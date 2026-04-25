@@ -5,6 +5,7 @@ main.py — GCC Telegram Agent 入口
 
 import logging
 import os
+import re
 
 from dotenv import load_dotenv
 from telegram import Update
@@ -22,11 +23,46 @@ ADMIN_USER_ID  = int(os.getenv("ADMIN_USER_ID", "0"))
 WEBHOOK_URL    = os.getenv("WEBHOOK_URL", "")   # https://your-app.fly.dev/webhook
 PORT           = int(os.getenv("PORT", "8080"))
 
-# ── Logging ───────────────────────────────────────────────────────────────────
-logging.basicConfig(
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    level=logging.INFO,
-)
+# ── Logging + Token 遮蔽 ─────────────────────────────────────────────────────
+
+class _TokenRedactionFilter(logging.Filter):
+    """
+    遮蔽日誌中的 Bot Token，防止 API 金鑰外洩到 Fly.io 日誌或任何日誌系統。
+    格式：bot123456:ABC-DEF → bot[REDACTED]
+    """
+    _PATTERN = re.compile(r"bot\d+:[A-Za-z0-9_-]+")
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if isinstance(record.msg, str):
+            record.msg = self._PATTERN.sub("bot[REDACTED]", record.msg)
+        # args 也需要遮蔽（logging 會把 args 插入 msg）
+        if record.args:
+            if isinstance(record.args, tuple):
+                record.args = tuple(
+                    self._PATTERN.sub("bot[REDACTED]", a) if isinstance(a, str) else a
+                    for a in record.args
+                )
+            elif isinstance(record.args, dict):
+                record.args = {
+                    k: self._PATTERN.sub("bot[REDACTED]", v) if isinstance(v, str) else v
+                    for k, v in record.args.items()
+                }
+        return True
+
+
+def _setup_logging() -> None:
+    """設定 logging，並對所有 handler 套用 Token 遮蔽過濾器"""
+    logging.basicConfig(
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        level=logging.INFO,
+    )
+    redact = _TokenRedactionFilter()
+    # 套用到 root logger 的所有 handler，覆蓋全部子 logger
+    for handler in logging.root.handlers:
+        handler.addFilter(redact)
+
+
+_setup_logging()
 logger = logging.getLogger(__name__)
 
 
