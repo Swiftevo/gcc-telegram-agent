@@ -1,0 +1,26 @@
+# flyctl launch added from .gitignore
+# 環境變數（絕對不能上傳）
+**/.env
+**/.env.*
+
+# Python
+**/__pycache__
+**/*.py[cod]
+**/*.pyo
+**/venv
+**/.venv
+**/*.egg-info
+
+# 測試資料庫（臨時檔案）
+**/test_*.db
+**/gcc_agent.db
+
+# 系統
+**/.DS_Store
+**/Thumbs.db
+**/*.Zone.Identifier
+
+# IDE
+**/.vscode
+**/.idea
+fly.toml
