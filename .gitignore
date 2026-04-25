@@ -18,6 +18,7 @@ gcc_agent.db
 .DS_Store
 Thumbs.db
 *.Zone.Identifier
+*:Zone.Identifier
 
 # IDE
 .vscode/
