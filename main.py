@@ -57,18 +57,26 @@ def _setup_logging() -> None:
         level=logging.INFO,
     )
     redact = _TokenRedactionFilter()
-    # 2. 核心修正：除了 root，也直接抓取所有已經存在的 logger
-    # 確保連 httpx, telegram.ext 等第三方庫的日誌都被過濾
-    loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]
-    loggers.append(logging.getLogger()) # 加入 root logger
+# 1. 取得 root logger
+    root_logger = logging.getLogger()
+    
+    # 2. 如果 basicConfig 沒建立 handler（極罕見），手動補一個
+    if not root_logger.handlers:
+        handler = logging.StreamHandler()
+        root_logger.addHandler(handler)
+        
+    # 3. 對所有 root 級別的 handler 掛載過濾器
+    for handler in root_logger.handlers:
+        # 避免重複掛載
+        if not any(isinstance(f, _TokenRedactionFilter) for f in handler.filters):
+            handler.addFilter(redact)
 
-    for logger in loggers:
-        # 清除可能重複的過濾器，確保只掛載一個新的
-        for f in logger.filters[:]:
-            if isinstance(f, _TokenRedactionFilter):
-                logger.removeFilter(f)
-        logger.addFilter(redact)
-
+# --- 關鍵修正處 ---
+# 先執行設定
+_setup_logging()
+# 再定義全域 logger 變數
+logger = logging.getLogger(__name__) 
+# ------------------
 
 # ── 核心訊息分發 ──────────────────────────────────────────────────────────────
 
