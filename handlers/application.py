@@ -8,7 +8,7 @@ import logging
 import os
 from datetime import datetime
 
-from telegram import Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from core.session import get_session, save_exchange, save
@@ -114,6 +114,37 @@ def _t(lang: str, key: str, **kwargs) -> str:
         kwargs["fund"] = fund_names[kwargs["fund"]].get(lang, kwargs["fund"])
     return template.format(**kwargs)
 
+
+
+# ── 退出按鈕 ──────────────────────────────────────────────────────────────────
+
+EXIT_BUTTON_LABEL = {
+    "zh-TW": "❌ 退出申請",
+    "zh-CN": "❌ 退出申请",
+    "en":    "❌ Exit Application",
+}
+
+APPLY_FORM_BUTTON_LABEL = {
+    "zh-TW": "📋 前往申請表",
+    "zh-CN": "📋 前往申请表",
+    "en":    "📋 Go to Application Form",
+}
+
+
+def make_exit_markup(lang: str) -> InlineKeyboardMarkup:
+    """申請流程中每步都附帶的退出按鈕"""
+    label = EXIT_BUTTON_LABEL.get(lang, EXIT_BUTTON_LABEL["zh-TW"])
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(label, callback_data="intent_exit")]
+    ])
+
+
+def make_completion_markup(lang: str) -> InlineKeyboardMarkup:
+    """申請完成後的按鈕：查看申請表連結"""
+    form_label = APPLY_FORM_BUTTON_LABEL.get(lang, APPLY_FORM_BUTTON_LABEL["zh-TW"])
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(form_label, url="https://www.gccofficial.org/application")]
+    ])
 
 # ── Values Engine 預審 ────────────────────────────────────────────────────────
 
@@ -309,7 +340,7 @@ async def handle_application(
     if draft.collection_step == 0:
         reply = _t(lang, "intro")
         draft.collection_step = 1
-        await update.message.reply_text(reply, parse_mode="Markdown")
+        await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
         await save_exchange(session, user_id, text, reply)
         return
 
@@ -318,7 +349,7 @@ async def handle_application(
         draft.project_name = text
         draft.collection_step = 2
         reply = _t(lang, "ask_fund_type", name=text)
-        await update.message.reply_text(reply, parse_mode="Markdown")
+        await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
         await save_exchange(session, user_id, text, reply)
         await save(session)
         return
@@ -330,14 +361,14 @@ async def handle_application(
         if fund_type == "unknown":
             # 沒有識別到有效的基金類型，重新詢問
             reply = _t(lang, "unknown_fund_type")
-            await update.message.reply_text(reply, parse_mode="Markdown")
+            await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
             await save_exchange(session, user_id, text, reply)
             return
 
         draft.fund_type = fund_type
         draft.collection_step = 3
         reply = _t(lang, "ask_one_liner", fund=fund_type)
-        await update.message.reply_text(reply, parse_mode="Markdown")
+        await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
         await save_exchange(session, user_id, text, reply)
         await save(session)
         return
@@ -357,7 +388,7 @@ async def handle_application(
 
         # 回覆用戶確認
         reply = _t(lang, "submitted")
-        await update.message.reply_text(reply, parse_mode="Markdown")
+        await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_completion_markup(lang))
         await save_exchange(session, user_id, text, reply)
 
         # 重置 Session 回 general mode（申請流程結束）

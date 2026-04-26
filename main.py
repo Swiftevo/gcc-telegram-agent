@@ -9,7 +9,7 @@ import re
 
 from dotenv import load_dotenv
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, MessageHandler, filters
 
 import db
 from handlers.guard import run_guard
@@ -57,26 +57,14 @@ def _setup_logging() -> None:
         level=logging.INFO,
     )
     redact = _TokenRedactionFilter()
-# 1. 取得 root logger
-    root_logger = logging.getLogger()
-    
-    # 2. 如果 basicConfig 沒建立 handler（極罕見），手動補一個
-    if not root_logger.handlers:
-        handler = logging.StreamHandler()
-        root_logger.addHandler(handler)
-        
-    # 3. 對所有 root 級別的 handler 掛載過濾器
-    for handler in root_logger.handlers:
-        # 避免重複掛載
-        if not any(isinstance(f, _TokenRedactionFilter) for f in handler.filters):
-            handler.addFilter(redact)
+    # 套用到 root logger 的所有 handler，覆蓋全部子 logger
+    for handler in logging.root.handlers:
+        handler.addFilter(redact)
 
-# --- 關鍵修正處 ---
-# 先執行設定
+
 _setup_logging()
-# 再定義全域 logger 變數
-logger = logging.getLogger(__name__) 
-# ------------------
+logger = logging.getLogger(__name__)
+
 
 # ── 核心訊息分發 ──────────────────────────────────────────────────────────────
 
@@ -94,11 +82,7 @@ async def handle_message(update: Update, context):
         return   # Guard 已發送回覆，直接結束
 
     # ── 計數（通過 Guard 才算數）──────────────────────────
-    # 如果不是管理員，才增加訊息計數
-    if guard.user.user_id != ADMIN_USER_ID:
-        await db.increment_user_message_count(guard.user.user_id)
-    else:
-        logger.info(f"管理員 {ADMIN_USER_ID} 操作中，跳過訊息計數。")
+    await db.increment_user_message_count(guard.user.user_id)
 
     # ── Router：決定模式 ───────────────────────────────────
     route_result = await route(update, context, guard)
@@ -116,6 +100,75 @@ async def handle_message(update: Update, context):
         from handlers.general import handle_general
         await handle_general(update, context, guard)
 
+
+
+
+async def handle_callback(update, context):
+    """
+    處理 Inline Button 點擊（callback_data）。
+    intent_apply → 進入申請模式（0 token）
+    intent_exit  → 退出申請模式（0 token）
+    完全繞過 AI 路由，不消耗任何 token。
+    """
+    query = update.callback_query
+    await query.answer()  # 消除按鈕的 loading 狀態
+
+    user_id = query.from_user.id
+
+    # Guard：確認是群組成員且未被封鎖
+    from db import get_user, get_or_create_session, save_session
+    from handlers.guard import detect_language
+
+    user = await get_user(user_id)
+    if user is None or user.is_blocked:
+        return
+
+    lang_code = query.from_user.language_code or "zh-TW"
+    from handlers.guard import detect_language as _dl
+    # 簡易語言偵測
+    lang = "zh-TW"
+    if lang_code:
+        lc = lang_code.lower()
+        if lc in ("zh-cn", "zh-sg", "zh"):
+            lang = "zh-CN"
+        elif lc.startswith("en"):
+            lang = "en"
+
+    session, _ = await get_or_create_session(user_id)
+
+    if query.data == "intent_apply":
+        session.mode = "application"
+        session.application_draft.__init__()  # 重置草稿，重新開始
+        await save_session(session)
+
+        # 直接發出第一個問題（項目名稱）
+        from handlers.application import _t, make_exit_markup
+        from models import ApplicationDraft
+        session.application_draft.collection_step = 1
+        await save_session(session)
+        reply = _t(lang, "intro")
+        await query.message.reply_text(
+            reply,
+            parse_mode="Markdown",
+            reply_markup=make_exit_markup(lang),
+        )
+        logger.info(f"CALLBACK APPLY: user_id={user_id}")
+
+    elif query.data == "intent_exit":
+        session.mode = "general"
+        session.application_draft.__init__()
+        await save_session(session)
+
+        exit_msg = {
+            "zh-TW": "✅ 已退出申請流程。有其他問題歡迎繼續發問。\n\n_如希望深入交流，歡迎參與 GCC 定期例會。_",
+            "zh-CN": "✅ 已退出申请流程。有其他问题欢迎继续提问。\n\n_如希望深入交流，欢迎参与 GCC 定期例会。_",
+            "en":    "✅ You have exited the application flow. Feel free to ask anything else.\n\n_For deeper discussion, join GCC regular community calls._",
+        }
+        await query.message.reply_text(
+            exit_msg.get(lang, exit_msg["zh-TW"]),
+            parse_mode="Markdown",
+        )
+        logger.info(f"CALLBACK EXIT: user_id={user_id}")
 
 async def handle_start(update: Update, context):
     """/start 指令：歡迎訊息"""
@@ -176,6 +229,9 @@ def main():
 
     # 指令 handlers
     app.add_handler(CommandHandler("start", handle_start))
+
+    # Inline Button 點擊（最高優先，完全不消耗 token）
+    app.add_handler(CallbackQueryHandler(handle_callback))
 
     # 所有私訊
     app.add_handler(
