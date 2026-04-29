@@ -25,7 +25,17 @@ async def handle_admin(
     guard: GuardResult,
     command: str,
 ) -> None:
-    """分發管理員指令"""
+    """
+    分發管理員指令。
+    雙重驗證：Router 已過濾一次，這裡再驗證一次。
+    防止 Router 邏輯失效時一般用戶能執行管理員指令。
+    """
+    # 二次驗證：不信任 Router，自己再確認一次
+    actual_user_id = update.effective_user.id if update.effective_user else 0
+    if actual_user_id != ADMIN_USER_ID:
+        logger.warning(f"ADMIN ACCESS DENIED: user_id={actual_user_id} tried command={command}")
+        return  # 靜默拒絕，不給任何回覆
+
     if command == "/status":
         await _handle_status(update)
     elif command == "/update_values":

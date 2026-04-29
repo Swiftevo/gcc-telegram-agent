@@ -137,15 +137,14 @@ async def handle_callback(update, context):
     session, _ = await get_or_create_session(user_id)
 
     if query.data == "intent_apply":
+        from models import ApplicationDraft
         session.mode = "application"
-        session.application_draft.__init__()  # 重置草稿，重新開始
+        session.application_draft = ApplicationDraft()  # 正確重置：建立全新物件
+        session.application_draft.collection_step = 1
         await save_session(session)
 
         # 直接發出第一個問題（項目名稱）
         from handlers.application import _t, make_exit_markup
-        from models import ApplicationDraft
-        session.application_draft.collection_step = 1
-        await save_session(session)
         reply = _t(lang, "intro")
         await query.message.reply_text(
             reply,
@@ -155,8 +154,9 @@ async def handle_callback(update, context):
         logger.info(f"CALLBACK APPLY: user_id={user_id}")
 
     elif query.data == "intent_exit":
+        from models import ApplicationDraft
         session.mode = "general"
-        session.application_draft.__init__()
+        session.application_draft = ApplicationDraft()  # 正確重置：建立全新物件
         await save_session(session)
 
         exit_msg = {
