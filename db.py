@@ -167,43 +167,37 @@ async def update_user_group_membership(user_id: int, is_member: bool) -> None:
         await db.commit()
 
 
-async def increment_user_message_count(user_id: int) -> int:
+async def try_increment_daily_count(user_id: int, limit: int = 20) -> bool:
     """
-    增加今日訊息計數，若日期已變則先重置。
-    返回更新後的 daily_count。
+    原子化檢查並增加每日訊息計數，同時處理跨日重置。
+    回傳 True 代表更新成功（未達今日上限）；False 代表已達上限。
     """
     today = datetime.utcnow().strftime("%Y-%m-%d")
+    
     async with aiosqlite.connect(DB_PATH) as db:
-        db.row_factory = aiosqlite.Row
-        async with db.execute(
-            "SELECT daily_count, count_reset_date FROM users WHERE user_id = ?",
-            (user_id,),
-        ) as cursor:
-            row = await cursor.fetchone()
-            if row is None:
-                return 0
-            current_count = row["daily_count"]
-            reset_date = row["count_reset_date"]
-
-        if reset_date != today:
-            # 新的一天，重置計數器
-            new_count = 1
-            await db.execute(
-                """UPDATE users
-                   SET daily_count = 1, count_reset_date = ?, total_messages = total_messages + 1
-                   WHERE user_id = ?""",
-                (today, user_id),
-            )
-        else:
-            new_count = current_count + 1
-            await db.execute(
-                """UPDATE users
-                   SET daily_count = daily_count + 1, total_messages = total_messages + 1
-                   WHERE user_id = ?""",
-                (user_id,),
-            )
+        # 核心邏輯：
+        # 如果日期不是今天 (跨日了) -> 強制設為 1，並更新日期
+        # 如果日期是今天 -> count + 1
+        # WHERE 條件：只有在「跨日」或「未達上限」時才允許執行這段 UPDATE
+        cursor = await db.execute(
+            """
+            UPDATE users 
+            SET 
+                daily_count = CASE 
+                    WHEN count_reset_date != ? THEN 1 
+                    ELSE daily_count + 1 
+                END,
+                count_reset_date = ?,
+                total_messages = total_messages + 1
+            WHERE user_id = ? 
+              AND (count_reset_date != ? OR daily_count < ?)
+            """,
+            (today, today, user_id, today, limit)
+        )
         await db.commit()
-        return new_count
+        
+        # rowcount > 0 表示成功寫入（即通過檢查）
+        return cursor.rowcount > 0
 
 
 async def set_user_blocked(user_id: int, blocked: bool) -> None:

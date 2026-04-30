@@ -81,8 +81,8 @@ async def handle_message(update: Update, context):
     if not guard.passed:
         return   # Guard 已發送回覆，直接結束
 
-    # ── 計數（通過 Guard 才算數）──────────────────────────
-    await db.increment_user_message_count(guard.user.user_id)
+    # ── 計數（通過 Guard 才算數，由guard.py負責）──────────────────────────
+    
 
     # ── Router：決定模式 ───────────────────────────────────
     route_result = await route(update, context, guard)

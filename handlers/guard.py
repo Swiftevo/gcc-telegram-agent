@@ -219,15 +219,18 @@ async def run_guard(
             return GuardResult(passed=False, user=user, lang=lang, reason="not_member")
         user.is_group_member = True
 
-    # ── 關卡 3：Rate Limit ────────────────────────────────
-    user.reset_if_new_day()
-    if user.daily_count >= DAILY_LIMIT:
+    # ── 關卡 3：原子化 Rate Limit ─────────────────────────
+    # 直接嘗試增加計數。若成功回傳 True；若已達上限或日期未更新則回傳 False。
+    passed_limit = await db.try_increment_daily_count(user_id, limit=DAILY_LIMIT)
+
+    if not passed_limit:
         await update.message.reply_text(_msg(lang, "rate_limited"))
-        logger.info(f"GUARD RATE_LIMITED: user_id={user_id} count={user.daily_count}")
+        logger.info(f"GUARD RATE_LIMITED: user_id={user_id}")
         return GuardResult(passed=False, user=user, lang=lang, reason="rate_limited")
 
     # ── 全部通過 ──────────────────────────────────────────
-    logger.debug(f"GUARD PASS: user_id={user_id} lang={lang} count={user.daily_count}")
+    # 注意：此時 DB 裡的計數已增加，我們不顯示過期的 user.daily_count
+    logger.debug(f"GUARD PASS: user_id={user_id} lang={lang}")
     return GuardResult(passed=True, user=user, lang=lang)
 
 
