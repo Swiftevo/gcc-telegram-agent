@@ -52,22 +52,56 @@ def _t(lang: str, key: str, **kwargs) -> str:
                 "Please reply 'public' or 'special'."
             ),
         },
-        "ask_one_liner": {
+        "ask_proposal_link": {
             "zh-TW": (
                 "好的，申請 *{fund}*。\n\n"
-                "最後一步：請用一句話介紹你的項目。\n"
-                "_（這句話的重點：你解決了什麼公共問題？）_"
+                "📎 *第三步：提案文件連結（選填）*\n\n"
+                "如有完整提案文件，請提供連結（Google Doc / Notion / PDF）。\n"
+                "尚未準備好文件？請直接回覆「跳過」。"
             ),
             "zh-CN": (
                 "好的，申请 *{fund}*。\n\n"
-                "最后一步：请用一句话介绍你的项目。\n"
-                "_（这句话的重点：你解决了什么公共问题？）_"
+                "📎 *第三步：提案文件链接（选填）*\n\n"
+                "如有完整提案文件，请提供链接（Google Doc / Notion / PDF）。\n"
+                "尚未准备好文件？请直接回复「跳过」。"
             ),
             "en": (
                 "Got it, applying for the *{fund}*.\n\n"
-                "Last step: please describe your project in one sentence.\n"
-                "_(Focus: what public problem does it solve?)_"
+                "📎 *Step 3: Proposal Document Link (optional)*\n\n"
+                "If you have a full proposal document, please share the link (Google Doc / Notion / PDF).\n"
+                "Not ready yet? Just reply 'skip'."
             ),
+        },
+        "ask_executive_summary": {
+            "zh-TW": (
+                "📝 *最後一步：執行摘要*\n\n"
+                "請用 *500 字以內* 說明你的提案核心，包括：\n\n"
+                "• 你解決了什麼公共問題？\n"
+                "• 你的解決方案是什麼？\n"
+                "• 為什麼這個問題需要公共資金支持？\n\n"
+                "_這份摘要將作為 GCC 成員初步評審的依據。_"
+            ),
+            "zh-CN": (
+                "📝 *最后一步：执行摘要*\n\n"
+                "请用 *500 字以内* 说明你的提案核心，包括：\n\n"
+                "• 你解决了什么公共问题？\n"
+                "• 你的解决方案是什么？\n"
+                "• 为什么这个问题需要公共资金支持？\n\n"
+                "_这份摘要将作为 GCC 成员初步评审的依据。_"
+            ),
+            "en": (
+                "📝 *Final Step: Executive Summary*\n\n"
+                "Please describe your proposal in *under 500 words*, covering:\n\n"
+                "• What public problem are you solving?\n"
+                "• What is your solution?\n"
+                "• Why does this problem require public funding?\n\n"
+                "_This summary will be used for GCC's initial review._"
+            ),
+        },
+        "summary_too_long": {
+            "zh-TW": "你的摘要超過 500 字（目前約 {count} 字）。請精簡後重新提交，重點說明核心問題和解決方案。",
+            "zh-CN": "你的摘要超过 500 字（目前约 {count} 字）。请精简后重新提交，重点说明核心问题和解决方案。",
+            "en":    "Your summary exceeds 500 words (currently ~{count} words). Please shorten it and resubmit, focusing on the core problem and solution.",
         },
         "unknown_fund_type": {
             "zh-TW": "請回覆「公共」或「專項」，讓我知道你想申請哪種基金。",
@@ -76,21 +110,21 @@ def _t(lang: str, key: str, **kwargs) -> str:
         },
         "submitted": {
             "zh-TW": (
-                "✅ 收到你的初步申請資料！\n\n"
+                "✅ 收到你的申請摘要！\n\n"
                 "GCC 成員會查看你的資料並與你跟進。\n\n"
                 "如果想正式提交申請，可以直接填寫申請表：\n"
                 "📋 https://www.gccofficial.org/application\n\n"
                 "_如希望深入交流，歡迎參與 GCC 定期例會。_"
             ),
             "zh-CN": (
-                "✅ 收到你的初步申请资料！\n\n"
+                "✅ 收到你的申请摘要！\n\n"
                 "GCC 成员会查看你的资料并与你跟进。\n\n"
                 "如果想正式提交申请，可以直接填写申请表：\n"
                 "📋 https://www.gccofficial.org/application\n\n"
                 "_如希望深入交流，欢迎参与 GCC 定期例会。_"
             ),
             "en": (
-                "✅ Your initial application details have been received!\n\n"
+                "✅ Your application summary has been received!\n\n"
                 "A GCC member will review your information and follow up with you.\n\n"
                 "To submit a formal application, you can fill out the form directly:\n"
                 "📋 https://www.gccofficial.org/application\n\n"
@@ -152,9 +186,7 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
     """
     根據 values.yaml 的 screening_rubric 對申請草稿進行預審評分。
     返回 (score, notes)。
-
-    這是基於關鍵詞的輕量評分，不呼叫 AI API。
-    目的是給管理員一個初步參考，而不是最終判斷。
+    現在基於 executive_summary（500字摘要）評分，比原來的一句話更準確。
     """
     from core.values import load_values
     values = load_values()
@@ -167,7 +199,8 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
         "feasibility":         int(rubric.get("feasibility", 10)),
     }
 
-    text = f"{draft.project_name} {draft.one_liner}".lower()
+    # 用項目名稱 + 執行摘要作為評分文本（更豐富的內容）
+    text = f"{draft.project_name} {draft.executive_summary}".lower()
     notes = []
     score = 0
 
@@ -196,7 +229,6 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
         "非營利", "non-profit", "nonprofit", "基礎設施", "infrastructure",
         "工具", "tool", "平台", "platform", "協議", "protocol",
     ]
-    reject_keywords = [kw.lower() for kw in values.rejection_criteria]
     reject_hit = any(kw in text for kw in [
         "commercial", "商業", "商业", "proprietary", "closed source",
         "核心部分不開源", "不開源",
@@ -233,17 +265,17 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
     score += cn_score
 
     # ── feasibility（可行性）────────────────────────────────
-    # 基於描述長度和清晰度的粗略判斷
-    one_liner_len = len(draft.one_liner.strip())
-    if one_liner_len >= 30:
+    # 500字摘要比一句話提供更豐富的可行性線索，用字數作粗略判斷
+    summary_len = len(draft.executive_summary.strip())
+    if summary_len >= 200:
         feasibility_score = weights["feasibility"]
-        notes.append("✅ 項目描述清晰")
-    elif one_liner_len >= 10:
+        notes.append("✅ 摘要詳盡，可行性描述充分")
+    elif summary_len >= 80:
         feasibility_score = int(weights["feasibility"] * 0.6)
-        notes.append("🔶 項目描述較簡短，可行性待確認")
+        notes.append("🔶 摘要較簡短，可行性待確認")
     else:
         feasibility_score = 0
-        notes.append("🔴 項目描述過於簡短")
+        notes.append("🔴 摘要過於簡短")
     score += feasibility_score
 
     return score, "\n".join(notes)
@@ -281,6 +313,8 @@ async def notify_admin(
 
     username_display = f"@{user.username}" if user.username else f"ID: {user.user_id}"
 
+    link_line = f"🔗 提案連結：{draft.proposal_link}\n" if draft.proposal_link else ""
+
     summary = (
         f"📬 *新申請通知*\n"
         f"{'─' * 30}\n"
@@ -290,7 +324,8 @@ async def notify_admin(
         f"{'─' * 30}\n"
         f"📌 項目名稱：*{draft.project_name}*\n"
         f"💰 申請基金：{fund_label}\n"
-        f"📝 一句話介紹：\n_{draft.one_liner}_\n"
+        f"{link_line}"
+        f"📝 執行摘要：\n_{draft.executive_summary}_\n"
         f"{'─' * 30}\n"
         f"🤖 *Agent 預審*\n"
         f"總分：{score_label}\n\n"
@@ -320,13 +355,11 @@ async def handle_application(
     guard: GuardResult,
 ) -> None:
     """
-    申請流程主處理器。
-    根據 session.application_draft.collection_step 決定目前在哪一步。
-
-    Step 0 → 介紹流程，詢問項目名稱
+    申請流程主處理器（四步）：
     Step 1 → 收到名稱，詢問基金類型
-    Step 2 → 收到類型，詢問一句話介紹
-    Step 3 → 收到介紹，預審 + 通知管理員 + 確認用戶
+    Step 2 → 收到類型，詢問提案連結（選填）
+    Step 3 → 收到連結或跳過，詢問執行摘要
+    Step 4 → 收到摘要，預審 + 通知管理員 + 確認用戶
     """
     text = (update.message.text or "").strip()
     lang = guard.lang
@@ -335,14 +368,6 @@ async def handle_application(
 
     session = await get_session(guard)
     draft = session.application_draft
-
-    # ── Step 0：開始收集，詢問項目名稱 ───────────────────
-    if draft.collection_step == 0:
-        reply = _t(lang, "intro")
-        draft.collection_step = 1
-        await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
-        await save_exchange(session, user_id, text, reply)
-        return
 
     # ── Step 1：收到項目名稱，詢問基金類型 ───────────────
     if draft.collection_step == 1:
@@ -354,12 +379,10 @@ async def handle_application(
         await save(session)
         return
 
-    # ── Step 2：收到基金類型，詢問一句話介紹 ─────────────
+    # ── Step 2：收到基金類型，詢問提案連結 ───────────────
     if draft.collection_step == 2:
         fund_type = draft.parse_fund_type(text)
-
         if fund_type == "unknown":
-            # 沒有識別到有效的基金類型，重新詢問
             reply = _t(lang, "unknown_fund_type")
             await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
             await save_exchange(session, user_id, text, reply)
@@ -367,15 +390,44 @@ async def handle_application(
 
         draft.fund_type = fund_type
         draft.collection_step = 3
-        reply = _t(lang, "ask_one_liner", fund=fund_type)
+        reply = _t(lang, "ask_proposal_link", fund=fund_type)
         await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
         await save_exchange(session, user_id, text, reply)
         await save(session)
         return
 
-    # ── Step 3：收到一句話介紹，預審 + 通知 ──────────────
+    # ── Step 3：收到提案連結（或跳過），詢問執行摘要 ──────
     if draft.collection_step == 3:
-        draft.one_liner = text
+        skip_keywords = ["跳過", "跳过", "skip", "沒有", "没有", "no", "none"]
+        is_skip = any(kw in text.lower() for kw in skip_keywords)
+
+        if not is_skip:
+            draft.proposal_link = text  # 儲存連結
+        # 跳過時 proposal_link 保持空字串
+
+        draft.collection_step = 4
+        reply = _t(lang, "ask_executive_summary")
+        await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
+        await save_exchange(session, user_id, text, reply)
+        await save(session)
+        return
+
+    # ── Step 4：收到執行摘要，預審 + 通知 ────────────────
+    if draft.collection_step == 4:
+        # 字數檢查（500字上限，以空格分詞估算）
+        word_count = len(text.split())
+        char_count = len(text)
+        # 中文按字符數估算（500漢字約等於500字）
+        is_too_long = char_count > 1200 or word_count > 500
+
+        if is_too_long:
+            count_display = char_count if char_count > 1200 else word_count
+            reply = _t(lang, "summary_too_long", count=count_display)
+            await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_exit_markup(lang))
+            await save_exchange(session, user_id, text, reply)
+            return  # 不推進步驟，讓用戶重新提交
+
+        draft.executive_summary = text
 
         # Values Engine 預審評分
         score, notes = pre_screen(draft)
@@ -391,11 +443,11 @@ async def handle_application(
         await update.message.reply_text(reply, parse_mode="Markdown", reply_markup=make_completion_markup(lang))
         await save_exchange(session, user_id, text, reply)
 
-        # 重置 Session 回 general mode（申請流程結束）
+        # 重置 Session 回 general mode
         session.mode = "general"
         await save(session)
 
         logger.info(
             f"申請完成：user_id={user_id} project='{draft.project_name}' "
-            f"fund={draft.fund_type} score={score}"
+            f"fund={draft.fund_type} score={score} has_link={bool(draft.proposal_link)}"
         )

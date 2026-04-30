@@ -59,26 +59,27 @@ class User:
 class ApplicationDraft:
     """
     申請草稿，嵌入在 Session 內。
-    三步收集流程：名稱 → 類型 → 一句話介紹。
+    四步收集流程：名稱 → 類型 → 提案連結（選填）→ 執行摘要（500字）
     完成後觸發 Values Engine 預審，生成摘要通知管理員。
     """
-    project_name: str = ""               # 步驟 1：項目名稱
-    fund_type: str = "unknown"           # 步驟 2："public" | "special" | "unknown"
-    one_liner: str = ""                  # 步驟 3：一句話介紹
-    collection_step: int = 0             # 目前收集進度（0=未開始，1，2，3=完成）
+    project_name:      str = ""       # 步驟 1：項目名稱
+    fund_type:         str = "unknown"  # 步驟 2："public" | "special" | "unknown"
+    proposal_link:     str = ""       # 步驟 3：提案文件連結（選填，可跳過）
+    executive_summary: str = ""       # 步驟 4：500 字以內執行摘要（必填）
+    collection_step:   int = 0        # 目前收集進度（0=未開始，1，2，3，4=完成）
 
-    # 預審結果（步驟 3 完成後由 Values Engine 填入）
-    agent_score: int = -1                # 預審總分（0-100），-1 表示尚未評分
-    agent_notes: str = ""                # 各維度分析文字
+    # 預審結果（步驟 4 完成後由 Values Engine 填入）
+    agent_score: int = -1             # 預審總分（0-100），-1 表示尚未評分
+    agent_notes: str = ""             # 各維度分析文字
     submitted_at: Optional[str] = None  # 提交給管理員的時間
 
     def is_complete(self) -> bool:
-        """三個欄位都已收集完畢"""
+        """四個必填欄位都已收集完畢（proposal_link 為選填）"""
         return (
-            self.collection_step >= 3
+            self.collection_step >= 4
             and self.project_name.strip() != ""
             and self.fund_type in ("public", "special")
-            and self.one_liner.strip() != ""
+            and self.executive_summary.strip() != ""
         )
 
     def next_question(self, lang: str = "zh-TW") -> str:

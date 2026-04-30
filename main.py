@@ -143,7 +143,7 @@ async def handle_callback(update, context):
         session.application_draft.collection_step = 1
         await save_session(session)
 
-        # 直接發出第一個問題（項目名稱）
+        # 發出第一個問題（項目名稱）
         from handlers.application import _t, make_exit_markup
         reply = _t(lang, "intro")
         await query.message.reply_text(

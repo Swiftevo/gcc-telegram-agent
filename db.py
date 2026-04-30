@@ -281,13 +281,14 @@ async def _upsert_session(session: Session) -> None:
     messages_json = json.dumps(session.messages, ensure_ascii=False)
     draft_json = json.dumps(
         {
-            "project_name": session.application_draft.project_name,
-            "fund_type": session.application_draft.fund_type,
-            "one_liner": session.application_draft.one_liner,
-            "collection_step": session.application_draft.collection_step,
-            "agent_score": session.application_draft.agent_score,
-            "agent_notes": session.application_draft.agent_notes,
-            "submitted_at": session.application_draft.submitted_at,
+            "project_name":      session.application_draft.project_name,
+            "fund_type":         session.application_draft.fund_type,
+            "proposal_link":     session.application_draft.proposal_link,
+            "executive_summary": session.application_draft.executive_summary,
+            "collection_step":   session.application_draft.collection_step,
+            "agent_score":       session.application_draft.agent_score,
+            "agent_notes":       session.application_draft.agent_notes,
+            "submitted_at":      session.application_draft.submitted_at,
         },
         ensure_ascii=False,
     )
@@ -455,13 +456,14 @@ def _row_to_session(row: aiosqlite.Row) -> Session:
     messages = json.loads(row["messages_json"] or "[]")
     draft_data = json.loads(row["draft_json"] or "{}")
     draft = ApplicationDraft(
-        project_name=draft_data.get("project_name", ""),
-        fund_type=draft_data.get("fund_type", "unknown"),
-        one_liner=draft_data.get("one_liner", ""),
-        collection_step=draft_data.get("collection_step", 0),
-        agent_score=draft_data.get("agent_score", -1),
-        agent_notes=draft_data.get("agent_notes", ""),
-        submitted_at=draft_data.get("submitted_at"),
+        project_name=      draft_data.get("project_name", ""),
+        fund_type=         draft_data.get("fund_type", "unknown"),
+        proposal_link=     draft_data.get("proposal_link", ""),
+        executive_summary= draft_data.get("executive_summary", ""),
+        collection_step=   draft_data.get("collection_step", 0),
+        agent_score=       draft_data.get("agent_score", -1),
+        agent_notes=       draft_data.get("agent_notes", ""),
+        submitted_at=      draft_data.get("submitted_at"),
     )
     return Session(
         session_id=row["session_id"],
