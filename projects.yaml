@@ -1,0 +1,117 @@
+# projects.yaml — GCC 已資助項目知識庫 v1.0
+# 用途：Agent 預審時參考成功案例，判斷申請方向是否符合 GCC 資助方向
+# 更新方式：直接編輯此檔，重啟 bot 或執行 /update_values 生效
+#
+# 欄位說明：
+#   name        項目名稱
+#   category    主要類別
+#   fund_type   資助基金類型：public / special
+#   amount      資助金額（USD）
+#   keywords    核心關鍵詞（用於預審相似度匹配）
+#   region      主要受益地區
+#   summary     項目核心描述
+#   why_funded  符合 GCC 資助方向的原因（預審判斷依據）
+#
+# 類別清單：
+#   開源軟件    開放原始碼工具、語言、框架
+#   加密隱私    隱私保護、抗審查、加密工具、ZK
+#   治理研究    鏈上/鏈下治理、DAO、公民參與
+#   公共人才    人才培育、社區建設、教育
+#   基礎設施    協議、標準、底層技術
+#   社會公益    社會議題、人文關懷、文化保存
+#   活動資助    會議、工作坊、社區聚會
+#   媒體內容    獨立媒體、開放內容、知識傳播
+
+version: "1.0.0"
+
+funded_projects:
+
+  - name: Vyper
+    category: 開源軟件
+    fund_type: public
+    amount: 30000
+    keywords: [智能合約, 安全, 以太坊, 開源, 編程語言, EVM, DeFi, Python, 華語社區]
+    region: [全球, 華語社區]
+    summary: 以太坊第二大智能合約語言，比 Solidity 更安全，保護超過 40 億美元 TVL。GCC 資助其建設華語開發者生態。
+    why_funded: 核心開源基礎設施，有明確的華語社區建設計劃，語言安全性直接影響公共物品
+
+  - name: Primus
+    category: 加密隱私
+    fund_type: public
+    amount: 16000
+    keywords: [零知識證明, 隱私, zkTLS, FHE, 全同態加密, 鏈下數據, 開源, 華語開發者]
+    region: [全球, 華語社區]
+    summary: 結合 zkTLS 與全同態加密的隱私數據基礎設施，讓鏈下數據可在不洩露原始信息的情況下被驗證。
+    why_funded: 前沿密碼學公共物品，有明確的華語開發者教育計劃，開源且技術影響深遠
+
+  - name: SnarkExpress
+    category: 加密隱私
+    fund_type: public
+    amount: 6000
+    keywords: [零知識證明, zkSNARKs, 學術研究, 開源, 論文整理, ZK, 研究資源]
+    region: [全球, 華語社區]
+    summary: zkSNARKs 前沿研究的開源學術整合平台，持續整理 ZK 領域重要論文，提供結構化摘要與引用資源。
+    why_funded: 降低 ZK 研究門檻，公共知識基礎設施，延續 ZK Punk 的開放研究方向
+
+  - name: Invisible Garden Argentina
+    category: 公共人才
+    fund_type: public
+    amount: 5000
+    keywords: [以太坊, ZK, 開發者社區, 共居, 學習, 跨文化, 包容性]
+    region: [南美, 全球]
+    summary: 以太坊與 ZK 開發者的快閃式共居城市項目，通過沉浸式學習與協作環境培育開發者人才。
+    why_funded: 跨文化開發者社區建設，公共人才培育，強調包容性與開放協作
+
+  - name: Herstory
+    category: 社會公益
+    fund_type: public
+    amount: 7040
+    keywords: [女性, Web3, 社區, 故事記錄, 少數群體, 鏈上保存, 經濟賦權]
+    region: [全球, 華語社區]
+    summary: 為女性和少數群體提供 Web3 敘事空間，讓她們的故事被永久記錄在鏈上，並通過 Web3 獲得經濟收益。
+    why_funded: 填補 Web3 社區的性別代表性缺口，鏈上公共記錄，直接服務邊緣群體
+
+  - name: 區塊勢
+    category: 媒體內容
+    fund_type: public
+    amount: 9000
+    keywords: [獨立媒體, 區塊鏈, 加密貨幣, 繁體中文, 台灣, 開放內容, 知識傳播]
+    region: [台灣, 華語社區]
+    summary: 台灣獨立區塊鏈媒體，累計 756 篇深度文章，20,000+ 訂閱者，GCC 資助其將部分付費內容開放免費。
+    why_funded: 華語區優質開放知識資源，完全讀者付費的獨立媒體，去廣告化符合公共物品精神
+
+  - name: OpenRPC
+    category: 基礎設施
+    fund_type: public
+    amount: 25000
+    keywords: [API標準, JSON-RPC, 開源, 以太坊, 區塊鏈基礎設施, 開放標準, 互操作性]
+    region: [全球]
+    summary: Apache 2.0 開放標準，用於描述 JSON-RPC API，以太坊執行層、MetaMask、Chainlink 等均在使用，年下載量超 590 萬次。
+    why_funded: 關鍵區塊鏈基礎設施標準，Apache 開源許可，解決跨生態互操作性問題
+
+  - name: Kaggle 智能合約漏洞檢測競賽
+    category: 開源軟件
+    fund_type: public
+    amount: 25000
+    keywords: [智能合約, 安全, AI, 開源, 漏洞檢測, 公開基準, DeFiHackLabs, 競賽]
+    region: [全球, 華語社區]
+    summary: 由華語安全社區主辦的開源智能合約漏洞檢測競賽，建立公開可復現的 AI 安全評估基準，數據集賽後完整開放。
+    why_funded: 填補 AI 安全工具評估的公共基準缺口，華語安全社區主導，數據完全開放
+
+  - name: Berkeley Emerging Technology Association (BETA)
+    category: 公共人才
+    fund_type: public
+    amount: 15000
+    keywords: [公共物品, Web3, 研究, 社區建設, 跨界協作, Funding the Commons]
+    region: [北美, 全球]
+    summary: 在 Web2、Web3、研究、慈善事業和產業之間架起公共物品社區橋樑，探索永續資助新模式。
+    why_funded: 直接推動公共物品資助生態發展，跨界連結符合 GCC 全球華語社區的願景
+
+  - name: Wamotopia 2026
+    category: 活動資助
+    fund_type: special
+    amount: 8800
+    keywords: [華語社區, 清邁, 自組織, 去中心化, 社區聚會, 密碼朋克, "706"]
+    region: [東南亞, 華語社區]
+    summary: 第四屆瓦猫之夏，超過 1,000 人參與的去中心化自組織活動，GCC 同期組織「華語區密碼朋克×思想者聚會」。
+    why_funded: 驗證去中心化社區組織模式，華語社區重要線下聚點，與 GCC 社區深度整合

@@ -14,10 +14,41 @@ from models import AgentValues
 
 logger = logging.getLogger(__name__)
 
-VALUES_PATH = os.getenv("VALUES_PATH", "values.yaml")
+VALUES_PATH   = os.getenv("VALUES_PATH", "values.yaml")
+PROJECTS_PATH = os.getenv("PROJECTS_PATH", "projects.yaml")
 
-# 模組級快取：Bot 啟動後載入一次，/update_values 時重新載入
-_cached_values: Optional[AgentValues] = None
+# 模組級快取
+_cached_values:   Optional[AgentValues] = None
+_cached_projects: Optional[list]        = None
+
+
+# ── 項目知識庫載入 ────────────────────────────────────────────────────────────
+
+def load_projects(force_reload: bool = False) -> list:
+    """
+    從 projects.yaml 載入已資助項目知識庫。
+    返回項目列表，每個項目是一個 dict。
+    """
+    global _cached_projects
+
+    if _cached_projects is not None and not force_reload:
+        return _cached_projects
+
+    if not os.path.exists(PROJECTS_PATH):
+        logger.warning(f"projects.yaml 不存在於 {PROJECTS_PATH}，項目知識庫為空")
+        _cached_projects = []
+        return _cached_projects
+
+    try:
+        with open(PROJECTS_PATH, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        _cached_projects = data.get("funded_projects", [])
+        logger.info(f"projects.yaml 載入成功，共 {len(_cached_projects)} 個項目")
+        return _cached_projects
+    except Exception as e:
+        logger.error(f"projects.yaml 載入失敗：{e}")
+        _cached_projects = []
+        return _cached_projects
 
 
 # ── 載入 ──────────────────────────────────────────────────────────────────────
@@ -62,7 +93,9 @@ def load_values(force_reload: bool = False) -> AgentValues:
 
 
 def reload_values() -> AgentValues:
-    """強制重新載入（/update_values 指令呼叫）"""
+    """強制重新載入 values.yaml 和 projects.yaml（/update_values 指令呼叫）"""
+    global _cached_projects
+    _cached_projects = None
     return load_values(force_reload=True)
 
 

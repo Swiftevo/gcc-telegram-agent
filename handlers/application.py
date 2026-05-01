@@ -184,13 +184,13 @@ def make_completion_markup(lang: str) -> InlineKeyboardMarkup:
 
 def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
     """
-    根據 values.yaml 的 screening_rubric 對申請草稿進行預審評分。
-    返回 (score, notes)。
-    現在基於 executive_summary（500字摘要）評分，比原來的一句話更準確。
+    根據 values.yaml 的 screening_rubric 以及 projects.yaml 的成功案例
+    對申請草稿進行預審評分。返回 (score, notes)。
     """
-    from core.values import load_values
-    values = load_values()
-    rubric = values.screening_rubric
+    from core.values import load_values, load_projects
+    values   = load_values()
+    projects = load_projects()
+    rubric   = values.screening_rubric
 
     weights = {
         "mission_fit":         int(rubric.get("mission_fit", 40)),
@@ -199,10 +199,33 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
         "feasibility":         int(rubric.get("feasibility", 10)),
     }
 
-    # 用項目名稱 + 執行摘要作為評分文本（更豐富的內容）
     text = f"{draft.project_name} {draft.executive_summary}".lower()
     notes = []
     score = 0
+
+    # ── 已資助項目相似度比對 ──────────────────────────────
+    # 找出關鍵詞重疊最多的已資助項目，作為預審參考
+    best_match = None
+    best_match_score = 0
+
+    for project in projects:
+        project_keywords = [kw.lower() for kw in project.get("keywords", [])]
+        overlap = sum(1 for kw in project_keywords if kw in text)
+        if overlap > best_match_score:
+            best_match_score = overlap
+            best_match = project
+
+    if best_match and best_match_score >= 2:
+        notes.append(
+            f"🔍 與已資助項目相似：*{best_match['name']}*（{best_match_score} 個關鍵詞重疊）\n"
+            f"   → {best_match.get('why_funded', '')}"
+        )
+    elif best_match and best_match_score == 1:
+        notes.append(f"🔍 與已資助項目略有相似：{best_match['name']}（1 個關鍵詞重疊）")
+    else:
+        notes.append("🔍 未找到與已資助項目的明顯相似性，需人工判斷")
+
+    notes.append("")  # 空行分隔
 
     # ── mission_fit（使命契合度）────────────────────────────
     mission_keywords = [
@@ -210,6 +233,7 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
         "隱私", "隐私", "privacy", "抗審查", "抗审查", "censorship",
         "去中心", "decentrali", "區塊鏈", "blockchain", "以太坊", "ethereum",
         "協議", "协议", "protocol", "公民", "citizen", "社區", "社区", "community",
+        "零知識", "零知识", "zk", "zkp", "安全", "security",
     ]
     mission_hits = sum(1 for kw in mission_keywords if kw in text)
     if mission_hits >= 3:
@@ -227,11 +251,10 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
     pg_keywords = [
         "開源", "开源", "open source", "免費", "free", "公共", "public",
         "非營利", "non-profit", "nonprofit", "基礎設施", "infrastructure",
-        "工具", "tool", "平台", "platform", "協議", "protocol",
+        "工具", "tool", "平台", "platform", "協議", "protocol", "標準", "standard",
     ]
     reject_hit = any(kw in text for kw in [
-        "commercial", "商業", "商业", "proprietary", "closed source",
-        "核心部分不開源", "不開源",
+        "commercial", "商業", "商业", "proprietary", "closed source", "不開源",
     ])
 
     if reject_hit:
@@ -254,6 +277,7 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
     cn_keywords = [
         "華語", "华语", "中文", "chinese", "台灣", "taiwan", "香港", "hong kong",
         "中國", "china", "東南亞", "southeast asia", "華人", "华人",
+        "繁體", "簡體", "普通話", "粵語",
     ]
     cn_hits = sum(1 for kw in cn_keywords if kw in text)
     if cn_hits >= 1:
@@ -265,7 +289,6 @@ def pre_screen(draft: ApplicationDraft) -> tuple[int, str]:
     score += cn_score
 
     # ── feasibility（可行性）────────────────────────────────
-    # 500字摘要比一句話提供更豐富的可行性線索，用字數作粗略判斷
     summary_len = len(draft.executive_summary.strip())
     if summary_len >= 200:
         feasibility_score = weights["feasibility"]
