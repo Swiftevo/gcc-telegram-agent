@@ -1,4 +1,4 @@
-# projects.yaml — GCC 已資助項目完整知識庫 v3.0
+# projects.yaml — GCC 已資助項目完整知識庫 v3.2
 # 來源：https://www.gccofficial.org/project（六個類別頁面完整抓取）
 # 更新日期：2026-05
 # 共 67 個項目
@@ -12,9 +12,11 @@
 #   keywords     核心關鍵詞（預審相似度匹配用）
 #   region       主要受益地區
 #   summary      項目核心描述（來自官網原文）
-#   why_funded   符合 GCC 資助方向的原因
+#   why_funded      符合 GCC 資助方向的原因
+#   project_url     GCC 官網項目詳情頁面
+#   official_website 項目自己的官方網站
 
-version: "3.0.0"
+version: "3.2.0"
 
 funded_projects:
 
@@ -31,6 +33,8 @@ funded_projects:
     region: [全球]
     summary: P2P 基金會旨在透過共同創建開放的知識共享和有彈性、可持續的人類網絡，幫助人們、組織和政府向基於共享的社會方法過渡。創始人 Michael Bauwens 是中本聰密碼學郵件組成員之一。
     why_funded: 全球 P2P 與數字公共領域研究的重要推動者，公共知識基礎設施的核心建設者
+    project_url: https://www.gccofficial.org/project/project-p2p
+    official_website: https://p2pfoundation.net/
 
   - name: Mastodon
     slug: project-mastodon
@@ -41,6 +45,8 @@ funded_projects:
     region: [全球]
     summary: 非營利組織，運營全球最大的去中心化、隱私優先的社交媒體網絡。與企業平台不同，Mastodon 的增長完全由社區驅動，目前在全球 10,000 台服務器上擁有 960 萬注冊用戶。GCC 的捐贈將幫助 Mastodon 賦能本地社區、促進連接並推動數字主權。
     why_funded: 去中心化社交媒體的核心基礎設施，開源非營利，直接對抗平台壟斷
+    project_url: https://www.gccofficial.org/project/project-mastodon
+    official_website: https://joinmastodon.org/
 
   - name: Vyper
     slug: project-vyper
@@ -51,6 +57,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 以太坊第二大智能合約編程語言，在 Curve、Lido、Aerodrome、Yearn 等主流 DeFi 協議中保護超過 40 億美元 TVL。GCC 的捐贈將主要幫助其發展華語社區，以「線上共學營 + 線下巡回活動 + 社區內容體系」的方式，系統性建設 Vyper 的華語開發者生態。
     why_funded: 核心開源基礎設施，有明確的華語社區建設計劃，語言安全性直接影響公共物品安全
+    project_url: https://www.gccofficial.org/project/project-vyper
+    official_website: https://vyperlang.org/
 
   - name: OSKey
     slug: project-oskey
@@ -61,6 +69,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 全開源的非商業硬件錢包項目，幫助所有人創造並使用無需信任的通用硬件錢包。用戶可以自由選擇第三方的幾千種開發板，刷入 OSKey 固件就作為硬件錢包使用。GCC 對 OSKey 的支持是其收到的第一筆大額捐贈，將支持 OSKey 在一年內衝刺達到不輸于商業硬件錢包的體驗，並能托底 OSKey 未來 10 年的長期發展。
     why_funded: 開源非商業，解決加密資產自託管的公共問題，降低普通用戶使用門檻
+    project_url: https://www.gccofficial.org/project/project-oskey
+    official_website: https://oskey.dev/
 
   - name: ZK Punk
     slug: project-zkpunk
@@ -71,6 +81,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 社區共創的 ZKP 技術與論文周刊，助力社區了解最新學界業界前沿發展動態，貢獻者通過 GitHub repo 添加自己看到的前沿 ZKP 技術與論文更新的鏈接和介紹，匯總後自動更新到網頁成為新一期周刊，發布後按照貢獻度分配獎勵。從 2024 年 1 月平穩運行至今，已累積成為一個高質量的華語 ZK 知識庫。
     why_funded: 開源知識公共物品，降低 ZK 研究門檻，直接服務華語技術社區
+    project_url: https://www.gccofficial.org/project/project-zkpunk
+    official_website: https://zkpunk.on.fleek.co/
 
   - name: zkp2p
     slug: project-zkp2p
@@ -81,6 +93,8 @@ funded_projects:
     region: [全球]
     summary: ZKP2P 項目使用 zkTLS 底層技術，該技術是零知識證明（ZK）和多方安全計算（MPC）技術的最新應用，允許任何智能合約驗證來自鏈下第三方 API 提供的數據。GCC 通過捐贈支持了這一協議的持續開發，這不僅僅是一項技術創新，更是一種具有深遠公共價值的基礎設施，為用戶提供了自托管等核心權利。
     why_funded: 鏈下數據可驗證的核心基礎設施，開源公共協議，擴展公共物品的技術邊界
+    project_url: https://www.gccofficial.org/project/project-zkp2p
+    official_website: https://zkp2p.xyz/
 
   - name: DefiHackLabs
     slug: project-defihacklabs
@@ -91,6 +105,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 資深華人安全專家 Sunsec 創立的 DeFi 安全社群，聚集全球最優秀的白帽黑客對過往 DeFi 攻擊事件進行復現並在 GitHub 無償分享。2024 年獲 GCC 資助後，社區白帽黑客數量從 180 名增長到 292 名，產出了近百期攻擊事件復盤。Anthropic 最新發布的智能合約安全研究基準 SCONE-bench 直接採用了 DeFiHackLabs 的開源數據。
     why_funded: 華語安全社區的核心公共物品，完全開源無償分享，直接提升全行業安全水平
+    project_url: https://www.gccofficial.org/project/project-defihacklabs
+    official_website: https://github.com/SunWeb3Sec/DeFiHackLabs
 
   - name: Primus
     slug: project-primus
@@ -101,6 +117,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 面向 Web3 的隱私數據基礎設施項目，結合 zkTLS 與全同態加密（FHE）等前沿密碼學技術，使鏈下數據在不洩露原始信息的前提下實現可驗證、可計算與跨主體協作。通過資助 Primus，GCC 希望能支持其為華語區開發者和學習者提供開源的 FHE 學習和入門資料，并不斷推進技術和性能優化，引領華語區 FHE 的發展。
     why_funded: 前沿密碼學公共物品，有明確的華語開發者教育計劃，開源且技術影響深遠
+    project_url: https://www.gccofficial.org/project/project-primus
+    official_website: https://primuslabs.xyz/
 
   - name: SnarkExpress
     slug: project-snarkexpress
@@ -111,6 +129,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 專注於 zkSNARKs 前沿研究的開源學術整合平台，持續以原生 LaTeX-PDF 形式更新零知識證明領域的重要論文，內容覆蓋 IACR ePrint、國際頂級學術會議專刊及階段性研究合集。為每篇論文提供結構化摘要、原文直鏈以及可直接復用的 .tex/.bib 引用文件，延續並擴展了 ZK Punk 在論文整理方向上的工作。
     why_funded: 降低 ZK 研究門檻，開源學術公共基礎設施，延續 ZK Punk 的開放研究方向
+    project_url: https://www.gccofficial.org/project/project-snarkexpress
+    official_website: https://snarkexpress.org/
 
   - name: OpenRPC
     slug: project-openrpc
@@ -121,6 +141,8 @@ funded_projects:
     region: [全球]
     summary: Apache 2.0 開放標準，用於描述 JSON-RPC API，在區塊鏈生態已運行超過六年。以太坊執行層、MetaMask、Chainlink、Filecoin、Celestia、Starknet 都在用它發布 API 規範，過去一年 NPM 工具包下載量超過 590 萬次。此次資金用於發布生產可用的 Linter 工具以及將測試覆蓋工具升級為現代 ESM 模塊。
     why_funded: 關鍵區塊鏈基礎設施標準，Apache 開源許可，解決跨生態互操作性問題
+    project_url: https://www.gccofficial.org/project/project-openrpc
+    official_website: https://open-rpc.org/
 
   - name: Kaggle 智能合約漏洞檢測競賽
     slug: project-kagglecompetition
@@ -131,6 +153,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 由 DeFiHackLabs 運營團隊與 OneSavieLabs 共同主辦，計劃 2026 年 Q2 在 Kaggle 平台上線。依托開源項目 Bastet 建立公開可復現的 AI 安全評估基準。核心動機是：市面上越來越多 AI 安全工具聲稱能檢測智能合約漏洞，但幾乎全是閉源付費產品，沒有任何公開基準能評估它們的實際效果。賽後數據集和研究報告也將完整開放。
     why_funded: 填補 AI 安全工具評估的公共基準缺口，華語安全社區主導，數據完全開放
+    project_url: https://www.gccofficial.org/project/project-kagglecompetition
+    official_website: https://github.com/Wzy-source/bastet
 
   - name: Liber3
     slug: project-liber3
@@ -141,6 +165,8 @@ funded_projects:
     region: [全球]
     summary: 基於以太坊、使用 ENS 和 IPFS 技術構建的去中心化數字圖書館，在 zLibrary 關閉後應運而生。作為 ENS 生態系統中最大的平台之一，一度佔總流量的 34%，已讓社區通過 ENS 子域名永久記錄了超過 2,800 本書籍。GCC 的資助主要用於覆蓋其鑄造索引的五百萬本書籍 ENS 二級域名的部分 gas fee，為將電子書全文數據向量化並提供基於以太坊合約的全文搜索查詢奠定基礎。
     why_funded: 知識自由的開源基礎設施，抗審查設計，鏈上永久保存知識公共物品
+    project_url: https://www.gccofficial.org/project/project-liber3
+    official_website: https://liber3.eth.limo/
 
   # ══════════════════════════════════════════════════════
   # Community（社區資助）— 18 個
@@ -155,6 +181,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 國內最老牌的區塊鏈技術社區，2017 年啟動以來為華語區培養了上千名優秀的區塊鏈人才。GCC 對其進行了回溯性捐贈，對其核心貢獻者進行了獎勵，以感謝該社區近 8 年以來的工作，並支持其後續在珠海落地 OpenSpace 線下集訓營、發佈 Web3 知識圖譜等。
     why_funded: 華語區最重要的開源區塊鏈教育資源，8 年持續貢獻，回溯性認可長期公共物品建設者
+    project_url: https://www.gccofficial.org/project/project-upchain
+    official_website: https://learnblockchain.cn/
 
   - name: Pagoda Gatherings
     slug: project-pagoda
@@ -165,6 +193,8 @@ funded_projects:
     region: [亞洲, 華語社區]
     summary: 立足亞洲、面向以太坊生態的去中心化協作網絡，聚集來自不同國家和地區的開發者、研究者與生態建設者，旨在促進亞洲社區在全球以太坊生態中的協作與連接，為亞洲 Builder 與生態參與者提供跨地域、跨文化的交流平台。
     why_funded: 亞洲以太坊社區的核心連接節點，支持去中心化的跨地域協作
+    project_url: https://www.gccofficial.org/project/project-pagoda
+    official_website: https://linktr.ee/pagodagatherings
 
   - name: 網絡社會研究所
     slug: project-networksociety
@@ -175,6 +205,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 下設於中國美術學院，是中國高等教育系統中首個專注於網絡社會、技術哲學、平台合作主義，以及技術的文化根源和歷史的機構。已舉辦了八屆年度網絡社會年會，多次藝術-黑客馬拉松和工作坊，培養建立了包括數百名學者、年輕藝術家、網絡活動家和技術專家在內的國際網絡。
     why_funded: 華語社區學術公共物品，推動網絡社會與數字人文的開放研究
+    project_url: https://www.gccofficial.org/project/project-networksociety
+    official_website: https://www.networksociety.org.cn/
 
   - name: Summer of Protocol 2025
     slug: project-sop2025
@@ -185,6 +217,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 持續的研究和宣傳活動，旨在激發人們對協議研究的廣泛興趣。今年的 SOP 主要內容是教學課程，旨在促進對協議的理解，並將其在學校中進行傳播。GCC 的捐贈將幫助擴大 Summer of Protocols 在華語區的影響力，鼓勵更多華人申請，借助 SOP 幫助 GCC 打通海內外高校有志於 crypto 相關研究的學術圈。
     why_funded: 推動協議研究公共知識，擴大華語學術影響力，連結 EF 核心成員
+    project_url: https://www.gccofficial.org/project/project-sop2025
+    official_website: https://summerofprotocols.com/
 
   - name: Summer of Protocols
     slug: project-sop
@@ -195,6 +229,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 由以太坊基金會贊助、以人文社科視角圍繞「協議」進行研究和創造的項目，推廣協議作為理解世界的第一類概念。SoP2024 中 GCC 支持了一個專為中文社區申請者設立的賽道。
     why_funded: 公共知識基礎設施，直接為華語社區申請者開設專屬賽道
+    project_url: https://www.gccofficial.org/project/project-sop
+    official_website: https://summerofprotocols.com/
 
   - name: Agora Citizen Network
     slug: project-agora
@@ -205,6 +241,8 @@ funded_projects:
     region: [全球]
     summary: 完全開源的公民審議平台，結合機器學習（ML）、大語言模型（LLM）與零知識證明（ZK）等技術，構建面向公衆的結構化、多方參與的對話空間。平台基於 Pol.is 的共識形成邏輯，鼓勵參與者圍繞具體觀點表達立場，並通過算法分析群體分布、分歧點與潛在共識。
     why_funded: 開源治理工具，直接推動數字公民參與，ZK 技術保護隱私投票
+    project_url: https://www.gccofficial.org/project/project-agora
+    official_website: https://agoracitizen.network/
 
   - name: EPF 華語小組
     slug: project-epf
@@ -215,6 +253,8 @@ funded_projects:
     region: [華語社區]
     summary: 旨在為 Ethereum Protocol Fellowship 項目的華語社區提供交流和討論的平台。組織了每週的華語社區會議，並向成功完成了 EPF 項目的參與者提供了 5000 U 的補貼。
     why_funded: 直接降低華語開發者參與以太坊核心開發的門檻，社區公共服務
+    project_url: https://www.gccofficial.org/project/project-epf
+    official_website: https://github.com/eth-protocol-fellows/cohort-four
 
   - name: Web3 Privacy Now
     slug: project-web3privacy
@@ -225,6 +265,8 @@ funded_projects:
     region: [全球]
     summary: 圍繞 Web3 隱私權展開的國際性協作網絡，致力於連接研究者、開發者、社區組織與倡議者，共同推動去中心化環境下的隱私保護實踐。其組織的 Privacy Congress 已成為 Web3 隱私領域的標杆性會議，在 2024 年曼谷和 2025 年布宜諾斯艾里斯有數千人次的參與者。
     why_funded: 隱私公共物品的生態連接者，跨社區協作符合 GCC 全球網絡的願景
+    project_url: https://www.gccofficial.org/project/project-web3privacy
+    official_website: https://web3privacy.info/
 
   - name: 高校 Web3 興趣小組資助計劃
     slug: project-universityblockchain
@@ -235,6 +277,8 @@ funded_projects:
     region: [華語社區]
     summary: GCC 希望捐贈對區塊鏈技術與相關社會課題感興趣的年輕人，支持他們思考相關技術和社會議題，寻求解決方案。高校 Web3 興趣小組能夠借助 GCC 的資源與品牌影響力，擴大其在校內外的影響，吸引更多優秀學生、愛好者及行業夥伴的關注與參與。
     why_funded: 華語高校 Web3 人才生態建設，培育下一代公共物品建設者
+    project_url: https://www.gccofficial.org/project/project-universityblockchain
+    official_website: https://www.gccofficial.org/application/special
 
   - name: Berkeley Emerging Technology Association (BETA)
     slug: project-beta
@@ -245,6 +289,8 @@ funded_projects:
     region: [北美, 全球]
     summary: 在 Web2、Web3、研究、慈善事業和產業之間架起公共產品社群的橋樑，目標是在開源網絡中建構永續公共產品資助和價值調整新模式。通過 Funding the Commons 探索永續資助新模式。
     why_funded: 直接推動公共物品資助生態發展，跨界連結符合 GCC 全球華語社區的願景
+    project_url: https://www.gccofficial.org/project/project-beta
+    official_website: https://www.berkeleybeta.org/
 
   - name: 極客Web3
     slug: project-geek
@@ -255,6 +301,8 @@ funded_projects:
     region: [華語社區]
     summary: 開源、公益性的技術媒體與社區，專注於比特幣/以太坊生態，致力於成為優質項目的 PR 渠道。
     why_funded: 開源公益技術媒體，為華語社區提供高質量以太坊生態資訊
+    project_url: https://www.gccofficial.org/project/project-geek
+    official_website: https://geekweb3.io/
 
   - name: OP 中文力量
     slug: project-op
@@ -265,6 +313,8 @@ funded_projects:
     region: [華語社區]
     summary: 由 LXDAO、PlanckerDAO、GCC 和登鏈社區共同發起的 Optimism 中文開發者社區，是一個傳播 Optimism 技術和公共物品理念的組織，旨在成為鏈接華語社區和 Optimism 生態的橋樑，促進 Optimism 生態和華語社區內的雙向交流，促進公共物品的繁榮。
     why_funded: 華語社區與 Optimism 生態的橋樑，推動公共物品理念在華語開發者中傳播
+    project_url: https://www.gccofficial.org/project/project-op
+    official_website: https://github.com/optimism-china
 
   - name: Chain Mirror
     slug: project-chainmirror
@@ -275,6 +325,8 @@ funded_projects:
     region: [華語社區]
     summary: 致力於解決區塊鏈領域的人才培養與安全認證問題，構建集學習、挑戰與協作為一體的綜合平台。GCC 的捐贈將支持其舉辦黑客松、CTF 等專業賽事，持續推動 Web3 安全與開發生態的發展。
     why_funded: 填補 Web3 安全人才缺口，開放競賽促進技術提升，直接服務華語社區
+    project_url: https://www.gccofficial.org/project/project-chainmirror
+    official_website: https://chain-mirror.com/
 
   - name: The Mu 社區
     slug: project-themu
@@ -285,6 +337,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 成立於 2023 年，關注實際社會問題和需求，倡導社區成員開發開源項目來幫助更廣的受衆群體。此前獲得了包括以太坊基金會、Starknet 基金會、Starkware、Taiko、Scroll 等在內的多家機構的支持，成功舉辦了 muChiangmai、muBuenos 等活動。
     why_funded: 以解決實際社會問題為核心，開源社區驅動，符合 GCC 公共物品精神
+    project_url: https://www.gccofficial.org/project/project-themu
+    official_website: https://themu.xyz/
 
   - name: Remix China
     slug: project-rcc
@@ -295,6 +349,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 為中文開發者建立的 Remix IDE 中文社區項目，通過對 Remix IDE 及相關生態進行系統性中文化，在國內部署鏡像服務，建設中文文檔、教程與交流社區，幫助中文開發者更高效地學習和使用 Remix IDE 參與以太坊開源生態建設。（目前項目已停止運營）
     why_funded: 降低華語開發者使用以太坊開發工具的門檻，中文化開源基礎設施
+    project_url: https://www.gccofficial.org/project/project-rcc
+    official_website: https://remixchina.org/
 
   - name: Herstory
     slug: project-herstory
@@ -305,6 +361,8 @@ funded_projects:
     region: [全球, 華語社區]
     summary: 致力於構建女性 Web3 社區的團體，為女性和少數群體提供一個安全的空間，讓她們能夠創造、敘述並分享自己的故事，確保這些故事能夠在 Web3 上被永久記錄。通過為女性提供掌控自己叙述的工具以及通過 Web3 獲得經濟收益的機會，創造讓她們的聲音得到真實表達和重視的空間。
     why_funded: 填補 Web3 社區性別代表性缺口，鏈上公共記錄，直接服務邊緣群體
+    project_url: https://www.gccofficial.org/project/project-herstory
+    official_website: https://herstory.framer.ai/
 
   - name: Invisible Garden Argentina
     slug: project-invisiblegarden
@@ -315,6 +373,8 @@ funded_projects:
     region: [南美, 全球]
     summary: 致力於促進科技、文化與社區協同發展的快閃式開發者城市項目，通過共居營的形式，為以太坊與零知識證明（ZK）領域的開發者提供沉浸式學習與協作環境。項目強調包容性與跨背景交流，鼓勵參與者在高強度的共同生活與實踐中深化技術理解，並建立長期的社區連接。
     why_funded: 跨文化開發者社區建設，公共人才培育，強調包容性與開放協作
+    project_url: https://www.gccofficial.org/project/project-invisiblegarden
+    official_website: https://invisible.garden/
 
   - name: Funding The Commons
     slug: project-ftc
@@ -325,6 +385,8 @@ funded_projects:
     region: [全球]
     summary: 在開源網絡中建構永續公共產品資助和價值調整新模式的個人和組織，目標是在 Web2、Web3、研究、慈善事業和產業之間架起公共產品社群的橋樑。
     why_funded: 公共物品資助生態的核心協調機構，與 GCC 使命高度一致
+    project_url: https://www.gccofficial.org/project/project-ftc
+    official_website: https://fundingthecommons.io/
 
   # ══════════════════════════════════════════════════════
   # Event（單次活動）— 16 個
@@ -339,6 +401,8 @@ funded_projects:
     region: [中國大陸, 東南亞, 歐洲]
     summary: 由浙江大學社會學系朱健剛教授聯合廣州公益慈善書院發起的「平行大學」，用書院共學和行動研究的方式，為青年提供在真實處境中理解社會、發展公共精神的學習空間。2026 年支持兩項國際營地：8 月在清邁舉辦為期 14 天的民族志田野營；7 月在柏林馬克斯·普朗克研究所舉辦行動研究營，由項飙教授主持，圍繞「青年、遷移與社會想象」展開。
     why_funded: 培育公民精神與公共意識，跨文化行動研究，直接服務華語青年社區
+    project_url: https://www.gccofficial.org/project/project-hehelianda
+    official_website: https://mp.weixin.qq.com/s/guar-oYkAhlcKVmRwHUPmg
 
   - name: Wamotopia 2026
     slug: project-wamotopia2026
@@ -349,6 +413,8 @@ funded_projects:
     region: [東南亞, 華語社區]
     summary: 第四屆瓦猫之夏，2026 年 1 月在清邁舉辦，由多個獨立營地組成，總人數超過 1,000 人，是規模最大的一次。GCC 作為聯合出資方，同期在清邁組織了「華語區密碼朋克×思想者聚會」。瓦猫一直在驗證一件事：一個完全去中心化、沒有統一主辦方的自組織活動，能不能把分散各地的華語社區、清邁在地網絡和國際參與者真正拉到一起——四屆下來，答案還是肯定的。
     why_funded: 驗證去中心化社區組織模式，華語社區重要線下聚點，與 GCC 社區深度整合
+    project_url: https://www.gccofficial.org/project/project-wamotopia2026
+    official_website: https://wamotopia.love/
 
   - name: 區塊勢
     slug: project-qukuaishi
@@ -359,6 +425,8 @@ funded_projects:
     region: [台灣, 華語社區]
     summary: 由許明恩創辦於 2017 年，一人運營將近九年，累計 756 篇深度文章，Podcast 每集約 15,000 次收聽，訂閱者 20,000+，完全依靠讀者付費，不接受任何置入廣告。台灣金管會、台灣大哥大、國泰金控都是它的機構訂戶。此次的資金支持他們把一批原本在付費牆後的內容免費開放。
     why_funded: 華語區優質開放知識資源，去廣告化獨立媒體，符合公共物品精神
+    project_url: https://www.gccofficial.org/project/project-qukuaishi
+    official_website: https://www.blocktrend.today/
 
   - name: Adventure X 2025
     slug: project-adventurex2025
@@ -369,6 +437,8 @@ funded_projects:
     region: [華語社區, 全球]
     summary: 由高中生 & 大學生組織的面向年輕人的黑客松，今年預計有來自全球 800 人參加，是中國歷史上最大的黑客松。GCC 在去年贊助 Adventure X 後認識了很多有潛力的年輕人，因此希望能繼續向更多的大學生布道公共物品以及以太坊密碼朋克。
     why_funded: 培育華語青年公共物品建設者，傳播密碼朋克精神，投資下一代貢獻者
+    project_url: https://www.gccofficial.org/project/project-adventurex2025
+    official_website: https://adventure-x.org
 
   - name: Adventure X
     slug: project-adventurex
@@ -379,6 +449,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 致力和全世界的「當代嬉皮士」一起舉辦中國第一場真正的黑客松，重塑年輕創客的精神，讓他們無畏的走向創新之路。在 2024 年 7 月中旬的黑客松吸引了來自中國的 1200 多名高中生及大學生報名，200 人參加，三天三夜，從 0 到 1 完成了 50 多個產品的創作開發。
     why_funded: 華語青年創客精神的重要實踐，第一屆大規模華語黑客松
+    project_url: https://www.gccofficial.org/project/project-adventurex
+    official_website: https://adventure-x.org
 
   - name: Community Privacy Residency
     slug: project-communityresidency
@@ -389,6 +461,8 @@ funded_projects:
     region: [台灣, 全球]
     summary: 在台北發起為期 4 週的驻留計劃，聚焦社區隱私方向的研究、共同設計、原型開發與開源應用構建。匯集研究者、工程師、設計師與社區成員，探索以人為中心的方法論，包括參與式共同設計與參與式威脅建模，在實踐中回應邊緣化群體的隱私需求。
     why_funded: 以人為本的隱私設計，開源應用，直接服務最受影響的社區群體
+    project_url: https://www.gccofficial.org/project/project-communityresidency
+    official_website: https://community-privacy.github.io
 
   - name: Wamo 清邁
     slug: project-wamo
@@ -399,6 +473,8 @@ funded_projects:
     region: [東南亞, 華語社區]
     summary: 在清邁舉辦的為期兩週的文化交流活動，將 Web3 社群和數位遊牧者聚集在一起，旨在創新、協作並共同塑造未來。GCC 與瓦猫的緣分從第二屆就開始了。
     why_funded: 華語 Web3 社區早期線下聚集的重要試驗，推動社區跨界連接
+    project_url: https://www.gccofficial.org/project/project-wamo
+    official_website: https://wamo.notion.site/
 
   - name: Base Builder House
     slug: project-basebuilderhouse
@@ -409,6 +485,8 @@ funded_projects:
     region: [中國大陸]
     summary: 完全由 Base 中國愛好者和支持者的社區驅動的黑客松活動。聚焦 AI Agent，在上海和深圳兩場活動聚集數十位有想法的建設者，探索 AI 代理和充滿活力的鏈上經濟的融合。
     why_funded: 華語社區自組織構建者聚會，AI agents 與公鏈結合的實驗
+    project_url: https://www.gccofficial.org/project/project-basebuilderhouse
+    official_website: https://www.hackquest.io/hackathons/Base-Builder-House-CN
 
   - name: Poetic Cryptography@Devcon
     slug: project-poetic
@@ -419,6 +497,8 @@ funded_projects:
     region: [全球]
     summary: 以加密為主題的藝術項目，以助記詞、迷宮與拼貼詩為創作元素。為 Devcon Scholar Program 的 Artist & Writer cohort 展覽「Trusting the Unseen」的組成部分，由 Fangting 創作。
     why_funded: 加密文化藝術公共物品，連接加密技術與人文藝術表達
+    project_url: https://www.gccofficial.org/project/project-poetic
+    official_website: https://fangting.me/poetic-cryptography
 
   - name: Solo Staking Education Program
     slug: project-solostaking
@@ -429,6 +509,8 @@ funded_projects:
     region: [亞洲, 華語社區]
     summary: GCC 與亞洲多所高校區塊鏈協會合作推廣 Solo Staking。提供驗證節點組件與預配置的 DappNode 硬件，並引入 Lido 的 CSM 模塊，使節點運營門檻降低至約 1.5 ETH，大幅降低原本 32 ETH 的參與成本。
     why_funded: 推進以太坊去中心化，降低華語社區參與獨立質押的技術和資金門檻
+    project_url: https://www.gccofficial.org/project/project-solostaking
+    official_website: https://lu.ma/givicqi8
 
   - name: MEV House Shanghai
     slug: project-mevshanghai
@@ -439,6 +521,8 @@ funded_projects:
     region: [中國大陸]
     summary: 上海國際區塊鏈周期間舉辦的專業活動，重點討論以太坊 PoS 機制下的中心化風險與 MEV 挑戰，探索緩解有害 MEV 與質押中心化問題的潛在解決方案。
     why_funded: 推動以太坊去中心化的技術研究，連接全球和華語研究者
+    project_url: https://www.gccofficial.org/project/project-mevshanghai
+    official_website: https://github.com/0xpantarhei/MEV-Shanghai
 
   - name: Cypherhouse
     slug: project-cypherhouse
@@ -449,6 +533,8 @@ funded_projects:
     region: [華語社區]
     summary: 以以太坊為主題的共居項目，由 4seas 與 ETHPanda 聯合發起。項目旨在連接數字世界與現實世界，復興以太坊社區中的密碼朋克精神，並促進長期的技術與價值觀交流。
     why_funded: 實體化密碼朋克精神，為華語以太坊社區提供線下聚集空間
+    project_url: https://www.gccofficial.org/project/project-cypherhouse
+    official_website: https://www.cypherhouse.xyz/
 
   - name: Colony House
     slug: project-colony
@@ -459,6 +545,8 @@ funded_projects:
     region: [全球]
     summary: 線下 Web3 Builder 的循環資助協作實驗：面向所有 Builder，可在 Devcon 黑客松期間免費住宿，條件是必須參加黑客松，贏得的獎金反饋 30% 回到社區本身，再資助下一場活動。如果模式可以跑通，這個開發者社區將會自主的、不依賴外部資金持續運營。
     why_funded: 探索可自我維持的公共物品資助模式，循環資助機制是一個有意思的實驗
+    project_url: https://www.gccofficial.org/project/project-colony
+    official_website: https://mp.weixin.qq.com/s/--tvs0QInGOLlpSCYvD-nA
 
   - name: WeWantJusticeDAO
     slug: project-justicedao
@@ -469,6 +557,8 @@ funded_projects:
     region: [全球]
     summary: 為與 Tornado Cash 相關的法律事務進行前線辯護工作，聘請了一支國際律師團隊來代表原始 TC 協議的開發者 Alexey Pertsev 和 Roman Storm。
     why_funded: 保護密碼朋克核心開發者，捍衛隱私工具開發者的法律權利
+    project_url: https://www.gccofficial.org/project/project-justicedao
+    official_website: https://wewantjusticedao.org/
 
   - name: Rebase
     slug: project-rebase
@@ -479,6 +569,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 運營「Web3 極客日報」的中國 Web3 開發者社區，已連接超過 1,500 名開發者與 9,000 名加密貨幣愛好者。Rebase Hackathon 通過社區化協作方式，持續促進開發者之間的技術交流與實踐。
     why_funded: 華語 Web3 開發者社區的日常連接基礎設施
+    project_url: https://www.gccofficial.org/project/project-rebase
+    official_website: https://rebase.network/
 
   # ══════════════════════════════════════════════════════
   # ETH City Series（以太坊城市系列）— 6 個
@@ -493,6 +585,8 @@ funded_projects:
     region: [華語社區, 全球]
     summary: 希望連接全球不同城市的加密貨幣愛好者、開發者和創新者，培養本地加密貨幣社區、促進知識共享，並為對區塊鏈技術和加密貨幣感興趣的人創造社交機會。ETH City 活動可以是小型研討會、技術工作坊，或圍繞特定 Web3 主題的社區聚會。GCC 計劃捐贈華語區的 ETH City 活動，支持相關活動的發生。
     why_funded: 支持華語區各城市的以太坊社區生態建設，點狀激活多城市節點
+    project_url: https://www.gccofficial.org/project/project-ethcity-series
+    official_website: https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
 
   - name: ETH Beijing
     slug: project-ethbeijing
@@ -503,6 +597,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: ETH 北京黑客松由北大鏈協和 WTF Academy 聯合 ETHPlanet 和 Scroll 共同舉辦，是中國疫情後首個以太坊社區活動。黑客松設有三個賽道，其中 GCC 支持公共產品賽道。
     why_funded: 中國疫情後以太坊社區復甦的重要里程碑，GCC 支持公共物品專屬賽道
+    project_url: https://www.gccofficial.org/project/project-ethbeijing
+    official_website: https://www.ethbeijing.xyz/
 
   - name: ETH Beijing 2025
     slug: project-ethbeijing-2025
@@ -513,6 +609,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 2025 ETH 北京黑客松由北大鏈協和 WTF Academy 共同舉辦。GCC 通過捐贈 ETH Beijing 並幫助優秀的 Web3 開發者、學生及社區成員一起，持續推動區塊鏈技術創新與應用落地。
     why_funded: 持續支持北京以太坊開發者生態，北大鏈協是重要的高校節點
+    project_url: https://www.gccofficial.org/project/project-ethbeijing-2025
+    official_website: https://x.com/PKUBlockchain/status/1920341944070275157
 
   - name: ETH Hangzhou 2025
     slug: project-ethhangzhou-2025
@@ -523,6 +621,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 2025 ETH 杭州黑客松由浙大鏈協、WTF Academy、北大鏈協、TinTinLand 聯合主辦。GCC 秉承著支持全球公共物品的願景，作為核心捐贈方，為 ETHHangzhou 提供技術與資金支持。
     why_funded: 支持長三角以太坊開發者生態，浙大鏈協是重要的高校節點
+    project_url: https://www.gccofficial.org/project/project-ethhangzhou-2025
+    official_website: https://x.com/BlockchainZJU/status/1901626943138902508
 
   - name: ETH Huangshan 2025
     slug: project-ethhuangshan
@@ -533,6 +633,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: ETH 黃山發生在黃山腳下，驻地中國第一個帶有產業主題、集「創意、設計、傳播」的數字遊民社區，想讓這場以「延續」為目標的無限游戲跨越技術周期，扎根在更厚重的東方文明土壤。GCC 通過這次捐贈期望幫助以太坊技術在中國普及，並期待能有結合在地的實際應用場景落地生根。
     why_funded: 探索以太坊精神與東方文化的結合，支持在地化創新實踐
+    project_url: https://www.gccofficial.org/project/project-ethhuangshan
+    official_website: https://x.com/KeyMapDAO/status/1928815334280028352
 
   - name: ETH Shanghai 2024
     slug: project-ethshanghai
@@ -543,6 +645,8 @@ funded_projects:
     region: [中國大陸, 華語社區]
     summary: 專注於亞太地區的年度以太坊社區峰會。2024 年的第三屆 ETH Shanghai 旨在匯集華語開發者、研究者和投資者，通過深入的討論和交流，共同探索以太坊的應用未來。
     why_funded: 亞太地區以太坊社區的重要年度聚會，連接華語開發者生態
+    project_url: https://www.gccofficial.org/project/project-ethshanghai
+    official_website: https://ethshanghai.org/
 
   # ══════════════════════════════════════════════════════
   # Travel Scholarship（免費機票計劃）— 7 個
@@ -557,6 +661,8 @@ funded_projects:
     region: [華語社區]
     summary: Devconnect 2025 將於 2025 年 11 月 17-22 日在阿根廷布宜諾斯艾利斯舉辦。GCC 發起「飛往 Devconnect 2025」機票支持計劃，為來自華語地區的 Builder 提供差旅資助，降低跨洲出行帶來的現實門檻，也是 GCC 支持過的距離最遠的一次機票活動。
     why_funded: 降低華語構建者參與全球以太坊核心活動的實際門檻
+    project_url: https://www.gccofficial.org/project/project-devconnect-2025
+    official_website: https://x.com/GCCofCommons/status/1978782504216559740
 
   - name: EDCON 大阪機票 2025
     slug: project-edcon-2025
@@ -567,6 +673,8 @@ funded_projects:
     region: [華語社區]
     summary: GCC 發起 EDCON 2025 Builder 免費機票計劃，為華語社區的以太坊建設者提供差旅支持，資助其前往日本大阪參加 EDCON 2025，與全球開發者進行面對面的技術交流與分享。本次計劃以機票報銷形式進行，單人最高補貼 300 美元。
     why_funded: 降低華語構建者參與國際技術交流的旅行門檻
+    project_url: https://www.gccofficial.org/project/project-edcon-2025
+    official_website: https://x.com/GCCofCommons/status/1955176823240999337
 
   - name: ETH Denver 機票 2025
     slug: project-denver-2025
@@ -577,6 +685,8 @@ funded_projects:
     region: [華語社區]
     summary: 延續對全球開發者交流的長期支持，GCC 於 2025 年繼續推出「Builder 免費機票計劃」，為華語社區建設者提供前往 ETH Denver 的機票資助，促進技術交流與國際協作。
     why_funded: 持續支持華語構建者參與國際以太坊社區
+    project_url: https://www.gccofficial.org/project/project-denver-2025
+    official_website: https://x.com/GCCofCommons/status/1889009838199550368
 
   - name: DevCon 機票 2024
     slug: project-devcon2024
@@ -587,6 +697,8 @@ funded_projects:
     region: [華語社區]
     summary: GCC 在 2024 年的 Devcon SEA 期間給中文社區的公共物品建設者提供了 20 張機票。
     why_funded: 直接支持華語公共物品構建者參與全球以太坊社區
+    project_url: https://www.gccofficial.org/project/project-devcon2024
+    official_website: https://x.com/GCCofCommons/status/1841471440354185697
 
   - name: EDCON 東京機票 2024
     slug: project-edcon
@@ -597,6 +709,8 @@ funded_projects:
     region: [亞洲, 華語社區]
     summary: GCC 聯合 Mask Network 與 ETHPanda，為亞洲區以太坊建設者提供前往東京參加 EDCON 的往返機票支持。其中包括 5 張專門授予 Super Demo Day 獲獎者的機票，鼓勵技術創新與社區貢獻。
     why_funded: 連接亞洲公共物品構建者與全球以太坊社區
+    project_url: https://www.gccofficial.org/project/project-edcon
+    official_website: https://x.com/GCCofCommons/status/1811190678497497489
 
   - name: ETH Denver 機票 2024
     slug: project-denver
@@ -607,6 +721,8 @@ funded_projects:
     region: [華語社區]
     summary: ETH Denver 是以太坊生態中每年都備受關注的大會，也是連接全球區塊鏈創新者和開發者的重要盛會。為了支持更多華語開發者進入這個前沿的世界舞台，GCC 推出「Buidler 免費機票計劃」。
     why_funded: 支持華語開發者走向全球以太坊舞台
+    project_url: https://www.gccofficial.org/project/project-denver
+    official_website: https://x.com/GCCofCommons/status/1763587871083262211
 
   - name: Devconnect 機票 2023
     slug: project-devconnect
@@ -617,6 +733,8 @@ funded_projects:
     region: [華語社區]
     summary: 以伊斯坦布爾為起點，GCC 聯合多個社區與媒體發起首次專注華語區的免費機票計劃，資助 10 位華語區的優秀建設者前往 2023 年 11 月舉辦的 Devconnect 線下活動，參與全球以太坊生態的交流與協作。
     why_funded: GCC 機票計劃的起點，開創華語構建者出海資助先例
+    project_url: https://www.gccofficial.org/project/project-devconnect
+    official_website: https://medium.com/@GCC_Official/给华语区buidler的免费机票-可以说走就走的伊斯坦布尔之旅-4a1738b5294b
 
   # ══════════════════════════════════════════════════════
   # Gitcoin（二次方配捐）— 5 個
@@ -631,6 +749,8 @@ funded_projects:
     region: [亞洲, 全球]
     summary: 首屆 Gitcoin Asia Round 由 GCC 和 Pagoda 共同發起，配備 75,000 美元配捐資金，通過 3,900 名捐贈者的 6,800 筆捐款支持了亞洲 89 個項目。突破了此前僅聚焦中國的範疇，通過多語言推廣和 Signal Booster，成功覆蓋了 14 個亞洲國家。
     why_funded: 亞洲公共物品生態系統的重要資助機制，二次方配捐放大社區聲音
+    project_url: https://www.gccofficial.org/project/project-gg21
+    official_website: https://reportcards.gitcoin.co/10/44
 
   - name: Gitcoin Grant 第 18 輪
     slug: project-gg18
@@ -641,6 +761,8 @@ funded_projects:
     region: [華語社區]
     summary: GG18 於 2023 年 8 月 15 日至 29 日進行，包含 7 個專題捐贈池，其中 GCC Round 由 GCC 基金獨立發起，贊助支持了 2.5 萬美元配捐資金，捐贈了包括 DeSpace QF、Blocktrend、飛地書店、viaPrize 在內的多個項目。
     why_funded: 通過二次方配捐機制支持華語公共物品項目的自主資助
+    project_url: https://www.gccofficial.org/project/project-gg18
+    official_website: https://www.gitcoin.co/blog/announcing-gitcoin-grants-18
 
   - name: Gitcoin Beta 輪
     slug: project-ggbeta
@@ -651,6 +773,8 @@ funded_projects:
     region: [華語社區]
     summary: Beta Round 於 2023 年 4 月 25 日至 5 月 9 日進行，包括 10 個專題捐贈池，其中 GCC Round 由 Plancker DAO and Loopring 贊助支持了 2.5 萬美元的配捐資金，支持華語以太坊生態中的開源項目。
     why_funded: GCC 早期重要的社區資助實驗，通過二次方配捐發掘優質華語開源項目
+    project_url: https://www.gccofficial.org/project/project-ggbeta
+    official_website: https://www.gitcoin.co/blog/announcing-the-gitcoin-grants-beta-round
 
   - name: Gitcoin Grant 第 15 輪
     slug: project-gg15
@@ -661,6 +785,8 @@ funded_projects:
     region: [華語社區]
     summary: GG15 於 2022 年 9 月 7 日至 22 日進行，其中 GCC Round 由 Scroll 和 PlanckerDAO 贊助支持了 5 萬美元的配捐資金，捐贈了包括 Chaineye、Soul Wallet、WTF Academy 在內的多個項目。
     why_funded: GCC 最早的 Gitcoin 配捐實驗，為多個後來成長的華語 Web3 項目提供了早期支持
+    project_url: https://www.gccofficial.org/project/project-gg15
+    official_website: https://www.gitcoin.co/blog/announcing-grants-round-15
 
   - name: Gitcoin Grant 第 19 輪
     slug: project-gg19
@@ -671,3 +797,5 @@ funded_projects:
     region: [華語社區]
     summary: GG19 於 2023 年 11 月 15 日至 29 日進行，其中 GCC Round 由 GCC 基金、Mask Network 和 Meta Pool 聯合贊助支持了 3 萬美金配捐資金，捐贈了包括 Decert.me、登鏈社區、Metopia、z2o-k7e 在內的多個項目。
     why_funded: 通過社區配捐機制，讓更多 GCC 社區成員直接參與資助決策
+    project_url: https://www.gccofficial.org/project/project-gg19
+    official_website: https://www.gitcoin.co/blog/announcing-gitcoin-grants-19
