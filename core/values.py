@@ -151,9 +151,25 @@ def as_system_block(values: Optional[AgentValues] = None) -> str:
 
 def as_gcc_summary_block(values: Optional[AgentValues] = None) -> str:
     """
-    生成 Layer 2：GCC 背景摘要。
-    比 Layer 1 輕量，用於初步問答參考。
+    Layer 2：GCC 背景摘要 + 已資助項目索引（精簡版）。
+    類別概覽 + 名稱列表，用戶問具體項目時再給 project_url。
     """
     if values is None:
         values = load_values()
-    return f"## GCC 背景摘要\n{values.gcc_summary}"
+
+    projects = load_projects()
+    if projects:
+        from collections import defaultdict
+        by_cat = defaultdict(list)
+        for p in projects:
+            by_cat[p.get("category", "其他")].append(p.get("name", ""))
+        lines = [f"## GCC 已資助項目（共 {len(projects)} 個）",
+                 "回答時：點名項目則給 project_url 連結；問概況則按類別介紹。", ""]
+        for cat, names in by_cat.items():
+            lines.append(f"【{cat}】{'、'.join(names)}")
+        project_index = "\n".join(lines)
+    else:
+        project_index = ""
+
+    summary = f"## GCC 背景摘要\n{values.gcc_summary}"
+    return f"{summary}\n\n{project_index}" if project_index else summary
