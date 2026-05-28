@@ -41,14 +41,27 @@ def test_project_case_database():
             },
             f"categories={sorted(categories)}",
         ),
-        check("all seed cases are available for AI review", len(ai_cases) == len(cases)),
+        check("five seed cases are available for AI review", len(ai_cases) == 5),
+        check(
+            "gitcoin placeholder is excluded from AI review",
+            any(
+                case.get("case_id") == "gcc-gitcoin-placeholder"
+                and case.get("ai_review_usage", {}).get("allowed") is False
+                for case in cases
+            ),
+        ),
     ]
 
     for case in cases:
         evidence = case.get("evidence", {})
+        public_record = case.get("public_record", {})
+        is_placeholder = case.get("case_id") == "gcc-gitcoin-placeholder"
         results.extend(
             [
-                check(f"{case['case_id']} has snapshots", bool(evidence.get("snapshots"))),
+                check(
+                    f"{case['case_id']} has snapshots or is placeholder",
+                    bool(evidence.get("snapshots")) or is_placeholder,
+                ),
                 check(
                     f"{case['case_id']} reserves application pointer",
                     "grant_application" in evidence,
@@ -57,12 +70,25 @@ def test_project_case_database():
                     f"{case['case_id']} reserves voting pointer",
                     "voting_record" in evidence,
                 ),
+                check(f"{case['case_id']} has funding block", "funding" in public_record),
+                check(
+                    f"{case['case_id']} has public goods dimensions",
+                    "public_goods_dimensions" in public_record,
+                ),
+                check(
+                    f"{case['case_id']} has lifecycle status",
+                    "lifecycle_status" in public_record,
+                ),
+                check(f"{case['case_id']} has raw data status", "raw_data_status" in evidence),
             ]
         )
 
-    legacy = case_to_legacy_project(cases[0])
-    results.append(check("legacy conversion keeps name", legacy["name"] == cases[0]["title"]))
-    results.append(check("legacy conversion keeps summary", bool(legacy["summary"])))
+    if cases:
+        legacy = case_to_legacy_project(cases[0])
+        results.append(check("legacy conversion keeps name", legacy["name"] == cases[0]["title"]))
+        results.append(check("legacy conversion keeps summary", bool(legacy["summary"])))
+    else:
+        results.append(check("legacy conversion skipped because no cases loaded", False))
 
     return all(results)
 
@@ -72,4 +98,3 @@ if __name__ == "__main__":
     ok = test_project_case_database()
     print("\nResult:", "PASS" if ok else "FAIL")
     raise SystemExit(0 if ok else 1)
-

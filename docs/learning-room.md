@@ -107,6 +107,27 @@ We intentionally did not add separate `github`, `sources`, or per-case `license`
 fields at this stage. Existing `links.repository_url`, `evidence.snapshots`, and
 future repository-level licensing cover those needs more cleanly for now.
 
+### 2026-05-29: Seed Cases Populated With New Fields
+
+The six seed cases now use the expanded schema fields. The rule for this pass:
+structure what is visible in the current sources, and mark uncertainty instead
+of guessing.
+
+Examples:
+
+- Vyper has milestone funding and education/community impact evidence.
+- The annual ETH City / university Web3 case is marked as a bundled dual-track
+  program so future search does not confuse it with one single project.
+- Wamotopia is marked as retroactive activity funding because the event had
+  already happened when the proposal requested confirmation.
+- ETH Beijing was corrected after the user noticed the official website had
+  updated to the 2026 edition. The 2025 case now uses a PKUBlockchain X recap as
+  source evidence instead of the current ETH Beijing website.
+- Devconnect is marked as reimbursement-based travel support with user-supplied
+  raw X post data.
+- Gitcoin remains a placeholder with unknown/not-applicable fields because the
+  user asked not to import data yet.
+
 ## Terms
 
 - `project`: The funded initiative itself.
