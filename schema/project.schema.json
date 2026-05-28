@@ -48,7 +48,22 @@
       "required": ["summary", "why_funded", "links"],
       "properties": {
         "amount_usd": {
+          "deprecated": true,
+          "description": "Legacy simple amount field. Prefer funding.* for new records.",
           "type": ["number", "null"]
+        },
+        "grant_year": {
+          "type": ["integer", "null"],
+          "description": "Year when GCC approved or recorded the grant."
+        },
+        "activity_year": {
+          "type": ["integer", "null"],
+          "description": "Year when the funded activity primarily takes place."
+        },
+        "language_community": {
+          "type": "array",
+          "description": "Language or cultural communities served by the case.",
+          "items": { "type": "string" }
         },
         "regions": {
           "type": "array",
@@ -63,6 +78,22 @@
         },
         "why_funded": {
           "type": "string"
+        },
+        "funding": {
+          "$ref": "#/$defs/funding"
+        },
+        "program_details": {
+          "$ref": "#/$defs/programDetails"
+        },
+        "public_goods_dimensions": {
+          "$ref": "#/$defs/publicGoodsDimensions"
+        },
+        "impact_evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/impactEvidence" }
+        },
+        "lifecycle_status": {
+          "$ref": "#/$defs/lifecycleStatus"
         },
         "links": {
           "type": "object",
@@ -93,6 +124,12 @@
         },
         "voting_record": {
           "$ref": "#/$defs/privateEvidencePointer"
+        },
+        "vote_summary": {
+          "$ref": "#/$defs/voteSummary"
+        },
+        "raw_data_status": {
+          "$ref": "#/$defs/rawDataStatus"
         }
       },
       "additionalProperties": false
@@ -148,6 +185,221 @@
   },
   "additionalProperties": false,
   "$defs": {
+    "funding": {
+      "type": "object",
+      "properties": {
+        "requested_amount_usd": { "type": ["number", "null"] },
+        "approved_amount_usd": { "type": ["number", "null"] },
+        "total_budget_usd": { "type": ["number", "null"] },
+        "per_person_cap_usd": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"] },
+        "disbursement_type": {
+          "type": ["string", "null"],
+          "enum": [
+            "milestone",
+            "one_time",
+            "retroactive",
+            "reimbursement",
+            "matching_pool",
+            "unknown",
+            null
+          ]
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "programDetails": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": ["string", "null"] },
+        "end_date": { "type": ["string", "null"] },
+        "application_deadline": { "type": ["string", "null"] },
+        "location": { "type": ["string", "null"] },
+        "eligibility": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "selection_criteria": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/weightedCriterion" }
+        },
+        "deliverables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "milestones": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/milestone" }
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "weightedCriterion": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "weight": { "type": ["number", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "milestone": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "unlock_amount_usd": { "type": ["number", "null"] },
+        "unlock_percentage": { "type": ["number", "null"] },
+        "expected_completion": { "type": ["string", "null"] },
+        "status": {
+          "type": ["string", "null"],
+          "enum": ["planned", "completed", "unknown", null]
+        }
+      },
+      "additionalProperties": false
+    },
+    "publicGoodsDimensions": {
+      "type": "object",
+      "properties": {
+        "open_source": { "$ref": "#/$defs/dimensionAssessment" },
+        "accessibility": { "$ref": "#/$defs/dimensionAssessment" },
+        "knowledge_transfer": { "$ref": "#/$defs/dimensionAssessment" },
+        "community_impact": { "$ref": "#/$defs/dimensionAssessment" },
+        "non_excludable": { "$ref": "#/$defs/dimensionAssessment" },
+        "non_rivalrous": { "$ref": "#/$defs/dimensionAssessment" },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "dimensionAssessment": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": ["string", "boolean", "null"],
+          "enum": [true, false, "high", "medium", "low", "unknown", null]
+        },
+        "notes": { "type": ["string", "null"] },
+        "source_snapshot_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "impactEvidence": {
+      "type": "object",
+      "required": ["type", "description"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "participation",
+            "deliverable",
+            "adoption",
+            "education",
+            "community",
+            "open_source_output",
+            "funding_access",
+            "other"
+          ]
+        },
+        "description": { "type": "string" },
+        "metric": { "type": ["string", "null"] },
+        "value": { "type": ["string", "number", "null"] },
+        "source_snapshot_id": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "lifecycleStatus": {
+      "type": "object",
+      "properties": {
+        "grant_status": {
+          "type": ["string", "null"],
+          "enum": [
+            "proposed",
+            "approved",
+            "rejected",
+            "funded",
+            "completed",
+            "unknown",
+            null
+          ]
+        },
+        "delivery_status": {
+          "type": ["string", "null"],
+          "enum": [
+            "not_started",
+            "in_progress",
+            "completed",
+            "retroactive",
+            "unknown",
+            null
+          ]
+        },
+        "reporting_status": {
+          "type": ["string", "null"],
+          "enum": [
+            "not_required",
+            "expected",
+            "submitted",
+            "missing",
+            "unknown",
+            null
+          ]
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "voteSummary": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": ["string", "null"],
+          "enum": ["snapshot", "manual", "internal", "unknown", null]
+        },
+        "proposal_id": { "type": ["string", "null"] },
+        "state": { "type": ["string", "null"] },
+        "choices": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/voteChoice" }
+        },
+        "total_score": { "type": ["number", "null"] },
+        "source_snapshot_id": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "voteChoice": {
+      "type": "object",
+      "required": ["label"],
+      "properties": {
+        "label": { "type": "string" },
+        "score": { "type": ["number", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "rawDataStatus": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["captured", "manual", "pending", "unavailable", "not_applicable"]
+        },
+        "verification": {
+          "type": ["string", "null"],
+          "enum": ["api", "official_site", "user_supplied", "unverified", "not_applicable", null]
+        },
+        "storage_uri": { "type": ["string", "null"] },
+        "source_snapshot_id": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
     "snapshot": {
       "type": "object",
       "required": ["snapshot_id", "source_type", "access_level"],

@@ -82,6 +82,31 @@ body is now stored inside each source snapshot markdown file under `## Raw Data`
 This keeps the database auditable: future summaries can be regenerated from the
 raw source instead of relying only on our interpretation.
 
+### 2026-05-29: Schema Expansion From Real Cases
+
+We reviewed the six seed cases before expanding the schema. The decision was not
+to add every theoretical public goods field as a required field. Instead, we
+added optional fields that the current cases actually need:
+
+- `grant_year` and `activity_year` instead of a single ambiguous `year`.
+- `language_community` for Chinese-speaking and other served communities.
+- `funding` because amount data differs by case: requested grant, total budget,
+  per-person cap, milestone unlocks, and reimbursement are different things.
+- `program_details` for deadlines, dates, location, eligibility, selection
+  criteria, deliverables, and milestones.
+- `public_goods_dimensions` as flexible assessments, not hard true/false theory
+  gates.
+- `impact_evidence` for concrete evidence that can later support search and
+  review.
+- `lifecycle_status` to avoid overloading the existing `status` fields.
+- `vote_summary` so Snapshot choices and scores are machine-readable.
+- `raw_data_status` so a case can distinguish API-captured raw data from
+  manually supplied, pending, unavailable, or not applicable raw data.
+
+We intentionally did not add separate `github`, `sources`, or per-case `license`
+fields at this stage. Existing `links.repository_url`, `evidence.snapshots`, and
+future repository-level licensing cover those needs more cleanly for now.
+
 ## Terms
 
 - `project`: The funded initiative itself.
