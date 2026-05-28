@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Swiftevo/gcc-telegram-agent/schema/project.schema.json",
+  "title": "GCC Public Goods Project Case",
+  "type": "object",
+  "required": [
+    "case_id",
+    "schema_version",
+    "title",
+    "category",
+    "fund_type",
+    "public_record",
+    "evidence",
+    "ai_review_usage"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "description": "Stable database id for this case."
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "canonical_project_id": {
+      "type": "string",
+      "description": "Optional link to the legacy projects.yaml slug or future canonical id."
+    },
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Open Source",
+        "Community",
+        "Event",
+        "ETH City Series",
+        "Travel Scholarship",
+        "Gitcoin"
+      ]
+    },
+    "fund_type": {
+      "type": "string",
+      "enum": ["public", "special", "unknown"]
+    },
+    "public_record": {
+      "type": "object",
+      "required": ["summary", "why_funded", "links"],
+      "properties": {
+        "amount_usd": {
+          "type": ["number", "null"]
+        },
+        "regions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "summary": {
+          "type": "string"
+        },
+        "why_funded": {
+          "type": "string"
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "gcc_project_url": { "type": ["string", "null"] },
+            "official_website": { "type": ["string", "null"] },
+            "repository_url": { "type": ["string", "null"] }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["source_urls", "snapshots", "grant_application", "voting_record"],
+      "properties": {
+        "source_urls": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "snapshots": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/snapshot" }
+        },
+        "grant_application": {
+          "$ref": "#/$defs/privateEvidencePointer"
+        },
+        "voting_record": {
+          "$ref": "#/$defs/privateEvidencePointer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ai_review_usage": {
+      "type": "object",
+      "required": ["allowed", "retrieval_text", "screening_dimensions", "cautions"],
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "retrieval_text": { "type": "string" },
+        "screening_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mission_fit",
+              "public_goods_nature",
+              "chinese_community",
+              "feasibility",
+              "precedent_similarity",
+              "risk"
+            ]
+          }
+        },
+        "cautions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "properties": {
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "internal", "private"]
+        },
+        "license": {
+          "type": ["string", "null"]
+        },
+        "maintainers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "review_status": {
+          "type": "string",
+          "enum": ["seed", "draft", "reviewed", "published", "deprecated"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "required": ["snapshot_id", "source_type", "access_level"],
+      "properties": {
+        "snapshot_id": { "type": "string" },
+        "captured_at": { "type": ["string", "null"] },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "gcc_project_page",
+            "grant_application",
+            "committee_vote",
+            "snapshot_proposal",
+            "event_website",
+            "social_post",
+            "project_website",
+            "repository",
+            "media",
+            "other"
+          ]
+        },
+        "access_level": {
+          "type": "string",
+          "enum": ["public", "internal", "private", "redacted"]
+        },
+        "source_url": { "type": ["string", "null"] },
+        "storage_uri": { "type": ["string", "null"] },
+        "checksum": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "privateEvidencePointer": {
+      "type": "object",
+      "required": ["status", "access_level"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["unknown", "expected", "available", "redacted", "not_applicable"]
+        },
+        "access_level": {
+          "type": "string",
+          "enum": ["public", "internal", "private", "redacted"]
+        },
+        "document_ref": { "type": ["string", "null"] },
+        "snapshot_id": { "type": ["string", "null"] },
+        "summary": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

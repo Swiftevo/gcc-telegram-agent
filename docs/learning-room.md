@@ -1,0 +1,96 @@
+# Learning Room
+
+This file is the teaching and discussion room for the public goods database work.
+It is intentionally separate from implementation docs, schemas, and code.
+
+## Why This Room Exists
+
+We want to learn while building, but we do not want unfinished discussion to leak
+into production design. Questions, doubts, trade-offs, and vocabulary notes should
+live here first. Once a decision becomes stable, we can move the outcome into the
+schema, API docs, or implementation.
+
+## Current Learning Goals
+
+- Understand the difference between a bot-specific knowledge file and a reusable
+  public goods database.
+- Learn how to design a project case schema that can support public summaries,
+  grant applications, voting records, and historical snapshots.
+- Keep a clear boundary between public facts, private committee material, and AI
+  screening interpretation.
+- Build in small steps so each design choice can be questioned before it hardens.
+
+## Discussion Log
+
+### 2026-05-27: Starting Direction
+
+The first implementation step is not to automate all review decisions. It is to
+define a data contract for funded project cases and seed one case from each GCC
+project category.
+
+Key design choice:
+
+- Keep `projects.yaml` as the current bot-oriented knowledge source for now.
+- Add a new `data/project-case-seeds.yaml` as a more explicit case database seed.
+- Add `schema/project.schema.json` to document the target shape.
+- Reserve extension points for project snapshots, detailed grant applications,
+  and GCC committee voting records without requiring those private documents to
+  be public today.
+
+Open questions:
+
+- Which parts of historical applications can be public by default?
+- Should committee voting records expose individual votes, aggregate votes, or
+  only the final decision?
+- What license should the public database use?
+- Should future snapshots be stored in Git, object storage, IPFS, or a mix?
+
+### 2026-05-27: First Source Imports
+
+The user provided source links for the six seed categories. We imported source
+evidence conservatively:
+
+- Open Source: Vyper Snapshot proposal imported.
+- Community: annual ETH City and university Web3 funding Snapshot imported.
+- Event: Wamotopia 2026 Snapshot proposal imported.
+- ETH City Series: ETH Beijing official event site imported because this series
+  does not use Snapshot for the case provided.
+- Travel Scholarship: X source URL preserved, but automated capture did not
+  retrieve the post body. The user later manually provided the post text, so the
+  case now has raw data and can be used as a travel scholarship precedent with a
+  caution that independent archive/screenshot verification is still desirable.
+- Gitcoin: fields preserved but no data imported, per user instruction.
+
+Teaching note:
+
+Source import does not mean "AI can freely use everything." Each case still has
+an `ai_review_usage` block. This lets us decide which extracted facts are safe
+for initial screening and which evidence should remain private, internal, or
+manual-review-only.
+
+Data quality note:
+
+The user-provided community Snapshot URL ended with one extra character. Snapshot
+Hub returned the proposal under id
+`0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476`, so both
+the user-provided URL and the normalized id are recorded.
+
+Follow-up correction:
+
+The first source import only stored extracted notes. The raw proposal/application
+body is now stored inside each source snapshot markdown file under `## Raw Data`.
+This keeps the database auditable: future summaries can be regenerated from the
+raw source instead of relying only on our interpretation.
+
+## Terms
+
+- `project`: The funded initiative itself.
+- `case`: A structured database record about a funded project.
+- `snapshot`: A point-in-time copy of public or private source material used to
+  support the case record.
+- `grant_application`: The detailed application submitted to GCC, possibly
+  private or partially redacted.
+- `voting_record`: The committee decision record, possibly public, aggregate, or
+  private depending on governance policy.
+- `AI screening context`: The subset of case data that the agent is allowed to
+  retrieve and cite during initial review.
