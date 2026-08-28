@@ -1,0 +1,39 @@
+# github/issue-labeler: each label is one regex (OR via |).
+# Multiple list items would all have to match (AND), so keep a single pattern per label.
+# (?i) = case-insensitive. Title + body are both scanned.
+
+bug:
+  - '(?i)(\bbug\b|\bfix(es|ed|ing)?\b|\berror\b|\bcrash\b|\bfail(ed|ure)?\b|缺陷|报错|错误|崩溃|异常)'
+
+enhancement:
+  - '(?i)(\benhancement\b|\bfeat(ure)?\b|\bimprove(ment)?\b|\benhance\b|新功能|改进|增强|优化)'
+
+docs:
+  - '(?i)(\bdocs?\b|\breadme\b|\bdocumentation\b|文档)'
+
+security:
+  - '(?i)(\bsecur(e|ity)\b|\bvuln(erabilit(y|ies))?\b|\bcve\b|\bsecret[s]?\b|\bssrf\b|\bidor\b|安全|漏洞|鉴权|敏感信息)'
+
+access:
+  - '(?i)(\baccess\b|\bidentity\b|\bgcc[_-]?member\b|\b/grant\b|\b/email\b|\b/verify\b|\botp\b|身份|邮箱验证)'
+
+applications:
+  - '(?i)(\bapplication[s]?\b|\bscreen(ing)?\b|\bpre-?screen\b|申请|预筛)'
+
+qa:
+  - '(?i)(\bqa\b|\bq&a\b|\blink-first\b|问答)'
+
+knowledge:
+  - '(?i)(\bknowledge\b|\bvalues\.yaml\b|\bprojects\.yaml\b|\bcase[s]?\b|知识库|价值观|案例)'
+
+ci:
+  - '(?i)(\bci\b|\bgithub actions?\b|\bworkflow[s]?\b|\blabeler\b|流水线|工作流)'
+
+telegram:
+  - '(?i)(\btelegram\b|\bbot\b|\bwebhook\b|机器人)'
+
+tests:
+  - '(?i)(\btests?\b|\bpytest\b|\bcoverage\b|测试|单测)'
+
+deploy:
+  - '(?i)(\bfly\.io\b|\bflyctl\b|\bdocker\b|\bdeploy(ment)?\b|部署)'

@@ -1,0 +1,71 @@
+# actions/labeler v5+: labels from changed file paths on PRs.
+
+access:
+  - changed-files:
+      - any-glob-to-any-file:
+          - gcc_agent/access/**
+          - handlers/access.py
+          - handlers/guard.py
+          - tests/access/**
+
+applications:
+  - changed-files:
+      - any-glob-to-any-file:
+          - gcc_agent/applications/**
+          - handlers/application.py
+          - tests/applications/**
+
+qa:
+  - changed-files:
+      - any-glob-to-any-file:
+          - gcc_agent/qa/**
+          - tests/qa/**
+
+knowledge:
+  - changed-files:
+      - any-glob-to-any-file:
+          - gcc_agent/knowledge/**
+          - tests/knowledge/**
+          - values.yaml
+          - projects.yaml
+          - data/**
+          - schema/**
+
+telegram:
+  - changed-files:
+      - any-glob-to-any-file:
+          - gcc_agent/telegram/**
+          - main.py
+          - handlers/router.py
+          - handlers/general.py
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - docs/**
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - tests/**
+
+deploy:
+  - changed-files:
+      - any-glob-to-any-file:
+          - Dockerfile
+          - .dockerignore
+          - fly.toml
+          - .github/workflows/fly.yml
+
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - gcc_agent/access/**
+          - .env.example
+          - migrations/**
