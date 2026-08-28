@@ -44,7 +44,7 @@ def test_pre_screen():
     high_draft = ApplicationDraft(
         project_name="OpenDAO",
         fund_type="public",
-        one_liner="一個開源的去中心化治理協議，專為華語社區設計，解決公共物品資金分配問題",
+        executive_summary="一個開源的去中心化治理協議，專為華語社區設計，解決公共物品資金分配問題",
         collection_step=3,
     )
     score_high, notes_high = pre_screen(high_draft)
@@ -56,7 +56,7 @@ def test_pre_screen():
     mid_draft = ApplicationDraft(
         project_name="DevTool",
         fund_type="public",
-        one_liner="一個開源的開發者工具，幫助更多人使用以太坊",
+        executive_summary="一個開源的開發者工具，幫助更多人使用以太坊",
         collection_step=3,
     )
     score_mid, notes_mid = pre_screen(mid_draft)
@@ -66,7 +66,7 @@ def test_pre_screen():
     low_draft = ApplicationDraft(
         project_name="MyApp",
         fund_type="public",
-        one_liner="做一個 app",
+        executive_summary="做一個 app",
         collection_step=3,
     )
     score_low, notes_low = pre_screen(low_draft)
@@ -81,10 +81,10 @@ def test_pre_screen():
         check(f"{label}案例分數在 0-100 之間", 0 <= score <= 100, f"score={score}")
 
 
-# ── Test 2: 三步收集流程 ──────────────────────────────────────────────────────
+# ── Test 2: 四步收集流程 ──────────────────────────────────────────────────────
 
 async def test_application_flow():
-    print("\n[ 2 ] 三步申請收集流程測試")
+    print("\n[ 2 ] 四步申請收集流程測試")
 
     await init_db()
     user, _ = await get_or_create_user(user_id=500001, username="apply_test")
@@ -101,18 +101,13 @@ async def test_application_flow():
     context = MagicMock()
     context.bot.send_message = AsyncMock()
 
-    # ── Step 0：偵測申請意圖，開始收集 ─────────────────
-    update0 = make_update("我想申請資助")
-    await handle_application(update0, context, guard)
-
-    check("Step 0：回覆了訊息", update0.message.reply_text.called)
-    reply0 = update0.message.reply_text.call_args[0][0]
-    check("Step 0：回覆包含項目名稱詢問", "項目名稱" in reply0 or "project" in reply0.lower())
-
-    # 驗證 Session 更新
+    # 申請由 callback 進入；workflow 只處理收集步驟。
     from core.session import get_session
     session = await get_session(guard)
-    check("Step 0：collection_step = 1", session.application_draft.collection_step == 1)
+    session.mode = "application"
+    session.application_draft.collection_step = 1
+    from core.session import save
+    await save(session)
 
     # ── Step 1：提供項目名稱 ──────────────────────────
     update1 = make_update("OpenCommons Protocol")
@@ -141,20 +136,25 @@ async def test_application_flow():
     update2b = make_update("公共")
     await handle_application(update2b, context, guard)
     reply2b = update2b.message.reply_text.call_args[0][0]
-    check("Step 2 有效輸入：回覆詢問一句話介紹", "一句話" in reply2b or "one sentence" in reply2b.lower())
+    check("Step 2 有效輸入：回覆詢問提案連結", "提案" in reply2b or "proposal" in reply2b.lower())
 
     session = await get_session(guard)
     check("Step 2：fund_type = public", session.application_draft.fund_type == "public")
     check("Step 2：collection_step = 3", session.application_draft.collection_step == 3)
 
-    # ── Step 3：提供一句話介紹 ────────────────────────
-    update3 = make_update("一個開源的公共物品協議，讓華語社區可以更公平地分配公共資源")
+    # ── Step 3：跳過提案連結 ──────────────────────────
+    update3 = make_update("跳過")
     await handle_application(update3, context, guard)
     reply3 = update3.message.reply_text.call_args[0][0]
+    check("Step 3：回覆詢問執行摘要", "執行摘要" in reply3 or "summary" in reply3.lower())
 
-    check("Step 3：回覆收到確認", "✅" in reply3)
-    check("Step 3：回覆包含申請表連結", "gccofficial.org/application" in reply3)
-    check("Step 3：回覆包含例會提醒", "例會" in reply3)
+    # ── Step 4：提供執行摘要 ──────────────────────────
+    update4 = make_update("一個開源的公共物品協議，讓華語社區可以更公平地分配公共資源")
+    await handle_application(update4, context, guard)
+    reply4 = update4.message.reply_text.call_args[0][0]
+    check("Step 4：回覆收到確認", "✅" in reply4)
+    check("Step 4：回覆包含申請表連結", "gccofficial.org/application" in reply4)
+    check("Step 4：回覆包含例會提醒", "例會" in reply4)
 
     # 管理員通知已發送
     check("Step 3：管理員通知已發送", context.bot.send_message.called)
@@ -179,7 +179,7 @@ def test_score_thresholds():
     strong = ApplicationDraft(
         project_name="ZK Privacy Tool",
         fund_type="public",
-        one_liner="開源零知識證明隱私工具，保護華語社區用戶的鏈上隱私，抗審查設計",
+        executive_summary="開源零知識證明隱私工具，保護華語社區用戶的鏈上隱私，抗審查設計",
         collection_step=3,
     )
     score, notes = pre_screen(strong)
@@ -189,7 +189,7 @@ def test_score_thresholds():
     weak = ApplicationDraft(
         project_name="App",
         fund_type="public",
-        one_liner="做個 app 賺錢",
+        executive_summary="做個 app 賺錢",
         collection_step=3,
     )
     score_weak, notes_weak = pre_screen(weak)
@@ -215,13 +215,11 @@ async def test_multilang_application():
         context = MagicMock()
         context.bot.send_message = AsyncMock()
 
-        # Step 0
-        u0 = MagicMock()
-        u0.message.text = "apply" if lang == "en" else "申請"
-        u0.message.reply_text = AsyncMock()
-        await handle_application(u0, context, guard)
-        r0 = u0.message.reply_text.call_args[0][0]
-        check(f"[{lang}] Step 0 回覆非空", len(r0) > 0)
+        from core.session import get_session, save
+        session = await get_session(guard)
+        session.mode = "application"
+        session.application_draft.collection_step = 1
+        await save(session)
 
         # Step 1
         u1 = MagicMock()
@@ -237,14 +235,20 @@ async def test_multilang_application():
         r2 = u2.message.reply_text.call_args[0][0]
         check(f"[{lang}] Step 2 回覆非空", len(r2) > 0)
 
-        # Step 3
+        # Step 3: optional proposal link
         u3 = MagicMock()
-        u3.message.text = "An open source public goods tool for the Chinese community"
+        u3.message.text = "skip"
         u3.message.reply_text = AsyncMock()
         await handle_application(u3, context, guard)
-        r3 = u3.message.reply_text.call_args[0][0]
-        check(f"[{lang}] Step 3 確認訊息包含 ✅", "✅" in r3)
-        check(f"[{lang}] Step 3 管理員已通知", context.bot.send_message.called)
+
+        # Step 4: executive summary
+        u4 = MagicMock()
+        u4.message.text = "An open source public goods tool for the Chinese community"
+        u4.message.reply_text = AsyncMock()
+        await handle_application(u4, context, guard)
+        r4 = u4.message.reply_text.call_args[0][0]
+        check(f"[{lang}] Step 4 確認訊息包含 ✅", "✅" in r4)
+        check(f"[{lang}] Step 4 管理員已通知", context.bot.send_message.called)
 
 
 # ── Test 5: admin.py 指令測試 ─────────────────────────────────────────────────

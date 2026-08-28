@@ -1,6 +1,7 @@
 # 環境變數（絕對不能上傳）
 .env
 .env.*
+!.env.example
 
 # Python
 __pycache__/

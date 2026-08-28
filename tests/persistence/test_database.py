@@ -12,18 +12,21 @@ import sys
 os.environ["DB_PATH"] = "test_gcc_agent.db"
 
 from db import (
+    complete_email_challenge,
     get_or_create_session,
     get_or_create_user,
     get_stats,
     get_user,
-    increment_user_message_count,
     init_db,
     save_exchange,
     save_session,
     set_user_blocked,
+    set_user_email,
+    set_user_kind,
+    try_increment_daily_count,
     update_user_group_membership,
 )
-from models import AgentValues, ApplicationDraft, Message, Session, User
+from models import USER_KIND_AI, USER_KIND_GCC_MEMBER, USER_KIND_REGULAR, AgentValues, ApplicationDraft, Message, Session, User
 
 PASS = "✅"
 FAIL = "❌"
@@ -49,7 +52,16 @@ def test_models():
     # User
     u = User(user_id=123456, username="testuser", first_name="Test")
     check("User 建立成功", u.user_id == 123456)
-    check("User 預設語言", u.detected_lang == "zh-TW")
+    check("User 預設身份 regular", u.user_kind == USER_KIND_REGULAR)
+    check("User 預設不能問答（無郵箱）", not u.can_use_qa())
+    u.user_kind = USER_KIND_GCC_MEMBER
+    check("gcc_member 無郵箱不能問答", not u.can_use_qa())
+    u.email = "member@example.com"
+    check("gcc_member 未驗證郵箱不能問答", not u.can_use_qa())
+    u.email_verified_at = "2026-01-01T00:00:00"
+    check("gcc_member 已驗證郵箱可以問答", u.can_use_qa())
+    u.user_kind = USER_KIND_AI
+    check("ai 即使有郵箱也不能問答", not u.can_use_qa())
     check("User is_rate_limited（初始應為 False）", not u.is_rate_limited())
 
     u.daily_count = 20
@@ -80,9 +92,9 @@ def test_models():
 
     d.project_name = "TestProject"
     d.fund_type = "public"
-    d.one_liner = "解決公共問題"
-    d.collection_step = 3
-    check("Draft 填完三步 is_complete() = True", d.is_complete())
+    d.executive_summary = "解決公共問題的開源工具"
+    d.collection_step = 4
+    check("Draft 填完四步 is_complete() = True", d.is_complete())
 
     # Session
     s = Session(user_id=123456)
@@ -115,6 +127,7 @@ def test_models():
 
 async def test_db():
     print("\n[ 2 ] db.py 資料庫測試")
+    cleanup()
 
     await init_db()
     check("init_db() 完成", True)
@@ -150,11 +163,33 @@ async def test_db():
     check("set_user_blocked True", blocked.is_blocked)
     await set_user_blocked(999001, False)
 
+    err = await set_user_kind(999001, USER_KIND_GCC_MEMBER)
+    check("無郵箱不能設 gcc_member", err == "gcc_email_required")
+    err = await set_user_email(999001, "alpha@example.com")
+    check("綁定郵箱成功", err == "")
+    member = await get_user(999001)
+    check("郵箱已寫入", member.email == "alpha@example.com")
+    check("直接綁定的郵箱未驗證", not member.email_verified_at)
+    await complete_email_challenge(999001, "alpha@example.com")
+    err = await set_user_kind(999001, USER_KIND_GCC_MEMBER)
+    check("已驗證郵箱可設 gcc_member", err == "")
+    member = await get_user(999001)
+    check("身份為 gcc_member", member.user_kind == USER_KIND_GCC_MEMBER)
+    check("可以問答", member.can_use_qa())
+
+    other, _ = await get_or_create_user(user_id=999002, username="other")
+    err = await set_user_email(999002, "alpha@example.com")
+    check("郵箱不可重複綁定", err == "taken")
+    err = await set_user_kind(999002, USER_KIND_AI)
+    check("可設為 ai", err == "")
+    ai_user = await get_user(999002)
+    check("ai 不能問答", not ai_user.can_use_qa())
+
     # Rate limit 計數
-    count1 = await increment_user_message_count(999001)
-    check("increment_user_message_count 第一次 = 1", count1 == 1)
-    count2 = await increment_user_message_count(999001)
-    check("increment_user_message_count 第二次 = 2", count2 == 2)
+    ok1 = await try_increment_daily_count(999001)
+    check("try_increment_daily_count 第一次通過", ok1)
+    ok2 = await try_increment_daily_count(999001)
+    check("try_increment_daily_count 第二次通過", ok2)
 
     # Session 建立
     session, is_new = await get_or_create_session(999001)
@@ -203,8 +238,8 @@ async def test_db():
     session.mode = "application"
     session.application_draft.project_name = "TestProject"
     session.application_draft.fund_type = "public"
-    session.application_draft.one_liner = "解決公共問題"
-    session.application_draft.collection_step = 3
+    session.application_draft.executive_summary = "解決公共問題"
+    session.application_draft.collection_step = 4
     session.application_draft.agent_score = 75
     session.application_draft.agent_notes = "使命契合度高"
     await save_session(session)
