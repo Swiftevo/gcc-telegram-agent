@@ -1,269 +1,186 @@
-# gcc-telegram-agent
-AI agent for GCC public goods funding allocation
-=======
 # GCC Telegram AI 助手
 
-**Global Chinese Community of Universal Digital Commons**
+**简体中文** · [繁體中文](README.zh-TW.md) · [English](README.en.md)
 
-一個專為 GCC 社區設計的 Telegram AI 助手，作為 GCC 的第一道過濾器——回答基本問題、收集申請資料、預審申請者，再交棒給 GCC 人類成員進行深入判斷。
+GCC（Global Chinese Community of Universal Digital Commons）的 Telegram AI
+助手。它负责回答基础问题、收集资助申请资料、初步筛选，再把需要深入判断的
+事项交给 GCC 成员。
 
----
+## 核心功能
 
-## 設計理念
+- 普通用户及未授权 Agent 只收到欢迎信息
+- GCC 内部成员完成邮箱验证后可以使用问答和申请功能
+- 每位成员每天最多发送 20 条消息
+- 官网链接优先，减少不必要的模型调用
+- 根据用户语言使用简体中文、繁体中文或英文
+- 四步申请流程：项目名称、基金类型、提案链接、执行摘要
+- 根据 `values.yaml` 做 0–100 分的初步筛选
+- 完成申请后通知管理员
+- `/status` 查看统计，`/update_values` 重新载入价值观
 
-這個 Agent 不是通用問答機器。它的核心任務是：
+## 身份与访问
 
-1. **過濾** — 只服務已加入 GCC Telegram 社區的成員
-2. **引導** — 優先給出官網連結，節省 token，回應更準確
-3. **收集** — 三步驟收集申請者的基本資料
-4. **預審** — 根據 GCC 價值觀對申請進行初步評分
-5. **交棒** — 把有潛力的申請者轉介給 GCC 人類成員
+身份由两个独立字段组成，不使用 RBAC：
 
-Agent 的價值觀與審查邏輯儲存在獨立的 `values.yaml`，完全不受用戶對話影響，可隨時由管理員更新。
+- `actor_type`：`human` 或 `agent`
+- `access_level`：`regular` 或 `gcc_member`
 
----
+人类 GCC 成员必须通过 `/email` 和 `/verify` 验证邮箱。普通用户和普通
+Agent 只能看到欢迎信息。旧数据库中的 `user_kind` 会在启动时自动迁移，
+不会删除原有数据。
 
-## 功能
+常用命令：
 
-- 群組成員驗證（只有 GCC 群組成員可使用）
-- 每日訊息上限（預設 20 條，防止濫用）
-- 三層 Prompt 架構（價值觀 → GCC 摘要 → 對話記錄）
-- 連結優先邏輯（問及已知內容直接給官網連結）
-- 三語支援（繁體中文 / 簡體中文 / 英文，跟隨用戶語言）
-- 申請資料三步收集（項目名稱 → 基金類型 → 一句話介紹）
-- Values Engine 預審評分（0-100 分）
-- 管理員私訊通知（申請完成後自動發送摘要）
-- `/status` 管理員統計指令
-- `/update_values` 即時更新價值觀設定
-
----
-
-## 技術架構
-
-```
-gcc-telegram-agent/
-├── main.py                  # Bot 入口
-├── models.py                # 資料結構定義
-├── db.py                    # SQLite 資料庫操作
-├── values.yaml              # 價值觀設定（可隨時更新）
-├── core/
-│   ├── values.py            # 價值觀載入與 Prompt 注入
-│   ├── session.py           # Session 管理
-│   └── prompt.py            # 三層 Prompt 組裝 + 連結優先邏輯
-└── handlers/
-    ├── guard.py             # 群組驗證 + Rate Limit + 語言偵測
-    ├── router.py            # Intent 識別
-    ├── general.py           # 一般問答（OpenAI API）
-    ├── application.py       # 申請流程 + 預審 + 管理員通知
-    └── admin.py             # 管理員指令
+```text
+/email you@example.com
+/verify 123456
+/whoami
+/grant <user_id 或 @username> regular|gcc_member|ai
 ```
 
-**技術棧：** Python 3.12 · python-telegram-bot · OpenAI API · SQLite · Fly.io
+当前 GCC Telegram 群的 `member`、`administrator`、`creator` 以及
+`ADMIN_USER_ID` 可以为其他用户设置身份。
 
----
+## 项目结构
 
-## 快速開始
+项目采用按功能组织的模块化单体：
 
-### 前置要求
+```text
+gcc_agent/
+├── access/                  # 身份、授权、邮箱验证和 Guard
+├── admin/                   # 管理员操作
+├── applications/            # 申请流程、文案、筛选和通知
+├── common/
+│   └── persistence/         # SQLite 迁移和 repositories
+├── knowledge/               # GCC 价值观、项目和案例
+├── qa/                      # Prompt、链接优先和 AI 问答
+├── telegram/                # Telegram 路由和应用装配
+└── config.py                # 环境变量
 
-- Python 3.12+
-- Telegram Bot Token（從 [@BotFather](https://t.me/BotFather) 取得）
-- OpenAI API Key
-- [Fly.io](https://fly.io) 帳號（用於部署）
+migrations/                  # 数据库初始结构及版本迁移
+tests/                       # 按功能组织的测试
+main.py                      # 启动入口
+```
 
-### 1. Repo
+根目录的 `db.py`、`models.py`、`core/` 和 `handlers/` 是旧 import 的兼容
+入口。新代码应放在 `gcc_agent/` 对应模块。
+
+技术栈：Python 3.12、python-telegram-bot、OpenAI API、SQLite、Fly.io。
+
+## 本地运行
+
+### 1. 准备环境
 
 ```bash
-git clone https://github.com/你的帳號/gcc-telegram-agent.git
+git clone https://github.com/你的账号/gcc-telegram-agent.git
 cd gcc-telegram-agent
-```
-
-### 2. 建立虛擬環境並安裝依賴
-
-```bash
 python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 3. 建立 .env 檔案
-
-```bash
 cp .env.example .env
 ```
 
-編輯 `.env`，填入以下變數：
+### 2. 配置环境变量
 
 ```env
-BOT_TOKEN=你從 BotFather 取得的 Token
-ADMIN_USER_ID=你的 Telegram User ID（數字）
-GCC_GROUP_ID=GCC Telegram 群組 ID（負數）
-OPENAI_API_KEY=你的 OpenAI API Key
-ADMIN_NOTIFY_ID=接收申請通知的 Telegram User ID
+BOT_TOKEN=Telegram Bot Token
+ADMIN_USER_ID=管理员 Telegram User ID
+ADMIN_NOTIFY_ID=接收申请通知的 Telegram User ID
+GCC_GROUP_ID=GCC Telegram 群组 ID
+
+OPENAI_API_KEY=OpenAI API Key
+AI_MODEL=gpt-4o-mini
+AI_MAX_TOKENS=800
+
+DB_PATH=gcc_agent.db
+
+# 邮箱验证；未完整配置时会安全拒绝发送
+EMAIL_VERIFICATION_SECRET=至少32字符的随机秘密
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=SMTP账号
+SMTP_PASSWORD=SMTP密码
+SMTP_FROM=bot@example.com
+SMTP_USE_TLS=true
 ```
 
-> 取得 Telegram User ID：在 Telegram 找 [@userinfobot](https://t.me/userinfobot) 發任意訊息
+不要把 `.env`、Token、密码或密钥提交到 Git。
 
-### 4. 設定 values.yaml
-
-編輯 `values.yaml`，填入你的組織使命、優先資助方向、審查邏輯。
-
-把 `ADMIN_USER_ID` 替換為你真實的 Telegram User ID（數字）。
-
-### 5. 本地測試
+### 3. 启动
 
 ```bash
 python main.py
 ```
 
-看到 `Polling 模式啟動（本地開發）` 表示正常。在 Telegram 找你的 Bot 測試。
+没有配置 `WEBHOOK_URL` 时使用 Telegram polling。
 
-### 6. 執行測試套件
+### 4. 测试
 
 ```bash
-python test_db.py       # 階段 1：資料層
-python test_guard.py    # 階段 2：Guard Layer
-python test_stage3.py   # 階段 3：Prompt 架構
-python test_stage4.py   # 階段 4：申請流程
+python -m unittest discover -s tests -v
 ```
 
----
+测试分别位于 `tests/access`、`tests/applications`、`tests/knowledge`、
+`tests/persistence` 和 `tests/qa`。
 
-## 部署到 Fly.io
-
-### 1. 安裝 flyctl
+## Fly.io 部署
 
 ```bash
-curl -L https://fly.io/install.sh | sh
-export PATH="$HOME/.fly/bin:$PATH"
 flyctl auth login
-```
-
-### 2. 建立 App 和持久化磁碟
-
-```bash
-flyctl launch --no-deploy --name 你的app名稱
+flyctl launch --no-deploy --name 你的应用名称
 flyctl volumes create gcc_agent_data --region nrt --size 1
-```
-
-### 3. 上傳環境變數
-
-```bash
 flyctl secrets set \
-  BOT_TOKEN="你的token" \
-  ADMIN_USER_ID="你的user_id" \
-  GCC_GROUP_ID="你的群組id" \
-  OPENAI_API_KEY="你的key" \
-  ADMIN_NOTIFY_ID="你的user_id" \
-  WEBHOOK_URL="https://你的app名稱.fly.dev/webhook"
-```
-
-### 4. 部署
-
-```bash
+  BOT_TOKEN="..." \
+  ADMIN_USER_ID="..." \
+  ADMIN_NOTIFY_ID="..." \
+  GCC_GROUP_ID="..." \
+  OPENAI_API_KEY="..." \
+  WEBHOOK_URL="https://你的应用名称.fly.dev/webhook"
 flyctl deploy
 ```
 
-### 5. 設定 Telegram Webhook
+当前 Webhook 只监听 `127.0.0.1`。部署时需要由同一实例中的反向代理转发，
+不能直接把本地监听地址暴露到公网。
 
-在瀏覽器打開：
+设置 Telegram Webhook：
 
-```
-https://api.telegram.org/bot你的BOT_TOKEN/setWebhook?url=https://你的app名稱.fly.dev/webhook
-```
-
-看到 `{"ok":true}` 表示設定成功。
-
----
-
-## 更新價值觀設定
-
-編輯 `values.yaml` 後有兩種方式生效：
-
-**方式 A：重新部署（推薦）**
-```bash
-flyctl deploy
+```text
+https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<应用名>.fly.dev/webhook
 ```
 
-**方式 B：Telegram 指令（即時生效）**
+## 价值观与预审
 
-在 Telegram 私訊 Bot 發送：
-```
-/update_values
-```
+`values.yaml` 保存 GCC 使命、资助方向、拒绝条件、语气和评分权重。管理员
+可以重新部署，或私聊 Bot 发送 `/update_values` 使修改生效。
 
-只有 `ADMIN_USER_ID` 對應的帳號可以執行此指令。
+默认评分：
 
----
+- 使命契合度：40
+- 公共物品属性：30
+- 华语社区影响：20
+- 可行性：10
 
-## 管理員指令
+结果仅用于初步筛选：
 
-| 指令 | 功能 |
-|------|------|
-| `/status` | 查看今日統計（用戶數、訊息數、token 消耗、申請數） |
-| `/update_values` | 重新載入 values.yaml |
+- ≥ 70：建议管理员跟进
+- 40–69：建议参加例会进一步了解
+- < 40：说明可能不符合当前方向
 
----
+## 数据与对话记忆
 
-## values.yaml 結構說明
+- 用户、会话、消息和申请草稿保存在 SQLite
+- GCC 项目和案例保存在 YAML/Markdown
+- 每位用户保留最近 20 条对话
+- 30 分钟无活动后建立新 Session
+- 价值观 system prompt 始终位于用户对话之前
 
-```yaml
-version: "1.0.0"
-admin_telegram_user_id: ADMIN_USER_ID
+## 关于 GCC
 
-mission_statement: |
-  組織使命描述...
+GCC 支持以未来方式重塑公共物品的人与项目，立足华语，共连全球。
 
-priority_themes:
-  - 優先資助方向 1
-  - 優先資助方向 2
+- 官网：[gccofficial.org](https://www.gccofficial.org)
+- 资助申请：[gccofficial.org/application](https://www.gccofficial.org/application)
 
-rejection_criteria:
-  - 明確不考慮的申請類型
+## 许可证
 
-screening_rubric:
-  mission_fit: 40        # 使命契合度（滿分 40）
-  public_goods_nature: 30  # 公共物品屬性（滿分 30）
-  chinese_community: 20   # 華語社區影響（滿分 20）
-  feasibility: 10         # 可行性（滿分 10）
-
-tone_guidelines: |
-  回應語氣指引...
-
-gcc_summary: |
-  組織背景摘要（用於初次對話）...
-```
-
-預審評分結果：
-- **≥ 70 分** → 通知管理員，建議深入跟進
-- **40–69 分** → 提供資料連結，建議參與例會
-- **< 40 分** → 禮貌說明不符合方向
-
----
-
-## 對話記憶設計
-
-- 每個用戶保留最近 **20 條**對話記錄
-- **30 分鐘**無活動後自動開新 Session
-- 不使用 AI 壓縮摘要，改以例會提醒引導深入交流
-- 價值觀層（Layer 1）永遠排在對話記錄之前，不可被用戶覆蓋
-
----
-
-## 授權
-
-本項目以 [MIT](LICENSE) 授權開源。
-
-衍生作品必須同樣以 MIT 授權開源，共同維護數字公地的開放精神。
-
----
-
-## 關於 GCC
-
-**Global Chinese Community of Universal Digital Commons**
-
-GCC 支持以未來方式重塑公共物品的人與項目，立足華語，共連全球。
-
-- 官方網站：[gccofficial.org](https://www.gccofficial.org)
-- 資助申請：[gccofficial.org/application](https://www.gccofficial.org/application)
-
+本项目采用 [MIT License](LICENSE)。

@@ -1,0 +1,1056 @@
+schema_version: "0.1.0"
+updated_at: "2026-05-27"
+purpose: >
+  Seed records for a reusable Chinese-language public goods database. This file
+  includes one representative case from each current GCC category and reserves
+  extension points for project snapshots, detailed grant applications, and
+  committee voting records.
+
+cases:
+  - case_id: gcc-open-source-vyper
+    schema_version: "0.1.0"
+    canonical_project_id: project-vyper
+    title: Vyper
+    category: Open Source
+    fund_type: public
+    public_record:
+      amount_usd: 40000
+      grant_year: 2026
+      activity_year: 2025
+      language_community: [Chinese-speaking developers, Chinese-speaking community]
+      funding:
+        requested_amount_usd: 40000
+        approved_amount_usd: 40000
+        total_budget_usd: 40000
+        per_person_cap_usd:
+        currency: USDC
+        disbursement_type: milestone
+        notes: Proposal uses "u"; recorded as USDC-equivalent for structured search.
+      program_details:
+        start_date: "2026-03"
+        end_date:
+        application_deadline:
+        location: Chinese-speaking developer ecosystem
+        eligibility: []
+        selection_criteria: []
+        deliverables:
+          - 30 Vyper core course sessions
+          - Vyper Chinese learning handbook and FAQ
+          - Online learning platform and points system
+          - Online cohort learning camp and hackathon pathway
+          - Five city offline tour events
+          - Vyper Chinese developer community summary report
+        milestones:
+          - name: M0
+            description: Vote approval unlock
+            unlock_amount_usd: 8000
+            unlock_percentage: 20
+            expected_completion:
+            status: planned
+          - name: M1
+            description: Course and infrastructure setup
+            unlock_amount_usd: 12000
+            unlock_percentage: 30
+            expected_completion: 0-3 months
+            status: planned
+          - name: M2
+            description: Online cohort and hackathon connection
+            unlock_amount_usd: 8000
+            unlock_percentage: 20
+            expected_completion: 3-5 months
+            status: planned
+          - name: M3
+            description: Five city offline tour
+            unlock_amount_usd: 8000
+            unlock_percentage: 20
+            expected_completion: 4-8 months
+            status: planned
+          - name: M4
+            description: Community consolidation and evaluation
+            unlock_amount_usd: 4000
+            unlock_percentage: 10
+            expected_completion: 6-9 months
+            status: planned
+        notes: Extracted from public Snapshot raw data.
+      public_goods_dimensions:
+        open_source:
+          value: true
+          notes: Vyper is open-source infrastructure and the proposal creates reusable learning materials.
+          source_snapshot_id: snap-vyper-snapshot-proposal
+        accessibility:
+          value: high
+          notes: Chinese localization lowers language and onboarding barriers.
+          source_snapshot_id: snap-vyper-snapshot-proposal
+        knowledge_transfer:
+          value: high
+          notes: Course, handbook, FAQ, workshops, and hackathon path are explicit deliverables.
+          source_snapshot_id: snap-vyper-snapshot-proposal
+        community_impact:
+          value: high
+          notes: Targets Chinese-speaking developer community growth and cross-region collaboration.
+          source_snapshot_id: snap-vyper-snapshot-proposal
+        non_excludable:
+          value: unknown
+          notes: Learning outputs are public-good oriented, but access terms need later verification.
+          source_snapshot_id: snap-vyper-snapshot-proposal
+        non_rivalrous:
+          value: high
+          notes: Educational content and open-source tooling can be reused without depletion.
+          source_snapshot_id: snap-vyper-snapshot-proposal
+        notes: Strong open-source education and developer infrastructure case.
+      impact_evidence:
+        - type: education
+          description: Proposal targets 500+ developers through online cohort learning.
+          metric: target_developers
+          value: 500
+          source_snapshot_id: snap-vyper-snapshot-proposal
+          notes:
+        - type: deliverable
+          description: Proposal includes 30 course sessions, handbook, FAQ, platform, and demos.
+          metric: planned_course_sessions
+          value: 30
+          source_snapshot_id: snap-vyper-snapshot-proposal
+          notes:
+        - type: community
+          description: Proposal targets a 500-800 person Chinese Vyper developer community.
+          metric: target_community_size
+          value: 500-800
+          source_snapshot_id: snap-vyper-snapshot-proposal
+          notes:
+      lifecycle_status:
+        grant_status: approved
+        delivery_status: in_progress
+        reporting_status: expected
+        notes: Snapshot is closed and support is modeled as approved; delivery evidence should be updated later.
+      regions: [global, Chinese-speaking community]
+      tags: [Vyper, Ethereum, EVM, smart contract security, developer education, Chinese localization]
+      summary: >
+        Vyper is a Python-like smart contract language for Ethereum and EVM
+        chains. The GCC-funded proposal focused on building a Chinese-speaking
+        Vyper developer ecosystem through online cohort learning, offline
+        events, and reusable community content.
+      why_funded: >
+        The case represents an open-source infrastructure and developer
+        education public good: it localizes a security-first smart contract
+        language for Chinese-speaking builders and aims to reduce ecosystem-wide
+        contract risk through better default tooling and education.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-vyper
+        official_website: https://vyperlang.org/
+        repository_url:
+    evidence:
+      source_urls:
+        - https://snapshot.org/#/s:gccofficial.eth/proposal/0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
+        - https://www.gccofficial.org/project/project-vyper
+        - https://vyperlang.org/
+      snapshots:
+        - snapshot_id: snap-vyper-snapshot-proposal
+          captured_at: "2026-05-27"
+          source_type: snapshot_proposal
+          access_level: public
+          source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
+          storage_uri: data/source-snapshots/vyper-snapshot-proposal.md
+          checksum:
+          notes: Snapshot proposal title, grant amount, vote summary, and extracted rationale.
+      grant_application:
+        status: available
+        access_level: public
+        document_ref: snapshot:0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
+        snapshot_id: snap-vyper-snapshot-proposal
+        summary: >
+          Public Snapshot proposal describes the Vyper Chinese developer
+          ecosystem plan, requested 40,000u, public problems, ecosystem gap, and
+          execution approach.
+        notes: Detailed private application can be linked later if GCC has a fuller submission record.
+      voting_record:
+        status: available
+        access_level: public
+        document_ref: snapshot:0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
+        snapshot_id: snap-vyper-snapshot-proposal
+        summary: >
+          Snapshot state closed. Choices: 赞成, 反对, 弃权, 维持原金额, 增加5%,
+          增加10%, 减少5%, 减少10%. Scores: 6, 0, 3, 3, 0, 0, 1, 2.
+        notes: Public Snapshot scores are recorded as vote-summary evidence, not as final legal accounting.
+      vote_summary:
+        platform: snapshot
+        proposal_id: 0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
+        state: closed
+        choices:
+          - label: 赞成
+            score: 6
+          - label: 反对
+            score: 0
+          - label: 弃权
+            score: 3
+          - label: 维持原金额
+            score: 3
+          - label: 增加5%
+            score: 0
+          - label: 增加10%
+            score: 0
+          - label: 减少5%
+            score: 1
+          - label: 减少10%
+            score: 2
+        total_score: 9
+        source_snapshot_id: snap-vyper-snapshot-proposal
+        notes: Vote choices include both approval and amount adjustment options.
+      raw_data_status:
+        status: captured
+        verification: api
+        storage_uri: data/source-snapshots/vyper-snapshot-proposal.md
+        source_snapshot_id: snap-vyper-snapshot-proposal
+        notes: Full Snapshot proposal body stored under Raw Data.
+    ai_review_usage:
+      allowed: true
+      retrieval_text: >
+        Open-source precedent for security-first developer infrastructure,
+        Chinese localization, Ethereum tooling education, and reusable learning
+        content. Useful when reviewing proposals that bridge global open-source
+        infrastructure into Chinese-speaking developer communities.
+      screening_dimensions:
+        - mission_fit
+        - public_goods_nature
+        - chinese_community
+        - precedent_similarity
+      cautions:
+        - Do not treat Snapshot score summary as the complete committee deliberation.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: seed
+
+  - case_id: gcc-community-eth-city-university-web3-2025
+    schema_version: "0.1.0"
+    canonical_project_id: project-universityblockchain
+    title: 年度 ETH City 活動與高校 Web3 興趣小組資助方案
+    category: Community
+    fund_type: public
+    public_record:
+      amount_usd: 60000
+      grant_year: 2025
+      activity_year: 2025
+      language_community: [Chinese-speaking community, university students, local Ethereum communities]
+      funding:
+        requested_amount_usd: 60000
+        approved_amount_usd: 60000
+        total_budget_usd: 60000
+        per_person_cap_usd:
+        currency: USD
+        disbursement_type: one_time
+        notes: "Dual-track annual pool: 30,000 USD for university Web3 groups and 30,000 USD for ETH City events."
+      program_details:
+        start_date: "2025-01-01"
+        end_date: "2025-12-30"
+        application_deadline:
+        location: global with Chinese-speaking community priority
+        eligibility:
+          - Global university blockchain associations, interest groups, and technical groups, with Chinese-speaking regions prioritized.
+          - Global Web3 event organizers running ETH-themed activities focused on Chinese-speaking groups and free public access.
+        selection_criteria:
+          - name: impact
+            weight:
+            notes: Contribution to Web3 community or universities.
+          - name: content_quality
+            weight:
+            notes: Depth and innovation of educational content.
+          - name: organizing_capacity
+            weight:
+            notes: Team execution capability and experience.
+          - name: budget_reasonableness
+            weight:
+            notes: Transparent and efficient funding use.
+          - name: geographic_distribution
+            weight:
+            notes: Balance different regions.
+        deliverables:
+          - University Web3 workshops and technical training.
+          - Open-source student project development.
+          - Community operations, lectures, salons, competitions, and hackathons.
+          - ETH City developer salons, public goods roadshows, hackathons, and open research activities.
+          - Activity records and follow-up reports.
+        milestones: []
+        notes: Bundled dual-track rolling grant program.
+      public_goods_dimensions:
+        open_source:
+          value: medium
+          notes: University track explicitly encourages GPL/MIT open-source outputs; ETH City track prioritizes open-source and public goods themes.
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        accessibility:
+          value: high
+          notes: ETH City activities must focus on Chinese-speaking groups and be free/open.
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        knowledge_transfer:
+          value: high
+          notes: Workshops, salons, technical training, and open research are core funding uses.
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        community_impact:
+          value: high
+          notes: Supports both campus and city-level community infrastructure.
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        non_excludable:
+          value: medium
+          notes: Free public activities are required for ETH City, but individual sub-grant outputs may vary.
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        non_rivalrous:
+          value: medium
+          notes: Educational outputs and open-source projects are reusable, while event seats and grants are limited.
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        notes: Strong community infrastructure case with two distinct tracks.
+      impact_evidence:
+        - type: funding_access
+          description: Creates two 30,000 USD rolling grant pools for university Web3 groups and ETH City activities.
+          metric: total_pool_usd
+          value: 60000
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          notes:
+        - type: education
+          description: Funds workshops, training, salons, public goods roadshows, hackathons, and open research.
+          metric:
+          value:
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          notes:
+        - type: community
+          description: Supports campus and city-based organizers serving Chinese-speaking communities.
+          metric:
+          value:
+          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          notes:
+      lifecycle_status:
+        grant_status: approved
+        delivery_status: unknown
+        reporting_status: expected
+        notes: Snapshot is closed; individual sub-grant delivery should be tracked separately.
+      regions: [global, Chinese-speaking community]
+      tags: [university Web3 groups, ETH City, education, local community, open-source activities]
+      summary: >
+        This annual dual-track funding proposal supported university Web3
+        interest groups and ETH City activities. It targeted Chinese-speaking
+        builders across campus and city contexts through rolling applications,
+        education, workshops, hackathons, community operations, and open-source
+        project development.
+      why_funded: >
+        It is a community infrastructure case that connects young builders,
+        local city organizers, and public goods education. It explicitly links
+        funding to open-source outputs, free public activities, and follow-up
+        reporting.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-universityblockchain
+        official_website:
+        repository_url:
+    evidence:
+      source_urls:
+        - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe84766
+        - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+      snapshots:
+        - snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          captured_at: "2026-05-27"
+          source_type: snapshot_proposal
+          access_level: public
+          source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+          storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
+          checksum:
+          notes: User-provided URL had one extra trailing character; stored Snapshot id uses the id returned by Snapshot Hub.
+      grant_application:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+        snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        summary: >
+          Public Snapshot proposal describes two rolling grant tracks: university
+          Web3 interest groups and ETH City events, each with a 30,000 USD total
+          pool.
+        notes: Future imports can split this into separate university and city sub-cases.
+      voting_record:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+        snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        summary: "Snapshot state closed. Choices: For, Against, Abstain. Scores: 3, 0, 2."
+        notes: This is a public vote-summary snapshot.
+      vote_summary:
+        platform: snapshot
+        proposal_id: 0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+        state: closed
+        choices:
+          - label: For
+            score: 3
+          - label: Against
+            score: 0
+          - label: Abstain
+            score: 2
+        total_score: 5
+        source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        notes: User-provided URL had an extra trailing character; this proposal id is the normalized Snapshot Hub id.
+      raw_data_status:
+        status: captured
+        verification: api
+        storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
+        source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        notes: Full Snapshot proposal body stored under Raw Data.
+    ai_review_usage:
+      allowed: true
+      retrieval_text: >
+        Community precedent for rolling support to campus Web3 groups and local
+        ETH City activities. Useful for reviewing education, workshop, local
+        organizer, community infrastructure, and open-source student activity
+        proposals.
+      screening_dimensions:
+        - mission_fit
+        - chinese_community
+        - feasibility
+        - precedent_similarity
+      cautions:
+        - Because this proposal bundles two tracks, compare new applicants to the relevant track only.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: seed
+
+  - case_id: gcc-event-wamotopia-2026
+    schema_version: "0.1.0"
+    canonical_project_id: project-wamotopia2026
+    title: Wamotopia 2026
+    category: Event
+    fund_type: public
+    public_record:
+      amount_usd: 8000
+      grant_year: 2026
+      activity_year: 2026
+      language_community: [Chinese-speaking community, international community]
+      funding:
+        requested_amount_usd: 8000
+        approved_amount_usd: 8000
+        total_budget_usd: 16000
+        per_person_cap_usd:
+        currency: USDC
+        disbursement_type: retroactive
+        notes: Proposal is a retroactive confirmation after the activity was already held.
+      program_details:
+        start_date: "2026-01-21"
+        end_date: "2026-02-04"
+        application_deadline:
+        location: Chiang Mai
+        eligibility: []
+        selection_criteria: []
+        deliverables:
+          - Opening and closing activities
+          - Theme camps and community gatherings
+          - Support for GCC cypherpunk and thinker gathering
+          - Public community co-creation and decentralized organizing experiment
+        milestones:
+          - name: M0
+            description: Retroactive confirmation after completed activity and GCC visibility delivery.
+            unlock_amount_usd: 8000
+            unlock_percentage: 100
+            expected_completion: after funds received
+            status: completed
+        notes: Event ran before funding confirmation; one-time retroactive unlock.
+      public_goods_dimensions:
+        open_source:
+          value: medium
+          notes: Proposal frames Wamotopia as open and reusable; source code/output terms need further verification.
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        accessibility:
+          value: medium
+          notes: Pop-up city participation is place-bound, but the model and brand are described as openly reusable.
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        knowledge_transfer:
+          value: medium
+          notes: Activities connect public thought, AI ethics, hacker retreat, P2P Foundation, and community practice.
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        community_impact:
+          value: high
+          notes: Proposal estimates more than 1,000 participants across Wamotopia and surrounding activities.
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        non_excludable:
+          value: low
+          notes: Physical event participation is limited by location and capacity.
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        non_rivalrous:
+          value: medium
+          notes: The organizing model and public narrative can be reused, while event attendance is rivalrous.
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        notes: Event public value comes mainly from community connection and organizing model experimentation.
+      impact_evidence:
+        - type: participation
+          description: Proposal estimates more than 1,000 participants across Wamotopia and surrounding activities.
+          metric: estimated_participants
+          value: 1000
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          notes:
+        - type: community
+          description: Proposal lists partner communities and camps spanning 706, Dweller, P2P Foundation, AI ethics, hacker retreat, rural DAO, and other communities.
+          metric:
+          value:
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          notes:
+        - type: other
+          description: Proposal frames Wamotopia as a decentralized self-organization experiment and pop-up city practice in Chinese-speaking contexts.
+          metric:
+          value:
+          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          notes:
+      lifecycle_status:
+        grant_status: approved
+        delivery_status: retroactive
+        reporting_status: expected
+        notes: Activity had already taken place when the proposal requested retroactive confirmation.
+      regions: [Chinese-speaking community, Chiang Mai]
+      tags: [pop-up city, self-organization, community co-creation, public talent, governance experiment]
+      summary: >
+        Wamotopia 2026 is a self-organized pop-up city and community co-creation
+        event. The proposal describes a fourth edition focused on rebuilding
+        shared reality in the AI era through camps, community gatherings,
+        workshops, and cross-community collaboration.
+      why_funded: >
+        This case models event funding as a public goods experiment: it connects
+        Chinese-speaking and international communities, tests decentralized
+        self-organization, and creates a shared setting for public talent,
+        governance, open-source, and community practice.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-wamotopia2026
+        official_website: https://x.com/wamo_topia
+        repository_url: https://github.com/wamotopia
+    evidence:
+      source_urls:
+        - https://snapshot.box/#/s:gccofficial.eth/proposal/0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
+        - https://github.com/wamotopia
+        - https://x.com/wamo_topia
+      snapshots:
+        - snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          captured_at: "2026-05-27"
+          source_type: snapshot_proposal
+          access_level: public
+          source_url: https://snapshot.box/#/s:gccofficial.eth/proposal/0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
+          storage_uri: data/source-snapshots/wamotopia-2026-snapshot-proposal.md
+          checksum:
+          notes: Snapshot proposal title, requested amount, event budget, scale, and vote summary.
+      grant_application:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
+        snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        summary: >
+          Public Snapshot proposal includes basic information, requested 8,000
+          USDC, total event budget, cooperating communities, team, highlights,
+          and contribution to Chinese-speaking communities.
+        notes: Future private application import can include attachments, post-event report, and receipts.
+      voting_record:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
+        snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        summary: >
+          Snapshot state closed. Choices: 赞成, 反对, 弃权, 增加10%, 增加5%,
+          金额不变, 减少5%, 减少10%. Scores: 7, 0, 2, 1, 0, 5, 0, 0.
+        notes: Public Snapshot scores are recorded as evidence.
+      vote_summary:
+        platform: snapshot
+        proposal_id: 0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
+        state: closed
+        choices:
+          - label: 赞成
+            score: 7
+          - label: 反对
+            score: 0
+          - label: 弃权
+            score: 2
+          - label: 增加10%
+            score: 1
+          - label: 增加5%
+            score: 0
+          - label: 金额不变
+            score: 5
+          - label: 减少5%
+            score: 0
+          - label: 减少10%
+            score: 0
+        total_score: 9
+        source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        notes: Vote choices include both approval and amount adjustment options.
+      raw_data_status:
+        status: captured
+        verification: api
+        storage_uri: data/source-snapshots/wamotopia-2026-snapshot-proposal.md
+        source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        notes: Full Snapshot proposal body stored under Raw Data.
+    ai_review_usage:
+      allowed: true
+      retrieval_text: >
+        Event precedent for public talent, governance experiments, pop-up city
+        organization, and cross-community collaboration. Useful when assessing
+        activity proposals that claim public value through shared infrastructure,
+        community learning, and repeatable organizing patterns.
+      screening_dimensions:
+        - mission_fit
+        - chinese_community
+        - feasibility
+        - precedent_similarity
+      cautions:
+        - Event proposals should later be checked against post-event reports and actual outputs.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: seed
+
+  - case_id: gcc-eth-city-eth-beijing-2025
+    schema_version: "0.1.0"
+    canonical_project_id: project-ethbeijing-2025
+    title: ETH Beijing 2025
+    category: ETH City Series
+    fund_type: special
+    public_record:
+      amount_usd:
+      grant_year: 2025
+      activity_year: 2026
+      language_community: [Chinese-speaking community, Beijing Ethereum builders, university builders]
+      funding:
+        requested_amount_usd:
+        approved_amount_usd:
+        total_budget_usd:
+        per_person_cap_usd:
+        currency:
+        disbursement_type: unknown
+        notes: Funding amount not available in the imported X recap source.
+      program_details:
+        start_date:
+        end_date: "2025-06-07"
+        application_deadline:
+        location: Beijing
+        eligibility:
+          - In-person Ethereum builders and hackathon participants.
+        selection_criteria: []
+        deliverables:
+          - Three-day offline hackathon development
+          - Public goods and AI track participation
+          - Ethereum builder community gathering
+        milestones: []
+        notes: Source is a 2025 recap post; exact start date is not in the imported text, but the post was published on 2025-06-07 and describes the hackathon as completed.
+      public_goods_dimensions:
+        open_source:
+          value: medium
+          notes: Recap focuses on public goods and AI tracks; open-source licensing not verified.
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+        accessibility:
+          value: high
+          notes: Offline participation is in-person and therefore location constrained.
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+        knowledge_transfer:
+          value: high
+          notes: Hackathon participation supports practical learning and builder exchange.
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+        community_impact:
+          value: medium
+          notes: Recap says hundreds of developers followed the event and more than one hundred participated offline.
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+        non_excludable:
+          value: low
+          notes: In-person event attendance is location and capacity constrained.
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+        non_rivalrous:
+          value: medium
+          notes: Event knowledge can spread, but attendance is rivalrous.
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+        notes: City-series case with X recap evidence rather than Snapshot proposal evidence.
+      impact_evidence:
+        - type: participation
+          description: Recap describes an in-person ETH Beijing Hackathon 2025 in Beijing.
+          metric:
+          value:
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          notes:
+        - type: education
+          description: Recap says the event focused on public goods and AI tracks.
+          metric:
+          value:
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          notes:
+        - type: deliverable
+          description: Recap says more than one hundred developers participated in offline hackathon development.
+          metric:
+          value:
+          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          notes:
+      lifecycle_status:
+        grant_status: unknown
+        delivery_status: not_started
+        reporting_status: unknown
+        notes: Recap source does not include GCC grant decision or report status.
+      regions: [Beijing, Chinese-speaking community]
+      tags: [ETH Beijing, hackathon, Ethereum, AI agents, blockchain, university builders]
+      summary: >
+        ETH Beijing Hackathon 2025 was an in-person Ethereum builder event in
+        Beijing co-hosted by PKU Blockchain and WTF Academy. The recap says the
+        hackathon focused on public goods and AI, attracted hundreds of
+        developers' attention, and had more than one hundred developers
+        participate offline.
+      why_funded: >
+        This is a city-series case for local Ethereum ecosystem building. It
+        supports student and developer communities through an offline hackathon
+        around public goods and AI, and the recap notes that the event again
+        received official Ethereum Foundation support.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-ethbeijing-2025
+        official_website:
+        repository_url:
+    evidence:
+      source_urls:
+        - https://x.com/PKUBlockchain/status/1931281003378880948
+        - https://www.gccofficial.org/project/project-ethbeijing-2025
+      snapshots:
+        - snapshot_id: snap-eth-beijing-2025-x-recap
+          captured_at: "2026-05-29"
+          source_type: social_post
+          access_level: public
+          source_url: https://x.com/PKUBlockchain/status/1931281003378880948
+          storage_uri: data/source-snapshots/eth-beijing-2025-x-recap.md
+          checksum:
+          notes: PKU Blockchain X recap used because the ETH Beijing website had already updated to the 2026 edition.
+      grant_application:
+        status: expected
+        access_level: private
+        document_ref:
+        snapshot_id:
+        summary:
+        notes: Reserved for the detailed GCC application if available.
+      voting_record:
+        status: unknown
+        access_level: internal
+        document_ref:
+        snapshot_id:
+        summary:
+        notes: User indicated ETH City Series uses non-Snapshot sources for this case.
+      vote_summary:
+        platform: unknown
+        proposal_id:
+        state:
+        choices: []
+        total_score:
+        source_snapshot_id:
+        notes: No vote source imported for this case.
+      raw_data_status:
+        status: captured
+        verification: api
+        storage_uri: data/source-snapshots/eth-beijing-2025-x-recap.md
+        source_snapshot_id: snap-eth-beijing-2025-x-recap
+        notes: X recap text captured through public Twitter mirror API; image media URL is preserved.
+    ai_review_usage:
+      allowed: true
+      retrieval_text: >
+        ETH City Series precedent for an in-person Ethereum hackathon in
+        Beijing, co-hosted by PKU Blockchain and WTF Academy, focused on public
+        goods and AI tracks.
+      screening_dimensions:
+        - chinese_community
+        - feasibility
+        - precedent_similarity
+      cautions:
+        - X recap describes the activity, but does not replace GCC application or vote evidence.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: seed
+
+  - case_id: gcc-travel-scholarship-devconnect-2025
+    schema_version: "0.1.0"
+    canonical_project_id: project-devconnect-2025
+    title: Devconnect 機票 2025
+    category: Travel Scholarship
+    fund_type: special
+    public_record:
+      amount_usd:
+      grant_year: 2025
+      activity_year: 2025
+      language_community: [Chinese-speaking builders, Asian builders, Ethereum community]
+      funding:
+        requested_amount_usd:
+        approved_amount_usd:
+        total_budget_usd: 5000
+        per_person_cap_usd: 1000
+        currency: USD
+        disbursement_type: reimbursement
+        notes: Total support pool is 5,000 USD with a 1,000 USD reimbursement cap per person.
+      program_details:
+        start_date: "2025-11-17"
+        end_date: "2025-11-22"
+        application_deadline: "2025-11-01 23:59 GMT+8"
+        location: La Rural, Buenos Aires, Argentina
+        eligibility:
+          - Native Chinese speaker with open-source project or public goods contribution experience.
+          - Able to communicate in English.
+          - Willing to participate in Devconnect activities such as hackathon, workshop, or panel.
+          - Passport and visa ready or feasible to obtain.
+          - Willing to give back to the community after the event by sharing experience and learnings.
+          - Applicants who already received GCC travel support in the same year are not eligible.
+        selection_criteria:
+          - name: project_background_and_potential_impact
+            weight: 40
+            notes:
+          - name: financial_situation_and_need
+            weight: 30
+            notes:
+          - name: public_goods_contribution
+            weight: 20
+            notes:
+          - name: motivation_and_recommendation
+            weight: 10
+            notes:
+        deliverables:
+          - Attend Devconnect 2025 in Buenos Aires.
+          - Participate in hackathon, workshop, panel, or related events.
+          - Share post-event experience and learnings with the community.
+        milestones: []
+        notes: Application link in raw data is https://tally.so/r/w2025L.
+      public_goods_dimensions:
+        open_source:
+          value: medium
+          notes: Prioritizes builders with open-source or public goods contribution experience.
+          source_snapshot_id: snap-devconnect-2025-x-post
+        accessibility:
+          value: high
+          notes: Reduces travel cost barrier for Chinese-speaking builders traveling to Buenos Aires.
+          source_snapshot_id: snap-devconnect-2025-x-post
+        knowledge_transfer:
+          value: high
+          notes: Applicants must be willing to share post-event experience and learnings with the community.
+          source_snapshot_id: snap-devconnect-2025-x-post
+        community_impact:
+          value: high
+          notes: Helps Chinese-speaking builders access global Ethereum collaboration and bring knowledge back.
+          source_snapshot_id: snap-devconnect-2025-x-post
+        non_excludable:
+          value: low
+          notes: Travel reimbursement is limited to selected individuals.
+          source_snapshot_id: snap-devconnect-2025-x-post
+        non_rivalrous:
+          value: medium
+          notes: Travel funds are rivalrous, but post-event knowledge sharing can be non-rivalrous.
+          source_snapshot_id: snap-devconnect-2025-x-post
+        notes: Travel scholarship public value depends on applicant selection and post-event knowledge return.
+      impact_evidence:
+        - type: funding_access
+          description: Provides 5,000 USD total travel support with a 1,000 USD per-person cap.
+          metric: total_pool_usd
+          value: 5000
+          source_snapshot_id: snap-devconnect-2025-x-post
+          notes:
+        - type: community
+          description: Prioritizes Chinese-speaking builders contributing to public goods, open protocols, on-chain governance, and crypto education.
+          metric:
+          value:
+          source_snapshot_id: snap-devconnect-2025-x-post
+          notes:
+        - type: education
+          description: Requires recipients to share post-event experience and learnings with the community.
+          metric:
+          value:
+          source_snapshot_id: snap-devconnect-2025-x-post
+          notes:
+      lifecycle_status:
+        grant_status: approved
+        delivery_status: in_progress
+        reporting_status: expected
+        notes: Program announced publicly; individual selections and post-event reports are not imported yet.
+      regions: [Chinese-speaking community, global]
+      tags: [travel scholarship, builder support, Ethereum, conference access]
+      summary: >
+        Devconnect 機票 2025 is a travel scholarship plan supporting
+        Chinese-speaking builders to attend Devconnect 2025 in Buenos Aires,
+        Argentina, from November 17 to 22, 2025. The plan provides a total of
+        5,000 USD, with a per-person reimbursement cap of 1,000 USD.
+      why_funded: >
+        This travel scholarship case supports builders who contribute to open
+        source and public goods but face high travel costs, long routes, visa
+        complexity, and cross-language/cross-cultural barriers. The public goods
+        value comes from enabling face-to-face collaboration, global visibility,
+        and post-event community knowledge sharing.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-devconnect-2025
+        official_website: https://x.com/GCCofCommons/status/1978780446596239625
+        repository_url:
+    evidence:
+      source_urls:
+        - https://x.com/GCCofCommons/status/1978780446596239625
+        - https://www.gccofficial.org/project/project-devconnect-2025
+      snapshots:
+        - snapshot_id: snap-devconnect-2025-x-post
+          captured_at: "2026-05-27"
+          source_type: social_post
+          access_level: public
+          source_url: https://x.com/GCCofCommons/status/1978780446596239625
+          storage_uri: data/source-snapshots/devconnect-2025-x-post.md
+          checksum:
+          notes: Source URL preserved; content needs manual capture or an accessible archive.
+      grant_application:
+        status: available
+        access_level: public
+        document_ref: x-post:1978780446596239625
+        snapshot_id: snap-devconnect-2025-x-post
+        summary: >
+          Public X post announces application link, deadline, funding amount,
+          eligibility, selection criteria, priority applicants, and Devconnect
+          2025 event context.
+        notes: Individual applicant submissions may contain personal data and need redaction.
+      voting_record:
+        status: unknown
+        access_level: internal
+        document_ref:
+        snapshot_id:
+        summary:
+        notes: Vote or selection record not yet imported.
+      vote_summary:
+        platform: unknown
+        proposal_id:
+        state:
+        choices: []
+        total_score:
+        source_snapshot_id:
+        notes: No vote source imported for this travel scholarship announcement.
+      raw_data_status:
+        status: manual
+        verification: user_supplied
+        storage_uri: data/source-snapshots/devconnect-2025-x-post.md
+        source_snapshot_id: snap-devconnect-2025-x-post
+        notes: Raw X post text was manually supplied by the user; archive or screenshot verification should be added later.
+    ai_review_usage:
+      allowed: true
+      retrieval_text: >
+        Travel scholarship precedent for helping Chinese-speaking public goods
+        and open-source builders attend Devconnect 2025 in Buenos Aires. Useful
+        for reviewing travel-support proposals that justify public value through
+        ecosystem access, global collaboration, and post-event community return.
+      screening_dimensions:
+        - mission_fit
+        - chinese_community
+        - feasibility
+        - precedent_similarity
+      cautions:
+        - Raw text was manually supplied by the user from the X post; add an archived screenshot or URL later for independent verification.
+        - Personal applicant data must not be exposed to public retrieval.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: seed
+
+  - case_id: gcc-gitcoin-placeholder
+    schema_version: "0.1.0"
+    canonical_project_id: project-gg21
+    title: Gitcoin 類別案例占位
+    category: Gitcoin
+    fund_type: public
+    public_record:
+      amount_usd:
+      grant_year:
+      activity_year:
+      language_community: []
+      funding:
+        requested_amount_usd:
+        approved_amount_usd:
+        total_budget_usd:
+        per_person_cap_usd:
+        currency:
+        disbursement_type: matching_pool
+        notes: Placeholder only; no funding data imported yet.
+      program_details:
+        start_date:
+        end_date:
+        application_deadline:
+        location:
+        eligibility: []
+        selection_criteria: []
+        deliverables: []
+        milestones: []
+        notes: Placeholder only.
+      public_goods_dimensions:
+        open_source:
+          value: unknown
+          notes: Not imported yet.
+          source_snapshot_id:
+        accessibility:
+          value: unknown
+          notes: Not imported yet.
+          source_snapshot_id:
+        knowledge_transfer:
+          value: unknown
+          notes: Not imported yet.
+          source_snapshot_id:
+        community_impact:
+          value: unknown
+          notes: Not imported yet.
+          source_snapshot_id:
+        non_excludable:
+          value: unknown
+          notes: Not imported yet.
+          source_snapshot_id:
+        non_rivalrous:
+          value: unknown
+          notes: Not imported yet.
+          source_snapshot_id:
+        notes: Gitcoin category intentionally left as placeholder.
+      impact_evidence: []
+      lifecycle_status:
+        grant_status: unknown
+        delivery_status: unknown
+        reporting_status: unknown
+        notes: Placeholder only.
+      regions: []
+      tags: [Gitcoin, quadratic funding, matching pool, public goods funding]
+      summary: >
+        Placeholder for Gitcoin / quadratic funding cases. The user requested
+        that fields remain in place but no source data be entered yet because
+        data access is currently difficult.
+      why_funded: >
+        Reserved for future modeling of matching pools, public goods funding
+        rounds, donor coordination, and ecosystem capital allocation.
+      links:
+        gcc_project_url:
+        official_website:
+        repository_url:
+    evidence:
+      source_urls: []
+      snapshots: []
+      grant_application:
+        status: unknown
+        access_level: private
+        document_ref:
+        snapshot_id:
+        summary:
+        notes: Intentionally left blank for now.
+      voting_record:
+        status: unknown
+        access_level: internal
+        document_ref:
+        snapshot_id:
+        summary:
+        notes: Intentionally left blank for now.
+      vote_summary:
+        platform: unknown
+        proposal_id:
+        state:
+        choices: []
+        total_score:
+        source_snapshot_id:
+        notes: Intentionally left blank for now.
+      raw_data_status:
+        status: not_applicable
+        verification: not_applicable
+        storage_uri: data/source-snapshots/gitcoin-placeholder.md
+        source_snapshot_id:
+        notes: Placeholder only; no raw data imported by user instruction.
+    ai_review_usage:
+      allowed: false
+      retrieval_text: ""
+      screening_dimensions: []
+      cautions:
+        - Placeholder only; do not use for AI screening until data is imported.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: seed

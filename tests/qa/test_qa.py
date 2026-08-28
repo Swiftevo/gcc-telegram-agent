@@ -315,16 +315,10 @@ async def test_handle_general_ai():
     update.message.reply_text = AsyncMock()
     context = MagicMock()
 
-    # Mock OpenAI 回應
-    mock_response = MagicMock()
-    mock_response.choices[0].message.content = "公共物品是指非排他性且非競爭性的物品。"
-    mock_response.usage.total_tokens = 42
-
-    with patch("handlers.general.get_openai_client") as mock_client:
-        mock_instance = AsyncMock()
-        mock_instance.chat.completions.create = AsyncMock(return_value=mock_response)
-        mock_client.return_value = mock_instance
-
+    with patch(
+        "gcc_agent.qa.handler.call_ai",
+        new=AsyncMock(return_value=("公共物品是指非排他性且非競爭性的物品。", 42)),
+    ):
         from handlers.general import handle_general
         await handle_general(update, context, guard)
 
