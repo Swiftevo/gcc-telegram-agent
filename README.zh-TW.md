@@ -1,110 +1,108 @@
+<div align="center">
+
+<img src="docs/assets/banner.jpg" alt="GCC" width="640">
+
 # GCC Telegram AI 助手
+
+面向公共物品的 Telegram AI 助手：回答問題、收集資助申請、完成初步篩選。
+
+[![Telegram](https://img.shields.io/badge/Telegram-@GCCpublicgoods__bot-2CA5E0?logo=telegram&logoColor=white)](https://t.me/GCCpublicgoods_bot)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Website](https://img.shields.io/badge/Website-gccofficial.org-1a1a1a)](https://www.gccofficial.org)
+[![Contributing](https://img.shields.io/badge/Contributing-guide-orange.svg)](CONTRIBUTING.md)
 
 [简体中文](README.md) · **繁體中文** · [English](README.en.md)
 
-**Global Chinese Community of Universal Digital Commons**
+[貢獻指南](CONTRIBUTING.md) · [行為準則](CODE_OF_CONDUCT.md) · [參與貢獻](#參與貢獻)
 
-一個專為 GCC 社區設計的 Telegram AI 助手，作為 GCC 的第一道過濾器——回答基本問題、收集申請資料、預審申請者，再交棒給 GCC 人類成員進行深入判斷。
-
----
-
-## 設計理念
-
-這個 Agent 不是通用問答機器。它的核心任務是：
-
-1. **過濾** — 問答與申請只服務已授權且完成驗證的 GCC 成員
-2. **引導** — 優先給出官網連結，節省 token，回應更準確
-3. **收集** — 四步驟收集申請者的基本資料
-4. **預審** — 根據 GCC 價值觀對申請進行初步評分
-5. **交棒** — 把有潛力的申請者轉介給 GCC 人類成員
-
-Agent 的價值觀與審查邏輯儲存在獨立的 `values.yaml`，完全不受用戶對話影響，可隨時由管理員更新。
+</div>
 
 ---
 
-## 功能
+## 立即試用
 
-- 身份與存取分離（`human/agent` + `regular/gcc_member`）
-- 人類 GCC 成員郵箱驗證
-- 每日訊息上限（預設 20 條，防止濫用）
-- 三層 Prompt 架構（價值觀 → GCC 摘要 → 對話記錄）
-- 連結優先邏輯（問及已知內容直接給官網連結）
-- 三語支援（繁體中文 / 簡體中文 / 英文，跟隨用戶語言）
-- 申請資料四步收集（項目名稱 → 基金類型 → 提案連結 → 執行摘要）
-- Values Engine 預審評分（0-100 分）
-- 管理員私訊通知（申請完成後自動發送摘要）
-- `/status` 管理員統計指令
-- `/update_values` 即時更新價值觀設定
+助手已經部署上線，在 Telegram 裡打開 **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** 發送 `/start` 即可開始。
 
----
+普通用戶會收到歡迎訊息；GCC 成員通過郵箱驗證後，可以使用問答和資助申請功能。
 
-## 技術架構
+想改程式或提 Issue，請先看 [貢獻指南](CONTRIBUTING.md)。Pull Request 請開向 `dev`，不要直接推 `main`。
 
-程式採用按功能組織的模組化單體。根目錄的 `db.py`、`models.py`、
-`core/` 和 `handlers/` 只保留舊 import 相容入口；新功能應直接寫入
-`gcc_agent/` 對應模組。
+## 這個專案解決什麼問題
+
+新成員的問題大多重複：GCC 在做什麼、資助怎麼申請、我的專案合不合適。這些問題過去要在群裡反覆回答。
+
+這個助手把這部分工作接過來：能用官網連結回答的直接給連結，需要判斷的先收集材料並按 GCC 價值觀打分，再交給成員跟進。
+
+## 核心功能
+
+| 功能 | 說明 |
+|---|---|
+| 分級存取 | 普通用戶和未授權 Agent 只收到歡迎訊息 |
+| 郵箱驗證 | GCC 成員驗證郵箱後解鎖問答與申請 |
+| 連結優先 | 能用官網連結回答的問題不呼叫模型 |
+| 多語言 | 依用戶語言使用簡體中文、繁體中文或英文 |
+| 申請流程 | 四步收集：專案名稱、基金類型、提案連結、執行摘要 |
+| 初步篩選 | 依據 `values.yaml` 給出 0–100 分並通知管理員 |
+| 用量限制 | 每位成員每天最多 20 條訊息 |
+
+## 指令
+
+面向成員：
 
 ```text
-gcc_agent/
-├── access/                  # 身份、授權、郵箱驗證、請求 Guard
-├── admin/                   # 管理員操作
-├── applications/            # 申請流程、文案、預審和通知
-├── common/
-│   └── persistence/         # SQLite migrations 和 repositories
-├── knowledge/               # GCC values、項目與案例載入
-├── qa/                      # Prompt、連結優先和 AI 問答
-├── telegram/                # Telegram 路由和 Application 裝配
-└── config.py                # 環境變數設定
-
-migrations/                  # 資料庫初始 schema
-tests/                       # 新模組測試
-main.py                      # 薄啟動入口
+/email you@example.com      綁定郵箱並接收驗證碼
+/verify 123456              提交驗證碼
+/whoami                     查看目前身份
 ```
 
-**技術棧：** Python 3.12 · python-telegram-bot · OpenAI API · SQLite · Fly.io
+面向管理員：
 
----
+```text
+/grant <user_id 或 @username> regular|gcc_member|ai
+/status                     查看統計
+/update_values              重新載入價值觀
+```
+
+GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID` 可以為其他用戶設定身份。
+
+## 身份模型
+
+身份由兩個獨立欄位組成，不使用 RBAC：
+
+- `actor_type`：`human` 或 `agent`
+- `access_level`：`regular` 或 `gcc_member`
+
+人類 GCC 成員必須通過 `/email` 和 `/verify` 驗證郵箱。舊資料庫中的 `user_kind` 會在啟動時自動遷移，不會刪除原有資料。
 
 ## 快速開始
 
-### 前置要求
-
-- Python 3.12+
-- Telegram Bot Token（從 [@BotFather](https://t.me/BotFather) 取得）
-- OpenAI API Key
-- [Fly.io](https://fly.io) 帳號（用於部署）
-
-### 1. Repo
+需要 Python 3.12。
 
 ```bash
-git clone https://github.com/你的帳號/gcc-telegram-agent.git
+git clone https://github.com/Swiftevo/gcc-telegram-agent.git
 cd gcc-telegram-agent
-```
-
-### 2. 建立虛擬環境並安裝依賴
-
-```bash
 python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 3. 建立 .env 檔案
-
-```bash
 cp .env.example .env
 ```
 
-編輯 `.env`，填入以下變數：
+在 `.env` 中填入設定：
 
 ```env
-BOT_TOKEN=你從 BotFather 取得的 Token
-ADMIN_USER_ID=你的 Telegram User ID（數字）
-GCC_GROUP_ID=GCC Telegram 群組 ID（負數）
-OPENAI_API_KEY=你的 OpenAI API Key
+BOT_TOKEN=Telegram Bot Token
+ADMIN_USER_ID=管理員 Telegram User ID
 ADMIN_NOTIFY_ID=接收申請通知的 Telegram User ID
+GCC_GROUP_ID=GCC Telegram 群組 ID
 
-# 郵箱驗證（未設定時會安全拒絕寄送）
+OPENAI_API_KEY=OpenAI API Key
+AI_MODEL=gpt-4o-mini
+AI_MAX_TOKENS=800
+
+DB_PATH=gcc_agent.db
+
+# 郵箱驗證；未完整設定時會安全拒絕發送
 EMAIL_VERIFICATION_SECRET=至少32字元的隨機秘密
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
@@ -114,178 +112,122 @@ SMTP_FROM=bot@example.com
 SMTP_USE_TLS=true
 ```
 
-> 取得 Telegram User ID：在 Telegram 找 [@userinfobot](https://t.me/userinfobot) 發任意訊息
+> [!WARNING]
+> 不要把 `.env`、Token、密碼或金鑰提交到 Git。
 
-身份拆成兩個互不混用的欄位：
-
-- `actor_type`: `human` / `agent`
-- `access_level`: `regular` / `gcc_member`
-
-人類 GCC 成員必須先以 `/email` 和 `/verify` 完成郵箱驗證。普通用戶及
-未授權 Agent 只收到歡迎訊息。舊資料中的 `user_kind` 會在啟動時由
-版本化 migration 自動映射，原資料不會刪除。
-
-### 4. 設定 values.yaml
-
-編輯 `values.yaml`，填入你的組織使命、優先資助方向、審查邏輯。
-
-把 `ADMIN_USER_ID` 替換為你真實的 Telegram User ID（數字）。
-
-### 5. 本地測試
+啟動：
 
 ```bash
 python main.py
 ```
 
-看到 `Polling 模式啟動（本地開發）` 表示正常。在 Telegram 找你的 Bot 測試。
+沒有設定 `WEBHOOK_URL` 時使用 Telegram polling。
 
-### 6. 執行測試套件
+執行測試：
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-測試依功能放在 `tests/access`、`tests/applications`、`tests/knowledge`、
-`tests/persistence` 和 `tests/qa`。
+## 專案結構
 
----
+專案採用按功能組織的模組化單體：
 
-## 部署到 Fly.io
+```text
+gcc_agent/
+├── access/                  # 身份、授權、郵箱驗證和 Guard
+├── admin/                   # 管理員操作
+├── applications/            # 申請流程、文案、篩選和通知
+├── common/
+│   └── persistence/         # SQLite 遷移和 repositories
+├── knowledge/               # GCC 價值觀、專案和案例
+├── qa/                      # Prompt、連結優先和 AI 問答
+├── telegram/                # Telegram 路由和應用裝配
+└── config.py                # 環境變數
 
-### 1. 安裝 flyctl
+migrations/                  # 資料庫初始結構及版本遷移
+tests/                       # 按功能組織的測試
+main.py                      # 啟動入口
+```
+
+根目錄的 `db.py`、`models.py`、`core/` 和 `handlers/` 是舊 import 的相容入口。新程式應放在 `gcc_agent/` 對應模組。
+
+技術棧：Python 3.12、python-telegram-bot、OpenAI API、SQLite、Fly.io。
+
+## 價值觀與預審
+
+`values.yaml` 保存 GCC 使命、資助方向、拒絕條件、語氣和評分權重。修改後重新部署，或私訊 Bot 發送 `/update_values` 生效。
+
+預設評分權重：
+
+| 維度 | 權重 |
+|---|---|
+| 使命契合度 | 40 |
+| 公共物品屬性 | 30 |
+| 華語社區影響 | 20 |
+| 可行性 | 10 |
+
+結果僅用於初步篩選，不代表最終決定：
+
+- **≥ 70**：建議管理員跟進
+- **40–69**：建議參加例會進一步了解
+- **< 40**：可能不符合目前方向
+
+## 資料與對話記憶
+
+- 用戶、會話、訊息和申請草稿保存在 SQLite
+- GCC 專案和案例保存在 YAML/Markdown
+- 每位用戶保留最近 20 條對話
+- 30 分鐘無活動後建立新 Session
+- 價值觀 system prompt 始終位於用戶對話之前
+
+## 部署
+
+以 Fly.io 為例：
 
 ```bash
-curl -L https://fly.io/install.sh | sh
-export PATH="$HOME/.fly/bin:$PATH"
 flyctl auth login
-```
-
-### 2. 建立 App 和持久化磁碟
-
-```bash
-flyctl launch --no-deploy --name 你的app名稱
+flyctl launch --no-deploy --name 你的應用名稱
 flyctl volumes create gcc_agent_data --region nrt --size 1
-```
-
-### 3. 上傳環境變數
-
-```bash
 flyctl secrets set \
-  BOT_TOKEN="你的token" \
-  ADMIN_USER_ID="你的user_id" \
-  GCC_GROUP_ID="你的群組id" \
-  OPENAI_API_KEY="你的key" \
-  ADMIN_NOTIFY_ID="你的user_id" \
-  WEBHOOK_URL="https://你的app名稱.fly.dev/webhook"
-```
-
-### 4. 部署
-
-```bash
+  BOT_TOKEN="..." \
+  ADMIN_USER_ID="..." \
+  ADMIN_NOTIFY_ID="..." \
+  GCC_GROUP_ID="..." \
+  OPENAI_API_KEY="..." \
+  WEBHOOK_URL="https://你的應用名稱.fly.dev/webhook"
 flyctl deploy
 ```
 
-### 5. 設定 Telegram Webhook
+設定 Telegram Webhook：
 
-目前 Webhook 只監聽 `127.0.0.1`。Fly.io 部署需要由同一實例中的反向代理
-轉發，不能直接把本機監聽位址暴露到公網。
-
-在瀏覽器打開：
-
-```
-https://api.telegram.org/bot你的BOT_TOKEN/setWebhook?url=https://你的app名稱.fly.dev/webhook
+```text
+https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<應用名>.fly.dev/webhook
 ```
 
-看到 `{"ok":true}` 表示設定成功。
+> [!IMPORTANT]
+> Webhook 只監聽 `127.0.0.1`，需要由同一實例中的反向代理轉發，不能直接把本機監聽位址暴露到公網。
 
----
+## 參與貢獻
 
-## 更新價值觀設定
+歡迎提交 Issue 和 Pull Request。完整流程和約定見 [CONTRIBUTING.md](CONTRIBUTING.md)，參與時請遵守 [行為準則](CODE_OF_CONDUCT.md)。
 
-編輯 `values.yaml` 後有兩種方式生效：
+簡要流程：
 
-**方式 A：重新部署（推薦）**
-```bash
-flyctl deploy
-```
+1. 從 `dev` 拉出 `feat/` 或 `fix/` 分支
+2. 改動保持聚焦，並補上對應測試
+3. 提交前執行 `python -m unittest discover -s tests -v`
+4. 向 **`dev`** 開 Pull Request，不要直接推 `main`
 
-**方式 B：Telegram 指令（即時生效）**
-
-在 Telegram 私訊 Bot 發送：
-```
-/update_values
-```
-
-只有 `ADMIN_USER_ID` 對應的帳號可以執行此指令。
-
----
-
-## 管理員指令
-
-| 指令 | 功能 |
-|------|------|
-| `/status` | 查看今日統計（用戶數、訊息數、token 消耗、申請數） |
-| `/update_values` | 重新載入 values.yaml |
-
----
-
-## values.yaml 結構說明
-
-```yaml
-version: "1.0.0"
-admin_telegram_user_id: ADMIN_USER_ID
-
-mission_statement: |
-  組織使命描述...
-
-priority_themes:
-  - 優先資助方向 1
-  - 優先資助方向 2
-
-rejection_criteria:
-  - 明確不考慮的申請類型
-
-screening_rubric:
-  mission_fit: 40        # 使命契合度（滿分 40）
-  public_goods_nature: 30  # 公共物品屬性（滿分 30）
-  chinese_community: 20   # 華語社區影響（滿分 20）
-  feasibility: 10         # 可行性（滿分 10）
-
-tone_guidelines: |
-  回應語氣指引...
-
-gcc_summary: |
-  組織背景摘要（用於初次對話）...
-```
-
-預審評分結果：
-- **≥ 70 分** → 通知管理員，建議深入跟進
-- **40–69 分** → 提供資料連結，建議參與例會
-- **< 40 分** → 禮貌說明不符合方向
-
----
-
-## 對話記憶設計
-
-- 每個用戶保留最近 **20 條**對話記錄
-- **30 分鐘**無活動後自動開新 Session
-- 不使用 AI 壓縮摘要，改以例會提醒引導深入交流
-- 價值觀層（Layer 1）永遠排在對話記錄之前，不可被用戶覆蓋
-
----
-
-## 授權
-
-本項目以 [MIT](LICENSE) 授權開源。
-
----
+Issue 標題帶上 `新功能`、`缺陷`、`文檔` 等類型詞，GitHub Actions 會按內容和改動路徑自動打標籤。提交說明請寫 `Refs #編號` 或 `Fixes #編號` 以關聯 Issue。
 
 ## 關於 GCC
 
-**Global Chinese Community of Universal Digital Commons**
+GCC（Global Chinese Community of Universal Digital Commons）支持以未來方式重塑公共物品的人與專案，立足華語，共連全球。
 
-GCC 支持以未來方式重塑公共物品的人與項目，立足華語，共連全球。
-
-- 官方網站：[gccofficial.org](https://www.gccofficial.org)
+- 官網：[gccofficial.org](https://www.gccofficial.org)
 - 資助申請：[gccofficial.org/application](https://www.gccofficial.org/application)
 
+## 授權
+
+本專案採用 [MIT License](LICENSE)。
