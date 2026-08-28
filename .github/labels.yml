@@ -1,0 +1,50 @@
+# Canonical labels. Synced by .github/workflows/sync-labels.yml
+# skip-delete is enabled, so extra repo labels are left alone.
+
+- name: bug
+  color: "d73a4a"
+  description: Something isn't working
+
+- name: enhancement
+  color: "a2eeef"
+  description: New feature or improvement
+
+- name: docs
+  color: "0075ca"
+  description: Documentation
+
+- name: security
+  color: "b60205"
+  description: Auth, secrets, or vulnerability-related
+
+- name: access
+  color: "5319e7"
+  description: Identity, email verification, grant
+
+- name: applications
+  color: "fbca04"
+  description: Grant application and pre-screening
+
+- name: qa
+  color: "1d76db"
+  description: Q&A and link-first answers
+
+- name: knowledge
+  color: "0e8a16"
+  description: Values, projects, and case knowledge
+
+- name: ci
+  color: "ededed"
+  description: GitHub Actions, workflows, and repo automation
+
+- name: telegram
+  color: "0088cc"
+  description: Bot entry, router, and Telegram wiring
+
+- name: tests
+  color: "c5def5"
+  description: Automated tests
+
+- name: deploy
+  color: "006b75"
+  description: Fly.io, Docker, or production deploy
