@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/banner.jpg" alt="GCC" width="640">
+<img src="docs/assets/banner.jpg" alt="GCC Telegram AI Assistant" width="100%">
 
 # GCC Telegram AI Assistant
 
