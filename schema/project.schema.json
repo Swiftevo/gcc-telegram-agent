@@ -19,7 +19,8 @@
       "description": "Stable database id for this case."
     },
     "schema_version": {
-      "type": "string"
+      "type": "string",
+      "const": "0.1.0"
     },
     "canonical_project_id": {
       "type": "string",
@@ -100,6 +101,7 @@
           "properties": {
             "gcc_project_url": { "type": ["string", "null"] },
             "official_website": { "type": ["string", "null"] },
+            "announcement_url": { "type": ["string", "null"] },
             "repository_url": { "type": ["string", "null"] }
           },
           "additionalProperties": true
