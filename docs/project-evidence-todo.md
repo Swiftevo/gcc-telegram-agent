@@ -2,6 +2,16 @@
 
 This list tracks follow-up evidence work for the public-goods case database.
 
+## ETH City / University Web3 Funding Tracks 2025
+
+- Import individual applications submitted under the University Web3 Interest Group Funding Plan.
+- Import individual applications submitted under the ETH City Funding Plan.
+- Link approval decisions, reviewers, and approval dates for downstream applications where public or shareable.
+- Link completed projects and activity reports to the relevant track.
+- Add photos, videos, participation data, feedback, GitHub repositories, or public write-ups for completed downstream projects.
+- Decide whether downstream applications should become child records in this file, separate case records, or a linked subgrant table.
+- Preserve private applicant data as internal or redacted evidence only.
+
 ## ETH Beijing 2025
 
 - Find the detailed GCC grant application, if it exists.
