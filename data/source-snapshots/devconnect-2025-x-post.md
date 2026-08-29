@@ -1,24 +1,29 @@
 # Devconnect 2025 X Post Capture Note
 
-- Source: https://x.com/GCCofCommons/status/1978780446596239625
-- Attempted capture at: 2026-05-27
+- Source: https://x.com/GCCofCommons/status/1978782504216559740
+- Captured at: 2026-08-30
 - Source type: X social post
 
 ## Capture Result
 
-The source URL was preserved. Automated capture did not retrieve the post body,
-so the user manually provided the post text and it is recorded below as raw
-data.
+The user manually supplied the X announcement text and the related GCC project
+page content. The full announcement body is recorded below as raw data.
 
 ## Next Step
 
-If possible, add a screenshot or archived URL later so the manually pasted raw
+If possible, add a screenshot or archived URL later so the manually supplied raw
 text can be independently verified.
 
 ## Raw Data
 
 ```text
 ✈️ GCC【飞往 Devconnect 2025】机票支持计划开启
+
+这可能是我们支持过的，距离最远的一次机票。我们将支持华语建设者飞越半个地球——从亚洲到阿根廷。GCC【飞往 Devconnect 2025】机票支持计划开启！
+
+申请入口：https://tally.so/r/w2025L
+
+截止时间：2025.11.1（GMT+8）
 
 从伊斯坦布尔到大阪，从丹佛到伦敦，GCC 的机票支持计划已经陪伴华语建设者走过许多前线。
 而今年，我们将把这场支持，推向距离最远的一次。

@@ -103,6 +103,19 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             devconnect["public_record"]["links"]["official_website"],
             "https://devconnect.org/",
         )
+        self.assertEqual(
+            devconnect["public_record"]["links"]["announcement_url"],
+            "https://x.com/GCCofCommons/status/1978782504216559740",
+        )
+        self.assertEqual(
+            devconnect["public_record"]["lifecycle_status"]["grant_status"],
+            "funded",
+        )
+        self.assertEqual(
+            devconnect["public_record"]["lifecycle_status"]["delivery_status"],
+            "unknown",
+        )
+        self.assertEqual(len(devconnect["evidence"]["snapshots"]), 2)
 
     def test_schema_v0_1_contract_files_exist(self):
         case_schema_path = ROOT / "schema" / "project.schema.json"

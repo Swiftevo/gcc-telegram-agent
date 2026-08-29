@@ -796,7 +796,7 @@ cases:
         per_person_cap_usd: 1000
         currency: USD
         disbursement_type: reimbursement
-        notes: Total support pool is 5,000 USD with a 1,000 USD reimbursement cap per person.
+        notes: GCC project page and X announcement list a 5,000 USD support pool with a 1,000 USD reimbursement cap per person.
       program_details:
         start_date: "2025-11-17"
         end_date: "2025-11-22"
@@ -827,7 +827,7 @@ cases:
           - Participate in hackathon, workshop, panel, or related events.
           - Share post-event experience and learnings with the community.
         milestones: []
-        notes: Application link in raw data is https://tally.so/r/w2025L.
+        notes: Application link in raw data is https://tally.so/r/w2025L. Selection, reimbursement, and post-event outcome records have not been imported yet.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -859,8 +859,8 @@ cases:
           description: Provides 5,000 USD total travel support with a 1,000 USD per-person cap.
           metric: total_pool_usd
           value: 5000
-          source_snapshot_id: snap-devconnect-2025-x-post
-          notes:
+          source_snapshot_id: snap-devconnect-2025-gcc-project-page
+          notes: GCC project page lists amount 5000; X announcement confirms 5,000 USD total support and 1,000 USD per-person reimbursement cap.
         - type: community
           description: Prioritizes Chinese-speaking builders contributing to public goods, open protocols, on-chain governance, and crypto education.
           metric:
@@ -874,10 +874,10 @@ cases:
           source_snapshot_id: snap-devconnect-2025-x-post
           notes:
       lifecycle_status:
-        grant_status: approved
-        delivery_status: in_progress
+        grant_status: funded
+        delivery_status: unknown
         reporting_status: expected
-        notes: Program announced publicly; individual selections and post-event reports are not imported yet.
+        notes: GCC project page confirms the program and amount. Individual selection, reimbursement/disbursement, and post-event outcome records are not imported yet.
       regions: [Chinese-speaking community, global]
       tags: [travel scholarship, builder support, Ethereum, conference access]
       summary: >
@@ -894,39 +894,48 @@ cases:
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-devconnect-2025
         official_website: https://devconnect.org/
-        announcement_url: https://x.com/GCCofCommons/status/1978780446596239625
+        announcement_url: https://x.com/GCCofCommons/status/1978782504216559740
         repository_url:
     evidence:
       source_urls:
-        - https://x.com/GCCofCommons/status/1978780446596239625
+        - https://x.com/GCCofCommons/status/1978782504216559740
         - https://www.gccofficial.org/project/project-devconnect-2025
         - https://devconnect.org/
+        - https://tally.so/r/w2025L
       snapshots:
+        - snapshot_id: snap-devconnect-2025-gcc-project-page
+          captured_at: "2026-08-30"
+          source_type: gcc_project_page
+          access_level: public
+          source_url: https://www.gccofficial.org/project/project-devconnect-2025
+          storage_uri: data/source-snapshots/devconnect-2025-gcc-project-page.md
+          checksum:
+          notes: GCC project page lists amount 5000, Travel scholarship category, displayed date 2025.10.08, and the project summary.
         - snapshot_id: snap-devconnect-2025-x-post
-          captured_at: "2026-05-27"
+          captured_at: "2026-08-30"
           source_type: social_post
           access_level: public
-          source_url: https://x.com/GCCofCommons/status/1978780446596239625
+          source_url: https://x.com/GCCofCommons/status/1978782504216559740
           storage_uri: data/source-snapshots/devconnect-2025-x-post.md
           checksum:
-          notes: Source URL preserved; content needs manual capture or an accessible archive.
+          notes: Announcement raw text was manually supplied by the user; add screenshot or archive verification later.
       grant_application:
         status: available
         access_level: public
-        document_ref: x-post:1978780446596239625
+        document_ref: x-post:1978782504216559740
         snapshot_id: snap-devconnect-2025-x-post
         summary: >
           Public X post announces application link, deadline, funding amount,
           eligibility, selection criteria, priority applicants, and Devconnect
           2025 event context.
-        notes: Individual applicant submissions may contain personal data and need redaction.
+        notes: Tally form link is public, but individual applicant submissions may contain personal data and need redaction.
       voting_record:
         status: unknown
         access_level: internal
         document_ref:
         snapshot_id:
         summary:
-        notes: Vote or selection record not yet imported.
+        notes: Vote, selection, reimbursement, or recipient approval record not yet imported.
       vote_summary:
         platform: unknown
         proposal_id:
@@ -940,7 +949,7 @@ cases:
         verification: user_supplied
         storage_uri: data/source-snapshots/devconnect-2025-x-post.md
         source_snapshot_id: snap-devconnect-2025-x-post
-        notes: Raw X post text was manually supplied by the user; archive or screenshot verification should be added later.
+        notes: GCC project page and raw X announcement text were manually supplied by the user; archive or screenshot verification should be added later.
     ai_review_usage:
       allowed: true
       retrieval_text: >
@@ -956,6 +965,7 @@ cases:
       cautions:
         - Raw text was manually supplied by the user from the X post; add an archived screenshot or URL later for independent verification.
         - Personal applicant data must not be exposed to public retrieval.
+        - Selection, reimbursement, recipient, and post-event outcome evidence has not been imported yet.
     governance:
       visibility: public
       license:
