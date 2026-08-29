@@ -605,18 +605,18 @@ cases:
     category: ETH City Series
     fund_type: special
     public_record:
-      amount_usd:
+      amount_usd: 3000
       grant_year: 2025
       activity_year: 2025
       language_community: [Chinese-speaking community, Beijing Ethereum builders, university builders]
       funding:
         requested_amount_usd:
-        approved_amount_usd:
+        approved_amount_usd: 3000
         total_budget_usd:
         per_person_cap_usd:
-        currency:
+        currency: USD
         disbursement_type: unknown
-        notes: Funding amount not available in the imported X recap source.
+        notes: GCC official project page lists amount 3000; currency is recorded as USD for amount_usd compatibility and should be verified later.
       program_details:
         start_date:
         end_date: "2025-06-07"
@@ -676,11 +676,17 @@ cases:
           value:
           source_snapshot_id: snap-eth-beijing-2025-x-recap
           notes:
+        - type: funding_access
+          description: GCC official project page lists ETH Beijing 2025 with amount 3000 under Eth city series.
+          metric: gcc_project_page_amount
+          value: 3000
+          source_snapshot_id: snap-eth-beijing-2025-gcc-project-page
+          notes: Currency and accounting interpretation need later verification.
       lifecycle_status:
-        grant_status: unknown
+        grant_status: funded
         delivery_status: completed
         reporting_status: unknown
-        notes: Recap source confirms the hackathon had completed by 2025-06-07. It does not include GCC grant decision, detailed application, voting record, or report status.
+        notes: GCC project page confirms GCC funding relationship and amount 3000; recap source confirms the hackathon had completed by 2025-06-07. Detailed application, voting record, currency, and report status still need verification.
       regions: [Beijing, Chinese-speaking community]
       tags: [ETH Beijing, hackathon, Ethereum, AI agents, blockchain, university builders]
       summary: >
@@ -703,6 +709,14 @@ cases:
         - https://x.com/PKUBlockchain/status/1931281003378880948
         - https://www.gccofficial.org/project/project-ethbeijing-2025
       snapshots:
+        - snapshot_id: snap-eth-beijing-2025-gcc-project-page
+          captured_at: "2026-08-30"
+          source_type: gcc_project_page
+          access_level: public
+          source_url: https://www.gccofficial.org/project/project-ethbeijing-2025
+          storage_uri: data/source-snapshots/eth-beijing-2025-gcc-project-page.md
+          checksum:
+          notes: GCC project page lists amount 3000 and describes GCC as a funder; page date 2022.04.04 requires later verification.
         - snapshot_id: snap-eth-beijing-2025-x-recap
           captured_at: "2026-05-29"
           source_type: social_post
@@ -715,9 +729,9 @@ cases:
         status: expected
         access_level: private
         document_ref:
-        snapshot_id:
-        summary:
-        notes: Reserved for the detailed GCC application if available.
+        snapshot_id: snap-eth-beijing-2025-gcc-project-page
+        summary: GCC project page confirms the ETH Beijing 2025 project page and lists amount 3000, but does not include the detailed application.
+        notes: Reserved for the detailed GCC application if available; follow-up is tracked in docs/project-evidence-todo.md.
       voting_record:
         status: unknown
         access_level: internal
@@ -736,13 +750,14 @@ cases:
       raw_data_status:
         status: captured
         verification: api
-        storage_uri: data/source-snapshots/eth-beijing-2025-x-recap.md
-        source_snapshot_id: snap-eth-beijing-2025-x-recap
+        storage_uri: data/source-snapshots/eth-beijing-2025-gcc-project-page.md
+        source_snapshot_id: snap-eth-beijing-2025-gcc-project-page
         notes: >
-          X recap text captured through public Twitter mirror API; image media
-          URL is preserved. Data-quality warning: the current official website
-          is for the 2026 edition, so it should not overwrite this 2025 recap
-          evidence.
+          GCC project page and X recap are both captured as public evidence. X
+          recap text preserves the event completion evidence; GCC project page
+          preserves the GCC funding relationship and listed amount. Data-quality
+          warning: the current ETH Beijing official website is for the 2026
+          edition, so it should not overwrite this 2025 recap evidence.
     ai_review_usage:
       allowed: true
       retrieval_text: >
@@ -756,6 +771,7 @@ cases:
       cautions:
         - X recap describes the activity, but does not replace GCC application or vote evidence.
         - Current ETH Beijing official website content may describe the 2026 edition; use the PKU Blockchain 2025 recap for this case unless a 2025 archive is added.
+        - GCC project page date is shown as 2022.04.04 and needs later verification before it is used as a timeline fact.
     governance:
       visibility: public
       license:

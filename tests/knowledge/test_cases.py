@@ -84,12 +84,17 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
 
         eth_beijing = cases["gcc-eth-city-eth-beijing-2025"]
+        self.assertEqual(eth_beijing["public_record"]["amount_usd"], 3000)
         self.assertEqual(eth_beijing["public_record"]["activity_year"], 2025)
         self.assertEqual(
             eth_beijing["public_record"]["lifecycle_status"]["delivery_status"],
             "completed",
         )
-        self.assertIsNone(eth_beijing["public_record"]["funding"]["approved_amount_usd"])
+        self.assertEqual(
+            eth_beijing["public_record"]["lifecycle_status"]["grant_status"],
+            "funded",
+        )
+        self.assertEqual(eth_beijing["public_record"]["funding"]["approved_amount_usd"], 3000)
 
         devconnect = cases["gcc-travel-scholarship-devconnect-2025"]
         self.assertEqual(devconnect["public_record"]["amount_usd"], 5000)
