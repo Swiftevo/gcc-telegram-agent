@@ -240,7 +240,7 @@ cases:
         per_person_cap_usd:
         currency: USD
         disbursement_type: one_time
-        notes: "Dual-track annual pool: 30,000 USD for university Web3 groups and 30,000 USD for ETH City events."
+        notes: "Umbrella funding-track approval: 30,000 USD for university Web3 groups and 30,000 USD for ETH City events."
       program_details:
         start_date: "2025-01-01"
         end_date: "2025-12-30"
@@ -271,8 +271,45 @@ cases:
           - Community operations, lectures, salons, competitions, and hackathons.
           - ETH City developer salons, public goods roadshows, hackathons, and open research activities.
           - Activity records and follow-up reports.
+        funding_tracks:
+          - name: 高校 Web3 興趣小組資助計劃
+            track_type: university_group
+            total_pool_usd: 30000
+            min_grant_usd: 2000
+            max_grant_usd: 3000
+            slot_limit: 10
+            application_mode: rolling
+            application_url: https://tally.so/r/3EMJ5N
+            eligibility:
+              - Global university blockchain associations, interest groups, and technical groups, with Chinese-speaking regions prioritized.
+            supported_uses:
+              - Decentralized technology workshops.
+              - Open-source student project development with GPL or MIT style licenses.
+              - Community operations, lectures, salons, competitions, and hackathons.
+            status: active
+            child_records_status: pending_import
+            notes: The track is already operating; individual applications, approvals, completed sub-projects, and reports should be imported as child records later.
+          - name: ETH City 資助計劃
+            track_type: city_event
+            total_pool_usd: 30000
+            min_grant_usd:
+            max_grant_usd: 5000
+            slot_limit: 10
+            application_mode: rolling
+            application_url: https://tally.so/r/3EMJ5N
+            eligibility:
+              - Global Web3 community event organizers running ETH-themed activities focused on Chinese-speaking groups and free public access.
+              - Priority for themes related to open source, education, and public goods.
+            supported_uses:
+              - Offline Web3 developer salons and public goods roadshows.
+              - Ethereum hackathons and open-source tool or protocol building.
+              - Community building events and cross-sector blockchain case sharing.
+              - Open research on Ethereum, blockchain, society, and public goods.
+            status: active
+            child_records_status: pending_import
+            notes: The track is already operating; individual applications, approvals, completed activities, and reports should be imported as child records later.
         milestones: []
-        notes: Bundled dual-track rolling grant program; the source says applications are rolling, each track has no more than 10 slots, and places close when full.
+        notes: Bundled dual-track rolling funding program; the source says applications are rolling, each track has no more than 10 slots, and places close when full. This case records the creation and approval of the two tracks, not a single downstream applicant project.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -320,30 +357,34 @@ cases:
           notes:
       lifecycle_status:
         grant_status: approved
-        delivery_status: unknown
+        delivery_status: in_progress
         reporting_status: expected
-        notes: Snapshot is closed; individual sub-grant delivery should be tracked separately.
+        notes: Snapshot is closed and the two funding tracks are operating. Individual applications, approvals, completed sub-projects, and delivery reports should be imported later as child records or linked cases.
       regions: [global, Chinese-speaking community]
       tags: [university Web3 groups, ETH City, education, local community, open-source activities]
       summary: >
-        This annual dual-track funding proposal supported university Web3
-        interest groups and ETH City activities. It targeted Chinese-speaking
-        builders across campus and city contexts through rolling applications,
-        education, workshops, hackathons, community operations, and open-source
-        project development.
+        This annual dual-track funding proposal approved two 2025 GCC funding
+        tracks: the University Web3 Interest Group Funding Plan and the ETH City
+        Funding Plan. It targeted Chinese-speaking builders across campus and
+        city contexts through rolling applications, education, workshops,
+        hackathons, community operations, and open-source project development.
       why_funded: >
-        It is a community infrastructure case that connects young builders,
-        local city organizers, and public goods education. It explicitly links
-        funding to open-source outputs, free public activities, and follow-up
-        reporting.
+        It is a community infrastructure and grant-program design case, not a
+        single applicant project. GCC approved two reusable funding tracks to
+        connect young builders, local city organizers, and public goods
+        education. The tracks explicitly link funding to open-source outputs,
+        free public activities, and follow-up reporting.
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-universityblockchain
         official_website:
+        announcement_url: https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
         repository_url:
     evidence:
       source_urls:
-        - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe84766
+        - https://snapshot.box/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+        - https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
+        - https://tally.so/r/3EMJ5N
       snapshots:
         - snapshot_id: snap-eth-city-university-web3-snapshot-proposal
           captured_at: "2026-05-27"
@@ -352,24 +393,34 @@ cases:
           source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
           storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
           checksum:
-          notes: User-provided URL had one extra trailing character; stored Snapshot id uses the id returned by Snapshot Hub.
+          notes: Snapshot records the funding-track approval, voting timeline, and voting results. Snapshot Hub proposal id is preserved as the normalized proposal id.
+        - snapshot_id: snap-eth-city-university-web3-wechat-announcement
+          captured_at: "2026-08-30"
+          source_type: public_announcement
+          access_level: public
+          source_url: https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
+          storage_uri: data/source-snapshots/eth-city-university-web3-wechat-announcement.md
+          checksum:
+          notes: Public WeChat announcement for the two funding tracks and application link.
       grant_application:
         status: available
         access_level: public
         document_ref: snapshot:0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         snapshot_id: snap-eth-city-university-web3-snapshot-proposal
         summary: >
-          Public Snapshot proposal describes two rolling grant tracks: university
-          Web3 interest groups and ETH City events, each with a 30,000 USD total
-          pool.
-        notes: Future imports can split this into separate university and city sub-cases.
+          Public Snapshot proposal describes approval of two rolling funding
+          tracks: university Web3 interest groups and ETH City events, each with
+          a 30,000 USD total pool.
+        notes: This is an umbrella funding-track approval; future imports should link individual applications, approvals, completed sub-projects, and reports as child records.
       voting_record:
         status: available
         access_level: public
         document_ref: snapshot:0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         snapshot_id: snap-eth-city-university-web3-snapshot-proposal
-        summary: "Snapshot state closed. Choices: For, Against, Abstain. Scores: 3, 0, 2."
-        notes: This is a public vote-summary snapshot.
+        summary: "Snapshot state closed. Timeline: created 2025-03-05 16:57, vote ended 2025-03-09 23:59. Choices: For, Against, Abstain. Scores: 3, 0, 2."
+        notes: >
+          Public voter records are preserved in the source snapshot. Voter
+          records show five 1 GCC votes: three For and two Abstain.
       vote_summary:
         platform: snapshot
         proposal_id: 0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
@@ -383,20 +434,20 @@ cases:
             score: 2
         total_score: 5
         source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
-        notes: User-provided URL had an extra trailing character; this proposal id is the normalized Snapshot Hub id.
+        notes: Proposal id is the normalized Snapshot Hub id. Vote ran from 2025-03-05 16:57 to 2025-03-09 23:59.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
         source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
-        notes: Full Snapshot proposal body stored under Raw Data.
+        notes: Full Snapshot proposal body and WeChat public announcement are stored under Raw Data. Downstream project applications, approvals, and completion records are pending import.
     ai_review_usage:
       allowed: true
       retrieval_text: >
-        Community precedent for rolling support to campus Web3 groups and local
-        ETH City activities. Useful for reviewing education, workshop, local
-        organizer, community infrastructure, and open-source student activity
-        proposals.
+        Funding-track precedent for rolling support to campus Web3 groups and
+        local ETH City activities. Useful for reviewing education, workshop,
+        local organizer, community infrastructure, and open-source student
+        activity proposals under an umbrella grant program.
       screening_dimensions:
         - mission_fit
         - chinese_community
@@ -404,6 +455,7 @@ cases:
         - precedent_similarity
       cautions:
         - Because this proposal bundles two tracks, compare new applicants to the relevant track only.
+        - This is not a single applicant project; use it as funding-track precedent and import downstream applications as child records when evidence is available.
     governance:
       visibility: public
       license:

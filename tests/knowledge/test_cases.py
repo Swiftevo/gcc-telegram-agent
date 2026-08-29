@@ -78,10 +78,27 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
+        eth_city_details = eth_city["public_record"]["program_details"]
         self.assertEqual(
-            eth_city["public_record"]["program_details"]["application_deadline"],
+            eth_city_details["application_deadline"],
             "rolling until 2025-12-30 or until quota filled",
         )
+        self.assertEqual(eth_city["public_record"]["lifecycle_status"]["delivery_status"], "in_progress")
+        self.assertEqual(eth_city["public_record"]["links"]["announcement_url"], "https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ")
+        self.assertEqual(len(eth_city_details["funding_tracks"]), 2)
+        self.assertEqual(
+            [track["track_type"] for track in eth_city_details["funding_tracks"]],
+            ["university_group", "city_event"],
+        )
+        self.assertEqual(
+            [track["total_pool_usd"] for track in eth_city_details["funding_tracks"]],
+            [30000, 30000],
+        )
+        self.assertEqual(
+            [track["child_records_status"] for track in eth_city_details["funding_tracks"]],
+            ["pending_import", "pending_import"],
+        )
+        self.assertEqual(len(eth_city["evidence"]["snapshots"]), 2)
 
         eth_beijing = cases["gcc-eth-city-eth-beijing-2025"]
         self.assertEqual(eth_beijing["public_record"]["amount_usd"], 3000)
@@ -127,6 +144,8 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.1.0")
         self.assertIn("cases", database_schema["required"])
         self.assertEqual(database_schema["properties"]["cases"]["items"]["$ref"], "project.schema.json")
+        self.assertIn("funding_tracks", case_schema["$defs"]["programDetails"]["properties"])
+        self.assertIn("fundingTrack", case_schema["$defs"])
         for field in ("public_record", "evidence", "ai_review_usage"):
             self.assertIn(field, case_schema["required"])
 
