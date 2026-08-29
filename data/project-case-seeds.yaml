@@ -1,5 +1,5 @@
 schema_version: "0.1.0"
-updated_at: "2026-05-27"
+updated_at: "2026-08-30"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category and reserves
@@ -137,12 +137,13 @@ cases:
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-vyper
         official_website: https://vyperlang.org/
-        repository_url:
+        repository_url: https://github.com/vyperlang/vyper
     evidence:
       source_urls:
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
         - https://www.gccofficial.org/project/project-vyper
         - https://vyperlang.org/
+        - https://github.com/vyperlang/vyper
       snapshots:
         - snapshot_id: snap-vyper-snapshot-proposal
           captured_at: "2026-05-27"
@@ -243,7 +244,7 @@ cases:
       program_details:
         start_date: "2025-01-01"
         end_date: "2025-12-30"
-        application_deadline:
+        application_deadline: rolling until 2025-12-30 or until quota filled
         location: global with Chinese-speaking community priority
         eligibility:
           - Global university blockchain associations, interest groups, and technical groups, with Chinese-speaking regions prioritized.
@@ -271,7 +272,7 @@ cases:
           - ETH City developer salons, public goods roadshows, hackathons, and open research activities.
           - Activity records and follow-up reports.
         milestones: []
-        notes: Bundled dual-track rolling grant program.
+        notes: Bundled dual-track rolling grant program; the source says applications are rolling, each track has no more than 10 slots, and places close when full.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -606,7 +607,7 @@ cases:
     public_record:
       amount_usd:
       grant_year: 2025
-      activity_year: 2026
+      activity_year: 2025
       language_community: [Chinese-speaking community, Beijing Ethereum builders, university builders]
       funding:
         requested_amount_usd:
@@ -629,7 +630,7 @@ cases:
           - Public goods and AI track participation
           - Ethereum builder community gathering
         milestones: []
-        notes: Source is a 2025 recap post; exact start date is not in the imported text, but the post was published on 2025-06-07 and describes the hackathon as completed.
+        notes: Source is a 2025 recap post; exact start date is not in the imported text, but the post was published on 2025-06-07 and describes the hackathon as completed. The official ETH Beijing website had already updated to the 2026 edition and should not be used as evidence for this 2025 case.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -677,9 +678,9 @@ cases:
           notes:
       lifecycle_status:
         grant_status: unknown
-        delivery_status: not_started
+        delivery_status: completed
         reporting_status: unknown
-        notes: Recap source does not include GCC grant decision or report status.
+        notes: Recap source confirms the hackathon had completed by 2025-06-07. It does not include GCC grant decision, detailed application, voting record, or report status.
       regions: [Beijing, Chinese-speaking community]
       tags: [ETH Beijing, hackathon, Ethereum, AI agents, blockchain, university builders]
       summary: >
@@ -737,7 +738,11 @@ cases:
         verification: api
         storage_uri: data/source-snapshots/eth-beijing-2025-x-recap.md
         source_snapshot_id: snap-eth-beijing-2025-x-recap
-        notes: X recap text captured through public Twitter mirror API; image media URL is preserved.
+        notes: >
+          X recap text captured through public Twitter mirror API; image media
+          URL is preserved. Data-quality warning: the current official website
+          is for the 2026 edition, so it should not overwrite this 2025 recap
+          evidence.
     ai_review_usage:
       allowed: true
       retrieval_text: >
@@ -750,6 +755,7 @@ cases:
         - precedent_similarity
       cautions:
         - X recap describes the activity, but does not replace GCC application or vote evidence.
+        - Current ETH Beijing official website content may describe the 2026 edition; use the PKU Blockchain 2025 recap for this case unless a 2025 archive is added.
     governance:
       visibility: public
       license:
@@ -763,13 +769,13 @@ cases:
     category: Travel Scholarship
     fund_type: special
     public_record:
-      amount_usd:
+      amount_usd: 5000
       grant_year: 2025
       activity_year: 2025
       language_community: [Chinese-speaking builders, Asian builders, Ethereum community]
       funding:
         requested_amount_usd:
-        approved_amount_usd:
+        approved_amount_usd: 5000
         total_budget_usd: 5000
         per_person_cap_usd: 1000
         currency: USD
@@ -871,12 +877,14 @@ cases:
         and post-event community knowledge sharing.
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-devconnect-2025
-        official_website: https://x.com/GCCofCommons/status/1978780446596239625
+        official_website: https://devconnect.org/
+        announcement_url: https://x.com/GCCofCommons/status/1978780446596239625
         repository_url:
     evidence:
       source_urls:
         - https://x.com/GCCofCommons/status/1978780446596239625
         - https://www.gccofficial.org/project/project-devconnect-2025
+        - https://devconnect.org/
       snapshots:
         - snapshot_id: snap-devconnect-2025-x-post
           captured_at: "2026-05-27"

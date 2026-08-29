@@ -181,6 +181,17 @@ main.py                      # 启动入口
 - 30 分钟无活动后建立新 Session
 - 价值观 system prompt 始终位于用户对话之前
 
+## 公共物品案例资料库
+
+第一批案例种子保存在 `data/project-case-seeds.yaml`，目前覆盖 6 个代表类别：开源项目、社区资助、单次活动、ETH City 系列、机票支持计划和 Gitcoin 类别占位。
+
+v0.1 schema 分成两层：
+
+- `schema/project-case-database.schema.json`：定义整个资料库文件，包括 `schema_version`、`updated_at`、`purpose` 和 `cases`
+- `schema/project.schema.json`：定义单个案例，包括公开记录、资金结构、公共物品维度、影响证据、原始资料指针、投票记录和 AI 初审引用方式
+
+这批资料是可追溯的 seed database，不等同于完整 GCC 历史资助库。新增案例时应保留原始申请书、Snapshot 或投票记录的指针，并明确标记资料质量、隐私和是否可用于 AI 初审。
+
 ## 部署
 
 以 Fly.io 为例：
