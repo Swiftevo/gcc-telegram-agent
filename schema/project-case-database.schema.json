@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Swiftevo/gcc-telegram-agent/schema/project-case-database.schema.json",
+  "title": "GCC Public Goods Project Case Database",
+  "type": "object",
+  "required": ["schema_version", "updated_at", "purpose", "cases"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Date when the seed database was last materially updated."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Human-readable explanation of the database scope and intended usage."
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "project.schema.json"
+      }
+    }
+  },
+  "additionalProperties": false
+}

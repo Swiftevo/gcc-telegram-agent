@@ -1,5 +1,5 @@
 schema_version: "0.1.0"
-updated_at: "2026-05-27"
+updated_at: "2026-08-30"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category and reserves
@@ -137,12 +137,13 @@ cases:
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-vyper
         official_website: https://vyperlang.org/
-        repository_url:
+        repository_url: https://github.com/vyperlang/vyper
     evidence:
       source_urls:
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
         - https://www.gccofficial.org/project/project-vyper
         - https://vyperlang.org/
+        - https://github.com/vyperlang/vyper
       snapshots:
         - snapshot_id: snap-vyper-snapshot-proposal
           captured_at: "2026-05-27"
@@ -239,11 +240,11 @@ cases:
         per_person_cap_usd:
         currency: USD
         disbursement_type: one_time
-        notes: "Dual-track annual pool: 30,000 USD for university Web3 groups and 30,000 USD for ETH City events."
+        notes: "Umbrella funding-track approval: 30,000 USD for university Web3 groups and 30,000 USD for ETH City events."
       program_details:
         start_date: "2025-01-01"
         end_date: "2025-12-30"
-        application_deadline:
+        application_deadline: rolling until 2025-12-30 or until quota filled
         location: global with Chinese-speaking community priority
         eligibility:
           - Global university blockchain associations, interest groups, and technical groups, with Chinese-speaking regions prioritized.
@@ -270,8 +271,45 @@ cases:
           - Community operations, lectures, salons, competitions, and hackathons.
           - ETH City developer salons, public goods roadshows, hackathons, and open research activities.
           - Activity records and follow-up reports.
+        funding_tracks:
+          - name: 高校 Web3 興趣小組資助計劃
+            track_type: university_group
+            total_pool_usd: 30000
+            min_grant_usd: 2000
+            max_grant_usd: 3000
+            slot_limit: 10
+            application_mode: rolling
+            application_url: https://tally.so/r/3EMJ5N
+            eligibility:
+              - Global university blockchain associations, interest groups, and technical groups, with Chinese-speaking regions prioritized.
+            supported_uses:
+              - Decentralized technology workshops.
+              - Open-source student project development with GPL or MIT style licenses.
+              - Community operations, lectures, salons, competitions, and hackathons.
+            status: active
+            child_records_status: pending_import
+            notes: The track is already operating; individual applications, approvals, completed sub-projects, and reports should be imported as child records later.
+          - name: ETH City 資助計劃
+            track_type: city_event
+            total_pool_usd: 30000
+            min_grant_usd:
+            max_grant_usd: 5000
+            slot_limit: 10
+            application_mode: rolling
+            application_url: https://tally.so/r/3EMJ5N
+            eligibility:
+              - Global Web3 community event organizers running ETH-themed activities focused on Chinese-speaking groups and free public access.
+              - Priority for themes related to open source, education, and public goods.
+            supported_uses:
+              - Offline Web3 developer salons and public goods roadshows.
+              - Ethereum hackathons and open-source tool or protocol building.
+              - Community building events and cross-sector blockchain case sharing.
+              - Open research on Ethereum, blockchain, society, and public goods.
+            status: active
+            child_records_status: pending_import
+            notes: The track is already operating; individual applications, approvals, completed activities, and reports should be imported as child records later.
         milestones: []
-        notes: Bundled dual-track rolling grant program.
+        notes: Bundled dual-track rolling funding program; the source says applications are rolling, each track has no more than 10 slots, and places close when full. This case records the creation and approval of the two tracks, not a single downstream applicant project.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -319,30 +357,34 @@ cases:
           notes:
       lifecycle_status:
         grant_status: approved
-        delivery_status: unknown
+        delivery_status: in_progress
         reporting_status: expected
-        notes: Snapshot is closed; individual sub-grant delivery should be tracked separately.
+        notes: Snapshot is closed and the two funding tracks are operating. Individual applications, approvals, completed sub-projects, and delivery reports should be imported later as child records or linked cases.
       regions: [global, Chinese-speaking community]
       tags: [university Web3 groups, ETH City, education, local community, open-source activities]
       summary: >
-        This annual dual-track funding proposal supported university Web3
-        interest groups and ETH City activities. It targeted Chinese-speaking
-        builders across campus and city contexts through rolling applications,
-        education, workshops, hackathons, community operations, and open-source
-        project development.
+        This annual dual-track funding proposal approved two 2025 GCC funding
+        tracks: the University Web3 Interest Group Funding Plan and the ETH City
+        Funding Plan. It targeted Chinese-speaking builders across campus and
+        city contexts through rolling applications, education, workshops,
+        hackathons, community operations, and open-source project development.
       why_funded: >
-        It is a community infrastructure case that connects young builders,
-        local city organizers, and public goods education. It explicitly links
-        funding to open-source outputs, free public activities, and follow-up
-        reporting.
+        It is a community infrastructure and grant-program design case, not a
+        single applicant project. GCC approved two reusable funding tracks to
+        connect young builders, local city organizers, and public goods
+        education. The tracks explicitly link funding to open-source outputs,
+        free public activities, and follow-up reporting.
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-universityblockchain
         official_website:
+        announcement_url: https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
         repository_url:
     evidence:
       source_urls:
-        - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe84766
+        - https://snapshot.box/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+        - https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
+        - https://tally.so/r/3EMJ5N
       snapshots:
         - snapshot_id: snap-eth-city-university-web3-snapshot-proposal
           captured_at: "2026-05-27"
@@ -351,24 +393,34 @@ cases:
           source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
           storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
           checksum:
-          notes: User-provided URL had one extra trailing character; stored Snapshot id uses the id returned by Snapshot Hub.
+          notes: Snapshot records the funding-track approval, voting timeline, and voting results. Snapshot Hub proposal id is preserved as the normalized proposal id.
+        - snapshot_id: snap-eth-city-university-web3-wechat-announcement
+          captured_at: "2026-08-30"
+          source_type: public_announcement
+          access_level: public
+          source_url: https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
+          storage_uri: data/source-snapshots/eth-city-university-web3-wechat-announcement.md
+          checksum:
+          notes: Public WeChat announcement for the two funding tracks and application link.
       grant_application:
         status: available
         access_level: public
         document_ref: snapshot:0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         snapshot_id: snap-eth-city-university-web3-snapshot-proposal
         summary: >
-          Public Snapshot proposal describes two rolling grant tracks: university
-          Web3 interest groups and ETH City events, each with a 30,000 USD total
-          pool.
-        notes: Future imports can split this into separate university and city sub-cases.
+          Public Snapshot proposal describes approval of two rolling funding
+          tracks: university Web3 interest groups and ETH City events, each with
+          a 30,000 USD total pool.
+        notes: This is an umbrella funding-track approval; future imports should link individual applications, approvals, completed sub-projects, and reports as child records.
       voting_record:
         status: available
         access_level: public
         document_ref: snapshot:0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         snapshot_id: snap-eth-city-university-web3-snapshot-proposal
-        summary: "Snapshot state closed. Choices: For, Against, Abstain. Scores: 3, 0, 2."
-        notes: This is a public vote-summary snapshot.
+        summary: "Snapshot state closed. Timeline: created 2025-03-05 16:57, vote ended 2025-03-09 23:59. Choices: For, Against, Abstain. Scores: 3, 0, 2."
+        notes: >
+          Public voter records are preserved in the source snapshot. Voter
+          records show five 1 GCC votes: three For and two Abstain.
       vote_summary:
         platform: snapshot
         proposal_id: 0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
@@ -382,20 +434,20 @@ cases:
             score: 2
         total_score: 5
         source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
-        notes: User-provided URL had an extra trailing character; this proposal id is the normalized Snapshot Hub id.
+        notes: Proposal id is the normalized Snapshot Hub id. Vote ran from 2025-03-05 16:57 to 2025-03-09 23:59.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
         source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
-        notes: Full Snapshot proposal body stored under Raw Data.
+        notes: Full Snapshot proposal body and WeChat public announcement are stored under Raw Data. Downstream project applications, approvals, and completion records are pending import.
     ai_review_usage:
       allowed: true
       retrieval_text: >
-        Community precedent for rolling support to campus Web3 groups and local
-        ETH City activities. Useful for reviewing education, workshop, local
-        organizer, community infrastructure, and open-source student activity
-        proposals.
+        Funding-track precedent for rolling support to campus Web3 groups and
+        local ETH City activities. Useful for reviewing education, workshop,
+        local organizer, community infrastructure, and open-source student
+        activity proposals under an umbrella grant program.
       screening_dimensions:
         - mission_fit
         - chinese_community
@@ -403,6 +455,7 @@ cases:
         - precedent_similarity
       cautions:
         - Because this proposal bundles two tracks, compare new applicants to the relevant track only.
+        - This is not a single applicant project; use it as funding-track precedent and import downstream applications as child records when evidence is available.
     governance:
       visibility: public
       license:
@@ -604,18 +657,18 @@ cases:
     category: ETH City Series
     fund_type: special
     public_record:
-      amount_usd:
+      amount_usd: 3000
       grant_year: 2025
-      activity_year: 2026
+      activity_year: 2025
       language_community: [Chinese-speaking community, Beijing Ethereum builders, university builders]
       funding:
         requested_amount_usd:
-        approved_amount_usd:
+        approved_amount_usd: 3000
         total_budget_usd:
         per_person_cap_usd:
-        currency:
+        currency: USD
         disbursement_type: unknown
-        notes: Funding amount not available in the imported X recap source.
+        notes: GCC official project page lists amount 3000; currency is recorded as USD for amount_usd compatibility and should be verified later.
       program_details:
         start_date:
         end_date: "2025-06-07"
@@ -629,7 +682,7 @@ cases:
           - Public goods and AI track participation
           - Ethereum builder community gathering
         milestones: []
-        notes: Source is a 2025 recap post; exact start date is not in the imported text, but the post was published on 2025-06-07 and describes the hackathon as completed.
+        notes: Source is a 2025 recap post; exact start date is not in the imported text, but the post was published on 2025-06-07 and describes the hackathon as completed. The official ETH Beijing website had already updated to the 2026 edition and should not be used as evidence for this 2025 case.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -675,11 +728,17 @@ cases:
           value:
           source_snapshot_id: snap-eth-beijing-2025-x-recap
           notes:
+        - type: funding_access
+          description: GCC official project page lists ETH Beijing 2025 with amount 3000 under Eth city series.
+          metric: gcc_project_page_amount
+          value: 3000
+          source_snapshot_id: snap-eth-beijing-2025-gcc-project-page
+          notes: Currency and accounting interpretation need later verification.
       lifecycle_status:
-        grant_status: unknown
-        delivery_status: not_started
+        grant_status: funded
+        delivery_status: completed
         reporting_status: unknown
-        notes: Recap source does not include GCC grant decision or report status.
+        notes: GCC project page confirms GCC funding relationship and amount 3000; recap source confirms the hackathon had completed by 2025-06-07. Detailed application, voting record, currency, and report status still need verification.
       regions: [Beijing, Chinese-speaking community]
       tags: [ETH Beijing, hackathon, Ethereum, AI agents, blockchain, university builders]
       summary: >
@@ -702,6 +761,14 @@ cases:
         - https://x.com/PKUBlockchain/status/1931281003378880948
         - https://www.gccofficial.org/project/project-ethbeijing-2025
       snapshots:
+        - snapshot_id: snap-eth-beijing-2025-gcc-project-page
+          captured_at: "2026-08-30"
+          source_type: gcc_project_page
+          access_level: public
+          source_url: https://www.gccofficial.org/project/project-ethbeijing-2025
+          storage_uri: data/source-snapshots/eth-beijing-2025-gcc-project-page.md
+          checksum:
+          notes: GCC project page lists amount 3000 and describes GCC as a funder; page date 2022.04.04 requires later verification.
         - snapshot_id: snap-eth-beijing-2025-x-recap
           captured_at: "2026-05-29"
           source_type: social_post
@@ -714,9 +781,9 @@ cases:
         status: expected
         access_level: private
         document_ref:
-        snapshot_id:
-        summary:
-        notes: Reserved for the detailed GCC application if available.
+        snapshot_id: snap-eth-beijing-2025-gcc-project-page
+        summary: GCC project page confirms the ETH Beijing 2025 project page and lists amount 3000, but does not include the detailed application.
+        notes: Reserved for the detailed GCC application if available; follow-up is tracked in docs/project-evidence-todo.md.
       voting_record:
         status: unknown
         access_level: internal
@@ -735,9 +802,14 @@ cases:
       raw_data_status:
         status: captured
         verification: api
-        storage_uri: data/source-snapshots/eth-beijing-2025-x-recap.md
-        source_snapshot_id: snap-eth-beijing-2025-x-recap
-        notes: X recap text captured through public Twitter mirror API; image media URL is preserved.
+        storage_uri: data/source-snapshots/eth-beijing-2025-gcc-project-page.md
+        source_snapshot_id: snap-eth-beijing-2025-gcc-project-page
+        notes: >
+          GCC project page and X recap are both captured as public evidence. X
+          recap text preserves the event completion evidence; GCC project page
+          preserves the GCC funding relationship and listed amount. Data-quality
+          warning: the current ETH Beijing official website is for the 2026
+          edition, so it should not overwrite this 2025 recap evidence.
     ai_review_usage:
       allowed: true
       retrieval_text: >
@@ -750,6 +822,8 @@ cases:
         - precedent_similarity
       cautions:
         - X recap describes the activity, but does not replace GCC application or vote evidence.
+        - Current ETH Beijing official website content may describe the 2026 edition; use the PKU Blockchain 2025 recap for this case unless a 2025 archive is added.
+        - GCC project page date is shown as 2022.04.04 and needs later verification before it is used as a timeline fact.
     governance:
       visibility: public
       license:
@@ -763,18 +837,18 @@ cases:
     category: Travel Scholarship
     fund_type: special
     public_record:
-      amount_usd:
+      amount_usd: 5000
       grant_year: 2025
       activity_year: 2025
       language_community: [Chinese-speaking builders, Asian builders, Ethereum community]
       funding:
         requested_amount_usd:
-        approved_amount_usd:
+        approved_amount_usd: 5000
         total_budget_usd: 5000
         per_person_cap_usd: 1000
         currency: USD
         disbursement_type: reimbursement
-        notes: Total support pool is 5,000 USD with a 1,000 USD reimbursement cap per person.
+        notes: GCC project page and X announcement list a 5,000 USD support pool with a 1,000 USD reimbursement cap per person.
       program_details:
         start_date: "2025-11-17"
         end_date: "2025-11-22"
@@ -805,7 +879,7 @@ cases:
           - Participate in hackathon, workshop, panel, or related events.
           - Share post-event experience and learnings with the community.
         milestones: []
-        notes: Application link in raw data is https://tally.so/r/w2025L.
+        notes: Application link in raw data is https://tally.so/r/w2025L. Selection, reimbursement, and post-event outcome records have not been imported yet.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -837,8 +911,8 @@ cases:
           description: Provides 5,000 USD total travel support with a 1,000 USD per-person cap.
           metric: total_pool_usd
           value: 5000
-          source_snapshot_id: snap-devconnect-2025-x-post
-          notes:
+          source_snapshot_id: snap-devconnect-2025-gcc-project-page
+          notes: GCC project page lists amount 5000; X announcement confirms 5,000 USD total support and 1,000 USD per-person reimbursement cap.
         - type: community
           description: Prioritizes Chinese-speaking builders contributing to public goods, open protocols, on-chain governance, and crypto education.
           metric:
@@ -852,10 +926,10 @@ cases:
           source_snapshot_id: snap-devconnect-2025-x-post
           notes:
       lifecycle_status:
-        grant_status: approved
-        delivery_status: in_progress
+        grant_status: funded
+        delivery_status: unknown
         reporting_status: expected
-        notes: Program announced publicly; individual selections and post-event reports are not imported yet.
+        notes: GCC project page confirms the program and amount. Individual selection, reimbursement/disbursement, and post-event outcome records are not imported yet.
       regions: [Chinese-speaking community, global]
       tags: [travel scholarship, builder support, Ethereum, conference access]
       summary: >
@@ -871,38 +945,49 @@ cases:
         and post-event community knowledge sharing.
       links:
         gcc_project_url: https://www.gccofficial.org/project/project-devconnect-2025
-        official_website: https://x.com/GCCofCommons/status/1978780446596239625
+        official_website: https://devconnect.org/
+        announcement_url: https://x.com/GCCofCommons/status/1978782504216559740
         repository_url:
     evidence:
       source_urls:
-        - https://x.com/GCCofCommons/status/1978780446596239625
+        - https://x.com/GCCofCommons/status/1978782504216559740
         - https://www.gccofficial.org/project/project-devconnect-2025
+        - https://devconnect.org/
+        - https://tally.so/r/w2025L
       snapshots:
+        - snapshot_id: snap-devconnect-2025-gcc-project-page
+          captured_at: "2026-08-30"
+          source_type: gcc_project_page
+          access_level: public
+          source_url: https://www.gccofficial.org/project/project-devconnect-2025
+          storage_uri: data/source-snapshots/devconnect-2025-gcc-project-page.md
+          checksum:
+          notes: GCC project page lists amount 5000, Travel scholarship category, displayed date 2025.10.08, and the project summary.
         - snapshot_id: snap-devconnect-2025-x-post
-          captured_at: "2026-05-27"
+          captured_at: "2026-08-30"
           source_type: social_post
           access_level: public
-          source_url: https://x.com/GCCofCommons/status/1978780446596239625
+          source_url: https://x.com/GCCofCommons/status/1978782504216559740
           storage_uri: data/source-snapshots/devconnect-2025-x-post.md
           checksum:
-          notes: Source URL preserved; content needs manual capture or an accessible archive.
+          notes: Announcement raw text was manually supplied by the user; add screenshot or archive verification later.
       grant_application:
         status: available
         access_level: public
-        document_ref: x-post:1978780446596239625
+        document_ref: x-post:1978782504216559740
         snapshot_id: snap-devconnect-2025-x-post
         summary: >
           Public X post announces application link, deadline, funding amount,
           eligibility, selection criteria, priority applicants, and Devconnect
           2025 event context.
-        notes: Individual applicant submissions may contain personal data and need redaction.
+        notes: Tally form link is public, but individual applicant submissions may contain personal data and need redaction.
       voting_record:
         status: unknown
         access_level: internal
         document_ref:
         snapshot_id:
         summary:
-        notes: Vote or selection record not yet imported.
+        notes: Vote, selection, reimbursement, or recipient approval record not yet imported.
       vote_summary:
         platform: unknown
         proposal_id:
@@ -916,7 +1001,7 @@ cases:
         verification: user_supplied
         storage_uri: data/source-snapshots/devconnect-2025-x-post.md
         source_snapshot_id: snap-devconnect-2025-x-post
-        notes: Raw X post text was manually supplied by the user; archive or screenshot verification should be added later.
+        notes: GCC project page and raw X announcement text were manually supplied by the user; archive or screenshot verification should be added later.
     ai_review_usage:
       allowed: true
       retrieval_text: >
@@ -932,6 +1017,7 @@ cases:
       cautions:
         - Raw text was manually supplied by the user from the X post; add an archived screenshot or URL later for independent verification.
         - Personal applicant data must not be exposed to public retrieval.
+        - Selection, reimbursement, recipient, and post-event outcome evidence has not been imported yet.
     governance:
       visibility: public
       license:

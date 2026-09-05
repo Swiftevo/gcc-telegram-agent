@@ -57,6 +57,39 @@ def setup_logging() -> None:
         handler.addFilter(TokenRedactionFilter())
 
 
+def message_mentions_bot(text: str, bot_username: str) -> bool:
+    if not text or not bot_username:
+        return False
+    mention = rf"(?<!\w)@{re.escape(bot_username.lstrip('@'))}(?!\w)"
+    return re.search(mention, text, flags=re.IGNORECASE) is not None
+
+
+async def get_bot_username(context) -> str:
+    cached = context.bot_data.get("bot_username") if hasattr(context, "bot_data") else None
+    if cached:
+        return cached
+
+    bot_user = await context.bot.get_me()
+    username = getattr(bot_user, "username", "") or ""
+    if hasattr(context, "bot_data"):
+        context.bot_data["bot_username"] = username
+    return username
+
+
+async def should_handle_group_message(update: Update, context) -> bool:
+    if update.message is None or update.effective_chat is None:
+        return False
+    if not settings.gcc_group_id:
+        logger.info("group message ignored because GCC_GROUP_ID is not configured")
+        return False
+    if update.effective_chat.id != settings.gcc_group_id:
+        logger.info("group message ignored chat_id=%s", update.effective_chat.id)
+        return False
+
+    bot_username = await get_bot_username(context)
+    return message_mentions_bot(update.message.text or "", bot_username)
+
+
 async def handle_message(update: Update, context) -> None:
     if update.message is None:
         return
@@ -70,6 +103,12 @@ async def handle_message(update: Update, context) -> None:
         await handle_application(update, context, guard)
     else:
         await handle_general(update, context, guard)
+
+
+async def handle_group_message(update: Update, context) -> None:
+    if not await should_handle_group_message(update, context):
+        return
+    await handle_message(update, context)
 
 
 async def handle_callback(update: Update, context) -> None:
@@ -121,6 +160,7 @@ def build_application() -> Application:
     app.add_handler(CommandHandler("whoami", handle_whoami))
     app.add_handler(CallbackQueryHandler(handle_callback))
     app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.PRIVATE, handle_message))
+    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.GROUPS, handle_group_message))
     return app
 
 

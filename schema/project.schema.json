@@ -19,7 +19,8 @@
       "description": "Stable database id for this case."
     },
     "schema_version": {
-      "type": "string"
+      "type": "string",
+      "const": "0.1.0"
     },
     "canonical_project_id": {
       "type": "string",
@@ -100,6 +101,7 @@
           "properties": {
             "gcc_project_url": { "type": ["string", "null"] },
             "official_website": { "type": ["string", "null"] },
+            "announcement_url": { "type": ["string", "null"] },
             "repository_url": { "type": ["string", "null"] }
           },
           "additionalProperties": true
@@ -228,9 +230,49 @@
           "type": "array",
           "items": { "type": "string" }
         },
+        "funding_tracks": {
+          "type": "array",
+          "description": "Sub-programs or funding tracks under an umbrella case.",
+          "items": { "$ref": "#/$defs/fundingTrack" }
+        },
         "milestones": {
           "type": "array",
           "items": { "$ref": "#/$defs/milestone" }
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "fundingTrack": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "track_type": {
+          "type": ["string", "null"],
+          "enum": ["university_group", "city_event", "travel_scholarship", "open_source", "other", null]
+        },
+        "total_pool_usd": { "type": ["number", "null"] },
+        "min_grant_usd": { "type": ["number", "null"] },
+        "max_grant_usd": { "type": ["number", "null"] },
+        "slot_limit": { "type": ["integer", "null"] },
+        "application_mode": { "type": ["string", "null"] },
+        "application_url": { "type": ["string", "null"] },
+        "eligibility": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "supported_uses": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": {
+          "type": ["string", "null"],
+          "enum": ["approved", "active", "completed", "unknown", null]
+        },
+        "child_records_status": {
+          "type": ["string", "null"],
+          "enum": ["none", "pending_import", "partial", "complete", "unknown", null]
         },
         "notes": { "type": ["string", "null"] }
       },
@@ -415,6 +457,7 @@
             "snapshot_proposal",
             "event_website",
             "social_post",
+            "public_announcement",
             "project_website",
             "repository",
             "media",
