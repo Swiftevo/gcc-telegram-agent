@@ -14,7 +14,7 @@ A Telegram AI assistant for public goods: it answers questions, collects grant a
 
 [简体中文](README.md) · [繁體中文](README.zh-TW.md) · **English**
 
-[Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [How to contribute](#contributing)
+[Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Project log](docs/project-log.md) · [Prioritized TODO](docs/todo.md) · [How to contribute](#contributing)
 
 </div>
 
