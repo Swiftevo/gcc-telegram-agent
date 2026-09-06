@@ -4,16 +4,27 @@
 #
 
 app = 'gcc-public-goods-bot'
-primary_region = 'lhr'
+primary_region = 'nrt'
 
 [build]
+
+[deploy]
+  # SQLite is stored on one regional volume, so deploy the single Machine in place.
+  strategy = 'rolling'
+  max_unavailable = 1
+
+[mounts]
+  source = 'gcc_agent_data'
+  destination = '/data'
+  processes = ['app']
 
 [http_service]
   internal_port = 8080
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 0
+  # Avoid Telegram webhook cold starts and keep only the primary Machine warm.
+  min_machines_running = 1
   processes = ['app']
 
 [[vm]]

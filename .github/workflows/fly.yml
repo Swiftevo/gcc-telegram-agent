@@ -3,9 +3,32 @@ on:
   push:
     branches:
       - main  # 只有當你把程式推送到 main 分支時才啟動部署
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fly-production
+  cancel-in-progress: false
+
 jobs:
+  test:
+    name: Verify release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m compileall -q gcc_agent main.py
+      - run: python tests/test_regression.py
+      - run: python -m unittest tests.test_logging
+
   deploy:
     name: Deploy app
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
