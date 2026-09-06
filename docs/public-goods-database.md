@@ -113,11 +113,19 @@ Fields deliberately not duplicated:
 - Database licensing should be handled at the database or repository level
   before making per-case licensing mandatory.
 
-## Migration Plan
+## Delivery Status
 
-1. Validate the new seed file manually and with YAML parsing.
-2. Add a small loader for the new case format.
-3. Update `pre_screen()` to retrieve similar cases from the case database.
-4. Add semantic search after the schema is stable.
-5. Import the remaining projects category by category.
-6. Add application and vote snapshots once access and redaction rules are clear.
+Completed foundations:
+
+- The seed file is populated and covered by YAML/schema-oriented tests.
+- A loader exposes all cases and the subset explicitly allowed for AI review.
+- Source snapshots preserve raw material separately from interpreted summaries.
+
+The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
+`GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
+[`docs/todo.md`](todo.md). That ordering is intentional: privacy, screening
+guardrails, provenance, and licensing must be stable before importing private
+applications or adding semantic search.
+
+This design document must not be used as a parallel backlog. Detailed evidence
+gaps remain in [`docs/project-evidence-todo.md`](project-evidence-todo.md).

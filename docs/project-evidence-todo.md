@@ -1,32 +1,78 @@
 # Project Evidence TODO
 
-This list tracks follow-up evidence work for the public-goods case database.
+This is the content-evidence sub-list for `CONTENT-001` and `CONTENT-002` in the
+canonical [`docs/todo.md`](todo.md). It does **not** override the project-wide
+priority order. Do not publish private applications, votes, applicant identities,
+or reimbursements merely to close a checkbox.
 
-## ETH City / University Web3 Funding Tracks 2025
+## Tier A — correctness and privacy blockers for existing seed cases
 
-- Import individual applications submitted under the University Web3 Interest Group Funding Plan.
-- Import individual applications submitted under the ETH City Funding Plan.
-- Link approval decisions, reviewers, and approval dates for downstream applications where public or shareable.
-- Link completed projects and activity reports to the relevant track.
-- Add photos, videos, participation data, feedback, GitHub repositories, or public write-ups for completed downstream projects.
-- Decide whether downstream applications should become child records in this file, separate case records, or a linked subgrant table.
-- Preserve private applicant data as internal or redacted evidence only.
+Complete these before describing the affected records as verified public cases.
 
-## ETH Beijing 2025
+### ETH Beijing 2025
 
-- Find the detailed GCC grant application, if it exists.
-- Find the GCC committee vote or approval record.
-- Verify the currency and accounting meaning of the GCC project page amount `3000`.
-- Clarify why the GCC project page shows `2022.04.04` for an ETH Beijing 2025 case.
-- Add a stable 2025 official website archive or screenshot if available, because the live ETH Beijing website may now describe a later edition.
-- Add post-event report material, photos, project submissions, judging results, or participant metrics if available.
+- [ ] Verify the currency and accounting meaning of the GCC project-page amount `3000`.
+- [ ] Resolve why the GCC project page shows `2022.04.04` for a 2025 case; record
+  the explanation or mark the field as unresolved rather than choosing a date.
+- [ ] Add a stable 2025 official archive or screenshot. The live event site may
+  describe a later edition and is not sufficient historical evidence.
+- [ ] Locate the detailed GCC grant application and committee decision, if they
+  exist; classify each as public, redacted, internal, unavailable, or unknown.
 
-## Devconnect Flight Scholarship 2025
+### Devconnect Flight Scholarship 2025
 
-- Add an independently verifiable screenshot or archive of the GCC X announcement.
-- Archive the Tally application form at `https://tally.so/r/w2025L`, if the form remains accessible.
-- Find the selection or approval record for individual recipients.
-- Find reimbursement or disbursement records, with personal data redacted before any public release.
-- Find recipient post-event reports, community sharing notes, or published reflections.
-- Add outcome evidence after Devconnect 2025, such as sessions attended, projects launched, collaborations formed, or public write-ups.
-- Confirm whether any applicant or recipient data must remain private/internal only.
+- [ ] Add an independently verifiable archive or screenshot of the GCC X announcement.
+- [ ] Archive the Tally form at `https://tally.so/r/w2025L` if it remains public
+  and the form owner permits archival use.
+- [ ] Decide and document which applicant, recipient, selection, reimbursement,
+  and disbursement fields must remain private or internal before importing them.
+- [ ] Locate selection and disbursement evidence; publish only aggregate or
+  redacted facts allowed by the privacy decision.
+
+### ETH City / University Web3 Funding Tracks 2025
+
+- [ ] Decide whether downstream applications are child records, independent case
+  records, or rows in a linked subgrant table before importing any of them.
+- [ ] Define public/internal/redacted treatment for applications, reviewers,
+  decisions, amounts and applicant identity.
+- [ ] Link public or shareable approval decisions and approval dates to the
+  correct funding track without exposing private reviewer data.
+
+## Tier B — outcome and impact evidence
+
+Start only after the corresponding Tier A claims and privacy boundary are stable.
+
+### ETH Beijing 2025
+
+- [ ] Add post-event reports, photos, submissions, judging results and participant
+  metrics, distinguishing organiser claims from independently verifiable evidence.
+
+### Devconnect Flight Scholarship 2025
+
+- [ ] Add recipient reports, community sharing notes or published reflections
+  where recipients made them public for reuse.
+- [ ] Add attributable outcomes such as sessions attended, projects launched,
+  collaborations or public write-ups; avoid claiming causality from attendance alone.
+
+### ETH City / University Web3 Funding Tracks 2025
+
+- [ ] Link completed projects and activity reports to the correct track and award.
+- [ ] Add public photos, videos, participation data, feedback, repositories and
+  write-ups with source date and access level.
+
+## Tier C — coverage expansion
+
+- [ ] Import individual downstream applications only after the subgrant data
+  model, privacy policy and review workflow are approved.
+- [ ] Work category by category; every new case must pass schema validation,
+  provenance review and AI-usage access checks.
+- [ ] Keep unavailable evidence explicitly `unknown`／`unavailable`; completeness
+  targets must never incentivise invented summaries or publication of private data.
+
+## Definition of done for one evidence item
+
+- The source URL or storage URI, capture date, source type and access level exist.
+- Public facts can be regenerated from preserved source material.
+- Uncertainty and conflicts are visible in the case record.
+- Private/internal material is excluded from public output and AI prompt context.
+- A human reviewer confirms the record before release.

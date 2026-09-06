@@ -14,7 +14,7 @@
 
 **简体中文** · [繁體中文](README.zh-TW.md) · [English](README.en.md)
 
-[贡献指南](CONTRIBUTING.md) · [行为准则](CODE_OF_CONDUCT.md) · [参与贡献](#参与贡献)
+[贡献指南](CONTRIBUTING.md) · [行为准则](CODE_OF_CONDUCT.md) · [项目日志](docs/project-log.md) · [优先级 TODO](docs/todo.md) · [参与贡献](#参与贡献)
 
 </div>
 

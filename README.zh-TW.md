@@ -14,7 +14,7 @@
 
 [简体中文](README.md) · **繁體中文** · [English](README.en.md)
 
-[貢獻指南](CONTRIBUTING.md) · [行為準則](CODE_OF_CONDUCT.md) · [參與貢獻](#參與貢獻)
+[貢獻指南](CONTRIBUTING.md) · [行為準則](CODE_OF_CONDUCT.md) · [項目日記](docs/project-log.md) · [優先級 TODO](docs/todo.md) · [參與貢獻](#參與貢獻)
 
 </div>
 
