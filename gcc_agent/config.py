@@ -24,6 +24,7 @@ class Settings:
     gcc_group_id: int = _int("GCC_GROUP_ID")
     gcc_group_invite: str = os.getenv("GCC_GROUP_INVITE", "")
     webhook_url: str = os.getenv("WEBHOOK_URL", "")
+    webhook_listen: str = os.getenv("WEBHOOK_LISTEN", "0.0.0.0")
     port: int = _int("PORT", 8080)
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     ai_model: str = os.getenv("AI_MODEL", "gpt-4o-mini")
