@@ -39,13 +39,10 @@ class TokenRedactionFilter(logging.Filter):
     pattern = re.compile(r"bot\d+:[A-Za-z0-9_-]+")
 
     def filter(self, record: logging.LogRecord) -> bool:
-        if isinstance(record.msg, str):
-            record.msg = self.pattern.sub("bot[REDACTED]", record.msg)
-        if isinstance(record.args, tuple):
-            record.args = tuple(
-                self.pattern.sub("bot[REDACTED]", value) if isinstance(value, str) else value
-                for value in record.args
-            )
+        # Redact the fully rendered message. HTTP clients pass URL objects in
+        # ``record.args``; filtering only string arguments leaves bot tokens in logs.
+        record.msg = self.pattern.sub("bot[REDACTED]", record.getMessage())
+        record.args = ()
         return True
 
 
