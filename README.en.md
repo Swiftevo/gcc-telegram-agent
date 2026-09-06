@@ -195,7 +195,8 @@ flyctl secrets set \
   ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
   OPENAI_API_KEY="..." \
-  WEBHOOK_URL="https://your-app.fly.dev/webhook"
+  WEBHOOK_URL="https://your-app.fly.dev/webhook" \
+  WEBHOOK_LISTEN="0.0.0.0"
 flyctl deploy
 ```
 
@@ -206,7 +207,7 @@ https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<app>.fly.dev/web
 ```
 
 > [!IMPORTANT]
-> The webhook listens on `127.0.0.1` only. Forward it with a reverse proxy on the same instance; do not expose the local listener to the public internet.
+> On Fly.io, the webhook must listen on `0.0.0.0` and the `internal_port` from `fly.toml`; otherwise Fly cannot forward Telegram webhook requests to the app. For local debugging, set `WEBHOOK_LISTEN=127.0.0.1` if you only want localhost.
 
 ## Contributing
 

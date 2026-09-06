@@ -207,7 +207,8 @@ flyctl secrets set \
   ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
   OPENAI_API_KEY="..." \
-  WEBHOOK_URL="https://你的应用名称.fly.dev/webhook"
+  WEBHOOK_URL="https://你的应用名称.fly.dev/webhook" \
+  WEBHOOK_LISTEN="0.0.0.0"
 flyctl deploy
 ```
 
@@ -218,7 +219,7 @@ https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<应用名>.fly.d
 ```
 
 > [!IMPORTANT]
-> Webhook 只监听 `127.0.0.1`，需要由同一实例中的反向代理转发，不能直接把本地监听地址暴露到公网。
+> 在 Fly.io 上，Webhook 必须监听 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否则 Fly 无法把 Telegram webhook 请求转发给应用。本地调试如需只监听 localhost，可设置 `WEBHOOK_LISTEN=127.0.0.1`。
 
 ## 参与贡献
 

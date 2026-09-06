@@ -168,9 +168,13 @@ def run() -> None:
     setup_logging()
     app = build_application()
     if settings.webhook_url:
-        logger.info("webhook mode enabled")
+        logger.info(
+            "webhook mode enabled listen=%s port=%s",
+            settings.webhook_listen,
+            settings.port,
+        )
         app.run_webhook(
-            listen="127.0.0.1",
+            listen=settings.webhook_listen,
             port=settings.port,
             webhook_url=settings.webhook_url,
             url_path="/webhook",
