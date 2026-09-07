@@ -25,6 +25,7 @@ jobs:
       - run: python -m compileall -q gcc_agent main.py
       - run: python tests/test_regression.py
       - run: python -m unittest tests.test_logging
+      - run: python -m unittest tests.test_webhook_security
 
   deploy:
     name: Deploy app

@@ -33,6 +33,7 @@ from gcc_agent.access.guard import detect_language, run_guard
 from gcc_agent.telegram.router import route
 
 logger = logging.getLogger(__name__)
+WEBHOOK_SECRET_PATTERN = re.compile(r"[A-Za-z0-9_-]{32,256}")
 
 
 class TokenRedactionFilter(logging.Filter):
@@ -52,6 +53,17 @@ def setup_logging() -> None:
     )
     for handler in logging.root.handlers:
         handler.addFilter(TokenRedactionFilter())
+
+
+def validate_webhook_configuration(webhook_url: str, secret_token: str) -> None:
+    """Require a strong Telegram-compatible secret whenever webhook mode is enabled."""
+    if not webhook_url:
+        return
+    if not WEBHOOK_SECRET_PATTERN.fullmatch(secret_token or ""):
+        raise ValueError(
+            "WEBHOOK_SECRET_TOKEN must contain 32-256 characters using only "
+            "letters, numbers, underscores, or hyphens when WEBHOOK_URL is configured"
+        )
 
 
 def message_mentions_bot(text: str, bot_username: str) -> bool:
@@ -163,6 +175,10 @@ def build_application() -> Application:
 
 def run() -> None:
     setup_logging()
+    validate_webhook_configuration(
+        settings.webhook_url,
+        settings.webhook_secret_token,
+    )
     app = build_application()
     if settings.webhook_url:
         logger.info(
@@ -175,6 +191,7 @@ def run() -> None:
             port=settings.port,
             webhook_url=settings.webhook_url,
             url_path="/webhook",
+            secret_token=settings.webhook_secret_token,
         )
     else:
         app.run_polling(allowed_updates=Update.ALL_TYPES)

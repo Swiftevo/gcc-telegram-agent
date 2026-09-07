@@ -196,18 +196,13 @@ flyctl secrets set \
   GCC_GROUP_ID="..." \
   OPENAI_API_KEY="..." \
   WEBHOOK_URL="https://your-app.fly.dev/webhook" \
-  WEBHOOK_LISTEN="0.0.0.0"
+  WEBHOOK_LISTEN="0.0.0.0" \
+  WEBHOOK_SECRET_TOKEN="random-secret-with-at-least-32-characters"
 flyctl deploy
 ```
 
-Set the Telegram webhook:
-
-```text
-https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<app>.fly.dev/webhook
-```
-
 > [!IMPORTANT]
-> On Fly.io, the webhook must listen on `0.0.0.0` and the `internal_port` from `fly.toml`; otherwise Fly cannot forward Telegram webhook requests to the app. For local debugging, set `WEBHOOK_LISTEN=127.0.0.1` if you only want localhost.
+> On Fly.io, the webhook must listen on `0.0.0.0` and the `internal_port` from `fly.toml`; otherwise Fly cannot forward Telegram webhook requests to the app. `WEBHOOK_SECRET_TOKEN` must contain 32–256 letters, numbers, underscores, or hyphens. The app registers the webhook and secret with Telegram during startup; do not manually call `setWebhook` without the secret. For local debugging, set `WEBHOOK_LISTEN=127.0.0.1` if you only want localhost.
 
 ## Contributing
 

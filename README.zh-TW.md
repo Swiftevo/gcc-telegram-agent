@@ -196,18 +196,13 @@ flyctl secrets set \
   GCC_GROUP_ID="..." \
   OPENAI_API_KEY="..." \
   WEBHOOK_URL="https://你的應用名稱.fly.dev/webhook" \
-  WEBHOOK_LISTEN="0.0.0.0"
+  WEBHOOK_LISTEN="0.0.0.0" \
+  WEBHOOK_SECRET_TOKEN="至少32字元的隨機秘密"
 flyctl deploy
 ```
 
-設定 Telegram Webhook：
-
-```text
-https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<應用名>.fly.dev/webhook
-```
-
 > [!IMPORTANT]
-> 在 Fly.io 上，Webhook 必須監聽 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否則 Fly 無法把 Telegram webhook 請求轉發給應用。本地調試如需只監聽 localhost，可設定 `WEBHOOK_LISTEN=127.0.0.1`。
+> 在 Fly.io 上，Webhook 必須監聽 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否則 Fly 無法把 Telegram webhook 請求轉發給應用。`WEBHOOK_SECRET_TOKEN` 必須是 32–256 個字母、數字、底線或連字號。應用啟動時會自動向 Telegram 註冊 webhook 和 secret；不要再用不帶 secret 的 `setWebhook` URL 手動註冊。本地調試如需只監聽 localhost，可設定 `WEBHOOK_LISTEN=127.0.0.1`。
 
 ## 參與貢獻
 
