@@ -24,7 +24,7 @@
 
 助手已經部署上線，在 Telegram 裡打開 **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** 發送 `/start` 即可開始。
 
-普通用戶會收到歡迎訊息；GCC 成員通過郵箱驗證後，可以使用問答和資助申請功能。
+普通用戶私訊時會收到歡迎訊息；GCC 成員通過郵箱驗證後，可以使用私訊問答和資助申請。指定 GCC 群組啟用群組問答後，群內用戶明確 mention bot 即可免郵箱提問。
 
 想改程式或提 Issue，請先看 [貢獻指南](CONTRIBUTING.md)。Pull Request 請開向 `dev`，不要直接推 `main`。
 
@@ -44,7 +44,8 @@
 | 多語言 | 依用戶語言使用簡體中文、繁體中文或英文 |
 | 申請流程 | 四步收集：專案名稱、基金類型、提案連結、執行摘要 |
 | 初步篩選 | 依據 `values.yaml` 給出 0–100 分並通知管理員 |
-| 用量限制 | 每位成員每天最多 20 條訊息 |
+| 群組提問 | 啟用後只在 `GCC_GROUP_ID` 指定群組內回應明確 mention；不要求郵箱，不開放申請或管理功能 |
+| 用量限制 | 每位用戶每天最多 20 條訊息，群組問答同樣計數 |
 
 ## 指令
 
@@ -73,7 +74,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 - `actor_type`：`human` 或 `agent`
 - `access_level`：`regular` 或 `gcc_member`
 
-人類 GCC 成員必須通過 `/email` 和 `/verify` 驗證郵箱。舊資料庫中的 `user_kind` 會在啟動時自動遷移，不會刪除原有資料。
+人類 GCC 成員必須通過 `/email` 和 `/verify` 驗證郵箱，才能使用私訊問答和申請。群組免郵箱問答是單次請求範圍的 `group_qa` 能力，不會把用戶升級為 `gcc_member`。舊資料庫中的 `user_kind` 會在啟動時自動遷移，不會刪除原有資料。
 
 ## 快速開始
 
@@ -95,6 +96,7 @@ BOT_TOKEN=Telegram Bot Token
 ADMIN_USER_ID=管理員 Telegram User ID
 ADMIN_NOTIFY_ID=接收申請通知的 Telegram User ID
 GCC_GROUP_ID=GCC Telegram 群組 ID
+GROUP_QA_ENABLED=false
 
 OPENAI_API_KEY=OpenAI API Key
 AI_MODEL=gpt-4o-mini
@@ -179,6 +181,7 @@ main.py                      # 啟動入口
 - GCC 專案和案例保存在 YAML/Markdown
 - 每位用戶保留最近 20 條對話
 - 30 分鐘無活動後建立新 Session
+- 私訊、群組、群組用戶及 Telegram topic 使用相互隔離的 Session
 - 價值觀 system prompt 始終位於用戶對話之前
 
 ## 部署
@@ -194,6 +197,7 @@ flyctl secrets set \
   ADMIN_USER_ID="..." \
   ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
+  GROUP_QA_ENABLED="true" \
   OPENAI_API_KEY="..." \
   WEBHOOK_URL="https://你的應用名稱.fly.dev/webhook" \
   WEBHOOK_LISTEN="0.0.0.0" \
@@ -203,6 +207,8 @@ flyctl deploy
 
 > [!IMPORTANT]
 > 在 Fly.io 上，Webhook 必須監聽 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否則 Fly 無法把 Telegram webhook 請求轉發給應用。`WEBHOOK_SECRET_TOKEN` 必須是 32–256 個字母、數字、底線或連字號。應用啟動時會自動向 Telegram 註冊 webhook 和 secret；不要再用不帶 secret 的 `setWebhook` URL 手動註冊。本地調試如需只監聽 localhost，可設定 `WEBHOOK_LISTEN=127.0.0.1`。
+
+`GROUP_QA_ENABLED=false` 可即時關閉免郵箱群組問答，不會刪除或改變現有用戶身份及會話資料。
 
 ## 參與貢獻
 

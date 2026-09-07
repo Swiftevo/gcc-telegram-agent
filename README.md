@@ -24,7 +24,7 @@
 
 助手已经部署上线，在 Telegram 里打开 **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** 发送 `/start` 即可开始。
 
-普通用户会收到欢迎信息；GCC 成员通过邮箱验证后，可以使用问答和资助申请功能。
+普通用户私聊时会收到欢迎信息；GCC 成员通过邮箱验证后，可以使用私聊问答和资助申请。指定 GCC 群组启用群组问答后，群内用户明确提及 bot 即可免邮箱提问。
 
 想改代码或提 Issue，请先看 [贡献指南](CONTRIBUTING.md)。Pull Request 请开向 `dev`，不要直接推 `main`。
 
@@ -44,8 +44,8 @@
 | 多语言 | 按用户语言使用简体中文、繁体中文或英文 |
 | 申请流程 | 四步收集：项目名称、基金类型、提案链接、执行摘要 |
 | 初步筛选 | 依据 `values.yaml` 给出 0–100 分并通知管理员 |
-| 群组提问 | 只在 `GCC_GROUP_ID` 指定群组内，且被 `@bot_username` 提及时回应 |
-| 用量限制 | 每位成员每天最多 20 条消息 |
+| 群组提问 | 启用后只在 `GCC_GROUP_ID` 指定群组内回应明确 mention；不要求邮箱，不开放申请或管理功能 |
+| 用量限制 | 每位用户每天最多 20 条消息，群组问答同样计数 |
 
 ## 命令
 
@@ -74,7 +74,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 - `actor_type`：`human` 或 `agent`
 - `access_level`：`regular` 或 `gcc_member`
 
-人类 GCC 成员必须通过 `/email` 和 `/verify` 验证邮箱。旧数据库中的 `user_kind` 会在启动时自动迁移，不会删除原有数据。
+人类 GCC 成员必须通过 `/email` 和 `/verify` 验证邮箱，才能使用私聊问答和申请。群组免邮箱问答是单次请求范围的 `group_qa` 能力，不会把用户升级为 `gcc_member`。旧数据库中的 `user_kind` 会在启动时自动迁移，不会删除原有数据。
 
 ## 快速开始
 
@@ -96,6 +96,7 @@ BOT_TOKEN=Telegram Bot Token
 ADMIN_USER_ID=管理员 Telegram User ID
 ADMIN_NOTIFY_ID=接收申请通知的 Telegram User ID
 GCC_GROUP_ID=GCC Telegram 群组 ID
+GROUP_QA_ENABLED=false
 
 OPENAI_API_KEY=OpenAI API Key
 AI_MODEL=gpt-4o-mini
@@ -180,6 +181,7 @@ main.py                      # 启动入口
 - GCC 项目和案例保存在 YAML/Markdown
 - 每位用户保留最近 20 条对话
 - 30 分钟无活动后建立新 Session
+- 私聊、群组、群组用户及 Telegram topic 使用相互隔离的 Session
 - 价值观 system prompt 始终位于用户对话之前
 
 ## 公共物品案例资料库
@@ -206,6 +208,7 @@ flyctl secrets set \
   ADMIN_USER_ID="..." \
   ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
+  GROUP_QA_ENABLED="true" \
   OPENAI_API_KEY="..." \
   WEBHOOK_URL="https://你的应用名称.fly.dev/webhook" \
   WEBHOOK_LISTEN="0.0.0.0" \
@@ -215,6 +218,8 @@ flyctl deploy
 
 > [!IMPORTANT]
 > 在 Fly.io 上，Webhook 必须监听 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否则 Fly 无法把 Telegram webhook 请求转发给应用。`WEBHOOK_SECRET_TOKEN` 必须是 32–256 个字母、数字、下划线或连字符。应用启动时会自动向 Telegram 注册 webhook 和 secret；不要再用不带 secret 的 `setWebhook` URL 手动注册。本地调试如需只监听 localhost，可设置 `WEBHOOK_LISTEN=127.0.0.1`。
+
+`GROUP_QA_ENABLED=false` 可即时关闭免邮箱群组问答，不会删除或改变现有用户身份及会话资料。
 
 ## 参与贡献
 

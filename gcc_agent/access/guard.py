@@ -78,13 +78,10 @@ class GuardResult:
     reason: str = ""
 
 
-async def run_guard(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-) -> GuardResult:
+async def _load_user(update: Update):
     tg_user = update.effective_user
     if tg_user is None or update.message is None:
-        return GuardResult(False, reason="no_user")
+        return None, "zh-TW"
 
     lang = detect_language(update)
     user, created = await users.get_or_create_user(
@@ -96,6 +93,16 @@ async def run_guard(
     if not created and user.detected_lang != lang:
         await users.update_user_lang(user.user_id, lang)
         user.detected_lang = lang
+    return user, lang
+
+
+async def run_guard(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> GuardResult:
+    user, lang = await _load_user(update)
+    if user is None:
+        return GuardResult(False, reason="no_user")
 
     access = qa_decision(user)
     if access.reason == "blocked":
@@ -115,3 +122,27 @@ async def run_guard(
         await update.message.reply_text(message(lang, "rate_limited"))
         return GuardResult(False, user, lang, "rate_limited")
     return GuardResult(True, user, lang)
+
+
+async def run_group_qa_guard(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> GuardResult:
+    """Allow scoped group Q&A without granting account-level member access."""
+    del context
+    tg_user = update.effective_user
+    if tg_user is None or update.message is None:
+        return GuardResult(False, reason="no_user")
+    if getattr(tg_user, "is_bot", False) is True:
+        return GuardResult(False, reason="bot_sender")
+
+    user, lang = await _load_user(update)
+    if user is None:
+        return GuardResult(False, reason="no_user")
+    if user.is_blocked:
+        logger.info("blocked group Q&A user_id=%s", user.user_id)
+        return GuardResult(False, user, lang, "blocked")
+    if not await users.try_increment_daily_count(user.user_id, DAILY_LIMIT):
+        await update.message.reply_text(message(lang, "rate_limited"))
+        return GuardResult(False, user, lang, "rate_limited")
+    return GuardResult(True, user, lang, "group_qa")

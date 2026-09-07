@@ -3,6 +3,35 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-08：關閉 Telegram 安全缺口及確定群組 QA 路徑
+
+### Production 安全驗證
+
+- PR #12（merge `4760b24`）已把長隨機 `WEBHOOK_SECRET_TOKEN` 同時傳給
+  Telegram `setWebhook` 和本機 webhook server。
+- 缺少或錯誤 `X-Telegram-Bot-Api-Secret-Token` 的 POST 會被拒絕；正確 header
+  能到達 Telegram update parser。
+- 曾在歷史 logs 出現的 bot token 已由 BotFather revoke；新 token 只經 Fly secret
+  更新。Machine `7813de2bdd3638` version 44 在 `nrt` 正常啟動。
+- 新 token 的 `getMe` 和 `setWebhook` 均回傳 200；webhook URL 正確，pending updates
+  為 0，沒有 last error，logs 只顯示 `bot[REDACTED]`。
+- Fly CLI 的 DNS warning 來自操作端向 `8.8.8.8` 查詢逾時；production webhook
+  實際可達且 Telegram 狀態正常。
+
+### 群組存取產品決定
+
+- 電郵驗證暫時不作為指定 GCC 群組一般問答的先決條件；它繼續保護私訊問答、
+  申請和成員級功能。
+- 群組能力是 request-scoped `group_qa`，不會寫入或升級用戶的 `access_level`，
+  亦不會偽造 email 驗證狀態。
+- 只有 `GCC_GROUP_ID` 指定群組內的明確 bot mention 才處理；其他群組及未 mention
+  訊息保持靜默。群組只開一般 QA，不開申請、callback 或管理功能。
+- Private、group、user 及 Telegram topic 的 session 必須隔離，避免私訊歷史或
+  申請草稿進入公開群組回答。
+- Block list 和每日 20 條限制繼續適用。`GROUP_QA_ENABLED` 是 rollout／rollback
+  開關；`fly.toml` 的 release 設定會啟用它，但只有 merge、deploy 和群組 E2E
+  完成後才可把 `GROUP-ACCESS-001` 移到 Done。
+
 ## 2026-09-07：由零開始的全系統重新審視
 
 ### 審視範圍與基線
@@ -109,4 +138,3 @@ production 成立：電郵驗證沒有寄送設定，普通用戶因此無法成
 - Webhook machine 保持常駐，優先可靠性而非 scale-to-zero 成本節省。
 - 每次 production deploy 前至少執行現有 release regression 與安全 smoke test。
 - 新工作按 [`docs/todo.md`](todo.md) 的單一順序處理；同一時間只開一個 active item。
-

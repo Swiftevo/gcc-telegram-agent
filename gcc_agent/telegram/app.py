@@ -29,7 +29,7 @@ from gcc_agent.common.persistence.conversations import get_or_create_session, sa
 from gcc_agent.common.persistence.users import get_user
 from gcc_agent.config import settings
 from gcc_agent.qa.handler import handle_general
-from gcc_agent.access.guard import detect_language, run_guard
+from gcc_agent.access.guard import detect_language, run_group_qa_guard, run_guard
 from gcc_agent.telegram.router import route
 
 logger = logging.getLogger(__name__)
@@ -73,6 +73,21 @@ def message_mentions_bot(text: str, bot_username: str) -> bool:
     return re.search(mention, text, flags=re.IGNORECASE) is not None
 
 
+def remove_bot_mentions(text: str, bot_username: str) -> str:
+    if not text or not bot_username:
+        return (text or "").strip()
+    mention = rf"(?<!\w)@{re.escape(bot_username.lstrip('@'))}(?!\w)"
+    return re.sub(mention, "", text, flags=re.IGNORECASE).strip()
+
+
+def group_question_required(lang: str) -> str:
+    return {
+        "zh-TW": "請在 mention 後加上你的問題。",
+        "zh-CN": "请在 mention 后加上你的问题。",
+        "en": "Please add your question after the mention.",
+    }.get(lang, "請在 mention 後加上你的問題。")
+
+
 async def get_bot_username(context) -> str:
     cached = context.bot_data.get("bot_username") if hasattr(context, "bot_data") else None
     if cached:
@@ -87,6 +102,9 @@ async def get_bot_username(context) -> str:
 
 async def should_handle_group_message(update: Update, context) -> bool:
     if update.message is None or update.effective_chat is None:
+        return False
+    if not settings.group_qa_enabled:
+        logger.info("group message ignored because GROUP_QA_ENABLED is false")
         return False
     if not settings.gcc_group_id:
         logger.info("group message ignored because GCC_GROUP_ID is not configured")
@@ -117,7 +135,31 @@ async def handle_message(update: Update, context) -> None:
 async def handle_group_message(update: Update, context) -> None:
     if not await should_handle_group_message(update, context):
         return
-    await handle_message(update, context)
+    guard = await run_group_qa_guard(update, context)
+    if not guard.passed:
+        return
+
+    bot_username = await get_bot_username(context)
+    user_text = remove_bot_mentions(update.message.text or "", bot_username)
+    if not user_text:
+        await update.message.reply_text(group_question_required(guard.lang))
+        return
+    if user_text.startswith("/"):
+        logger.info("group command ignored user_id=%s", guard.user.user_id)
+        return
+
+    raw_thread_id = getattr(update.message, "message_thread_id", 0)
+    thread_id = raw_thread_id if isinstance(raw_thread_id, int) else 0
+    await handle_general(
+        update,
+        context,
+        guard,
+        user_text_override=user_text,
+        scope_type="group",
+        scope_id=update.effective_chat.id,
+        thread_id=thread_id,
+        allow_application=False,
+    )
 
 
 async def handle_callback(update: Update, context) -> None:
@@ -125,6 +167,9 @@ async def handle_callback(update: Update, context) -> None:
     if query is None:
         return
     await query.answer()
+    if update.effective_chat is None or update.effective_chat.type != "private":
+        logger.info("non-private callback ignored")
+        return
     user = await get_user(query.from_user.id)
     if user is None or user.is_blocked or not user.can_use_qa():
         return
@@ -162,11 +207,12 @@ def build_application() -> Application:
     if not settings.bot_token:
         raise ValueError("BOT_TOKEN is not configured")
     app = Application.builder().token(settings.bot_token).post_init(post_init).build()
-    app.add_handler(CommandHandler("start", handle_start))
-    app.add_handler(CommandHandler("email", handle_email))
-    app.add_handler(CommandHandler("verify", handle_verify))
-    app.add_handler(CommandHandler("grant", handle_grant))
-    app.add_handler(CommandHandler("whoami", handle_whoami))
+    private = filters.ChatType.PRIVATE
+    app.add_handler(CommandHandler("start", handle_start, filters=private))
+    app.add_handler(CommandHandler("email", handle_email, filters=private))
+    app.add_handler(CommandHandler("verify", handle_verify, filters=private))
+    app.add_handler(CommandHandler("grant", handle_grant, filters=private))
+    app.add_handler(CommandHandler("whoami", handle_whoami, filters=private))
     app.add_handler(CallbackQueryHandler(handle_callback))
     app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.PRIVATE, handle_message))
     app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.GROUPS, handle_group_message))

@@ -72,6 +72,23 @@ async def _migration_003_credentials(db: aiosqlite.Connection) -> None:
     )
 
 
+async def _migration_004_session_scopes(db: aiosqlite.Connection) -> None:
+    """Keep private, group, and forum-topic conversations separate."""
+    columns = await _columns(db, "sessions")
+    additions = {
+        "scope_type": "TEXT NOT NULL DEFAULT 'private'",
+        "scope_id": "INTEGER NOT NULL DEFAULT 0",
+        "thread_id": "INTEGER NOT NULL DEFAULT 0",
+    }
+    for name, definition in additions.items():
+        if name not in columns:
+            await db.execute(f"ALTER TABLE sessions ADD COLUMN {name} {definition}")
+    await db.execute(
+        """CREATE INDEX IF NOT EXISTS idx_sessions_scope
+           ON sessions(user_id, scope_type, scope_id, thread_id, last_active)"""
+    )
+
+
 async def init_db() -> None:
     async with connect() as db:
         await db.execute(
@@ -91,5 +108,8 @@ async def init_db() -> None:
         if 3 not in applied:
             await _migration_003_credentials(db)
             await db.execute("INSERT INTO schema_migrations(version) VALUES (3)")
+        if 4 not in applied:
+            await _migration_004_session_scopes(db)
+            await db.execute("INSERT INTO schema_migrations(version) VALUES (4)")
         await db.commit()
     logger.info("database initialized path=%s", DB_PATH)

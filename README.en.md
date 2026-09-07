@@ -24,7 +24,7 @@ A Telegram AI assistant for public goods: it answers questions, collects grant a
 
 The assistant is already deployed. Open **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** in Telegram and send `/start`.
 
-Regular users receive a welcome message. GCC members can use Q&A and grant applications after verifying their email.
+Regular users receive a welcome message in private chat. GCC members can use private Q&A and grant applications after verifying their email. When group Q&A is enabled for the configured GCC group, users there may ask by explicitly mentioning the bot without providing an email.
 
 To change code or open an Issue, start with the [contributing guide](CONTRIBUTING.md). Open Pull Requests against `dev`; do not push `main` directly.
 
@@ -44,7 +44,8 @@ This assistant takes that first layer: it answers with official links when it ca
 | Languages | Simplified Chinese, Traditional Chinese, or English from the user locale |
 | Application flow | Four steps: project name, fund type, proposal link, executive summary |
 | Screening | 0–100 score from `values.yaml`, then notify an administrator |
-| Rate limit | 20 messages per member per day |
+| Group Q&A | When enabled, only explicit mentions in the `GCC_GROUP_ID` chat are answered; email, applications, and admin capabilities are excluded |
+| Rate limit | 20 messages per user per day, including group Q&A |
 
 ## Commands
 
@@ -73,7 +74,7 @@ Identity uses two independent fields instead of RBAC:
 - `actor_type`: `human` or `agent`
 - `access_level`: `regular` or `gcc_member`
 
-Human GCC members must verify email with `/email` and `/verify`. Legacy `user_kind` rows are migrated automatically at startup without deleting existing data.
+Human GCC members must verify email with `/email` and `/verify` to use private Q&A and applications. Email-free group Q&A is a request-scoped `group_qa` capability and never promotes the user to `gcc_member`. Legacy `user_kind` rows are migrated automatically at startup without deleting existing data.
 
 ## Quick start
 
@@ -95,6 +96,7 @@ BOT_TOKEN=Telegram Bot Token
 ADMIN_USER_ID=Administrator Telegram User ID
 ADMIN_NOTIFY_ID=Application notification Telegram User ID
 GCC_GROUP_ID=GCC Telegram group ID
+GROUP_QA_ENABLED=false
 
 OPENAI_API_KEY=OpenAI API Key
 AI_MODEL=gpt-4o-mini
@@ -179,6 +181,7 @@ Scores are preliminary only and are not a final decision:
 - GCC projects and cases live in YAML/Markdown
 - The latest 20 messages are kept per user
 - A new session starts after 30 minutes of inactivity
+- Private chats, groups, group users, and Telegram topics use isolated sessions
 - The values system prompt always precedes user conversation context
 
 ## Deploy
@@ -194,6 +197,7 @@ flyctl secrets set \
   ADMIN_USER_ID="..." \
   ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
+  GROUP_QA_ENABLED="true" \
   OPENAI_API_KEY="..." \
   WEBHOOK_URL="https://your-app.fly.dev/webhook" \
   WEBHOOK_LISTEN="0.0.0.0" \
@@ -203,6 +207,8 @@ flyctl deploy
 
 > [!IMPORTANT]
 > On Fly.io, the webhook must listen on `0.0.0.0` and the `internal_port` from `fly.toml`; otherwise Fly cannot forward Telegram webhook requests to the app. `WEBHOOK_SECRET_TOKEN` must contain 32–256 letters, numbers, underscores, or hyphens. The app registers the webhook and secret with Telegram during startup; do not manually call `setWebhook` without the secret. For local debugging, set `WEBHOOK_LISTEN=127.0.0.1` if you only want localhost.
+
+Set `GROUP_QA_ENABLED=false` to immediately disable email-free group Q&A without deleting or changing existing user identities or session data.
 
 ## Contributing
 

@@ -26,6 +26,7 @@ jobs:
       - run: python tests/test_regression.py
       - run: python -m unittest tests.test_logging
       - run: python -m unittest tests.test_webhook_security
+      - run: python -m unittest tests.telegram.test_group_mentions tests.persistence.test_session_scopes tests.persistence.test_migrations
 
   deploy:
     name: Deploy app

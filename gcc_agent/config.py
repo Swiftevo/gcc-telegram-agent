@@ -15,6 +15,13 @@ def _int(name: str, default: int = 0) -> int:
         return default
 
 
+def _bool(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
 @dataclass(frozen=True)
 class Settings:
     bot_token: str = os.getenv("BOT_TOKEN", "")
@@ -22,6 +29,7 @@ class Settings:
     admin_user_id: int = _int("ADMIN_USER_ID")
     admin_notify_id: int = _int("ADMIN_NOTIFY_ID")
     gcc_group_id: int = _int("GCC_GROUP_ID")
+    group_qa_enabled: bool = _bool("GROUP_QA_ENABLED")
     gcc_group_invite: str = os.getenv("GCC_GROUP_INVITE", "")
     webhook_url: str = os.getenv("WEBHOOK_URL", "")
     webhook_listen: str = os.getenv("WEBHOOK_LISTEN", "0.0.0.0")
