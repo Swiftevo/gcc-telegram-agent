@@ -12,6 +12,9 @@ from gcc_agent.applications.models import ApplicationDraft
 class Session:
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     user_id: int = 0
+    scope_type: str = "private"
+    scope_id: int = 0
+    thread_id: int = 0
     mode: str = "general"
     messages: List[dict] = field(default_factory=list)
     application_draft: ApplicationDraft = field(default_factory=ApplicationDraft)

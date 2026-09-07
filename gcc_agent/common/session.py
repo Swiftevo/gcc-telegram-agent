@@ -8,10 +8,27 @@ from gcc_agent.common.persistence import conversations
 logger = logging.getLogger(__name__)
 
 
-async def get_session(guard) -> Session:
-    session, is_new = await conversations.get_or_create_session(guard.user.user_id)
+async def get_session(
+    guard,
+    *,
+    scope_type: str = "private",
+    scope_id: int = 0,
+    thread_id: int = 0,
+) -> Session:
+    session, is_new = await conversations.get_or_create_session(
+        guard.user.user_id,
+        scope_type=scope_type,
+        scope_id=scope_id,
+        thread_id=thread_id,
+    )
     if is_new:
-        logger.debug("new session user_id=%s", guard.user.user_id)
+        logger.debug(
+            "new session user_id=%s scope_type=%s scope_id=%s thread_id=%s",
+            guard.user.user_id,
+            scope_type,
+            scope_id,
+            thread_id,
+        )
     return session
 
 

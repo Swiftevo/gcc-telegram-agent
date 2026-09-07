@@ -22,16 +22,35 @@ async def handle_general(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
     guard,
+    *,
+    user_text_override: str | None = None,
+    scope_type: str = "private",
+    scope_id: int = 0,
+    thread_id: int = 0,
+    allow_application: bool = True,
 ) -> None:
     """Answer from a deterministic link or the configured language model."""
     if update.message is None:
         return
 
-    user_text = (update.message.text or "").strip()
+    user_text = (
+        user_text_override
+        if user_text_override is not None
+        else (update.message.text or "").strip()
+    )
     lang = guard.lang
     user_id = guard.user.user_id
-    session = await get_session(guard)
-    reply_markup = make_apply_markup(lang) if is_funding_related(user_text) else None
+    session = await get_session(
+        guard,
+        scope_type=scope_type,
+        scope_id=scope_id,
+        thread_id=thread_id,
+    )
+    reply_markup = (
+        make_apply_markup(lang)
+        if allow_application and is_funding_related(user_text)
+        else None
+    )
 
     link_result = check_link_first(user_text, lang)
     if link_result.matched:

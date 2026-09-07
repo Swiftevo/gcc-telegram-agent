@@ -8,6 +8,9 @@ primary_region = 'nrt'
 
 [build]
 
+[env]
+  GROUP_QA_ENABLED = "true"
+
 [deploy]
   # SQLite is stored on one regional volume, so deploy the single Machine in place.
   strategy = 'rolling'

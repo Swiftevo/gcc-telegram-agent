@@ -12,10 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 def _row_to_session(row) -> Session:
+    keys = set(row.keys())
     draft_data = json.loads(row["draft_json"] or "{}")
     return Session(
         session_id=row["session_id"],
         user_id=row["user_id"],
+        scope_type=row["scope_type"] if "scope_type" in keys else "private",
+        scope_id=row["scope_id"] if "scope_id" in keys else 0,
+        thread_id=row["thread_id"] if "thread_id" in keys else 0,
         mode=row["mode"],
         messages=json.loads(row["messages_json"] or "[]"),
         application_draft=ApplicationDraft(
@@ -33,11 +37,19 @@ def _row_to_session(row) -> Session:
     )
 
 
-async def get_active_session(user_id: int) -> Optional[Session]:
+async def get_active_session(
+    user_id: int,
+    *,
+    scope_type: str = "private",
+    scope_id: int = 0,
+    thread_id: int = 0,
+) -> Optional[Session]:
     async with connect(rows=True) as db:
         async with db.execute(
-            "SELECT * FROM sessions WHERE user_id=? ORDER BY last_active DESC LIMIT 1",
-            (user_id,),
+            """SELECT * FROM sessions
+               WHERE user_id=? AND scope_type=? AND scope_id=? AND thread_id=?
+               ORDER BY last_active DESC LIMIT 1""",
+            (user_id, scope_type, scope_id, thread_id),
         ) as cursor:
             row = await cursor.fetchone()
     if not row:
@@ -46,15 +58,47 @@ async def get_active_session(user_id: int) -> Optional[Session]:
     return None if session.is_expired() else session
 
 
-async def create_session(user_id: int) -> Session:
-    session = Session(user_id=user_id)
+async def create_session(
+    user_id: int,
+    *,
+    scope_type: str = "private",
+    scope_id: int = 0,
+    thread_id: int = 0,
+) -> Session:
+    session = Session(
+        user_id=user_id,
+        scope_type=scope_type,
+        scope_id=scope_id,
+        thread_id=thread_id,
+    )
     await save_session(session)
     return session
 
 
-async def get_or_create_session(user_id: int) -> tuple[Session, bool]:
-    session = await get_active_session(user_id)
-    return (session, False) if session else (await create_session(user_id), True)
+async def get_or_create_session(
+    user_id: int,
+    *,
+    scope_type: str = "private",
+    scope_id: int = 0,
+    thread_id: int = 0,
+) -> tuple[Session, bool]:
+    session = await get_active_session(
+        user_id,
+        scope_type=scope_type,
+        scope_id=scope_id,
+        thread_id=thread_id,
+    )
+    if session:
+        return session, False
+    return (
+        await create_session(
+            user_id,
+            scope_type=scope_type,
+            scope_id=scope_id,
+            thread_id=thread_id,
+        ),
+        True,
+    )
 
 
 async def save_session(session: Session) -> None:
@@ -75,14 +119,18 @@ async def save_session(session: Session) -> None:
     async with connect() as db:
         await db.execute(
             """INSERT INTO sessions
-               (session_id,user_id,mode,messages_json,draft_json,created_at,last_active)
-               VALUES (?,?,?,?,?,?,?)
+               (session_id,user_id,scope_type,scope_id,thread_id,mode,messages_json,
+                draft_json,created_at,last_active)
+               VALUES (?,?,?,?,?,?,?,?,?,?)
                ON CONFLICT(session_id) DO UPDATE SET mode=excluded.mode,
                  messages_json=excluded.messages_json, draft_json=excluded.draft_json,
                  last_active=excluded.last_active""",
             (
                 session.session_id,
                 session.user_id,
+                session.scope_type,
+                session.scope_id,
+                session.thread_id,
                 session.mode,
                 json.dumps(session.messages, ensure_ascii=False),
                 draft_json,
