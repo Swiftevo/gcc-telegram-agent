@@ -3,6 +3,22 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-10：`GROUP-ACCESS-001` production 驗收完成
+
+- PR #13 已 merge（`f60825e`）；GitHub Actions run `34169493168` 的 verify 和
+  Fly deploy 均成功。
+- Production `GCC_GROUP_ID` 已由舊測試群組更新為 GCC 2026H2 內部工作群組
+  `-1003962128595`；`GROUP_QA_ENABLED=true`。
+- Machine `7813de2bdd3638` 在 `nrt` 為 `started`／host `ok`；重啟後 `getMe`、
+  `setWebhook` 均為 200。Webhook pending updates 為 0，沒有 last error。
+- 未驗證 email、`access_level=regular` 的真實群組用戶 mention bot 後，成功取得
+  GCC about 的 link-first 回覆；沒有 email gate 或申請按鈕。
+- SQLite 建立一個 `scope_type=group`、正確 group ID、`mode=general` 的 session；
+  一問一答同時產生 2 條 context 及 2 條 message records。儲存內容已移除 bot mention，
+  application draft 為空，沒有建立或觸碰 private session。
+- Production logs 記錄 `link served type=about`，沒有新 error／traceback。由此確認
+  mention-only、免 email、窄權限及 session 隔離閉環均成立，任務移到 Done。
+
 ## 2026-09-08：關閉 Telegram 安全缺口及確定群組 QA 路徑
 
 ### Production 安全驗證
