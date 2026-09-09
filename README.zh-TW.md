@@ -186,6 +186,9 @@ main.py                      # 啟動入口
 
 ## 部署
 
+Production SQLite 的 snapshot、備份、還原演練及事故程序見
+[`docs/sqlite-backup-restore.md`](docs/sqlite-backup-restore.md)。
+
 以 Fly.io 為例：
 
 ```bash

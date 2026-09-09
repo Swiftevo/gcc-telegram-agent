@@ -3,6 +3,34 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-10：`DATA-001` snapshot 還原演練通過，實作待 merge
+
+- Production volume `vol_vde858w7nwx75564` 的 scheduled snapshots 已實際產生：
+  盤點時最近兩日有 3 個 `created` snapshots；設定顯示 scheduled snapshots 為 true。
+- 每日 snapshot retention 已由 5 日提高至 14 日；production machine、volume mount
+  和 DB 內容沒有因此重啟或改動。
+- 第一輪從當日較早的 automatic snapshot `vs_ZywDkqVwkgYszlxYjN8k77P` 建立隔離
+  volume；DB `integrity_check=ok`、外鍵違規 0、migration 1–4 齊全，但 users／sessions／
+  messages 為 0／0／0。同期 production 唯讀檢查為 1／1／6，實證每日 snapshot 最多
+  可落後約 24 小時，不能當作即時複本。
+- 隨後建立 on-demand snapshot `vs_7q940ZM90DyT9QKjyGbgwRk`；從它建立位於不同
+  zone 的獨立 restore volume，並以不啟動 bot 或 HTTP service 的一次性 machine
+  `83d105ec746ed8` 驗證。結果為 `integrity_check=ok`、外鍵違規 0、migration 1–4、
+  users／sessions／messages 1／1／6，與 snapshot 前 production 計數一致；machine
+  exit code 0 並自動銷毀。
+- 兩個演練 restore volumes 均在核對未 attached 後刪除；production volume 未被替換。
+- 已建立 `gcc_agent.ops.sqlite_backup`：以 SQLite online backup API 建立一致副本，
+  驗證完整性／外鍵／必要 tables／migration，並輸出不含實際個人資料的 SHA-256、
+  row counts 和 manifest。Windows 首輪測試發現 connection 未明確 close 會鎖檔，
+  修正後相關測試全數通過。
+- Runbook 訂明 owner 為 GCC bot operator（目前 `Swiftevo`）、RPO 24 小時、RTO 2 小時、
+  migration 前 on-demand snapshot、每季 restore drill，以及 rollback／清理界線。
+- 離站備份評估結論：只用 Fly snapshots 仍有同 account／平台風險；建議獨立
+  S3-compatible storage、上傳前加密、14 個 daily 加 3 個 monthly。正式啟用仍待
+  GCC 指定 storage account owner 及 `PRIV-001` 確定含個人資料備份的保留／刪除政策。
+- 本 section 記錄的是已完成的 production 演練及設定；備份工具、CI 和 runbook 在
+  `codex/data-001` merge/deploy 前仍未成為 production release，故 `DATA-001` 暫不移入 Done。
+
 ## 2026-09-10：`GROUP-ACCESS-001` production 驗收完成
 
 - PR #13 已 merge（`f60825e`）；GitHub Actions run `34169493168` 的 verify 和
