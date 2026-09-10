@@ -48,6 +48,13 @@ The schema reserves fields for:
 - `checksum`
 - `access_level`
 
+A signed governance Snapshot proves the proposal or decision captured at that time;
+it does not prove actual disbursement, milestone acceptance, or fund unlock. Those
+execution events require separate transaction／accounting／operator evidence. When
+sources conflict, preserve the alternatives, mark the execution fact
+`pending_reconciliation`, and exclude it from AI factual answers and review until
+an authorized GCC owner confirms it.
+
 ### 3. Grant Application
 
 Applications are modeled as linked evidence, not copied into the public database
