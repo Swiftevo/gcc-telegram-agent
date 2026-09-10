@@ -3,7 +3,7 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-09-10：`DATA-001` snapshot 還原演練通過，實作待 merge
+## 2026-09-10：`DATA-001` SQLite 備份與還原閉環完成
 
 - Production volume `vol_vde858w7nwx75564` 的 scheduled snapshots 已實際產生：
   盤點時最近兩日有 3 個 `created` snapshots；設定顯示 scheduled snapshots 為 true。
@@ -28,8 +28,15 @@
 - 離站備份評估結論：只用 Fly snapshots 仍有同 account／平台風險；建議獨立
   S3-compatible storage、上傳前加密、14 個 daily 加 3 個 monthly。正式啟用仍待
   GCC 指定 storage account owner 及 `PRIV-001` 確定含個人資料備份的保留／刪除政策。
-- 本 section 記錄的是已完成的 production 演練及設定；備份工具、CI 和 runbook 在
-  `codex/data-001` merge/deploy 前仍未成為 production release，故 `DATA-001` 暫不移入 Done。
+- PR #15 已 merge（`15932a4`）；GitHub Actions run `34418412224` 的 compile、既有
+  regression suites、新增 SQLite backup tests 及 Fly deploy 全部成功。
+- Production machine `7813de2bdd3638` 已更新至 version 48，原 `nrt` volume 保持掛載；
+  新 image 內的 `sqlite_backup verify` 直接檢查 `/data/gcc_agent.db` 成功：
+  `integrity_check=ok`、外鍵違規 0、migration 1–4。部署後 bot 繼續成功處理 Telegram
+  和 OpenAI 回覆，logs 沒有新 traceback，token 保持 redacted。
+- 驗收完成後 `DATA-001` 移入 Done。現存 snapshots 在 retention 更新前建立，仍顯示
+  5 日；volume 現行設定為 14 日，下一個 scheduled snapshot 應再核對其個別 retention。
+  離站 object storage 未啟用的風險保留至 `PRIV-001` 和 storage owner 決定。
 
 ## 2026-09-10：`GROUP-ACCESS-001` production 驗收完成
 
