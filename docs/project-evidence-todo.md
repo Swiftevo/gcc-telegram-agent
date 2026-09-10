@@ -5,6 +5,29 @@ canonical [`docs/todo.md`](todo.md). It does **not** override the project-wide
 priority order. Do not publish private applications, votes, applicant identities,
 or reimbursements merely to close a checkbox.
 
+## Funding execution reconciliation — intentionally non-blocking
+
+A signed Snapshot proposal or vote records a governance proposal／decision. It is
+not by itself evidence that the approved amount was transferred, a milestone was
+accepted, or an unlock happened exactly as proposed.
+
+- [ ] Model and record `governance_decision`, actual `disbursement`, milestone
+  `acceptance`, and milestone `unlock` as separate events with separate sources.
+- [ ] Reconcile Vyper's conflicting `30,000`／`40,000` amount meanings: requested,
+  approved, transferred, unlocked, or another accounting basis.
+- [ ] Reconcile Wamotopia 2026's `8,000`／`8,800` amount meanings on the same basis.
+- [ ] Check every signed grant Snapshot against available transaction, accounting,
+  payment and milestone follow-up records; record partial execution rather than
+  copying proposal milestones into actual outcomes.
+- [ ] Assign an authorized GCC follow-up owner to confirm each resolution and its
+  effective date without publishing private reviewer／recipient material.
+
+Until the assigned owner finishes a check, preserve all conflicting values and mark
+the operational fact `unknown`／`pending_reconciliation`. Exclude that disputed
+claim from bot factual answers, comparison examples and application review. This
+work is tracked as `GRANT-RECON-001` and does not block unrelated repairs or
+non-conflicting case evidence.
+
 ## Tier A — correctness and privacy blockers for existing seed cases
 
 Complete these before describing the affected records as verified public cases.

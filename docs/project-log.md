@@ -3,6 +3,25 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-11：隔離 Snapshot／實際執行衝突，凍結新功能
+
+- GCC 確認：Snapshot 簽署與真實資助執行、milestone 驗收／解鎖可能有出入，現正由
+  專人跟進核對。往後資料模型及內容必須把 governance decision、actual disbursement、
+  milestone acceptance 和 unlock 分開，不可由簽署結果推定實際執行。
+- 未完成核對的金額、付款和 milestone claim 保留所有來源，標成
+  `unknown`／`pending_reconciliation`，不進 bot 事實回答、案例比較或申請 review；
+  相關工作集中到 `GRANT-RECON-001`，不阻塞其他非衝突內容及可靠性修復。
+- 本輪 bot 實測顯示「GCC 評審流程」回答把 repository 內部 40/30/20/10 權重及
+  70/40 門檻表述成正式政策，亦沒有準確交代盡調、投委決策與 milestone 管理。
+  這是現有 QA 的 correctness bug，不是新增內容需求，新增 `QA-FACT-001` 優先修復。
+- 現階段 scope freeze：除資助項目資料整理及申請評審修復外，不增加產品能力。
+  順序先處理完整測試入口、QA 事實邊界、申請持久化／通知、假精確評分、私隱、
+  health／告警、管理命令及 release gate；metrics、案例擴量及 semantic search 留後。
+- 電郵驗證按先前決定繼續暫緩；其後應由 GCC 明確選擇完成、收窄或移除，不讓
+  一個不可用的既有入口長期停留在模糊狀態。
+- 這次只重整 canonical TODO、evidence 子清單及資料設計原則，沒有改動 runtime、
+  production data 或 Fly 設定。
+
 ## 2026-09-10：`DATA-001` SQLite 備份與還原閉環完成
 
 - Production volume `vol_vde858w7nwx75564` 的 scheduled snapshots 已實際產生：
