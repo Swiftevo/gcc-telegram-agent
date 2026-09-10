@@ -30,7 +30,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-python -m unittest discover -s tests -v
+python -m tests
 ```
 
 不要把 `.env`、Token、密码或密钥提交到 Git。本地服务只能绑定 `127.0.0.1`，不要把本机端口暴露到公网。
@@ -63,7 +63,7 @@ python -m unittest discover -s tests -v
 5. 提交前在本地跑：
 
    ```bash
-   python -m unittest discover -s tests -v
+   python -m tests
    ```
 
 6. 向 **`dev`** 开 Pull Request，不要直接开向 `main`。

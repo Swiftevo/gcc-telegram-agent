@@ -128,7 +128,7 @@ python main.py
 執行測試：
 
 ```bash
-python -m unittest discover -s tests -v
+python -m tests
 ```
 
 ## 專案結構
@@ -221,7 +221,7 @@ flyctl deploy
 
 1. 從 `dev` 拉出 `feat/` 或 `fix/` 分支
 2. 改動保持聚焦，並補上對應測試
-3. 提交前執行 `python -m unittest discover -s tests -v`
+3. 提交前執行 `python -m tests`
 4. 向 **`dev`** 開 Pull Request，不要直接推 `main`
 
 Issue 標題帶上 `新功能`、`缺陷`、`文檔` 等類型詞，GitHub Actions 會按內容和改動路徑自動打標籤。提交說明請寫 `Refs #編號` 或 `Fixes #編號` 以關聯 Issue。
