@@ -2,14 +2,17 @@ name: Fly Deploy
 on:
   push:
     branches:
-      - main  # 只有當你把程式推送到 main 分支時才啟動部署
+      - main  # Production deploys only after a tested main push.
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
 
 concurrency:
-  group: fly-production
-  cancel-in-progress: false
+  group: fly-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
@@ -28,6 +31,7 @@ jobs:
   deploy:
     name: Deploy app
     needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
