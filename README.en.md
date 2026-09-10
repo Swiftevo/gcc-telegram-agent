@@ -128,7 +128,7 @@ Telegram polling is used when `WEBHOOK_URL` is unset.
 Tests:
 
 ```bash
-python -m unittest discover -s tests -v
+python -m tests
 ```
 
 ## Project structure
@@ -218,7 +218,7 @@ Short path:
 
 1. Branch `feat/` or `fix/` from `dev`
 2. Keep the change focused and add tests
-3. Run `python -m unittest discover -s tests -v` before you push
+3. Run `python -m tests` before you push
 4. Open the Pull Request against **`dev`**, not `main`
 
 Put type words such as `enhancement`, `bug`, or `docs` in the Issue title so Actions can label it. Reference issues with `Refs #n` or `Fixes #n` in the commit message.

@@ -2,14 +2,17 @@ name: Fly Deploy
 on:
   push:
     branches:
-      - main  # 只有當你把程式推送到 main 分支時才啟動部署
+      - main  # Production deploys only after a tested main push.
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
 
 concurrency:
-  group: fly-production
-  cancel-in-progress: false
+  group: fly-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
@@ -23,15 +26,12 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: python -m compileall -q gcc_agent main.py
-      - run: python tests/test_regression.py
-      - run: python -m unittest tests.test_logging
-      - run: python -m unittest tests.test_webhook_security
-      - run: python -m unittest tests.telegram.test_group_mentions tests.persistence.test_session_scopes tests.persistence.test_migrations
-      - run: python -m unittest tests.ops.test_sqlite_backup
+      - run: python -m tests
 
   deploy:
     name: Deploy app
     needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
