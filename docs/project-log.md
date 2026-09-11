@@ -13,6 +13,12 @@
   targeting `dev` 也不會執行 release gate。是否採 trunk-based、保留真正 integration
   branch、要求獨立 approval，以及是否設 CODEOWNERS，集中交由新項目
   `REPO-GOV-001` 決定和落實，列為最高的 P2 工作。
+- `REPO-GOV-001` 同時必須補回跨 AI Agent onboarding：建立單一 canonical
+  `docs/ai-agent-guide.md`，涵蓋開工前必讀順序、scope／TODO 約束、架構邊界、敏感資料、
+  production 操作授權、事實來源、完整測試及完成記錄；再按實際使用工具提供薄入口檔
+  （例如根目錄 `AGENTS.md`、`CLAUDE.md` 或 `.github/copilot-instructions.md`），只引用
+  canonical guide，避免多份規則漂移。另以 PR template 要求 scope、測試、私隱／資料、
+  production 驗收及 rollback 說明。
 - `RELEASE-001` 收窄為已確認的 supply-chain／reproducibility 修復：把所有 GitHub
   Actions 及 Fly deployment tooling 從可浮動 tag／`master` 鎖到不可變版本，建立受
   review 的更新政策，並驗證 main release 可追溯至同一 tested commit。它不再以未完成
