@@ -274,6 +274,7 @@ def test_values_yaml():
         check("包含 priority_themes（列表）", isinstance(data.get("priority_themes"), list))
         check("包含 rejection_criteria（列表）", isinstance(data.get("rejection_criteria"), list))
         check("包含 screening_rubric（字典）", isinstance(data.get("screening_rubric"), dict))
+        check("包含 qa_fact_policy", bool(data.get("qa_fact_policy")))
         check("包含 tone_guidelines", "tone_guidelines" in data)
         check("包含 gcc_summary", "gcc_summary" in data)
         rubric = data.get("screening_rubric", {})

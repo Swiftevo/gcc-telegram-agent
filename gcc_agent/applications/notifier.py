@@ -41,7 +41,7 @@ async def notify_admin(
         f"{'─' * 30}\n📌 項目名稱：*{draft.project_name}*\n"
         f"💰 申請基金：{fund}\n{link}"
         f"📝 執行摘要：\n_{draft.executive_summary}_\n"
-        f"{'─' * 30}\n🤖 *Agent 預審*\n總分：{score}\n\n"
+        f"{'─' * 30}\n🤖 *Bot 內部 heuristic（非 GCC 正式評分）*\n內部分數：{score}\n\n"
         f"{draft.agent_notes}\n{'─' * 30}\n"
         f"📅 提交時間：{datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}"
     )

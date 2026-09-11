@@ -12,5 +12,6 @@ class AgentValues:
     priority_themes: List[str] = field(default_factory=list)
     rejection_criteria: List[str] = field(default_factory=list)
     screening_rubric: dict = field(default_factory=dict)
+    qa_fact_policy: str = ""
     tone_guidelines: str = ""
     gcc_summary: str = ""

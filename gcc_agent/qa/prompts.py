@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from gcc_agent.common.models import Session
+from gcc_agent.qa.facts import check_official_fact
 from gcc_agent.knowledge.loaders import (
     as_gcc_summary_block,
     as_system_block,
@@ -85,8 +86,15 @@ def _link_reply(lang: str, link_type: str, name: str, url: str) -> str:
     return f"{label}\n{url}{reminder}"
 
 
-def check_link_first(text: str, lang: str = "zh-TW") -> LinkResult:
+def check_link_first(
+    text: str,
+    lang: str = "zh-TW",
+    previous_messages: list[dict] | None = None,
+) -> LinkResult:
     value = text.lower().strip()
+    fact = check_official_fact(text, lang, previous_messages)
+    if fact.matched:
+        return LinkResult(True, fact.reply, f"fact_{fact.fact_type}")
     for name, url in PROJECT_LINKS.items():
         if name in value:
             return LinkResult(True, _link_reply(lang, "project", name.title(), url), "project")

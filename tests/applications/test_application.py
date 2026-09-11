@@ -163,6 +163,7 @@ async def test_application_flow():
     notify_text = notify_args[1]["text"]
     check("Step 3：通知包含項目名稱", "OpenCommons Protocol" in notify_text)
     check("Step 3：通知包含預審分數", "/100" in notify_text)
+    check("Step 3：通知標明非 GCC 正式評分", "非 GCC 正式評分" in notify_text)
     check("Step 3：通知包含申請人 username", "apply_test" in notify_text)
 
     # Session 已重置回 general mode
