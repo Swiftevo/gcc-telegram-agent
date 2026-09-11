@@ -3,6 +3,27 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-12：`QA-FACT-001` 官方事實邊界完成
+
+- 資助／評審流程、公開準則、評選時間、正式評分、來源追問，以及
+  Snapshot 決定與實際執行，現先經繁／簡／英 deterministic link-first 路由；這些
+  高風險答案不再交由語言模型推斷。
+- 公開流程只引用 GCC 官網已核實內容；明確說明官網沒有公布 40/30/20/10 權重、
+  70/40 門檻或各階段分別需時。公共基金與專項基金不再混為同一套細節。
+- 一般 QA system prompt 已移除舊百分制。現有 application heuristic 暫時只供管理員
+  初步整理，通知明確標成「非 GCC 正式評分」；完整 evidence triage 仍由
+  `REVIEW-001` 處理。
+- Snapshot 簽署／投票不再被描述成實際撥款、milestone 驗收或款項解鎖；未核實
+  執行狀態保留為 unknown，交由 `GRANT-RECON-001` 核對。
+- PR #20 合併至 main（merge `96ca785`）。PR `Verify release` 及 main Actions run
+  `34644006225` 的 compile、13 個完整 test files 與 Fly deploy 全部成功。
+- Production release v52／machine `7813de2bdd3638` 在 `nrt` 為 started；image label
+  `GH_SHA=96ca785e399bd442127f084126efd368c8534e3f`。啟動 logs 顯示 database
+  `/data/gcc_agent.db`、webhook `0.0.0.0:8080`、Telegram `getMe`／`setWebhook` 均正常。
+- v52 容器內唯讀 smoke probe 確認六類代表問法命中預期 fact route，官方連結及
+  unknown 邊界正確；Telegram webhook 指向 production host、pending updates 為 0、
+  無 last error。驗證沒有向真實群組發訊息或注入假 update。
+
 ## 2026-09-11：`TEST-001` 完整跨平台 release gate 完成
 
 - 新增唯一完整測試入口 `python -m tests`，自動找出所有 test files，並把舊 executable
