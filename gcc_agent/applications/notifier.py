@@ -7,6 +7,7 @@ from telegram.ext import ContextTypes
 
 from gcc_agent.applications.models import ApplicationDraft
 from gcc_agent.config import settings
+from gcc_agent.ops.runtime import report_incident
 
 logger = logging.getLogger(__name__)
 
@@ -57,4 +58,5 @@ async def notify_admin(
         return True
     except Exception:
         logger.exception("application notification failed user_id=%s", user.user_id)
+        await report_incident(context.bot, "admin_notification_failure")
         return False

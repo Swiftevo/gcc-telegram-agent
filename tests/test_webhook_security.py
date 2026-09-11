@@ -2,7 +2,7 @@
 
 from types import SimpleNamespace
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from telegram import Update
 
@@ -44,14 +44,15 @@ class WebhookConfigurationTests(unittest.TestCase):
             webhook_listen="0.0.0.0",
             webhook_secret_token=secret,
             port=8080,
+            webhook_internal_port=8081,
         )
 
         with patch.object(telegram_app, "settings", webhook_settings):
             telegram_app.run()
 
         application.run_webhook.assert_called_once_with(
-            listen="0.0.0.0",
-            port=8080,
+            listen="127.0.0.1",
+            port=8081,
             webhook_url="https://example.fly.dev/webhook",
             url_path="/webhook",
             secret_token=secret,
@@ -100,6 +101,40 @@ class WebhookConfigurationTests(unittest.TestCase):
             allowed_updates=Update.ALL_TYPES
         )
         application.run_webhook.assert_not_called()
+
+
+class WebhookStartupHookTests(unittest.IsolatedAsyncioTestCase):
+    async def test_post_init_starts_ops_proxy_after_database_and_telegram(self) -> None:
+        application = SimpleNamespace(
+            bot=SimpleNamespace(
+                get_me=AsyncMock(return_value=SimpleNamespace(username="test_bot"))
+            )
+        )
+        webhook_settings = SimpleNamespace(
+            webhook_url="https://example.fly.dev/webhook",
+            webhook_listen="0.0.0.0",
+            port=8080,
+            webhook_internal_port=8081,
+        )
+        with (
+            patch.object(telegram_app, "settings", webhook_settings),
+            patch.object(telegram_app, "init_db", new=AsyncMock()) as init_db,
+            patch.object(
+                telegram_app,
+                "start_operations",
+                new=AsyncMock(),
+            ) as start_operations,
+        ):
+            await telegram_app.post_init(application)
+
+        init_db.assert_awaited_once()
+        application.bot.get_me.assert_awaited_once()
+        start_operations.assert_awaited_once_with(
+            application,
+            listen="0.0.0.0",
+            port=8080,
+            upstream_port=8081,
+        )
 
 
 if __name__ == "__main__":

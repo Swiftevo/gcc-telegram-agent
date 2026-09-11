@@ -39,3 +39,23 @@ jobs:
       - run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  alert:
+    name: Alert on production deploy failure
+    needs: [test, deploy]
+    if: ${{ always() && github.event_name == 'push' && (needs.test.result == 'failure' || needs.deploy.result == 'failure') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Open deploy incident
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          SHA: ${{ github.sha }}
+        run: |
+          gh issue create --repo "$REPOSITORY" \
+            --title "[OPS] Production deploy failed: run $RUN_ID" \
+            --body "The main release for commit $SHA failed. Inspect https://github.com/$REPOSITORY/actions/runs/$RUN_ID and follow docs/operations-runbook.md. No user content is included."

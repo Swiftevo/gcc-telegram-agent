@@ -36,13 +36,13 @@
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 1 | APP-001 | P1 | **讓現有申請流程成為耐久、可追蹤的正式紀錄** | 新增 versioned migration 與 `applications`／status model；提交使用 stable ID 且具冪等性；通知成功／失敗分開記錄並可重試；通知失敗不可對用戶聲稱已送達；修正 `applications_today`；輸入 URL 驗證及 Telegram Markdown escaping 有測試 | TEST-001 |
-| 2 | REVIEW-001 | P1 | **以可解釋 evidence triage 取代現有假精確分數** | 現行百分制先降級，不向用戶或管理員暗示正式決策；輸出證據、缺失資料、風險及人工追問；不得自動拒絕；代表性 eval cases 經 GCC reviewer 審閱；測試繁簡英同義內容；記錄 rubric／model version 和人工 override；爭議 milestone／撥款 claim 不參與判斷 | APP-001、GCC reviewer 參與 |
-| 3 | PRIV-001 | P1 | **補回現有個人資料治理缺口** | 列出 email、Telegram identity、對話、申請及 admin chat 的資料流；決定告知、用途、保留期、刪除／匯出、存取權；實作 retention cleanup 與 user/admin 操作；公開文件不洩露私人申請或委員資料 | APP-001，GCC governance 決定 |
-| 4 | OPS-001 | P1 | **補回健康檢查、告警與營運 runbook** | 不含敏感資料的 health/readiness endpoint；Fly health check 驗證 process、DB read/write readiness；machine down、deploy fail、webhook error、admin notification failure 有告警；runbook 包含 rollback、volume、token、incident 步驟 | TEST-001 |
-| 5 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；email revoke／重新驗證部分待 `ACCESS-001` | TEST-001；部分依賴 ACCESS-001 |
-| 6 | RELEASE-001 | P1 | **修復 dev→main 發佈治理缺口** | PR checks 同時適用 dev/main；main 受保護且只接收經驗證 release PR；deploy workflow/action 版本固定或有更新政策；documented rollback 經演練 | TEST-001、OPS-001 |
-| 7 | ACCESS-001 | P1 | **完成或正式收窄私訊／電郵驗證功能** | 決定繼續、收窄或移除未完成的 private/member email path；若保留，決定合資格政策及 SMTP provider、加入 cooldown／每日上限並完成三語 E2E；不影響 `group_qa` 免 email 路徑 | 依先前決定暫緩；需要 GCC 資格政策及 SMTP owner |
+| 1 | OPS-001 | P1 | **補回健康檢查、告警與營運 runbook** | 不含敏感資料的 health/readiness endpoint；Fly health check 驗證 process、DB read/write readiness；machine down、deploy fail、webhook error、admin notification failure 有告警；runbook 包含 rollback、volume、token、incident 步驟 | TEST-001 |
+| 2 | PRIV-001 | P1 | **補回現有個人資料治理缺口** | 列出 email、Telegram identity、對話、申請及 admin chat 的資料流；決定告知、用途、保留期、刪除／匯出、存取權；實作 retention cleanup 與 user/admin 操作；公開文件不洩露私人申請或委員資料 | GCC governance 決定 |
+| 3 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；email revoke／重新驗證部分待 `ACCESS-001` | TEST-001；部分依賴 ACCESS-001 |
+| 4 | RELEASE-001 | P1 | **修復 dev→main 發佈治理缺口** | PR checks 同時適用 dev/main；main 受保護且只接收經驗證 release PR；deploy workflow/action 版本固定或有更新政策；documented rollback 經演練 | TEST-001、OPS-001 |
+| 5 | REVIEW-001 | P1 | **移除 Bot 現有的假精確申請分數** | 停止計算／通知 40/30/20/10 百分制及 70/40 建議；Bot 不作自動通過、拒絕或排序；一般 QA 繼續使用官方事實邊界；外置表格及人類流程是正式申請／決策來源；舊 scoring code、tests、文件及資料使用有清理／兼容方案 | 外置表格決定已確認 |
+| 6 | ACCESS-001 | P1 | **完成或正式收窄私訊／電郵驗證功能** | 決定繼續、收窄或移除未完成的 private/member email path；若保留，決定合資格政策及 SMTP provider、加入 cooldown／每日上限並完成三語 E2E；不影響 `group_qa` 免 email 路徑 | 依先前決定暫緩；需要 GCC 資格政策及 SMTP owner |
+| 7 | APP-001 | P2 | **把 Bot 申請入口收窄至官方外置表格** | 申請 CTA 直接導向正確公共／專項基金表格並清楚說明正式提交在外部完成；停止本機四步資料收集、管理員通知及提交成功暗示；安全退出舊 draft；既有資料依 `PRIV-001` 處理 | 外置表格 URL owner；PRIV-001 |
 | 8 | PGDATA-001 | P2 | **讓非衝突、已審核的 public-goods cases 成為 QA 資料來源** | 定義 QA 可用欄位；runtime 不再只靠 `projects.yaml`；回應帶 provenance／日期；private/internal 及 `pending_reconciliation` claims 不進 prompt；完整 schema validation 及兼容測試；review/scoring 接入另由 REVIEW-001 控制 | QA-FACT-001、PRIV-001 |
 | 9 | CONTENT-001 | P2 | **修正非衝突 seed case 的證據與私隱缺口** | 完成 evidence 子清單可獨立核實的 Tier A 項目；每個公開 claim 有來源或明確 unknown；由內容 owner review；撥款／milestone 衝突移交 `GRANT-RECON-001`，不得猜測或阻塞其他 case | PGDATA-001 可平行設計，發佈受 PRIV-001 約束 |
 | 10 | GRANT-RECON-001 | P2 | **由專人核對治理決定、實際撥款及 milestone 解鎖差異** | 對每個爭議 case 分開記錄 snapshot decision、實際 disbursement、milestone acceptance／unlock；保留衝突來源；由獲授權 owner 確認後才解除 `pending_reconciliation`；未確認資料不進 bot 事實回答或 review | GCC 指定跟進人及會計／交易／驗收證據；不阻塞其他修復 |

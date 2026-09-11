@@ -28,6 +28,11 @@ from gcc_agent.common.persistence.database import init_db
 from gcc_agent.common.persistence.conversations import get_or_create_session, save_session
 from gcc_agent.common.persistence.users import get_user
 from gcc_agent.config import settings
+from gcc_agent.ops.runtime import (
+    handle_application_error,
+    start_operations,
+    stop_operations,
+)
 from gcc_agent.qa.handler import handle_general
 from gcc_agent.access.guard import detect_language, run_group_qa_guard, run_guard
 from gcc_agent.telegram.router import route
@@ -200,13 +205,28 @@ async def handle_start(update: Update, context) -> None:
 
 async def post_init(application: Application) -> None:
     await init_db()
-    logger.info("bot started username=%s", (await application.bot.get_me()).username)
+    bot_user = await application.bot.get_me()
+    if settings.webhook_url:
+        await start_operations(
+            application,
+            listen=settings.webhook_listen,
+            port=settings.port,
+            upstream_port=settings.webhook_internal_port,
+        )
+    logger.info("bot started username=%s", bot_user.username)
 
 
 def build_application() -> Application:
     if not settings.bot_token:
         raise ValueError("BOT_TOKEN is not configured")
-    app = Application.builder().token(settings.bot_token).post_init(post_init).build()
+    app = (
+        Application.builder()
+        .token(settings.bot_token)
+        .post_init(post_init)
+        .post_stop(stop_operations)
+        .build()
+    )
+    app.add_error_handler(handle_application_error)
     private = filters.ChatType.PRIVATE
     app.add_handler(CommandHandler("start", handle_start, filters=private))
     app.add_handler(CommandHandler("email", handle_email, filters=private))
@@ -227,14 +247,17 @@ def run() -> None:
     )
     app = build_application()
     if settings.webhook_url:
+        if settings.webhook_internal_port == settings.port:
+            raise ValueError("WEBHOOK_INTERNAL_PORT must differ from PORT")
         logger.info(
-            "webhook mode enabled listen=%s port=%s",
+            "webhook mode enabled proxy=%s:%s internal=127.0.0.1:%s",
             settings.webhook_listen,
             settings.port,
+            settings.webhook_internal_port,
         )
         app.run_webhook(
-            listen=settings.webhook_listen,
-            port=settings.port,
+            listen="127.0.0.1",
+            port=settings.webhook_internal_port,
             webhook_url=settings.webhook_url,
             url_path="/webhook",
             secret_token=settings.webhook_secret_token,

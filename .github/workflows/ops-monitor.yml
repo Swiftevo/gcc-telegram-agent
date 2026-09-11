@@ -1,0 +1,64 @@
+name: Production Readiness Monitor
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: production-readiness-monitor
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    name: Probe production operations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe readiness and operational state
+        id: probe
+        run: |
+          if curl --fail --silent --show-error --max-time 10 \
+            --retry 2 --retry-all-errors \
+            https://gcc-public-goods-bot.fly.dev/opsz > /dev/null; then
+            echo "result=ready" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=failed" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open one durable incident while production is degraded
+        if: steps.probe.outputs.result != 'ready'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          issue_number="$(gh issue list --repo "$REPOSITORY" --state open \
+            --search '"[OPS] Production readiness monitor failed" in:title' \
+            --json number --jq '.[0].number // empty')"
+          if [ -z "$issue_number" ]; then
+            gh issue create --repo "$REPOSITORY" \
+              --title "[OPS] Production readiness monitor failed" \
+              --body "The external /opsz probe failed. Inspect https://github.com/$REPOSITORY/actions/runs/$RUN_ID and follow docs/operations-runbook.md. No user content is included."
+          fi
+          exit 1
+
+      - name: Close readiness incident after recovery
+        if: steps.probe.outputs.result == 'ready'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          issue_number="$(gh issue list --repo "$REPOSITORY" --state open \
+            --search '"[OPS] Production readiness monitor failed" in:title' \
+            --json number --jq '.[0].number // empty')"
+          if [ -n "$issue_number" ]; then
+            gh issue comment "$issue_number" --repo "$REPOSITORY" \
+              --body "Production recovered; /opsz passed in https://github.com/$REPOSITORY/actions/runs/$RUN_ID."
+            gh issue close "$issue_number" --repo "$REPOSITORY" \
+              --reason completed
+          fi

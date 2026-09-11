@@ -219,7 +219,12 @@ flyctl deploy
 ```
 
 > [!IMPORTANT]
-> 在 Fly.io 上，Webhook 必须监听 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否则 Fly 无法把 Telegram webhook 请求转发给应用。`WEBHOOK_SECRET_TOKEN` 必须是 32–256 个字母、数字、下划线或连字符。应用启动时会自动向 Telegram 注册 webhook 和 secret；不要再用不带 secret 的 `setWebhook` URL 手动注册。本地调试如需只监听 localhost，可设置 `WEBHOOK_LISTEN=127.0.0.1`。
+> 在 Fly.io 上，公开入口必须监听 `0.0.0.0` 和 `fly.toml` 的 `internal_port`，否则 Fly 无法把请求转发给应用。Production 的入口层再把 `/webhook` 转交到 `127.0.0.1:WEBHOOK_INTERNAL_PORT` 的 PTB handler。`WEBHOOK_SECRET_TOKEN` 必须是 32–256 个字母、数字、下划线或连字符，并由 PTB handler 验证。应用启动时会自动向 Telegram 注册 webhook 和 secret；不要再用不带 secret 的 `setWebhook` URL 手动注册。本地调试如需只监听 localhost，可设置 `WEBHOOK_LISTEN=127.0.0.1`。
+
+Production 的公开入口同时提供不含敏感资料的 `/healthz`、`/readyz` 和
+`/opsz`。Fly 使用 `/readyz` 控制 routing／deployment，GitHub Actions 每 15 分钟
+检查 `/opsz` 并在异常时建立 incident。操作及 rollback 步骤见
+[`docs/operations-runbook.md`](docs/operations-runbook.md)。
 
 `GROUP_QA_ENABLED=false` 可即时关闭免邮箱群组问答，不会删除或改变现有用户身份及会话资料。
 
