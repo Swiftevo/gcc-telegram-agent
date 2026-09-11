@@ -3,6 +3,29 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-12：`OPS-001` production 健康檢查、告警與 runbook 完成
+
+- 公開 ingress 現提供三個不含敏感資料的 operational endpoints：`/healthz` 只反映
+  process liveness；`/readyz` 檢查 application、webhook、Telegram 初始化及 SQLite
+  schema／write-lock readiness；`/opsz` 再涵蓋 Telegram webhook、積壓量及近期 incident。
+  DB probe 在背景定時執行並由 endpoint 讀取 cache，避免公網請求直接放大 DB 負載。
+- Telegram webhook handler 移到 `127.0.0.1:8081`，由 `0.0.0.0:8080` 的薄 ingress
+  只代理 `/webhook`；secret header 驗證仍由 Telegram application handler 執行。
+- machine／DB readiness 由 Fly 每 15 秒檢查；Telegram webhook error／backlog 及
+  admin notification failure 會發送不含用戶內容的去重 admin 告警。main deploy failure
+  及外部 `/opsz` 失敗會開立單一 durable GitHub issue，恢復後自動關閉。
+- 新增 operations runbook，記錄 owner、endpoint contract、告警矩陣、incident triage、
+  webhook／DB 處理、image rollback 及季度演練要求。PR #22 已合併至 main（merge
+  `389322c`）；Actions run `34651675306` 的 compile、完整測試及 Fly deploy 均成功。
+- Production release v54／machine `7813de2bdd3638` 在 `nrt` 為 started，image label
+  `GH_SHA=389322ccbf619c75a4ddff9c6f1f783914be9ed5`，`/data` encrypted volume 仍掛載，
+  Fly `/readyz` check 為 passing。公開 `/healthz`、`/readyz`、`/opsz` 均回 200；
+  `/webhook` GET 為 405，缺少 secret 的 POST 為 403。
+- Telegram `getWebhookInfo` 指向 production host、pending updates 為 0、無 last error；
+  手動 workflow_dispatch 的 Production Readiness Monitor run `34656207494` 成功，沒有
+  open incident issue。驗收沒有向真實群組發訊息、注入假 update 或故意製造 outage；
+  故障分支由自動測試覆蓋，首次季度演練仍須按 runbook 執行及留下證據。
+
 ## 2026-09-12：正式申請改用外置表格，降低 `APP-001` 優先級
 
 - GCC 決定正式申請由外置表格收集，不再優先建設 Bot 內的 application database、

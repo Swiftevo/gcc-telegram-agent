@@ -36,25 +36,25 @@
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 1 | OPS-001 | P1 | **補回健康檢查、告警與營運 runbook** | 不含敏感資料的 health/readiness endpoint；Fly health check 驗證 process、DB read/write readiness；machine down、deploy fail、webhook error、admin notification failure 有告警；runbook 包含 rollback、volume、token、incident 步驟 | TEST-001 |
-| 2 | PRIV-001 | P1 | **補回現有個人資料治理缺口** | 列出 email、Telegram identity、對話、申請及 admin chat 的資料流；決定告知、用途、保留期、刪除／匯出、存取權；實作 retention cleanup 與 user/admin 操作；公開文件不洩露私人申請或委員資料 | GCC governance 決定 |
-| 3 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；email revoke／重新驗證部分待 `ACCESS-001` | TEST-001；部分依賴 ACCESS-001 |
-| 4 | RELEASE-001 | P1 | **修復 dev→main 發佈治理缺口** | PR checks 同時適用 dev/main；main 受保護且只接收經驗證 release PR；deploy workflow/action 版本固定或有更新政策；documented rollback 經演練 | TEST-001、OPS-001 |
-| 5 | REVIEW-001 | P1 | **移除 Bot 現有的假精確申請分數** | 停止計算／通知 40/30/20/10 百分制及 70/40 建議；Bot 不作自動通過、拒絕或排序；一般 QA 繼續使用官方事實邊界；外置表格及人類流程是正式申請／決策來源；舊 scoring code、tests、文件及資料使用有清理／兼容方案 | 外置表格決定已確認 |
-| 6 | ACCESS-001 | P1 | **完成或正式收窄私訊／電郵驗證功能** | 決定繼續、收窄或移除未完成的 private/member email path；若保留，決定合資格政策及 SMTP provider、加入 cooldown／每日上限並完成三語 E2E；不影響 `group_qa` 免 email 路徑 | 依先前決定暫緩；需要 GCC 資格政策及 SMTP owner |
-| 7 | APP-001 | P2 | **把 Bot 申請入口收窄至官方外置表格** | 申請 CTA 直接導向正確公共／專項基金表格並清楚說明正式提交在外部完成；停止本機四步資料收集、管理員通知及提交成功暗示；安全退出舊 draft；既有資料依 `PRIV-001` 處理 | 外置表格 URL owner；PRIV-001 |
-| 8 | PGDATA-001 | P2 | **讓非衝突、已審核的 public-goods cases 成為 QA 資料來源** | 定義 QA 可用欄位；runtime 不再只靠 `projects.yaml`；回應帶 provenance／日期；private/internal 及 `pending_reconciliation` claims 不進 prompt；完整 schema validation 及兼容測試；review/scoring 接入另由 REVIEW-001 控制 | QA-FACT-001、PRIV-001 |
-| 9 | CONTENT-001 | P2 | **修正非衝突 seed case 的證據與私隱缺口** | 完成 evidence 子清單可獨立核實的 Tier A 項目；每個公開 claim 有來源或明確 unknown；由內容 owner review；撥款／milestone 衝突移交 `GRANT-RECON-001`，不得猜測或阻塞其他 case | PGDATA-001 可平行設計，發佈受 PRIV-001 約束 |
-| 10 | GRANT-RECON-001 | P2 | **由專人核對治理決定、實際撥款及 milestone 解鎖差異** | 對每個爭議 case 分開記錄 snapshot decision、實際 disbursement、milestone acceptance／unlock；保留衝突來源；由獲授權 owner 確認後才解除 `pending_reconciliation`；未確認資料不進 bot 事實回答或 review | GCC 指定跟進人及會計／交易／驗收證據；不阻塞其他修復 |
-| 11 | GOVERNANCE-001 | P2 | **確定 public-goods database 的授權與貢獻治理** | 決定資料 license（不只程式 MIT）；定義 provenance、版本、更正、撤回、敏感資料及 reviewer policy；提供 public contribution template | PRIV-001 |
-| 12 | PRODUCT-001 | P2 | **建立產品成效指標與回饋迴路** | 指標能區分 onboarding、verified activation、link-first、AI、application started/submitted/followed-up；不以收集更多 PII 為代價；管理員可查看準確 funnel 與失敗率 | Scope freeze；APP-001、PRIV-001 |
-| 13 | CONTENT-002 | P3 | **擴充案例覆蓋與 outcome evidence** | 完成 evidence 子清單 Tier B/C；按類別逐批 import、review、release；不以「67 個全部匯入」取代品質門檻 | Scope freeze；CONTENT-001、GOVERNANCE-001 |
-| 14 | SEARCH-001 | P3 | **在 schema 穩定後評估 semantic search** | 先用 deterministic retrieval 建 baseline；量度準確率、引用率、成本及隱私；只有明顯優於 baseline 才引入 embeddings/vector store | Scope freeze；PGDATA-001、代表性 eval set |
+| 1 | PRIV-001 | P1 | **補回現有個人資料治理缺口** | 列出 email、Telegram identity、對話、申請及 admin chat 的資料流；決定告知、用途、保留期、刪除／匯出、存取權；實作 retention cleanup 與 user/admin 操作；公開文件不洩露私人申請或委員資料 | GCC governance 決定 |
+| 2 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；email revoke／重新驗證部分待 `ACCESS-001` | TEST-001；部分依賴 ACCESS-001 |
+| 3 | RELEASE-001 | P1 | **修復 dev→main 發佈治理缺口** | PR checks 同時適用 dev/main；main 受保護且只接收經驗證 release PR；deploy workflow/action 版本固定或有更新政策；documented rollback 經演練 | TEST-001、OPS-001 |
+| 4 | REVIEW-001 | P1 | **移除 Bot 現有的假精確申請分數** | 停止計算／通知 40/30/20/10 百分制及 70/40 建議；Bot 不作自動通過、拒絕或排序；一般 QA 繼續使用官方事實邊界；外置表格及人類流程是正式申請／決策來源；舊 scoring code、tests、文件及資料使用有清理／兼容方案 | 外置表格決定已確認 |
+| 5 | ACCESS-001 | P1 | **完成或正式收窄私訊／電郵驗證功能** | 決定繼續、收窄或移除未完成的 private/member email path；若保留，決定合資格政策及 SMTP provider、加入 cooldown／每日上限並完成三語 E2E；不影響 `group_qa` 免 email 路徑 | 依先前決定暫緩；需要 GCC 資格政策及 SMTP owner |
+| 6 | APP-001 | P2 | **把 Bot 申請入口收窄至官方外置表格** | 申請 CTA 直接導向正確公共／專項基金表格並清楚說明正式提交在外部完成；停止本機四步資料收集、管理員通知及提交成功暗示；安全退出舊 draft；既有資料依 `PRIV-001` 處理 | 外置表格 URL owner；PRIV-001 |
+| 7 | PGDATA-001 | P2 | **讓非衝突、已審核的 public-goods cases 成為 QA 資料來源** | 定義 QA 可用欄位；runtime 不再只靠 `projects.yaml`；回應帶 provenance／日期；private/internal 及 `pending_reconciliation` claims 不進 prompt；完整 schema validation 及兼容測試；review/scoring 接入另由 REVIEW-001 控制 | QA-FACT-001、PRIV-001 |
+| 8 | CONTENT-001 | P2 | **修正非衝突 seed case 的證據與私隱缺口** | 完成 evidence 子清單可獨立核實的 Tier A 項目；每個公開 claim 有來源或明確 unknown；由內容 owner review；撥款／milestone 衝突移交 `GRANT-RECON-001`，不得猜測或阻塞其他 case | PGDATA-001 可平行設計，發佈受 PRIV-001 約束 |
+| 9 | GRANT-RECON-001 | P2 | **由專人核對治理決定、實際撥款及 milestone 解鎖差異** | 對每個爭議 case 分開記錄 snapshot decision、實際 disbursement、milestone acceptance／unlock；保留衝突來源；由獲授權 owner 確認後才解除 `pending_reconciliation`；未確認資料不進 bot 事實回答或 review | GCC 指定跟進人及會計／交易／驗收證據；不阻塞其他修復 |
+| 10 | GOVERNANCE-001 | P2 | **確定 public-goods database 的授權與貢獻治理** | 決定資料 license（不只程式 MIT）；定義 provenance、版本、更正、撤回、敏感資料及 reviewer policy；提供 public contribution template | PRIV-001 |
+| 11 | PRODUCT-001 | P2 | **建立產品成效指標與回饋迴路** | 指標能區分 onboarding、verified activation、link-first、AI、application started/submitted/followed-up；不以收集更多 PII 為代價；管理員可查看準確 funnel 與失敗率 | Scope freeze；APP-001、PRIV-001 |
+| 12 | CONTENT-002 | P3 | **擴充案例覆蓋與 outcome evidence** | 完成 evidence 子清單 Tier B/C；按類別逐批 import、review、release；不以「67 個全部匯入」取代品質門檻 | Scope freeze；CONTENT-001、GOVERNANCE-001 |
+| 13 | SEARCH-001 | P3 | **在 schema 穩定後評估 semantic search** | 先用 deterministic retrieval 建 baseline；量度準確率、引用率、成本及隱私；只有明顯優於 baseline 才引入 embeddings/vector store | Scope freeze；PGDATA-001、代表性 eval set |
 
 ## Done
 
 | 日期 | ID | 原優先級 | 完成內容 | 證據 |
 |---|---|---|---|---|
+| 2026-09-12 | OPS-001 | P1 | 補回不含敏感資料的 liveness／readiness／operations endpoints、Fly DB readiness check、Telegram webhook／backlog 監察、admin／deploy／machine 外部告警，以及完整 incident／rollback runbook | PR #22／merge `389322c`；Actions run `34651675306` 完整測試及 deploy 成功；production v54／machine started／Fly check passing／GH_SHA 相符；三個 endpoint 200、未授權 webhook 403；Telegram pending 0、無 last error；monitor run `34656207494` 成功、無 open incident |
 | 2026-09-12 | QA-FACT-001 | P1 | 高風險資助政策問答改用繁／簡／英 deterministic link-first 與官方來源；一般 QA 移除內部百分制；明確區分公共／專項基金、Bot heuristic／人類決策，以及 Snapshot／實際執行 | PR #20／merge `96ca785`；Actions run `34644006225` compile、13 test files、Fly deploy 成功；production v52／machine started／GH_SHA 相符；容器內六類 route probe 正確；webhook pending 0、無 last error |
 | 2026-09-11 | TEST-001 | P1 | 建立跨 Windows／Linux 的單一完整測試入口 `python -m tests`；逐檔隔離舊 executable suites 與 unittest，統一 UTF-8，消除 `tests/telegram` package shadowing；PR 與 main deploy 共用完整 gate；main ruleset 無 bypass 並要求 `Verify release` | PR #19／merge `38b747b`（PR #18 只合併至中間分支，故由 #19 正式帶入 main）；Windows 完整 suite 連續兩次通過、legacy discovery 33 tests；Actions run `34514061374` Linux gate／Fly deploy 成功；production machine v51；Node 20 action warning 留待 RELEASE-001 |
 | 2026-09-10 | DATA-001 | P0 | Fly scheduled snapshots 已核實並保留 14 日；SQLite online backup／manifest 驗證工具、runbook、RPO 24h／RTO 2h、owner 及季度演練規則已建立；不同 zone restore drill 成功 | PR #15／merge `15932a4`；Actions run `34418412224`；production machine v48；on-demand snapshot 還原後 integrity OK、外鍵 0、migration 1–4、row counts 與 production 一致；臨時資源已清理；離站 object storage 待 `PRIV-001` 與 owner 決定 |
