@@ -52,7 +52,7 @@ async def handle_general(
         else None
     )
 
-    link_result = check_link_first(user_text, lang)
+    link_result = check_link_first(user_text, lang, session.get_context())
     if link_result.matched:
         await update.message.reply_text(
             link_result.reply,

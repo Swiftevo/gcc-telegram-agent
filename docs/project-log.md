@@ -3,6 +3,27 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-11：`TEST-001` 完整跨平台 release gate 完成
+
+- 新增唯一完整測試入口 `python -m tests`，自動找出所有 test files，並把舊 executable
+  suites 與 unittest modules 放在獨立 processes 執行；由此隔離各測試的 SQLite 路徑、
+  environment mutation 及殘留 connection。
+- Runner 強制 UTF-8，修正 Windows CP950 無法輸出測試符號而中止的問題；
+  `tests/telegram` 改為 `tests/telegram_bot`，不再遮蔽安裝的 Telegram package。
+- Windows 完整 suite 連續兩次通過；舊 discovery 亦由 6 個 import errors 變成 33 tests
+  全過。Linux GitHub Actions 的 `Verify release` 執行完整 command 並成功。
+- Pull requests targeting `main` 現在先通過相同 gate；Fly deploy 只在已測試的 main push
+  執行，PR event 會明確 skip deployment。
+- `Project main` ruleset 已 active：target default branch、無 bypass、禁止 delete／force
+  push、必須經 PR、解決 review threads、branch up to date，並要求 GitHub Actions 的
+  `Verify release`。
+- PR #18 因 stacked base 已先合併，只進入中間分支；PR #19 將相同兩個 commits 正式
+  合併至 main（merge `38b747b`）。Actions run `34514061374` 的 test 及 Fly deploy
+  成功；production machine `7813de2bdd3638` 更新至 v51，在 `nrt` 為 started，webhook
+  `0.0.0.0:8080`、database `/data/gcc_agent.db`、Telegram `getMe`／`setWebhook` 均正常。
+- Actions 顯示 Node.js 20 deprecation warning，但由 GitHub 強制以 Node 24 成功執行；
+  workflow action version／更新政策仍由 `RELEASE-001` 跟進。
+
 ## 2026-09-11：隔離 Snapshot／實際執行衝突，凍結新功能
 
 - GCC 確認：Snapshot 簽署與真實資助執行、milestone 驗收／解鎖可能有出入，現正由

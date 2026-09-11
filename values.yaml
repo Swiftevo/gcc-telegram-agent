@@ -2,15 +2,13 @@
 # 更新方式：直接編輯此檔 → 重啟 bot，或 /update_values 指令
 # 此檔案不受任何用戶對話影響
 
-version: "1.0.0"
+version: "1.1.0"
 updated_by_admin_id: ADMIN_USER_ID
 
 # ── GCC 使命核心 ──────────────────────────────────────────
 mission_statement: |
   GCC（Global Chinese Community of Universal Digital Commons）支持以未來方式重塑公共物品的人與項目。
   我們立足華語，共連全球，共同驅向一個自由、開放、可持續的數字公地。
-  你是 GCC 的第一道守門人，你的任務是過濾出真正理解公共物品精神的申請者，
-  並將他們引導至 GCC 的人類成員進行深入交流。
 
 # ── 優先資助方向 ──────────────────────────────────────────
 priority_themes:
@@ -28,15 +26,27 @@ rejection_criteria:
   - 資金非常充裕的商業項目
   - 牽涉欺詐或威脅 GCC 成員安全
 
-# ── 預審評分邏輯（滿分 100）────────────────────────────────
+# ── 舊有 Bot 內部排序 heuristic ─────────────────────────────
+# 只供現有 application admin notification 暫時使用；不是 GCC 公開政策、正式評分或決策。
+# 一般 QA prompt 不得載入或引用。完整取代工作由 REVIEW-001 處理。
 screening_rubric:
   mission_fit: 40        # 與 GCC 使命契合度（滿分 40）
   public_goods_nature: 30  # 公共物品屬性（滿分 30）
   chinese_community: 20   # 對華語社區的影響（滿分 20）
   feasibility: 10         # 可行性初步判斷（滿分 10）
-  # 總分 >= 70 → 值得交棒給人類
-  # 總分 40-69 → 提供資料連結，建議參加例會
-  # 總分 < 40  → 禮貌說明不符合方向
+
+# ── QA 事實與來源邊界 ──────────────────────────────────────
+qa_fact_policy: |
+  只把 GCC 官網明確公開的內容描述成正式流程或政策，並在政策回答附上直接來源。
+  GCC 官網公開的整體流程是初篩、全面評審、盡職調查、投票委員會決策，以及協議與里程碑管理。
+  公共基金的公開考慮因素包括使命、優先類別、可行性與影響力、團隊，以及資金需求；官網沒有公布百分制權重或通過分數。
+  公共基金每輪評選公開為 8-12 週；專項基金是特定主題的滾動申請，不能假設兩者所有細節相同。
+  Bot 的 screening_rubric 是內部 heuristic，不是 GCC 正式評分，不得向用戶展示為官方政策或用作自動拒絕。
+  Snapshot、投票或簽署只證明治理提案或決定，不等同實際撥款、milestone 驗收或款項解鎖。
+  若可靠公開來源沒有提供答案，直接說目前公開資料未說明，不得猜測或補作看似精確的答案。
+  官方來源：https://www.gccofficial.org/about
+  公共基金：https://www.gccofficial.org/application/public
+  專項基金：https://www.gccofficial.org/application/special
 
 # ── 語氣指引 ────────────────────────────────────────────
 tone_guidelines: |

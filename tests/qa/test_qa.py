@@ -55,6 +55,7 @@ def test_values_load():
         check("values.yaml 載入 priority_themes（list）", isinstance(v2.priority_themes, list))
         check("values.yaml priority_themes 不為空", len(v2.priority_themes) > 0)
         check("values.yaml 載入 screening_rubric（dict）", isinstance(v2.screening_rubric, dict))
+        check("values.yaml 載入 QA 事實邊界", len(v2.qa_fact_policy) > 0)
     else:
         print("  ⚠️  values.yaml 不存在，跳過詳細載入測試")
 
@@ -74,6 +75,7 @@ def test_system_block():
             "chinese_community": 20,
             "feasibility": 10,
         },
+        qa_fact_policy="沒有公開來源時明確回答未知，不得推斷。",
         tone_guidelines="保持簡潔。",
         gcc_summary="GCC 是資助機構。",
     )
@@ -84,7 +86,8 @@ def test_system_block():
     check("包含使命文字", "測試使命" in block)
     check("包含優先方向", "開源軟件" in block)
     check("包含拒絕標準", "商業項目" in block)
-    check("包含評分邏輯", "40" in block)
+    check("包含事實邊界", "回答未知" in block)
+    check("不包含內部評分邏輯", "使命契合度 40" not in block and ">= 70" not in block)
     check("包含語氣指引", "保持簡潔" in block)
     check("包含 END OF IMMUTABLE", "END OF IMMUTABLE" in block)
 
