@@ -35,6 +35,7 @@ class Settings:
     webhook_listen: str = os.getenv("WEBHOOK_LISTEN", "0.0.0.0")
     webhook_secret_token: str = os.getenv("WEBHOOK_SECRET_TOKEN", "")
     port: int = _int("PORT", 8080)
+    webhook_internal_port: int = _int("WEBHOOK_INTERNAL_PORT", 8081)
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     ai_model: str = os.getenv("AI_MODEL", "gpt-4o-mini")
     ai_max_tokens: int = _int("AI_MAX_TOKENS", 800)

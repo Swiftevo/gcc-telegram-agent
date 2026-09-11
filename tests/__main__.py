@@ -18,6 +18,7 @@ REQUIRED_TEST_SUITES = LEGACY_EXECUTABLE_SUITES | {
     Path("tests/access/test_identity.py"),
     Path("tests/knowledge/test_cases.py"),
     Path("tests/ops/test_sqlite_backup.py"),
+    Path("tests/ops/test_runtime.py"),
     Path("tests/persistence/test_migrations.py"),
     Path("tests/persistence/test_session_scopes.py"),
     Path("tests/telegram_bot/test_group_mentions.py"),

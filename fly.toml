@@ -30,6 +30,15 @@ primary_region = 'nrt'
   min_machines_running = 1
   processes = ['app']
 
+  [[http_service.checks]]
+    grace_period = '15s'
+    interval = '15s'
+    method = 'GET'
+    path = '/readyz'
+    timeout = '3s'
+    [http_service.checks.headers]
+      X-Forwarded-Proto = 'https'
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
