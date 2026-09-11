@@ -3,6 +3,28 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-12：拆分 release tooling、rollback 演練與 contributor governance
+
+- Repository 最近新增三位 collaborators；電郵功能亦由其中一位 contributor 提交，
+  而非由 `Swiftevo` 單獨開發。預期往後會有多人增減功能，因此 release 流程除了技術
+  gate，也需要明確的 ownership、review、merge、hotfix 及權限邊界。
+- 多人協作不自動代表必須採用 `dev`。目前 `main` 有 required PR／`Verify release` 及
+  no-bypass ruleset，但 required approval count 為 0；`dev` 存在卻沒有 ruleset，PR
+  targeting `dev` 也不會執行 release gate。是否採 trunk-based、保留真正 integration
+  branch、要求獨立 approval，以及是否設 CODEOWNERS，集中交由新項目
+  `REPO-GOV-001` 決定和落實，列為最高的 P2 工作。
+- `RELEASE-001` 收窄為已確認的 supply-chain／reproducibility 修復：把所有 GitHub
+  Actions 及 Fly deployment tooling 從可浮動 tag／`master` 鎖到不可變版本，建立受
+  review 的更新政策，並驗證 main release 可追溯至同一 tested commit。它不再以未完成
+  的 branch-model 決策或 rollback 演練作為同一 PR 的出口條件。
+- 實際 image rollback rehearsal 拆為 `RELEASE-DRILL-001`：先在不使用 production
+  Telegram token、production SQLite volume 或真實用戶流量的隔離環境完成向前／向後
+  切換；任何 production drill 必須另有 maintenance window 及授權。這項列為 P2，
+  依賴 `RELEASE-001`、既有 OPS runbook 及 DATA restore 邊界。
+- 這次只調整 scope 與 canonical TODO，沒有更改 GitHub permissions／rulesets、workflow、
+  Fly、runtime 或 production data。在 `REPO-GOV-001` 完成前，現有 protected-main gate
+  繼續生效，但不能把「有 PR」等同「已有獨立人類批准」。
+
 ## 2026-09-12：`OPS-001` production 健康檢查、告警與 runbook 完成
 
 - 公開 ingress 現提供三個不含敏感資料的 operational endpoints：`/healthz` 只反映
