@@ -26,7 +26,7 @@ The assistant is already deployed. Open **[@GCCpublicgoods_bot](https://t.me/GCC
 
 Regular users receive a welcome message in private chat. GCC members can use private Q&A and grant applications after verifying their email. When group Q&A is enabled for the configured GCC group, users there may ask by explicitly mentioning the bot without providing an email.
 
-To change code or open an Issue, start with the [contributing guide](CONTRIBUTING.md). Open Pull Requests against `dev`; do not push `main` directly.
+To change code or open an Issue, start with the [contributing guide](CONTRIBUTING.md). Create a short-lived branch from the latest `main`, then open a Pull Request against `main`; never push directly to `main`.
 
 ## What this project solves
 
@@ -216,10 +216,10 @@ Issues and Pull Requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for
 
 Short path:
 
-1. Branch `feat/` or `fix/` from `dev`
+1. Branch `feat/`, `fix/`, `docs/`, or `chore/` from the latest `main`
 2. Keep the change focused and add tests
 3. Run `python -m tests` before you push
-4. Open the Pull Request against **`dev`**, not `main`
+4. Open the Pull Request against **`main`**; merge only after required checks pass, and never push directly to `main`
 
 Put type words such as `enhancement`, `bug`, or `docs` in the Issue title so Actions can label it. Reference issues with `Refs #n` or `Fixes #n` in the commit message.
 

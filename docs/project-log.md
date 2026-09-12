@@ -3,6 +3,20 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-12：採用 trunk-based，準備移除長期 `dev` branch
+
+- GCC 決定現階段採用 `main` 為唯一長期 release branch；每項工作由最新 `main` 建立
+  短期 `feat/`、`fix/`、`docs/` 或 `chore/` branch，經 PR、required checks 及適用的
+  review 後合併到 `main`，再由既有 workflow 部署 production。
+- 決策前核對顯示 `dev` 比 `main` 落後 33 commits、沒有任何只存在於 `dev` 的 commit，
+  亦沒有以 `dev` 為來源或目標的 open PR。三份 README、`CONTRIBUTING.md` 及 label sync
+  workflow 先在同一 PR 改為 trunk-based；該 PR 合併後才刪除 remote `dev`，避免文件與
+  repository 狀態短暫矛盾。
+- 日後若建立真正 staging／integration 需要，可從當時的 `main` 重新建立 `dev`；必須先
+  配置 ruleset、完整 PR gate、owner 及 promotion 規則，才接受 contributor 變更。
+- 這項只落實 branch model 決定；敏感路徑 CODEOWNERS、選擇性非作者批准、AI Agent
+  onboarding、backup operator 訓練及最小權限仍由 `REPO-GOV-001` 後續完成。
+
 ## 2026-09-12：拆分 release tooling、rollback 演練與 contributor governance
 
 - Repository 最近新增三位 collaborators；電郵功能亦由其中一位 contributor 提交，
