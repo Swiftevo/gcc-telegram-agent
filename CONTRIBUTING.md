@@ -9,14 +9,16 @@
 | 分支 | 用途 |
 |---|---|
 | `main` | 生产。已部署的 [@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot) 以这条为准 |
-| `dev` | 日常集成。功能合并到这里，验证后再进入 `main` |
-| `feat/...`、`fix/...` | 功能或修复的短生命周期分支 |
+| `feat/...`、`fix/...`、`docs/...`、`chore/...` | 从最新 `main` 建立的短生命周期工作分支 |
 
-不要直接向 `main` 推送。默认流程：
+项目采用 trunk-based 流程，不使用长期 `dev` 集成分支。不要直接向 `main` 推送；默认流程：
 
 ```text
-origin/dev  →  feat/简短说明  →  PR 合入 origin/dev  →  再 PR 合入 origin/main
+origin/main  →  feat/简短说明  →  PR 合入 origin/main  →  自动部署 production
 ```
+
+一次 PR 只包含一个可独立审查、测试和回退的改动。多人可以在各自的短期分支并行工作，
+但不要在没有 PR 的情况下把分支内容推入 `main`。
 
 ## 开发环境
 
@@ -25,7 +27,8 @@ origin/dev  →  feat/简短说明  →  PR 合入 origin/dev  →  再 PR 合�
 ```bash
 git clone https://github.com/Swiftevo/gcc-telegram-agent.git
 cd gcc-telegram-agent
-git checkout dev
+git switch main
+git pull --ff-only
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -56,7 +59,7 @@ python -m tests
 
 ## 提交代码
 
-1. 从最新 `dev` 拉出功能分支，名称用英文短横线，例如 `feat/grant-status`、`fix/email-otp`。
+1. 从最新 `main` 拉出工作分支，名称用英文短横线，例如 `feat/grant-status`、`fix/email-otp`、`docs/update-runbook`。
 2. 一次 PR 只做一件事。重构和功能改动分开。
 3. 新逻辑放在 `gcc_agent/` 对应模块。根目录的 `db.py`、`models.py`、`core/`、`handlers/` 只是兼容入口，不要在那里加新功能。
 4. 行为变化要有测试，放在 `tests/` 下对应目录（`access`、`applications`、`knowledge`、`persistence`、`qa`）。
@@ -66,7 +69,7 @@ python -m tests
    python -m tests
    ```
 
-6. 向 **`dev`** 开 Pull Request，不要直接开向 `main`。
+6. 向 **`main`** 开 Pull Request；不要直接推送 `main`。
 
 ### 提交说明
 
@@ -92,7 +95,8 @@ PR 标题与提交说明同样清晰。正文建议包含：
 
 GitHub Actions 会按改动路径给 PR 打标签。请确认 CI 通过后再请求审查。
 
-审查通过后由维护者合入 `dev`；发布到生产时再从 `dev` 合入 `main`。
+required checks 及适用的审查要求通过后，由维护者合入 `main`。合并会触发 production
+部署，因此不要把未完成、未经验证或混合多个目的的改动合入 `main`。
 
 ## 代码约定
 

@@ -26,7 +26,7 @@
 
 普通用戶私訊時會收到歡迎訊息；GCC 成員通過郵箱驗證後，可以使用私訊問答和資助申請。指定 GCC 群組啟用群組問答後，群內用戶明確 mention bot 即可免郵箱提問。
 
-想改程式或提 Issue，請先看 [貢獻指南](CONTRIBUTING.md)。Pull Request 請開向 `dev`，不要直接推 `main`。
+想改程式或提 Issue，請先看 [貢獻指南](CONTRIBUTING.md)。請從最新 `main` 建立短期功能分支，再向 `main` 開 Pull Request；不要直接推送 `main`。
 
 ## 這個專案解決什麼問題
 
@@ -219,10 +219,10 @@ flyctl deploy
 
 簡要流程：
 
-1. 從 `dev` 拉出 `feat/` 或 `fix/` 分支
+1. 從最新 `main` 拉出 `feat/`、`fix/`、`docs/` 或 `chore/` 分支
 2. 改動保持聚焦，並補上對應測試
 3. 提交前執行 `python -m tests`
-4. 向 **`dev`** 開 Pull Request，不要直接推 `main`
+4. 向 **`main`** 開 Pull Request；通過 required checks 後才可合併，不要直接推送 `main`
 
 Issue 標題帶上 `新功能`、`缺陷`、`文檔` 等類型詞，GitHub Actions 會按內容和改動路徑自動打標籤。提交說明請寫 `Refs #編號` 或 `Fixes #編號` 以關聯 Issue。
 

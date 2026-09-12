@@ -26,7 +26,7 @@
 
 普通用户私聊时会收到欢迎信息；GCC 成员通过邮箱验证后，可以使用私聊问答和资助申请。指定 GCC 群组启用群组问答后，群内用户明确提及 bot 即可免邮箱提问。
 
-想改代码或提 Issue，请先看 [贡献指南](CONTRIBUTING.md)。Pull Request 请开向 `dev`，不要直接推 `main`。
+想改代码或提 Issue，请先看 [贡献指南](CONTRIBUTING.md)。请从最新 `main` 建立短期功能分支，再向 `main` 开 Pull Request；不要直接推送 `main`。
 
 ## 这个项目解决什么问题
 
@@ -234,10 +234,10 @@ Production 的公开入口同时提供不含敏感资料的 `/healthz`、`/ready
 
 简要流程：
 
-1. 从 `dev` 拉出 `feat/` 或 `fix/` 分支
+1. 从最新 `main` 拉出 `feat/`、`fix/`、`docs/` 或 `chore/` 分支
 2. 改动保持聚焦，并补上对应测试
 3. 提交前运行 `python -m tests`
-4. 向 **`dev`** 开 Pull Request，不要直接推 `main`
+4. 向 **`main`** 开 Pull Request；通过 required checks 后才可合并，不要直接推送 `main`
 
 Issue 标题带上 `新功能`、`缺陷`、`文档` 等类型词，GitHub Actions 会按内容和改动路径自动打标签。提交说明请写 `Refs #编号` 或 `Fixes #编号` 以关联 Issue。
 
