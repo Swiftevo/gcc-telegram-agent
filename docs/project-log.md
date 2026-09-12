@@ -3,15 +3,18 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-09-12：採用 trunk-based，準備移除長期 `dev` branch
+## 2026-09-12：採用 trunk-based，長期 `dev` branch 已移除
 
 - GCC 決定現階段採用 `main` 為唯一長期 release branch；每項工作由最新 `main` 建立
   短期 `feat/`、`fix/`、`docs/` 或 `chore/` branch，經 PR、required checks 及適用的
   review 後合併到 `main`，再由既有 workflow 部署 production。
 - 決策前核對顯示 `dev` 比 `main` 落後 33 commits、沒有任何只存在於 `dev` 的 commit，
-  亦沒有以 `dev` 為來源或目標的 open PR。三份 README、`CONTRIBUTING.md` 及 label sync
-  workflow 先在同一 PR 改為 trunk-based；該 PR 合併後才刪除 remote `dev`，避免文件與
-  repository 狀態短暫矛盾。
+  亦沒有以 `dev` 為來源或目標的 open PR。PR #25 先把三份 README、`CONTRIBUTING.md`
+  及 label sync workflow 改為 trunk-based；`Verify release` 及 main Actions run
+  `34685910481` 的完整測試／Fly deploy 均成功。
+- PR #25 合併後再次核對：default branch 是 `main`；`dev` 落後 35 commits、仍為 0 個
+  獨有 commit，且沒有 open PR。其 remote ref 隨後刪除，`ls-remote` 查詢為空，GitHub
+  branch API 回傳預期 404；沒有刪除任何獨有程式碼或本機工作分支。
 - 日後若建立真正 staging／integration 需要，可從當時的 `main` 重新建立 `dev`；必須先
   配置 ruleset、完整 PR gate、owner 及 promotion 規則，才接受 contributor 變更。
 - 這項只落實 branch model 決定；敏感路徑 CODEOWNERS、選擇性非作者批准、AI Agent
