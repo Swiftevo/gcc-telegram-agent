@@ -3,7 +3,7 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-09-13：開始 `PRIV-001B` 最低限度資料告知
+## 2026-09-14：`PRIV-001B` 最低限度資料告知完成
 
 - GCC owner 在 `PRIV-001A` 完成後明確選定 `PRIV-001B` 為下一項；這項授權不自動延伸
   至 `PRIV-001C` 至 `PRIV-001H`。
@@ -16,8 +16,13 @@
 - [`docs/privacy-notice.md`](privacy-notice.md) 定義文案必備事實、語言 fallback、變更觸發、
   技術 owner、production smoke test 及 rollback。技術 owner 沿用 GCC bot operator；這不
   等同指定法律 data controller 或正式 privacy contact，後者仍由 `PRIV-001H` 決定。
-- 本地 `python -m tests` 已通過全部 15 個 test files。`PRIV-001B` 仍須 PR merge、main
-  release gate 及 production smoke test 才可移入 Done。
+- PR #29 已 merge（`74d39f09a3f6d3288af590d7b84e65097cf90b4c`）；Actions run
+  `34760585478` 的完整測試及 Fly deploy 成功。Production v61 的 `GH_SHA` 與 merge
+  commit 相符，NRT machine started、encrypted `/data` volume 保持掛載，application、
+  webhook、database 及 Telegram readiness 全部 passing。
+- Production container 內六項 notice tests 及群組 non-persistence routing test 全部通過；
+  GCC owner 隨後在真實 Telegram 確認私訊 `/privacy` 及指定群組 explicit-mention
+  `/privacy` 均正常。`PRIV-001B` 已移入 Done；`PRIV-001C` 至 `PRIV-001H` 沒有因此開始。
 
 ## 2026-09-13：`PRIV-001` 拆分並開始現況資料盤點
 
