@@ -24,7 +24,7 @@ A Telegram AI assistant for public goods: it answers questions, collects grant a
 
 The assistant is already deployed. Open **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** in Telegram and send `/start`.
 
-Regular users receive a welcome message in private chat. GCC members can use private Q&A and grant applications after verifying their email. When group Q&A is enabled for the configured GCC group, users there may ask by explicitly mentioning the bot without providing an email.
+Regular users receive a welcome message in private chat. New private-member onboarding and email verification are currently paused. When group Q&A is enabled for the configured GCC group, users there may ask by explicitly mentioning the bot.
 
 To change code or open an Issue, start with the [contributing guide](CONTRIBUTING.md). Create a short-lived branch from the latest `main`, then open a Pull Request against `main`; never push directly to `main`.
 
@@ -39,27 +39,19 @@ This assistant takes that first layer: it answers with official links when it ca
 | Feature | Description |
 |---|---|
 | Tiered access | Regular users and unauthorized agents get a welcome message only |
-| Email verification | GCC members unlock Q&A and applications after verifying email |
 | Link-first answers | Questions that match official pages skip the model |
 | Languages | Simplified Chinese, Traditional Chinese, or English from the user locale |
 | Application flow | Four steps: project name, fund type, proposal link, executive summary |
 | Screening | 0–100 score from `values.yaml`, then notify an administrator |
-| Group Q&A | When enabled, only explicit mentions in the `GCC_GROUP_ID` chat are answered; email, applications, and admin capabilities are excluded |
+| Group Q&A | When enabled, only explicit mentions in the `GCC_GROUP_ID` chat are answered; applications and admin capabilities are excluded |
 | Rate limit | 20 messages per user per day, including group Q&A |
 
 ## Commands
 
-For everyone (no email verification required):
+For everyone:
 
 ```text
 /privacy                    Show the Bot's current data-processing notice
-```
-
-For members:
-
-```text
-/email you@example.com      Bind email and receive a verification code
-/verify 123456              Submit the code
 /whoami                     Show current identity
 ```
 
@@ -75,7 +67,7 @@ Telegram group users with `member`, `administrator`, or `creator` status, plus `
 
 ## Data notice
 
-`/privacy` explains the data the Bot currently processes, recipients including Fly.io, Telegram, OpenAI, and SMTP, the parts that do not yet expire automatically, and GCC's public contact channel. The command creates no user or conversation record in the Bot's SQLite database and does not consume the daily limit; an explicit bot mention is still required in the configured group. See the [data-flow inventory](docs/privacy-data-map.md) for technical detail and the [minimum data notice](docs/privacy-notice.md) for scope and maintenance rules.
+`/privacy` explains the data the Bot currently processes, recipients including Fly.io, Telegram, and OpenAI, the paused SMTP email-verification path and possible legacy data, the parts that do not yet expire automatically, and GCC's public contact channel. The command creates no user or conversation record in the Bot's SQLite database and does not consume the daily limit; an explicit bot mention is still required in the configured group. See the [data-flow inventory](docs/privacy-data-map.md) for technical detail and the [minimum data notice](docs/privacy-notice.md) for scope and maintenance rules.
 
 ## Identity model
 
@@ -84,7 +76,7 @@ Identity uses two independent fields instead of RBAC:
 - `actor_type`: `human` or `agent`
 - `access_level`: `regular` or `gcc_member`
 
-Human GCC members must verify email with `/email` and `/verify` to use private Q&A and applications. Email-free group Q&A is a request-scoped `group_qa` capability and never promotes the user to `gcc_member`. Legacy `user_kind` rows are migrated automatically at startup without deleting existing data.
+New private-member onboarding and email verification are paused; `/email` and `/verify` accept no new data. Group Q&A is a request-scoped `group_qa` capability and never promotes the user to `gcc_member`. Legacy email fields, the verification table, and dormant implementation remain in place so data is not destroyed before retention and deletion policy is decided; legacy `user_kind` rows still migrate at startup.
 
 ## Quick start
 
@@ -113,15 +105,6 @@ AI_MODEL=gpt-4o-mini
 AI_MAX_TOKENS=800
 
 DB_PATH=gcc_agent.db
-
-# Email delivery fails closed unless fully configured
-EMAIL_VERIFICATION_SECRET=random secret with at least 32 characters
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=SMTP username
-SMTP_PASSWORD=SMTP password
-SMTP_FROM=bot@example.com
-SMTP_USE_TLS=true
 ```
 
 > [!WARNING]
@@ -147,7 +130,7 @@ The codebase is a feature-oriented modular monolith:
 
 ```text
 gcc_agent/
-├── access/                  # Identity, authorization, email verification, guard
+├── access/                  # Identity, authorization, guard, dormant email compatibility
 ├── admin/                   # Administrator operations
 ├── applications/            # Workflow, copy, screening, notifications
 ├── common/

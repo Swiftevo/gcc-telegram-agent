@@ -24,7 +24,7 @@
 
 助手已經部署上線，在 Telegram 裡打開 **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** 發送 `/start` 即可開始。
 
-普通用戶私訊時會收到歡迎訊息；GCC 成員通過郵箱驗證後，可以使用私訊問答和資助申請。指定 GCC 群組啟用群組問答後，群內用戶明確 mention bot 即可免郵箱提問。
+普通用戶私訊時會收到歡迎訊息；新的私訊成員啟用及郵箱驗證目前暫停。指定 GCC 群組啟用群組問答後，群內用戶明確 mention bot 即可提問。
 
 想改程式或提 Issue，請先看 [貢獻指南](CONTRIBUTING.md)。請從最新 `main` 建立短期功能分支，再向 `main` 開 Pull Request；不要直接推送 `main`。
 
@@ -39,27 +39,19 @@
 | 功能 | 說明 |
 |---|---|
 | 分級存取 | 普通用戶和未授權 Agent 只收到歡迎訊息 |
-| 郵箱驗證 | GCC 成員驗證郵箱後解鎖問答與申請 |
 | 連結優先 | 能用官網連結回答的問題不呼叫模型 |
 | 多語言 | 依用戶語言使用簡體中文、繁體中文或英文 |
 | 申請流程 | 四步收集：專案名稱、基金類型、提案連結、執行摘要 |
 | 初步篩選 | 依據 `values.yaml` 給出 0–100 分並通知管理員 |
-| 群組提問 | 啟用後只在 `GCC_GROUP_ID` 指定群組內回應明確 mention；不要求郵箱，不開放申請或管理功能 |
+| 群組提問 | 啟用後只在 `GCC_GROUP_ID` 指定群組內回應明確 mention；不開放申請或管理功能 |
 | 用量限制 | 每位用戶每天最多 20 條訊息，群組問答同樣計數 |
 
 ## 指令
 
-面向所有用戶（毋須郵箱驗證）：
+面向所有用戶：
 
 ```text
 /privacy                    查看 Bot 目前的資料處理告知
-```
-
-面向成員：
-
-```text
-/email you@example.com      綁定郵箱並接收驗證碼
-/verify 123456              提交驗證碼
 /whoami                     查看目前身份
 ```
 
@@ -75,7 +67,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 
 ## 資料告知
 
-`/privacy` 說明 Bot 目前處理的資料、Fly.io／Telegram／OpenAI／SMTP 等接收者、尚未設定自動刪除期限的部分，以及 GCC 的公開聯絡渠道。此指令不會在 Bot SQLite 建立用戶或對話記錄，也不計入每日限額；在指定群組內仍須明確 mention bot。詳細技術清冊見[資料流盤點](docs/privacy-data-map.md)，告知邊界與維護規則見[最低限度資料告知](docs/privacy-notice.md)。
+`/privacy` 說明 Bot 目前處理的資料、Fly.io／Telegram／OpenAI 等接收者、已暫停的 SMTP 郵箱驗證及可能殘留的 legacy 資料、尚未設定自動刪除期限的部分，以及 GCC 的公開聯絡渠道。此指令不會在 Bot SQLite 建立用戶或對話記錄，也不計入每日限額；在指定群組內仍須明確 mention bot。詳細技術清冊見[資料流盤點](docs/privacy-data-map.md)，告知邊界與維護規則見[最低限度資料告知](docs/privacy-notice.md)。
 
 ## 身份模型
 
@@ -84,7 +76,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 - `actor_type`：`human` 或 `agent`
 - `access_level`：`regular` 或 `gcc_member`
 
-人類 GCC 成員必須通過 `/email` 和 `/verify` 驗證郵箱，才能使用私訊問答和申請。群組免郵箱問答是單次請求範圍的 `group_qa` 能力，不會把用戶升級為 `gcc_member`。舊資料庫中的 `user_kind` 會在啟動時自動遷移，不會刪除原有資料。
+新的私訊成員啟用及郵箱驗證目前暫停；`/email` 和 `/verify` 不接受新資料。群組問答是單次請求範圍的 `group_qa` 能力，不會把用戶升級為 `gcc_member`。歷史郵箱欄位、驗證表及 dormant implementation 暫時保留，以免在保存／刪除政策確定前破壞資料；舊資料庫中的 `user_kind` 仍會在啟動時自動遷移。
 
 ## 快速開始
 
@@ -114,14 +106,6 @@ AI_MAX_TOKENS=800
 
 DB_PATH=gcc_agent.db
 
-# 郵箱驗證；未完整設定時會安全拒絕發送
-EMAIL_VERIFICATION_SECRET=至少32字元的隨機秘密
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=SMTP帳號
-SMTP_PASSWORD=SMTP密碼
-SMTP_FROM=bot@example.com
-SMTP_USE_TLS=true
 ```
 
 > [!WARNING]
@@ -147,7 +131,7 @@ python -m tests
 
 ```text
 gcc_agent/
-├── access/                  # 身份、授權、郵箱驗證和 Guard
+├── access/                  # 身份、授權、Guard 及 dormant 郵箱兼容程式
 ├── admin/                   # 管理員操作
 ├── applications/            # 申請流程、文案、篩選和通知
 ├── common/

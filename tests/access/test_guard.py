@@ -222,7 +222,8 @@ async def test_gcc_member_needs_email():
     result = await run_guard(update, make_context())
     check("缺郵箱 welcome_only", result.reason == "welcome_only")
     body = update.message.reply_text.call_args[0][0]
-    check("提示去綁定郵箱", "/email" in body)
+    check("不再提示郵箱驗證", "/email" not in body and "/verify" not in body)
+    check("改為提示群組 mention", "群組" in body and "mention" in body)
 
 
 async def test_router():

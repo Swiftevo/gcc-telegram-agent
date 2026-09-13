@@ -16,6 +16,11 @@ production metadata 為證據。本次沒有讀取 production SQLite 內容、Te
 後續決定及實作分別由 `PRIV-001B` 至 `PRIV-001H` 跟進；`APP-001`／`REVIEW-001`
 仍決定 Bot 申請收集及評分的產品去向。
 
+> 2026-09-14 後續變更：GCC 已決定收起 email verification。新 `/email`／`/verify`
+> 不再收集地址、建立 challenge 或呼叫 SMTP；公開引導及 SMTP 設定範例已移除。
+> 本文件以下內容保留為 `PRIV-001A` 當時的完整現況證據；仍存在的 schema、dormant
+> implementation 及任何 legacy data 仍須由 `PRIV-001D/F/G` 決定保存或刪除。
+
 ## 資料主體與處理角色
 
 | 類別 | 現況 |

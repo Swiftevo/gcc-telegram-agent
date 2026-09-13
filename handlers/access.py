@@ -2,6 +2,7 @@
 
 from gcc_agent.access.handler import (
     handle_email,
+    handle_email_shelved,
     handle_grant,
     handle_verify,
     handle_whoami,

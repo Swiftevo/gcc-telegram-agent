@@ -6,7 +6,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from gcc_agent.access.email_sender import SMTPEmailSender
-from gcc_agent.access.messages import NEED_VERIFICATION, translated, welcome_text
+from gcc_agent.access.messages import EMAIL_VERIFICATION_SHELVED, translated, welcome_text
 from gcc_agent.access.models import (
     ACCESS_GCC_MEMBER,
     ACCESS_LEVELS,
@@ -95,6 +95,20 @@ async def handle_email(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(translated(lang, messages.get(error, messages["delivery_failed"])), parse_mode="Markdown")
 
 
+async def handle_email_shelved(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """Reject legacy email commands without reading arguments or creating user data."""
+    from handlers.guard import detect_language
+
+    del context
+    if update.message is None:
+        return
+    await update.message.reply_text(
+        translated(detect_language(update), EMAIL_VERIFICATION_SHELVED)
+    )
+
+
 async def handle_verify(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     from handlers.guard import detect_language
 
@@ -134,8 +148,7 @@ async def handle_whoami(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         return
     await update.message.reply_text(
         f"user_id: `{user.user_id}`\nactor_type: `{user.actor_type}`\n"
-        f"access_level: `{user.access_level}`\nemail: `{mask_email(user.email) or '—'}`\n"
-        f"email_verified: `{'yes' if user.email_verified_at else 'no'}`\n"
+        f"access_level: `{user.access_level}`\n"
         f"qa: `{'yes' if user.can_use_qa() else 'no'}`",
         parse_mode="Markdown",
     )
@@ -179,7 +192,7 @@ async def handle_grant(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
     error = await users.set_identity(target.user_id, *identity)
     errors = {
-        "verified_email_required": "Human GCC members require a verified email.",
+        "verified_email_required": "New human GCC-member onboarding is currently paused.",
         "agent_credential_required": "GCC-member agents require an agent credential.",
     }
     if error:
@@ -205,15 +218,7 @@ async def _resolve_target(token: str):
 async def send_limited_welcome(update: Update, user, lang: str) -> None:
     if update.message is None:
         return
-    if (
-        user.actor_type == ACTOR_HUMAN
-        and user.access_level == ACCESS_GCC_MEMBER
-        and not user.email_verified_at
-    ):
-        text = translated(lang, NEED_VERIFICATION)
-    else:
-        text = welcome_text(lang)
-    await update.message.reply_text(text, parse_mode="Markdown")
+    await update.message.reply_text(welcome_text(lang), parse_mode="Markdown")
 
 
 async def maybe_promote_group_member_after_email(user_id, context):
