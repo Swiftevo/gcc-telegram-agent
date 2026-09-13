@@ -3,6 +3,28 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-13：`PRIV-001` 拆分並開始現況資料盤點
+
+- 原本把資料盤點、用戶告知、對話／身份／申請保存政策、自動清理、匯出／刪除、
+  backups／logs／第三方和 production 存取放在一起的 `PRIV-001` 太大，現拆為
+  `PRIV-001A` 至 `PRIV-001H`，各自有獨立出口條件。
+- 本輪只批准 `PRIV-001A`。B–H 的排列仍待 GCC owner 看完盤點後重新確認，不因列入
+  TODO 而自動授權下一項工作。
+- `PRIV-001A` 以 main `d4be4206b1113146b4d6aa49c802a6030917c9c2` 為基準，建立
+  [`docs/privacy-data-map.md`](privacy-data-map.md)，盤點六個 SQLite tables、重複 session
+  storage、Telegram／OpenAI／SMTP／Fly／GitHub 接收、logs、管理員通知、volume／snapshot／
+  manual backup 及 public repository content。
+- 核對 production 時只讀取 secret 名稱及非敏感 metadata，沒有讀 secret value、SQLite
+  row、Telegram 對話或管理員 chat，也沒有更改 runtime／Fly／用戶資料。Production secret
+  名稱目前沒有 SMTP 或 `EMAIL_VERIFICATION_SECRET`，所以 email path 現時 fail closed；
+  這不代表 database 沒有歷史 email。
+- 關鍵發現：30 分鐘只令舊 session 不再被選取，最近 20 條只限制 AI context；兩者均不會
+  刪除 `sessions.messages_json` 或獨立 `messages` rows。現行申請 draft 完成後仍在 session，
+  並另有管理員 Telegram notification 副本。
+- 這次只建立 verified current-state inventory 及重整 TODO，沒有新增 privacy notice、
+  retention 承諾、cleanup、export／delete 或 access policy；`PRIV-001A` 仍須經 PR／main
+  合併核對後才移入 Done。
+
 ## 2026-09-12：採用 trunk-based，長期 `dev` branch 已移除
 
 - GCC 決定現階段採用 `main` 為唯一長期 release branch；每項工作由最新 `main` 建立
@@ -77,7 +99,7 @@
   status model、通知重試及提交追蹤系統。
 - `APP-001` 降為 P2 scope-reduction：其後只需把 Bot 申請入口清楚導向官方外置表格，
   移除本機四步收集、管理員通知及舊百分制的正式提交暗示；現存資料的保留／刪除由
-  `PRIV-001` 決定。
+  `PRIV-001E` 決定。
 - `REVIEW-001` 相應收窄為移除 Bot 的假精確評分，而不是建立新的申請決策系統。
 - 下一個優先項改為 `OPS-001`，其後依次為私隱、管理身份生命週期、release 治理及
   移除舊評分。
@@ -167,7 +189,7 @@
   migration 前 on-demand snapshot、每季 restore drill，以及 rollback／清理界線。
 - 離站備份評估結論：只用 Fly snapshots 仍有同 account／平台風險；建議獨立
   S3-compatible storage、上傳前加密、14 個 daily 加 3 個 monthly。正式啟用仍待
-  GCC 指定 storage account owner 及 `PRIV-001` 確定含個人資料備份的保留／刪除政策。
+  GCC 指定 storage account owner 及 `PRIV-001H` 確定含個人資料備份的保留／刪除政策。
 - PR #15 已 merge（`15932a4`）；GitHub Actions run `34418412224` 的 compile、既有
   regression suites、新增 SQLite backup tests 及 Fly deploy 全部成功。
 - Production machine `7813de2bdd3638` 已更新至 version 48，原 `nrt` volume 保持掛載；
@@ -176,7 +198,7 @@
   和 OpenAI 回覆，logs 沒有新 traceback，token 保持 redacted。
 - 驗收完成後 `DATA-001` 移入 Done。現存 snapshots 在 retention 更新前建立，仍顯示
   5 日；volume 現行設定為 14 日，下一個 scheduled snapshot 應再核對其個別 retention。
-  離站 object storage 未啟用的風險保留至 `PRIV-001` 和 storage owner 決定。
+  離站 object storage 未啟用的風險保留至 `PRIV-001H` 和 storage owner 決定。
 
 ## 2026-09-10：`GROUP-ACCESS-001` production 驗收完成
 

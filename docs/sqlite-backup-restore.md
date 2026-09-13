@@ -169,7 +169,8 @@ Fly snapshot 仍依賴同一個 Fly account／平台，不能覆蓋 account lock
 
 建議採用獨立 S3-compatible storage、每日一份、保留 14 個 daily 及 3 個 monthly；
 上傳前 client-side encryption，credential 只容許指定 bucket/prefix。正式啟用前由
-`PRIV-001` 確認資料保留及刪除政策，並由 GCC 指定 storage account owner。
+`PRIV-001H` 確認 backup 保留、刪除及存取政策，並由 GCC 指定 storage account owner；
+`PRIV-001G` 另向用戶清楚說明 live database 刪除與 backup expiry 的時間差。
 
 ## 驗收紀錄
 
