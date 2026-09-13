@@ -22,8 +22,11 @@
   刪除 `sessions.messages_json` 或獨立 `messages` rows。現行申請 draft 完成後仍在 session，
   並另有管理員 Telegram notification 副本。
 - 這次只建立 verified current-state inventory 及重整 TODO，沒有新增 privacy notice、
-  retention 承諾、cleanup、export／delete 或 access policy；`PRIV-001A` 仍須經 PR／main
-  合併核對後才移入 Done。
+  retention 承諾、cleanup、export／delete 或 access policy。PR #27 已 merge
+  （`7148b17012fd3fa4593bd93ad1a2063e989a0fc2`）；Actions run `34753531218` 的完整
+  測試及 Fly deploy 成功。Production v59 的 `GH_SHA` 與 merge commit 相符，NRT machine
+  started、encrypted `/data` volume 保持掛載且 readiness passing，故 `PRIV-001A` 已移入
+  Done；B–H 仍待 GCC owner 排序。
 
 ## 2026-09-12：採用 trunk-based，長期 `dev` branch 已移除
 
