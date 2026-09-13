@@ -33,6 +33,7 @@ from gcc_agent.ops.runtime import (
     start_operations,
     stop_operations,
 )
+from gcc_agent.privacy import is_privacy_request, privacy_notice
 from gcc_agent.qa.handler import handle_general
 from gcc_agent.access.guard import detect_language, run_group_qa_guard, run_guard
 from gcc_agent.telegram.router import route
@@ -140,12 +141,17 @@ async def handle_message(update: Update, context) -> None:
 async def handle_group_message(update: Update, context) -> None:
     if not await should_handle_group_message(update, context):
         return
+
+    bot_username = await get_bot_username(context)
+    user_text = remove_bot_mentions(update.message.text or "", bot_username)
+    if is_privacy_request(user_text):
+        await update.message.reply_text(privacy_notice(detect_language(update)))
+        return
+
     guard = await run_group_qa_guard(update, context)
     if not guard.passed:
         return
 
-    bot_username = await get_bot_username(context)
-    user_text = remove_bot_mentions(update.message.text or "", bot_username)
     if not user_text:
         await update.message.reply_text(group_question_required(guard.lang))
         return
@@ -203,6 +209,13 @@ async def handle_start(update: Update, context) -> None:
         )
 
 
+async def handle_privacy(update: Update, context) -> None:
+    """Show the current-state notice without creating identity or conversation rows."""
+    del context
+    if update.message:
+        await update.message.reply_text(privacy_notice(detect_language(update)))
+
+
 async def post_init(application: Application) -> None:
     await init_db()
     bot_user = await application.bot.get_me()
@@ -229,6 +242,7 @@ def build_application() -> Application:
     app.add_error_handler(handle_application_error)
     private = filters.ChatType.PRIVATE
     app.add_handler(CommandHandler("start", handle_start, filters=private))
+    app.add_handler(CommandHandler("privacy", handle_privacy, filters=private))
     app.add_handler(CommandHandler("email", handle_email, filters=private))
     app.add_handler(CommandHandler("verify", handle_verify, filters=private))
     app.add_handler(CommandHandler("grant", handle_grant, filters=private))

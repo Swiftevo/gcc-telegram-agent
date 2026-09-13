@@ -3,6 +3,22 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-13：開始 `PRIV-001B` 最低限度資料告知
+
+- GCC owner 在 `PRIV-001A` 完成後明確選定 `PRIV-001B` 為下一項；這項授權不自動延伸
+  至 `PRIV-001C` 至 `PRIV-001H`。
+- 依已核實的 data map 建立繁中、簡中及英文 current-state notice，涵蓋實際處理資料、
+  Telegram／Fly.io／OpenAI／SMTP／管理員 Telegram 接收、現況保存缺口及 GCC 官方
+  contact 頁；不宣稱尚未批准的法律基礎、controller、保存日數或資料要求程序。
+- 私訊 `/privacy` 不要求 email、member 或 QA access；指定 GCC 群組只回應 explicit
+  mention 的 privacy request。兩條路徑均不建立 Bot SQLite user／session／message row，
+  也不消耗每日限額。`/start` 及三份 README 提供入口。
+- [`docs/privacy-notice.md`](privacy-notice.md) 定義文案必備事實、語言 fallback、變更觸發、
+  技術 owner、production smoke test 及 rollback。技術 owner 沿用 GCC bot operator；這不
+  等同指定法律 data controller 或正式 privacy contact，後者仍由 `PRIV-001H` 決定。
+- 本地 `python -m tests` 已通過全部 15 個 test files。`PRIV-001B` 仍須 PR merge、main
+  release gate 及 production smoke test 才可移入 Done。
+
 ## 2026-09-13：`PRIV-001` 拆分並開始現況資料盤點
 
 - 原本把資料盤點、用戶告知、對話／身份／申請保存政策、自動清理、匯出／刪除、
@@ -26,7 +42,7 @@
   （`7148b17012fd3fa4593bd93ad1a2063e989a0fc2`）；Actions run `34753531218` 的完整
   測試及 Fly deploy 成功。Production v59 的 `GH_SHA` 與 merge commit 相符，NRT machine
   started、encrypted `/data` volume 保持掛載且 readiness passing，故 `PRIV-001A` 已移入
-  Done；B–H 仍待 GCC owner 排序。
+  Done；其後 GCC owner 已另行選定 B，C–H 仍待逐項排序及授權。
 
 ## 2026-09-12：採用 trunk-based，長期 `dev` branch 已移除
 
