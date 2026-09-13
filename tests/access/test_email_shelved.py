@@ -92,6 +92,8 @@ class ShelvedEmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("legacy@example.com", reply)
         self.assertNotIn("email", reply.lower())
         self.assertIn("access_level", reply)
+        self.assertNotIn("`", reply)
+        self.assertNotIn("parse_mode", update.message.reply_text.await_args.kwargs)
 
     def test_public_setup_no_longer_invites_email_or_smtp_configuration(self):
         env_example = (ROOT / ".env.example").read_text(encoding="utf-8")

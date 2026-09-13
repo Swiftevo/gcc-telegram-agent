@@ -147,10 +147,9 @@ async def handle_whoami(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if user is None:
         return
     await update.message.reply_text(
-        f"user_id: `{user.user_id}`\nactor_type: `{user.actor_type}`\n"
-        f"access_level: `{user.access_level}`\n"
-        f"qa: `{'yes' if user.can_use_qa() else 'no'}`",
-        parse_mode="Markdown",
+        f"user_id: {user.user_id}\nactor_type: {user.actor_type}\n"
+        f"access_level: {user.access_level}\n"
+        f"qa: {'yes' if user.can_use_qa() else 'no'}"
     )
 
 
