@@ -176,6 +176,23 @@ class GroupMentionTests(unittest.IsolatedAsyncioTestCase):
 
         handle_general.assert_not_awaited()
 
+    async def test_explicit_group_privacy_request_bypasses_guard_and_is_not_saved(self):
+        update = make_update(-100123, "@GCCpublicgoods_bot /privacy")
+        with patch("gcc_agent.telegram.app.settings", group_settings()):
+            with patch(
+                "gcc_agent.telegram.app.run_group_qa_guard", new_callable=AsyncMock
+            ) as guard:
+                with patch(
+                    "gcc_agent.telegram.app.handle_general", new_callable=AsyncMock
+                ) as handle_general:
+                    await handle_group_message(update, make_context())
+
+        guard.assert_not_awaited()
+        handle_general.assert_not_awaited()
+        update.message.reply_text.assert_awaited_once()
+        self.assertIn("資料告知", update.message.reply_text.await_args.args[0])
+        self.assertIn("https://www.gccofficial.org/contact", update.message.reply_text.await_args.args[0])
+
     async def test_group_qa_does_not_offer_application_callback(self):
         update = make_update(-100123, "@GCCpublicgoods_bot 如何申請資助？")
         guard = GuardResult(

@@ -22,6 +22,7 @@ REQUIRED_TEST_SUITES = LEGACY_EXECUTABLE_SUITES | {
     Path("tests/persistence/test_migrations.py"),
     Path("tests/persistence/test_session_scopes.py"),
     Path("tests/telegram_bot/test_group_mentions.py"),
+    Path("tests/telegram_bot/test_privacy_notice.py"),
     Path("tests/test_logging.py"),
     Path("tests/test_webhook_security.py"),
 }

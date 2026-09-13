@@ -49,6 +49,12 @@
 
 ## 命令
 
+面向所有用户（无需邮箱验证）：
+
+```text
+/privacy                    查看 Bot 当前的数据处理说明
+```
+
 面向成员：
 
 ```text
@@ -66,6 +72,10 @@
 ```
 
 GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID` 可以为其他用户设置身份。
+
+## 数据告知
+
+`/privacy` 说明 Bot 当前处理的数据、Fly.io／Telegram／OpenAI／SMTP 等接收方、尚未设定自动删除期限的部分，以及 GCC 的公开联系渠道。该指令不会在 Bot SQLite 建立用户或对话记录，也不计入每日限额；在指定群组内仍须明确 mention bot。详细技术清单见[数据流盘点](docs/privacy-data-map.md)，告知范围与维护规则见[最低限度数据告知](docs/privacy-notice.md)。
 
 ## 身份模型
 

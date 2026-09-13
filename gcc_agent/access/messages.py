@@ -7,7 +7,8 @@ WELCOME = {
         "🔗 官方網站：https://www.gccofficial.org\n\n"
         "目前問答與申請只開放給已驗證郵箱的 GCC 人類成員。"
         "普通用戶與一般 Agent 僅會收到這則說明。\n\n"
-        "驗證郵箱：`/email 你的郵箱`，收到郵件後使用 `/verify 驗證碼`。"
+        "驗證郵箱：`/email 你的郵箱`，收到郵件後使用 `/verify 驗證碼`。\n\n"
+        "資料告知：`/privacy`"
     ),
     "zh-CN": (
         "👋 你好！我是 *GCC AI 助手*。\n\n"
@@ -15,7 +16,8 @@ WELCOME = {
         "🔗 官方网站：https://www.gccofficial.org\n\n"
         "目前问答与申请只开放给已验证邮箱的 GCC 人类成员。"
         "普通用户与一般 Agent 只会收到这则说明。\n\n"
-        "验证邮箱：`/email 你的邮箱`，收到邮件后使用 `/verify 验证码`。"
+        "验证邮箱：`/email 你的邮箱`，收到邮件后使用 `/verify 验证码`。\n\n"
+        "数据告知：`/privacy`"
     ),
     "en": (
         "👋 Hello! I'm the *GCC AI Assistant*.\n\n"
@@ -23,7 +25,8 @@ WELCOME = {
         "🔗 Website: https://www.gccofficial.org\n\n"
         "Q&A and applications require GCC-member access. Human members must have "
         "a verified email. Regular users and agents receive this welcome note only.\n\n"
-        "Verify email with `/email you@example.com`, then `/verify code`."
+        "Verify email with `/email you@example.com`, then `/verify code`.\n\n"
+        "Data notice: `/privacy`"
     ),
 }
 

@@ -49,6 +49,12 @@ This assistant takes that first layer: it answers with official links when it ca
 
 ## Commands
 
+For everyone (no email verification required):
+
+```text
+/privacy                    Show the Bot's current data-processing notice
+```
+
 For members:
 
 ```text
@@ -66,6 +72,10 @@ For administrators:
 ```
 
 Telegram group users with `member`, `administrator`, or `creator` status, plus `ADMIN_USER_ID`, may assign identities to others.
+
+## Data notice
+
+`/privacy` explains the data the Bot currently processes, recipients including Fly.io, Telegram, OpenAI, and SMTP, the parts that do not yet expire automatically, and GCC's public contact channel. The command creates no user or conversation record in the Bot's SQLite database and does not consume the daily limit; an explicit bot mention is still required in the configured group. See the [data-flow inventory](docs/privacy-data-map.md) for technical detail and the [minimum data notice](docs/privacy-notice.md) for scope and maintenance rules.
 
 ## Identity model
 
