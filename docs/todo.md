@@ -35,21 +35,21 @@
 ## Next up：嚴格執行順序
 
 原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A、B 已完成。
-C–H 的表內次序仍只是方便檢視的暫定排列，必須由 GCC owner 重新確認它們與其他任務
-的實際先後，不得因 B 完成而自動開始 C。
+GCC owner 於 2026-09-14 明確選定先收起 email verification，因此 `ACCESS-001` 提前處理；
+C–H 的表內次序仍只是方便檢視的暫定排列，不會因 B 或 ACCESS-001 完成而自動開始。
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 1* | PRIV-001C | P1 | **決定對話與 session 保存政策** | 分開決定 private／group、link-first／AI、`messages_json`／messages 的必要性、保存期、匿名統計及模型傳送邊界 | PRIV-001A；GCC retention 決定 |
-| 2* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重做 authentication | PRIV-001A；部分依賴 ACCESS-001／ACCESS-002 決定 |
-| 3* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
-| 4* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential、legacy draft；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D、PRIV-001E |
-| 5* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C 至 PRIV-001F；ACCESS-002 |
-| 6* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
-| 7 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；email revoke／重新驗證部分待 `ACCESS-001` | TEST-001；部分依賴 ACCESS-001、PRIV-001D |
-| 8 | RELEASE-001 | P1 | **鎖定 release workflow 與部署工具供應鏈** | 所有 GitHub Actions 固定到已核實的完整 commit SHA；移除 `setup-flyctl@master` 並固定 Fly deployment tooling；建立由 PR／完整 gate 審核的定期更新政策；main test／deploy 可追溯至同一 commit，production image SHA 相符 | TEST-001、OPS-001 |
-| 9 | REVIEW-001 | P1 | **移除 Bot 現有的假精確申請分數** | 停止計算／通知 40/30/20/10 百分制及 70/40 建議；Bot 不作自動通過、拒絕或排序；一般 QA 繼續使用官方事實邊界；外置表格及人類流程是正式申請／決策來源；舊 scoring code、tests、文件及資料使用有清理／兼容方案 | 外置表格決定已確認；PRIV-001E 跟進歷史資料 |
-| 10 | ACCESS-001 | P1 | **完成或正式收窄私訊／電郵驗證功能** | 決定繼續、收窄或移除未完成的 private/member email path；若保留，決定合資格政策及 SMTP provider、加入 cooldown／每日上限並完成三語 E2E；不影響 `group_qa` 免 email 路徑 | 依先前決定暫緩；需要 GCC 資格政策及 SMTP owner；PRIV-001D |
+| 1 | ACCESS-001 | P1 | **收起私訊 email verification** | `/start`、README 及設定範例不再引導 email；legacy `/email`／`/verify` 以不讀參數、不寫資料、不寄 SMTP 的三語回應截住；`/whoami` 不顯示 email；保留 schema、dormant implementation 及 legacy data 待私隱政策處理；群組 mention-only QA 不受影響；merge 後完成 production smoke test | GCC owner 已決定收起；PRIV-001A／B；PRIV-001D/F/G 跟進 legacy data |
+| 2* | PRIV-001C | P1 | **決定對話與 session 保存政策** | 分開決定 private／group、link-first／AI、`messages_json`／messages 的必要性、保存期、匿名統計及模型傳送邊界 | PRIV-001A；GCC retention 決定 |
+| 3* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、legacy email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重啟 email verification 或重做 authentication | PRIV-001A；ACCESS-001；部分依賴 ACCESS-002 決定 |
+| 4* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
+| 5* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential、legacy draft；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D、PRIV-001E |
+| 6* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C 至 PRIV-001F；ACCESS-002 |
+| 7* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
+| 8 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；不在本項重啟 email verification | TEST-001；ACCESS-001；部分依賴 PRIV-001D |
+| 9 | RELEASE-001 | P1 | **鎖定 release workflow 與部署工具供應鏈** | 所有 GitHub Actions 固定到已核實的完整 commit SHA；移除 `setup-flyctl@master` 並固定 Fly deployment tooling；建立由 PR／完整 gate 審核的定期更新政策；main test／deploy 可追溯至同一 commit，production image SHA 相符 | TEST-001、OPS-001 |
+| 10 | REVIEW-001 | P1 | **移除 Bot 現有的假精確申請分數** | 停止計算／通知 40/30/20/10 百分制及 70/40 建議；Bot 不作自動通過、拒絕或排序；一般 QA 繼續使用官方事實邊界；外置表格及人類流程是正式申請／決策來源；舊 scoring code、tests、文件及資料使用有清理／兼容方案 | 外置表格決定已確認；PRIV-001E 跟進歷史資料 |
 | 11 | REPO-GOV-001 | P2 | **確立多人 contributor／AI Agent 的 repository 與 release 治理** | Trunk-based model、main-only 文件／workflow 及移除無獨有 commit 的 `dev` 已完成；剩餘：盤點三位 collaborators 並採最小權限；以 CODEOWNERS 只為敏感路徑要求非作者 approval，定義 owner、emergency hotfix 及 backup operator 訓練；建立單一 `docs/ai-agent-guide.md`，規定開工必讀、TODO／scope、架構、敏感資料、production 授權、事實來源、測試與完成記錄；按實際工具加入薄入口檔並建立 PR template | 敏感 owner／backup operator 最終確認；TEST-001；PRIV-001H 共享 access register |
 | 12 | RELEASE-DRILL-001 | P2 | **在隔離環境完成 image rollback／roll-forward 演練** | 使用不含 production token、volume 或真實流量的隔離環境，選定可追溯的 current／known-good images，實際 rollback 再 roll-forward；驗證 endpoints、logs、image SHA、schema compatibility 及恢復時間；留下 operator、時間、證據和失敗處理；production 演練另需 maintenance window | RELEASE-001、OPS-001、DATA-001 |
 | 13 | APP-001 | P2 | **把 Bot 申請入口收窄至官方外置表格** | 申請 CTA 直接導向正確公共／專項基金表格並清楚說明正式提交在外部完成；停止本機四步資料收集、管理員通知及提交成功暗示；安全退出舊 draft；不在本項刪除歷史資料 | 外置表格 URL owner；PRIV-001E 隨後處理歷史資料 |

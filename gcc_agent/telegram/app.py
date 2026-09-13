@@ -15,9 +15,8 @@ from telegram.ext import (
 from gcc_agent.access.messages import welcome_text
 from gcc_agent.admin.handler import handle_admin
 from gcc_agent.access.handler import (
-    handle_email,
+    handle_email_shelved,
     handle_grant,
-    handle_verify,
     handle_whoami,
 )
 from gcc_agent.applications.models import ApplicationDraft
@@ -243,8 +242,9 @@ def build_application() -> Application:
     private = filters.ChatType.PRIVATE
     app.add_handler(CommandHandler("start", handle_start, filters=private))
     app.add_handler(CommandHandler("privacy", handle_privacy, filters=private))
-    app.add_handler(CommandHandler("email", handle_email, filters=private))
-    app.add_handler(CommandHandler("verify", handle_verify, filters=private))
+    app.add_handler(
+        CommandHandler(("email", "verify"), handle_email_shelved, filters=private)
+    )
     app.add_handler(CommandHandler("grant", handle_grant, filters=private))
     app.add_handler(CommandHandler("whoami", handle_whoami, filters=private))
     app.add_handler(CallbackQueryHandler(handle_callback))

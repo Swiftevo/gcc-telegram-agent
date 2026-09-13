@@ -1,7 +1,7 @@
 # GCC Telegram Agent minimum data notice
 
 Status: `PRIV-001B` implementation specification  
-Last reviewed: 2026-09-13  
+Last reviewed: 2026-09-14
 Evidence baseline: [`privacy-data-map.md`](privacy-data-map.md)
 
 ## Purpose and boundary
@@ -41,17 +41,17 @@ existing language behaviour.
 All three versions disclose the same current facts:
 
 1. Telegram identity, group/topic identifiers, public profile/language, access
-   state, questions, and answers can be processed; email verification and current
-   application flows add their respective data.
+   state, questions, and answers can be processed; the current application flow
+   adds application-draft data. Email verification is paused and accepts no new
+   address or code, while SQLite and backups may retain legacy fields or records.
 2. Telegram transports interactions. Fly.io hosts the application, operational
    logs, SQLite volume, and scheduled snapshots; an operator can also create a
    manual SQLite backup in a separately chosen location.
 3. OpenAI receives the current question and up to 20 recent messages from the same
    session only when deterministic official-link or established-fact handling does
    not answer it.
-4. An SMTP service receives an address and one-time code only when email delivery
-   is enabled; a completed current application may be copied to a GCC
-   administrator's Telegram.
+4. The Bot does not currently send verification mail through SMTP. A completed
+   current application may be copied to a GCC administrator's Telegram.
 5. Some records do not currently expire automatically. Copies held by providers or
    in an administrator's Telegram are outside a live SQLite deletion.
 6. Users should not send passwords, private keys, or unnecessary sensitive data.
@@ -87,3 +87,16 @@ a conversation row.
 
 Rollback is the normal application-image rollback. Reverting the change removes the
 command and welcome link but does not alter or delete existing database records.
+
+## Shelved email-verification boundary
+
+As of 2026-09-14, new email verification is not a supported product surface:
+
+- `/start`, the three READMEs, and `.env.example` do not invite email or SMTP setup;
+- legacy `/email` and `/verify` commands return a localized unavailable response
+  without reading arguments, creating a user, saving a challenge, or calling SMTP;
+- `/whoami` no longer displays email or verification status;
+- the schema, persistence primitives, and implementation remain dormant so no
+  historical data is deleted before `PRIV-001D`, `PRIV-001F`, and `PRIV-001G`;
+- reactivation requires a new reviewed code change and the policy, provider,
+  rate-limit, and end-to-end conditions recorded under `ACCESS-001`.

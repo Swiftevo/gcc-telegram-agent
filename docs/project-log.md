@@ -3,6 +3,24 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-14：開始 `ACCESS-001`，收起 email verification
+
+- GCC owner 在 `PRIV-001B` production 驗收後明確決定先收起整個 email verification；
+  這次只停止入口及新資料處理，不刪 schema、implementation 或任何 production／backup
+  歷史資料，也不自動開始 `PRIV-001C` 至 `PRIV-001H`。
+- 動手前以唯讀 aggregate 查核 production：`users=2`、已驗證用戶 `0`、已驗證用戶的
+  private messages `0`、已驗證用戶的 application drafts `0`、pending email challenges
+  `0`；沒有讀取身份、email、訊息或申請內容。因此無須為現行已驗證用戶設過渡路徑。
+- 實作邊界定為：公開 onboarding／README／設定範例移除 email 入口；legacy `/email`、
+  `/verify` 只回三語暫停訊息，且不讀指令參數、不建立 user／challenge、不呼叫 SMTP；
+  `/whoami` 不再顯示 email 欄位。群組 mention-only QA、`/privacy` 及既有 session 隔離
+  不變。
+- SQLite email 欄位、challenge table、persistence 及 sender 程式暫時保留為 dormant
+  compatibility surface，避免在 retention／deletion 政策前破壞歷史資料；後續由
+  `PRIV-001D/F/G` 決定 legacy data 的保存、清理及用戶權利流程。
+- 本項仍在 PR 前驗證階段；合併及 production smoke test 完成前不會移入 Done。詳細
+  行為、驗收及回復邊界見 [`email-verification-shelving.md`](email-verification-shelving.md)。
+
 ## 2026-09-14：`PRIV-001B` 最低限度資料告知完成
 
 - GCC owner 在 `PRIV-001A` 完成後明確選定 `PRIV-001B` 為下一項；這項授權不自動延伸

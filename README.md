@@ -24,7 +24,7 @@
 
 助手已经部署上线，在 Telegram 里打开 **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** 发送 `/start` 即可开始。
 
-普通用户私聊时会收到欢迎信息；GCC 成员通过邮箱验证后，可以使用私聊问答和资助申请。指定 GCC 群组启用群组问答后，群内用户明确提及 bot 即可免邮箱提问。
+普通用户私聊时会收到欢迎信息；新的私聊成员启用及邮箱验证目前暂停。指定 GCC 群组启用群组问答后，群内用户明确提及 bot 即可提问。
 
 想改代码或提 Issue，请先看 [贡献指南](CONTRIBUTING.md)。请从最新 `main` 建立短期功能分支，再向 `main` 开 Pull Request；不要直接推送 `main`。
 
@@ -39,27 +39,19 @@
 | 功能 | 说明 |
 |---|---|
 | 分级访问 | 普通用户和未授权 Agent 只收到欢迎信息 |
-| 邮箱验证 | GCC 成员验证邮箱后解锁问答与申请 |
 | 链接优先 | 能用官网链接回答的问题不调用模型 |
 | 多语言 | 按用户语言使用简体中文、繁体中文或英文 |
 | 申请流程 | 四步收集：项目名称、基金类型、提案链接、执行摘要 |
 | 初步筛选 | 依据 `values.yaml` 给出 0–100 分并通知管理员 |
-| 群组提问 | 启用后只在 `GCC_GROUP_ID` 指定群组内回应明确 mention；不要求邮箱，不开放申请或管理功能 |
+| 群组提问 | 启用后只在 `GCC_GROUP_ID` 指定群组内回应明确 mention；不开放申请或管理功能 |
 | 用量限制 | 每位用户每天最多 20 条消息，群组问答同样计数 |
 
 ## 命令
 
-面向所有用户（无需邮箱验证）：
+面向所有用户：
 
 ```text
 /privacy                    查看 Bot 当前的数据处理说明
-```
-
-面向成员：
-
-```text
-/email you@example.com      绑定邮箱并接收验证码
-/verify 123456              提交验证码
 /whoami                     查看当前身份
 ```
 
@@ -75,7 +67,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 
 ## 数据告知
 
-`/privacy` 说明 Bot 当前处理的数据、Fly.io／Telegram／OpenAI／SMTP 等接收方、尚未设定自动删除期限的部分，以及 GCC 的公开联系渠道。该指令不会在 Bot SQLite 建立用户或对话记录，也不计入每日限额；在指定群组内仍须明确 mention bot。详细技术清单见[数据流盘点](docs/privacy-data-map.md)，告知范围与维护规则见[最低限度数据告知](docs/privacy-notice.md)。
+`/privacy` 说明 Bot 当前处理的数据、Fly.io／Telegram／OpenAI 等接收方、已暂停的 SMTP 邮箱验证及可能残留的 legacy 数据、尚未设定自动删除期限的部分，以及 GCC 的公开联系渠道。该指令不会在 Bot SQLite 建立用户或对话记录，也不计入每日限额；在指定群组内仍须明确 mention bot。详细技术清单见[数据流盘点](docs/privacy-data-map.md)，告知范围与维护规则见[最低限度数据告知](docs/privacy-notice.md)。
 
 ## 身份模型
 
@@ -84,7 +76,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 - `actor_type`：`human` 或 `agent`
 - `access_level`：`regular` 或 `gcc_member`
 
-人类 GCC 成员必须通过 `/email` 和 `/verify` 验证邮箱，才能使用私聊问答和申请。群组免邮箱问答是单次请求范围的 `group_qa` 能力，不会把用户升级为 `gcc_member`。旧数据库中的 `user_kind` 会在启动时自动迁移，不会删除原有数据。
+新的私聊成员启用及邮箱验证目前暂停；`/email` 和 `/verify` 不接受新数据。群组问答是单次请求范围的 `group_qa` 能力，不会把用户升级为 `gcc_member`。历史邮箱字段、验证表及 dormant implementation 暂时保留，以免在保存／删除政策确定前破坏资料；旧数据库中的 `user_kind` 仍会在启动时自动迁移。
 
 ## 快速开始
 
@@ -114,14 +106,6 @@ AI_MAX_TOKENS=800
 
 DB_PATH=gcc_agent.db
 
-# 邮箱验证；未完整配置时会安全拒绝发送
-EMAIL_VERIFICATION_SECRET=至少32字符的随机秘密
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=SMTP账号
-SMTP_PASSWORD=SMTP密码
-SMTP_FROM=bot@example.com
-SMTP_USE_TLS=true
 ```
 
 > [!WARNING]
@@ -147,7 +131,7 @@ python -m tests
 
 ```text
 gcc_agent/
-├── access/                  # 身份、授权、邮箱验证和 Guard
+├── access/                  # 身份、授权、Guard 及 dormant 邮箱兼容代码
 ├── admin/                   # 管理员操作
 ├── applications/            # 申请流程、文案、筛选和通知
 ├── common/
