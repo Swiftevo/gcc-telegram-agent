@@ -3,7 +3,7 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-09-15：開始 `GROUP-ACCESS-002`，群組成員可使用私人一般問答
+## 2026-09-15：`GROUP-ACCESS-002` 完成，群組成員可使用私人一般問答
 
 - GCC owner 指出 email verification 收起後，普通私人訊息只餘 welcome，明確決定讓
   `GCC_GROUP_ID` 指定群組的現任 Telegram 成員同時取得私人一般問答能力。
@@ -16,9 +16,15 @@
 - 私人 membership QA 沿用每日 20 條限制和私人 session；一般問答不開申請按鈕、不進
   application session，也不新增管理能力；既有專用命令治理仍留在 `ACCESS-002`。`/start`、`/privacy`、已暫停的 `/email`／`/verify` 專用路徑
   不變；`/whoami` 將以 live membership 準確反映 QA 資格。
-- 這是 GCC owner 在 `ACCESS-001` 後明確插入的當前 P1；`PRIV-001C` 至 `PRIV-001H` 沒有
-  因此自動開始。本項仍在 PR 前驗證階段，未部署前不會移入 Done。驗收及 rollback
-  邊界見 [`group-member-private-qa.md`](group-member-private-qa.md)。
+- PR #33 已 merge（`7df1325f3c4d0972a00e02874d41ba732abaf2d5`）；Actions run
+  `34895178387` 完整測試及 Fly deploy 成功，production machine v65、Fly check passing。
+- GCC owner 真實私訊 `/whoami` 得到 `qa: yes`；私人一般問題正常回答，資助問題使用官方
+  link-first 回覆且沒有申請按鈕。指定群組英文 explicit mention 亦正常回覆。互動後
+  `/readyz`、`/opsz` 均為 HTTP 200，webhook pending `0`，沒有 recent incident。
+- 群組英文問題的正文為英文，但固定例會提醒依 Telegram locale 顯示中文；不影響本項
+  存取、session 或安全驗收，已另列低優先、非阻塞 `I18N-001`，不在收尾 PR 順手改行為。
+- `GROUP-ACCESS-002` 已移入 Done；`PRIV-001C` 至 `PRIV-001H` 沒有因此自動開始。驗收及
+  rollback 邊界見 [`group-member-private-qa.md`](group-member-private-qa.md)。
 
 ## 2026-09-14：`ACCESS-001` 完成，email verification 已收起
 
