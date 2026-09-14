@@ -3,6 +3,7 @@
 from gcc_agent.access.guard import (
     DAILY_LIMIT,
     GuardResult,
+    PRIVATE_GROUP_QA_REASON,
     detect_language,
     message as _msg,
     run_guard,
@@ -12,6 +13,7 @@ from gcc_agent.access.guard import (
 __all__ = [
     "DAILY_LIMIT",
     "GuardResult",
+    "PRIVATE_GROUP_QA_REASON",
     "_msg",
     "detect_language",
     "run_guard",

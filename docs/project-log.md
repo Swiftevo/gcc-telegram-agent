@@ -3,7 +3,24 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-09-14：開始 `ACCESS-001`，收起 email verification
+## 2026-09-15：開始 `GROUP-ACCESS-002`，群組成員可使用私人一般問答
+
+- GCC owner 指出 email verification 收起後，普通私人訊息只餘 welcome，明確決定讓
+  `GCC_GROUP_ID` 指定群組的現任 Telegram 成員同時取得私人一般問答能力。
+- Production 預查使用 owner 提供的 Telegram user ID，只輸出 membership status；Bot API
+  成功從指定群組回傳 `creator`，沒有讀 token、profile、訊息或其他成員資料，證明現有 Bot
+  權限可支援 live `getChatMember` 判斷。
+- 邊界定為只接受 human `member`／`administrator`／`creator`，每次私人一般訊息即時查核；
+  不依賴舊 cache，不永久升級 `gcc_member`。離群、kicked、blocked、Agent、群組未設定或
+  Telegram API error 一律 fail closed。
+- 私人 membership QA 沿用每日 20 條限制和私人 session；一般問答不開申請按鈕、不進
+  application session，也不新增管理能力；既有專用命令治理仍留在 `ACCESS-002`。`/start`、`/privacy`、已暫停的 `/email`／`/verify` 專用路徑
+  不變；`/whoami` 將以 live membership 準確反映 QA 資格。
+- 這是 GCC owner 在 `ACCESS-001` 後明確插入的當前 P1；`PRIV-001C` 至 `PRIV-001H` 沒有
+  因此自動開始。本項仍在 PR 前驗證階段，未部署前不會移入 Done。驗收及 rollback
+  邊界見 [`group-member-private-qa.md`](group-member-private-qa.md)。
+
+## 2026-09-14：`ACCESS-001` 完成，email verification 已收起
 
 - GCC owner 在 `PRIV-001B` production 驗收後明確決定先收起整個 email verification；
   這次只停止入口及新資料處理，不刪 schema、implementation 或任何 production／backup
@@ -18,8 +35,22 @@
 - SQLite email 欄位、challenge table、persistence 及 sender 程式暫時保留為 dormant
   compatibility surface，避免在 retention／deletion 政策前破壞歷史資料；後續由
   `PRIV-001D/F/G` 決定 legacy data 的保存、清理及用戶權利流程。
-- 本項仍在 PR 前驗證階段；合併及 production smoke test 完成前不會移入 Done。詳細
-  行為、驗收及回復邊界見 [`email-verification-shelving.md`](email-verification-shelving.md)。
+- PR #31 已 merge（`5f0ae989242c1a9b4276732412cbde9a9a80149a`）；Actions run
+  `34787021266` 完整測試及部署成功，production machine v63、四項 readiness passing。
+  GCC owner 真實驗收 `/start`、`/email`、`/verify` 均符合預期。
+- 首次真實 `/whoami` 暴露本輪移除 `email_verified` 行後留下奇數 Markdown underscore，
+  Telegram 以 HTTP 400 拒絕訊息並觸發 `unhandled_update_error` 告警。PR #32 隨即改用純文字
+  並加入回歸測試；merge `efe2ddb5efbb6277e1a255870b1d2bd03cbebb6e`、Actions run
+  `34790480003` 成功部署 production v64，owner 重測得到正確 identity／`qa: no`，沒有 email
+  或新告警。這項真實失敗及修復均保留在完成證據，不以原本綠燈測試掩蓋。
+- 驗收後再次唯讀查核，aggregate 與變更前相同：`users=2`、verified users `0`、pending
+  email challenges `0`、verified private messages `0`、verified application drafts `0`；
+  `/email`／`/verify` 沒有新增驗證資料。沒有讀 identity、email、訊息或 draft 內容。
+- 群組路徑沒有被本項修改，production container 的 email／privacy／group routing tests
+  通過；schema、legacy data、volume、snapshots 亦沒有刪改。Container 缺少可直接核對的
+  `GH_SHA` 是既有 release traceability 缺口，留在 `RELEASE-001`，不虛構已核對。
+- `ACCESS-001` 已移入 Done；legacy data 仍由 `PRIV-001D/F/G` 跟進。詳細行為及回復邊界
+  見 [`email-verification-shelving.md`](email-verification-shelving.md)。
 
 ## 2026-09-14：`PRIV-001B` 最低限度資料告知完成
 

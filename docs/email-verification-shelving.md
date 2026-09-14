@@ -1,19 +1,21 @@
 # Email verification shelving boundary
 
-Status: `ACCESS-001` implementation specification  
+Status: `ACCESS-001` completed; private group-member access extended separately
 Decision date: 2026-09-14  
 Owner decision: stop the public email-verification path without deleting historical data
 
 ## Current product behaviour
 
-- Private `/start` explains that private-member onboarding is paused and directs users to
-  mention the Bot in the configured GCC group.
+- Private `/start` explains that email verification is paused and that current human
+  members of the configured GCC group may use private general Q&A.
 - Legacy private `/email` and `/verify` commands return a localized paused response. The
   handler does not inspect command arguments, load or create a user, create a challenge,
   or call the SMTP sender.
 - `/whoami` reports identity and Q&A access without showing legacy email or verification
   state.
-- The configured GCC group's explicit-mention, email-free Q&A route is unchanged.
+- The configured GCC group's explicit-mention, email-free Q&A route is unchanged. A later
+  owner decision also gives its current human members request-scoped private general Q&A;
+  this does not reactivate email verification or promote an account to `gcc_member`.
 - `/privacy` remains available without authentication or persistence and discloses that
   email verification is paused while legacy fields or records may remain.
 

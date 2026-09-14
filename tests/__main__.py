@@ -17,6 +17,7 @@ LEGACY_EXECUTABLE_SUITES = {
 REQUIRED_TEST_SUITES = LEGACY_EXECUTABLE_SUITES | {
     Path("tests/access/test_identity.py"),
     Path("tests/access/test_email_shelved.py"),
+    Path("tests/access/test_private_group_member.py"),
     Path("tests/knowledge/test_cases.py"),
     Path("tests/ops/test_sqlite_backup.py"),
     Path("tests/ops/test_runtime.py"),

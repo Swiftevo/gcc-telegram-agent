@@ -139,17 +139,24 @@ async def handle_verify(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 
 async def handle_whoami(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    from handlers.guard import detect_language
+    from handlers.guard import detect_language, verify_group_membership
 
     if update.message is None:
         return
-    user = await _current_user(update, detect_language(update))
+    lang = detect_language(update)
+    user = await _current_user(update, lang)
     if user is None:
         return
+    if user.is_blocked:
+        qa_allowed = False
+    elif user.actor_type == ACTOR_HUMAN:
+        qa_allowed = await verify_group_membership(user.user_id, lang, context)
+    else:
+        qa_allowed = user.can_use_qa()
     await update.message.reply_text(
         f"user_id: {user.user_id}\nactor_type: {user.actor_type}\n"
         f"access_level: {user.access_level}\n"
-        f"qa: {'yes' if user.can_use_qa() else 'no'}"
+        f"qa: {'yes' if qa_allowed else 'no'}"
     )
 
 

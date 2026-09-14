@@ -78,6 +78,7 @@ class ShelvedEmailTests(unittest.IsolatedAsyncioTestCase):
             user_id=42,
             actor_type="human",
             access_level="regular",
+            is_blocked=False,
             email="legacy@example.com",
             email_verified_at="2026-01-01T00:00:00+00:00",
             can_use_qa=lambda: False,
@@ -86,14 +87,20 @@ class ShelvedEmailTests(unittest.IsolatedAsyncioTestCase):
             "gcc_agent.access.handler._current_user",
             new=AsyncMock(return_value=user),
         ):
-            await handle_whoami(update, None)
+            with patch(
+                "handlers.guard.verify_group_membership",
+                new=AsyncMock(return_value=True),
+            ) as membership:
+                await handle_whoami(update, SimpleNamespace(bot=object()))
 
         reply = update.message.reply_text.await_args.args[0]
         self.assertNotIn("legacy@example.com", reply)
         self.assertNotIn("email", reply.lower())
         self.assertIn("access_level", reply)
+        self.assertIn("qa: yes", reply)
         self.assertNotIn("`", reply)
         self.assertNotIn("parse_mode", update.message.reply_text.await_args.kwargs)
+        membership.assert_awaited_once()
 
     def test_public_setup_no_longer_invites_email_or_smtp_configuration(self):
         env_example = (ROOT / ".env.example").read_text(encoding="utf-8")

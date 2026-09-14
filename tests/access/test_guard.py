@@ -119,8 +119,8 @@ def test_email_helpers():
     check("遮罩不含完整 local", masked != "alice@gcc.org" and masked.endswith("@gcc.org"))
 
 
-async def test_guard_pass():
-    print("\n[ 3 ] Guard 通過（gcc_member + 郵箱）")
+async def test_legacy_email_no_longer_grants_runtime_qa():
+    print("\n[ 3 ] 舊 email 狀態不再授予 human 私人問答")
     cleanup()
     await init_db()
     await make_gcc_member(200001, "pass_user")
@@ -130,18 +130,18 @@ async def test_guard_pass():
 
     result = await run_guard(update, context)
 
-    check("已授權成員通過（不需當前在群裡）", result.passed)
+    check("已驗證 email 但已離群仍被拒絕", not result.passed)
     check("GuardResult 有 user 物件", result.user is not None)
     check("GuardResult lang 正確", result.lang == "zh-TW")
-    check("GuardResult reason 為空", result.reason == "")
-    check("通過時沒有回覆系統訊息", not update.message.reply_text.called)
+    check("reason = welcome_only", result.reason == "welcome_only")
+    check("拒絕時顯示 welcome", update.message.reply_text.called)
 
 
 async def test_guard_welcome_only():
     print("\n[ 4 ] 普通用戶 / AI 只回歡迎語")
 
     update = make_update(user_id=200002, language_code="zh-TW")
-    context = make_context(is_member=True)
+    context = make_context(is_member=False)
     result = await run_guard(update, context)
     check("普通用戶 passed=False", not result.passed)
     check("reason = welcome_only", result.reason == "welcome_only")
@@ -156,8 +156,21 @@ async def test_guard_welcome_only():
     check("AI 也是 welcome_only", result_ai.reason == "welcome_only")
 
 
+async def test_private_group_member_qa():
+    print("\n[ 5 ] 指定群組現任成員可使用私人問答")
+
+    update = make_update(user_id=200023, language_code="zh-TW")
+    context = make_context(is_member=True)
+    result = await run_guard(update, context)
+
+    check("群組成員私人問答通過", result.passed)
+    check("使用 request-scoped membership 原因", result.reason == "private_group_qa")
+    check("即時查核設定中的群組", context.bot.get_chat_member.await_count == 1)
+    check("不顯示 welcome", not update.message.reply_text.called)
+
+
 async def test_guard_rate_limit():
-    print("\n[ 5 ] Guard Rate Limit 測試")
+    print("\n[ 6 ] Guard Rate Limit 測試")
 
     user_id = 200003
     from datetime import datetime
@@ -187,7 +200,7 @@ async def test_guard_rate_limit():
 
 
 async def test_guard_blocked():
-    print("\n[ 6 ] Guard 封鎖用戶測試")
+    print("\n[ 7 ] Guard 封鎖用戶測試")
 
     user_id = 200004
     await make_gcc_member(user_id, "blocked_test")
@@ -206,7 +219,7 @@ async def test_guard_blocked():
 
 
 async def test_gcc_member_needs_email():
-    print("\n[ 7 ] gcc_member 缺郵箱不能問答")
+    print("\n[ 8 ] gcc_member 缺郵箱且不在群組不能問答")
     user_id = 200005
     await get_or_create_user(user_id=user_id, username="noemail")
     # 直接寫 identity，繞過 service 驗證（模擬資料不完整）
@@ -219,7 +232,7 @@ async def test_gcc_member_needs_email():
         await conn.commit()
 
     update = make_update(user_id=user_id)
-    result = await run_guard(update, make_context())
+    result = await run_guard(update, make_context(is_member=False))
     check("缺郵箱 welcome_only", result.reason == "welcome_only")
     body = update.message.reply_text.call_args[0][0]
     check("不再提示郵箱驗證", "/email" not in body and "/verify" not in body)
@@ -227,7 +240,7 @@ async def test_gcc_member_needs_email():
 
 
 async def test_router():
-    print("\n[ 8 ] Router 模式識別測試")
+    print("\n[ 9 ] Router 模式識別測試")
 
     user_id = 200006
     user, _ = await get_or_create_user(user_id=user_id)
@@ -270,8 +283,9 @@ async def main():
 
     test_language_detection()
     test_email_helpers()
-    await test_guard_pass()
+    await test_legacy_email_no_longer_grants_runtime_qa()
     await test_guard_welcome_only()
+    await test_private_group_member_qa()
     await test_guard_rate_limit()
     await test_guard_blocked()
     await test_gcc_member_needs_email()
