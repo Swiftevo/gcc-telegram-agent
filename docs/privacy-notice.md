@@ -44,20 +44,23 @@ All three versions disclose the same current facts:
    state, questions, and answers can be processed; the current application flow
    adds application-draft data. Email verification is paused and accepts no new
    address or code, while SQLite and backups may retain legacy fields or records.
-2. Telegram transports interactions. Fly.io hosts the application, operational
+2. For a general private question or `/whoami`, the Bot asks Telegram for the
+   person's current membership status in the configured GCC group and updates the SQLite access
+   state. This request-scoped access does not promote the account to `gcc_member`.
+3. Telegram transports interactions. Fly.io hosts the application, operational
    logs, SQLite volume, and scheduled snapshots; an operator can also create a
    manual SQLite backup in a separately chosen location.
-3. OpenAI receives the current question and up to 20 recent messages from the same
+4. OpenAI receives the current question and up to 20 recent messages from the same
    session only when deterministic official-link or established-fact handling does
    not answer it.
-4. The Bot does not currently send verification mail through SMTP. A completed
+5. The Bot does not currently send verification mail through SMTP. A completed
    current application may be copied to a GCC administrator's Telegram.
-5. Some records do not currently expire automatically. Copies held by providers or
+6. Some records do not currently expire automatically. Copies held by providers or
    in an administrator's Telegram are outside a live SQLite deletion.
-6. Users should not send passwords, private keys, or unnecessary sensitive data.
+7. Users should not send passwords, private keys, or unnecessary sensitive data.
    Retention and data-request procedures remain under design and are not promised
    by this notice.
-7. The public channel for privacy questions and corrections is
+8. The public channel for privacy questions and corrections is
    <https://www.gccofficial.org/contact>.
 
 ## Ownership and change control

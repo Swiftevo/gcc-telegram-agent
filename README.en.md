@@ -24,7 +24,7 @@ A Telegram AI assistant for public goods: it answers questions, collects grant a
 
 The assistant is already deployed. Open **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** in Telegram and send `/start`.
 
-Regular users receive a welcome message in private chat. New private-member onboarding and email verification are currently paused. When group Q&A is enabled for the configured GCC group, users there may ask by explicitly mentioning the bot.
+Email verification is paused. Current human members of the configured GCC group may explicitly mention the Bot there or ask a general question in private. The Bot checks current Telegram group membership for each private request and does not permanently promote the account.
 
 To change code or open an Issue, start with the [contributing guide](CONTRIBUTING.md). Create a short-lived branch from the latest `main`, then open a Pull Request against `main`; never push directly to `main`.
 
@@ -38,12 +38,12 @@ This assistant takes that first layer: it answers with official links when it ca
 
 | Feature | Description |
 |---|---|
-| Tiered access | Regular users and unauthorized agents get a welcome message only |
+| Tiered access | Current human members of the configured GCC group may use group and private general Q&A; other users and unauthorized agents get a welcome message only |
 | Link-first answers | Questions that match official pages skip the model |
 | Languages | Simplified Chinese, Traditional Chinese, or English from the user locale |
 | Application flow | Four steps: project name, fund type, proposal link, executive summary |
 | Screening | 0–100 score from `values.yaml`, then notify an administrator |
-| Group Q&A | When enabled, only explicit mentions in the `GCC_GROUP_ID` chat are answered; applications and admin capabilities are excluded |
+| Group-member Q&A | Explicit mention is required in `GCC_GROUP_ID`; current members may also ask general questions privately; general Q&A itself enables no application or new admin capability |
 | Rate limit | 20 messages per user per day, including group Q&A |
 
 ## Commands
@@ -76,7 +76,7 @@ Identity uses two independent fields instead of RBAC:
 - `actor_type`: `human` or `agent`
 - `access_level`: `regular` or `gcc_member`
 
-New private-member onboarding and email verification are paused; `/email` and `/verify` accept no new data. Group Q&A is a request-scoped `group_qa` capability and never promotes the user to `gcc_member`. Legacy email fields, the verification table, and dormant implementation remain in place so data is not destroyed before retention and deletion policy is decided; legacy `user_kind` rows still migrate at startup.
+Email verification is paused; `/email` and `/verify` accept no new data. Current human members of the configured group receive request-scoped group and private general-Q&A capability. Private questions use Telegram `getChatMember` for a live check; the account is not promoted to `gcc_member`, and general Q&A enables no application or new admin capability. Governance of existing dedicated management commands remains under `ACCESS-002`. Legacy email fields, the verification table, and dormant implementation remain in place so data is not destroyed before retention and deletion policy is decided; legacy `user_kind` rows still migrate at startup.
 
 ## Quick start
 

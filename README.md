@@ -24,7 +24,7 @@
 
 助手已经部署上线，在 Telegram 里打开 **[@GCCpublicgoods_bot](https://t.me/GCCpublicgoods_bot)** 发送 `/start` 即可开始。
 
-普通用户私聊时会收到欢迎信息；新的私聊成员启用及邮箱验证目前暂停。指定 GCC 群组启用群组问答后，群内用户明确提及 bot 即可提问。
+邮箱验证目前暂停。指定 GCC 群组的当前 human 成员可在群内明确提及 bot，也可直接私聊一般问题；Bot 每次通过 Telegram 即时核对群组身份，不会永久升级帐户。
 
 想改代码或提 Issue，请先看 [贡献指南](CONTRIBUTING.md)。请从最新 `main` 建立短期功能分支，再向 `main` 开 Pull Request；不要直接推送 `main`。
 
@@ -38,12 +38,12 @@
 
 | 功能 | 说明 |
 |---|---|
-| 分级访问 | 普通用户和未授权 Agent 只收到欢迎信息 |
+| 分级访问 | 指定 GCC 群组的当前 human 成员可使用群组及私聊一般问答；其他用户和未授权 Agent 只收到欢迎信息 |
 | 链接优先 | 能用官网链接回答的问题不调用模型 |
 | 多语言 | 按用户语言使用简体中文、繁体中文或英文 |
 | 申请流程 | 四步收集：项目名称、基金类型、提案链接、执行摘要 |
 | 初步筛选 | 依据 `values.yaml` 给出 0–100 分并通知管理员 |
-| 群组提问 | 启用后只在 `GCC_GROUP_ID` 指定群组内回应明确 mention；不开放申请或管理功能 |
+| 群组成员问答 | 在 `GCC_GROUP_ID` 内须明确 mention；当前成员也可私聊一般问题；一般问答本身不启用申请或新增管理权限 |
 | 用量限制 | 每位用户每天最多 20 条消息，群组问答同样计数 |
 
 ## 命令
@@ -76,7 +76,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 - `actor_type`：`human` 或 `agent`
 - `access_level`：`regular` 或 `gcc_member`
 
-新的私聊成员启用及邮箱验证目前暂停；`/email` 和 `/verify` 不接受新数据。群组问答是单次请求范围的 `group_qa` 能力，不会把用户升级为 `gcc_member`。历史邮箱字段、验证表及 dormant implementation 暂时保留，以免在保存／删除政策确定前破坏资料；旧数据库中的 `user_kind` 仍会在启动时自动迁移。
+邮箱验证目前暂停；`/email` 和 `/verify` 不接受新数据。指定群组的当前 human 成员可获得 request-scoped 群组及私聊一般问答能力；私聊问题会即时通过 Telegram `getChatMember` 核对，不会把帐户升级为 `gcc_member`，一般问答也不会启用申请或新增管理权限。现有专用管理命令的治理另由 `ACCESS-002` 跟进。历史邮箱字段、验证表及 dormant implementation 暂时保留，以免在保存／删除政策确定前破坏资料；旧数据库中的 `user_kind` 仍会在启动时自动迁移。
 
 ## 快速开始
 

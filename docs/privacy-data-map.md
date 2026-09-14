@@ -21,6 +21,12 @@ production metadata 為證據。本次沒有讀取 production SQLite 內容、Te
 > 本文件以下內容保留為 `PRIV-001A` 當時的完整現況證據；仍存在的 schema、dormant
 > implementation 及任何 legacy data 仍須由 `PRIV-001D/F/G` 決定保存或刪除。
 
+> 2026-09-15 後續存取變更：指定 `GCC_GROUP_ID` 的現任 human 成員可使用私人一般
+> 問答。每次私人一般訊息及 `/whoami` 均由 Bot 向 Telegram `getChatMember` 查核；結果會更新既有
+> `users.is_group_member` access state，但不升級 `access_level`；一般問答本身不開放
+> application 或新增管理能力，既有專用命令資格不變。離群或 API error 均 fail closed。
+> 此處理已同步至 `/privacy` 告知。
+
 ## 資料主體與處理角色
 
 | 類別 | 現況 |

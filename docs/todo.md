@@ -35,12 +35,13 @@
 ## Next up：嚴格執行順序
 
 原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A、B 已完成。
-GCC owner 於 2026-09-14 明確選定先收起 email verification，因此 `ACCESS-001` 提前處理；
-C–H 的表內次序仍只是方便檢視的暫定排列，不會因 B 或 ACCESS-001 完成而自動開始。
+`ACCESS-001` 已收起 email verification；GCC owner 於 2026-09-15 明確選定先讓指定群組
+現任成員使用私人一般問答，因此新增 `GROUP-ACCESS-002` 為當前工作。C–H 的表內次序
+仍只是方便檢視的暫定排列，不會自動開始。
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 1 | ACCESS-001 | P1 | **收起私訊 email verification** | `/start`、README 及設定範例不再引導 email；legacy `/email`／`/verify` 以不讀參數、不寫資料、不寄 SMTP 的三語回應截住；`/whoami` 不顯示 email；保留 schema、dormant implementation 及 legacy data 待私隱政策處理；群組 mention-only QA 不受影響；merge 後完成 production smoke test | GCC owner 已決定收起；PRIV-001A／B；PRIV-001D/F/G 跟進 legacy data |
+| 1 | GROUP-ACCESS-002 | P1 | **讓指定群組現任成員使用私人一般問答** | 每次私人一般訊息以 `GCC_GROUP_ID` 即時查核 `member`／`administrator`／`creator`；只給 human request-scoped QA，不升級 `gcc_member`；離群、blocked、Agent、API error 均 fail closed；沿用每日限額及 private session 隔離；一般問答不開啟申請按鈕／application session 或新增管理權限；既有專用命令留待 ACCESS-002；`/whoami` 準確反映；三語文案、測試及 production E2E 完成 | GROUP-ACCESS-001、ACCESS-001；PRIV-001B；ACCESS-002 跟進身份生命週期 |
 | 2* | PRIV-001C | P1 | **決定對話與 session 保存政策** | 分開決定 private／group、link-first／AI、`messages_json`／messages 的必要性、保存期、匿名統計及模型傳送邊界 | PRIV-001A；GCC retention 決定 |
 | 3* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、legacy email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重啟 email verification 或重做 authentication | PRIV-001A；ACCESS-001；部分依賴 ACCESS-002 決定 |
 | 4* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
@@ -65,6 +66,7 @@ C–H 的表內次序仍只是方便檢視的暫定排列，不會因 B 或 ACCE
 
 | 日期 | ID | 原優先級 | 完成內容 | 證據 |
 |---|---|---|---|---|
+| 2026-09-14 | ACCESS-001 | P1 | 正式收起 email verification：公開 onboarding／README／設定範例停止引導；legacy `/email`／`/verify` 只作三語 non-persisting 暫停回應；`/whoami` 隱藏 email；schema、dormant implementation 及 legacy data 保留待私隱政策；群組 mention-only QA 不變 | PR #31／merge `5f0ae98`／Actions `34787021266`／production v63；真實 `/start`、`/email`、`/verify` 通過；真實 `/whoami` 揭露 Markdown regression 後由 PR #32／merge `efe2ddb`／Actions `34790480003` 修復至 v64並通過；production aggregate 前後同為 users 2、verified 0、pending challenge 0、verified private message／draft 0；四項 readiness passing；容器 routing tests 通過；container 欠 `GH_SHA` 留待 RELEASE-001 |
 | 2026-09-14 | PRIV-001B | P1 | 提供繁中／簡中／英文最低限度 current-state data notice；私訊 `/privacy` 毋須 email 或 member access，指定群組維持 explicit mention；兩者均不寫入 Bot SQLite 或消耗每日限額；`/start`、三份 README、維護／rollback 文件可找到；說明實際保存及 Telegram／Fly.io／OpenAI／SMTP／管理員 Telegram 接收，不虛構未批准的法律或 retention 承諾 | PR #29／merge `74d39f0`；Actions run `34760585478` 完整測試及 Fly deploy 成功；production v61／NRT machine started／encrypted `/data` mounted／四項 readiness passing／GH_SHA 相符；production container 7 項 notice／routing tests 通過；GCC owner 確認真實私訊及群組路徑均正常 |
 | 2026-09-13 | PRIV-001A | P1 | 以 code、schema 及非敏感 production metadata 建立現行個人資料／data-flow 清冊；涵蓋六個 SQLite tables、session duplicate、Telegram／OpenAI／SMTP／Fly／GitHub、logs、admin notification、volume／snapshot／manual backup 及 public repo content；A–H 取代原本單一 PRIV-001，未決定或實作政策 | PR #27／merge `7148b17`；Actions run `34753531218` 完整測試及 Fly deploy 成功；production v59／NRT machine started／encrypted `/data` mounted／readiness passing／GH_SHA 相符；沒有讀 secret value、production row 或 Telegram 內容 |
 | 2026-09-12 | OPS-001 | P1 | 補回不含敏感資料的 liveness／readiness／operations endpoints、Fly DB readiness check、Telegram webhook／backlog 監察、admin／deploy／machine 外部告警，以及完整 incident／rollback runbook | PR #22／merge `389322c`；Actions run `34651675306` 完整測試及 deploy 成功；production v54／machine started／Fly check passing／GH_SHA 相符；三個 endpoint 200、未授權 webhook 403；Telegram pending 0、無 last error；monitor run `34656207494` 成功、無 open incident |

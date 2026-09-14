@@ -7,12 +7,14 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from gcc_agent.access.handler import send_limited_welcome
+from gcc_agent.access.models import ACTOR_HUMAN
 from gcc_agent.access.rules import qa_decision
 from gcc_agent.common.persistence import users
 from gcc_agent.config import settings
 
 logger = logging.getLogger(__name__)
 DAILY_LIMIT = 20
+PRIVATE_GROUP_QA_REASON = "private_group_qa"
 
 
 def detect_language(update: Update) -> str:
@@ -55,7 +57,7 @@ async def verify_group_membership(
     lang: str,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> bool:
-    """Compatibility helper used only for explicit group checks."""
+    """Check the configured group live and persist only its current access state."""
     del lang
     if not settings.gcc_group_id:
         logger.warning("group membership check denied: GCC_GROUP_ID missing")
@@ -108,7 +110,14 @@ async def run_guard(
     if access.reason == "blocked":
         await update.message.reply_text(message(lang, "blocked"))
         return GuardResult(False, user, lang, "blocked")
-    if not access.allowed:
+    private_group_qa = False
+    if user.actor_type == ACTOR_HUMAN:
+        private_group_qa = await verify_group_membership(user.user_id, lang, context)
+        allowed = private_group_qa
+    else:
+        allowed = access.allowed
+
+    if not allowed:
         await send_limited_welcome(update, user, lang)
         logger.info(
             "welcome-only user_id=%s actor_type=%s access_level=%s",
@@ -121,7 +130,8 @@ async def run_guard(
     if not await users.try_increment_daily_count(user.user_id, DAILY_LIMIT):
         await update.message.reply_text(message(lang, "rate_limited"))
         return GuardResult(False, user, lang, "rate_limited")
-    return GuardResult(True, user, lang)
+    reason = PRIVATE_GROUP_QA_REASON if private_group_qa else ""
+    return GuardResult(True, user, lang, reason)
 
 
 async def run_group_qa_guard(

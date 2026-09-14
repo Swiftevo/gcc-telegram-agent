@@ -34,7 +34,12 @@ from gcc_agent.ops.runtime import (
 )
 from gcc_agent.privacy import is_privacy_request, privacy_notice
 from gcc_agent.qa.handler import handle_general
-from gcc_agent.access.guard import detect_language, run_group_qa_guard, run_guard
+from gcc_agent.access.guard import (
+    PRIVATE_GROUP_QA_REASON,
+    detect_language,
+    run_group_qa_guard,
+    run_guard,
+)
 from gcc_agent.telegram.router import route
 
 logger = logging.getLogger(__name__)
@@ -131,6 +136,8 @@ async def handle_message(update: Update, context) -> None:
     result = await route(update, context, guard)
     if result.mode == "admin":
         await handle_admin(update, context, guard, result.command)
+    elif guard.reason == PRIVATE_GROUP_QA_REASON:
+        await handle_general(update, context, guard, allow_application=False)
     elif result.mode == "application":
         await handle_application(update, context, guard)
     else:

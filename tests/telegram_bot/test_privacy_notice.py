@@ -43,10 +43,13 @@ class PrivacyNoticeTests(unittest.IsolatedAsyncioTestCase):
     def test_notices_disclose_unsettled_retention_without_promising_a_period(self):
         self.assertIn("沒有自動刪除期限", privacy_notice("zh-TW"))
         self.assertIn("郵箱驗證目前暫停", privacy_notice("zh-TW"))
+        self.assertIn("向 Telegram 查核", privacy_notice("zh-TW"))
         self.assertIn("没有自动删除期限", privacy_notice("zh-CN"))
         self.assertIn("邮箱验证目前暂停", privacy_notice("zh-CN"))
+        self.assertIn("向 Telegram 查询", privacy_notice("zh-CN"))
         self.assertIn("no automatic deletion period", privacy_notice("en"))
         self.assertIn("Email verification is paused", privacy_notice("en"))
+        self.assertIn("member of the configured GCC group", privacy_notice("en"))
 
     def test_unknown_language_falls_back_to_traditional_chinese(self):
         self.assertEqual(privacy_notice("zh-TW"), privacy_notice("fr"))
