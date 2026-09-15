@@ -59,8 +59,9 @@
 | 16 | GOVERNANCE-001 | P2 | **確定 public-goods database 的授權與貢獻治理** | 決定資料 license（不只程式 MIT）；定義 provenance、版本、更正、撤回、敏感資料及 reviewer policy；提供 public contribution template | PRIV-001A、PRIV-001H |
 | 17 | PRODUCT-001 | P2 | **建立產品成效指標與回饋迴路** | 指標能區分 onboarding、verified activation、link-first、AI、application started/submitted/followed-up；不以收集更多 PII 為代價；管理員可查看準確 funnel 與失敗率 | Scope freeze；APP-001、PRIV-001C／PRIV-001H |
 | 18 | I18N-001 | P3 | **避免問答正文與固定尾句混用不同語言** | 重現英文問題正文配中文例會提醒；決定以 Telegram locale、問題語言或答案語言為準並統一整則回覆；繁／簡／英的 link-first、AI、private、group 路徑有測試；不改事實內容或存取規則 | 2026-09-15 `GROUP-ACCESS-002` production 群組 E2E 發現；非阻塞 |
-| 19 | CONTENT-002 | P3 | **擴充案例覆蓋與 outcome evidence** | 完成 evidence 子清單 Tier B/C；按類別逐批 import、review、release；不以「67 個全部匯入」取代品質門檻 | Scope freeze；CONTENT-001、GOVERNANCE-001 |
-| 20 | SEARCH-001 | P3 | **在 schema 穩定後評估 semantic search** | 先用 deterministic retrieval 建 baseline；量度準確率、引用率、成本及隱私；只有明顯優於 baseline 才引入 embeddings/vector store | Scope freeze；PGDATA-001、代表性 eval set |
+| 19 | ONBOARDING-I18N-001 | P3 | **為新手 onboarding 內容建立多語審核與 fallback** | 以 GCC owner 核准的簡中內容為來源，分別建立繁中／英文版本及 locale-specific `draft`／`published` 狀態；每個版本經人工核對後才發佈，未翻譯內容不得由 AI 臨時翻譯後冒充官方文字；定義缺少語言時的安全 fallback；內部、持續修改的飛書文件不直接成為 runtime 依賴，亦不把其 URL 寫入公開 production content | GCC owner 稍後提供翻譯／review 時間；onboarding 內容模型尚待批准；非阻塞 |
+| 20 | CONTENT-002 | P3 | **擴充案例覆蓋與 outcome evidence** | 完成 evidence 子清單 Tier B/C；按類別逐批 import、review、release；不以「67 個全部匯入」取代品質門檻 | Scope freeze；CONTENT-001、GOVERNANCE-001 |
+| 21 | SEARCH-001 | P3 | **在 schema 穩定後評估 semantic search** | 先用 deterministic retrieval 建 baseline；量度準確率、引用率、成本及隱私；只有明顯優於 baseline 才引入 embeddings/vector store | Scope freeze；PGDATA-001、代表性 eval set |
 
 ## Done
 
