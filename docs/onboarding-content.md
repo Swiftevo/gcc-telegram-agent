@@ -60,6 +60,13 @@ decide deterministic matching, answer selection, how one follow-up prompt is app
 and how existing session retention applies. It must retain current group membership,
 rate-limit, privacy, application, and session-isolation boundaries.
 
+There is also a known source-priority conflict to resolve before activation:
+`data/onboarding.yaml` says the owner-supplied `2026 H2` focus has converged on OPS,
+while the current `values.yaml` still lists five older priority themes and its GCC summary
+describes four of them. Runtime integration must not blend both as simultaneously current.
+The GCC owner must decide whether onboarding takes precedence for newcomer questions or
+whether the canonical values content should be updated in the same reviewed change.
+
 ## Verification and rollback
 
 `gcc_agent.knowledge.onboarding` validates the content contract and fails on duplicate or
