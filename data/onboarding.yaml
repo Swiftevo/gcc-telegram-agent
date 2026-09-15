@@ -1,0 +1,267 @@
+schema_version: "0.1.0"
+updated_at: "2026-09-16"
+title: GCC 贡献者成长地图
+purpose: >
+  面向已经加入指定 GCC Telegram 群组的新手，以轻量、问题驱动的方式，
+  从认识 GCC、加入志愿者社群、参与活动与任务，逐步了解如何成为 GCC 建设者。
+
+runtime:
+  connected: false
+  note: 此版本只建立经 owner 提供的内容资料层，尚未接入 Bot 回答流程。
+
+audience:
+  eligibility: configured_group_members
+  access_source: GCC_GROUP_ID
+  actor_type: human
+  interaction_model: question_led
+  navigation_buttons: none
+
+provenance:
+  source_type: owner_supplied_internal_working_copy
+  review_status: owner_approved_baseline
+  automatic_sync: false
+  internal_source_urls_stored: false
+  update_method: GCC owner 在内容更新后提供新的核准文字
+  available_locales: [zh-CN]
+
+public_channels:
+  website: https://www.gccofficial.org/
+  x: https://x.com/GCCofCommons
+  telegram:
+    label: GCC 志愿者大群
+    url: https://t.me/+GpdpcPIN2fY5YTZl
+  email: admin@gccofficial.org
+
+journey:
+  - order: 1
+    id: know-gcc
+    title: 认识 GCC
+    topic_ids: [gcc-overview, gcc-beliefs, gcc-focus, why-participate]
+  - order: 2
+    id: join-gcc
+    title: 如何加入
+    topic_ids: [official-channels, join-volunteer-community]
+  - order: 3
+    id: participate
+    title: 参与活动与任务
+    topic_ids: [activities-and-tasks]
+  - order: 4
+    id: become-builder
+    title: 如何成为建设 GCC 的人
+    topic_ids: [volunteer-and-builder, become-gcc-builder]
+
+topics:
+  - id: gcc-overview
+    journey_id: know-gcc
+    status: approved_for_integration
+    suggested_questions:
+      - GCC 是什么？
+      - GCC 是一个怎样的组织？
+      - GCC 在做什么？
+    content:
+      zh-CN:
+        title: GCC 是什么
+        short_answer: >
+          GCC（Global Chinese Community of Universal Digital Commons），
+          是华语区专注支持数字公共物品的资助网络。
+        paragraphs:
+          - >
+            GCC 的 Slogan 是「Fund & Support Public Goods We Believe In」——
+            去支持那些我们真正相信的公共物品。
+        bullets: []
+        next_prompt: 你也可以继续问「GCC 相信什么？」或「GCC 支持什么？」。
+        links:
+          - label: GCC 官网
+            url: https://www.gccofficial.org/
+
+  - id: gcc-beliefs
+    journey_id: know-gcc
+    status: approved_for_integration
+    suggested_questions:
+      - GCC 相信什么？
+      - GCC 为什么支持公共物品？
+      - 公共物品对 GCC 意味着什么？
+    content:
+      zh-CN:
+        title: 我们相信什么
+        short_answer: 公共物品不是慈善，而是公共基础设施。
+        paragraphs:
+          - >
+            公共物品不需要被「雪中送炭」式地拯救，而需要被视作协议社会的根基，
+            被理性、持续地投入。
+          - >
+            这也是 GCC 做资助的出发点：不救急，而是把资源长期、稳定地投向
+            那些支撑数字世界的底层能力。
+        bullets: []
+        next_prompt: 你可以继续了解 GCC 目前聚焦的支持方向。
+        links: []
+
+  - id: gcc-focus
+    journey_id: know-gcc
+    status: approved_for_integration
+    context_label: 2026 H2
+    suggested_questions:
+      - GCC 支持什么？
+      - 什么是 OPS？
+      - GCC 支持开源、隐私或安全吗？
+    content:
+      zh-CN:
+        title: GCC 支持什么
+        short_answer: 2026 年下半年，GCC 的价值框架聚焦 OPS 三个方向。
+        paragraphs:
+          - 如果你关注开源、隐私或安全，这里就是你在做的事。
+        bullets:
+          - label: Open Source（开源）
+            text: 代码公开、可审计、可复用的软件与协议。
+          - label: Privacy（隐私）
+            text: 保护个人数据与权利的隐私工具。
+          - label: Security（安全）
+            text: 让数字世界更可信任的安全能力。
+        next_prompt: 你可以继续问其中一个方向，或了解 GCC 为什么值得参与。
+        links: []
+
+  - id: why-participate
+    journey_id: know-gcc
+    status: approved_for_integration
+    suggested_questions:
+      - 为什么值得参与 GCC？
+      - 参加 GCC 可以做什么？
+      - 我会和谁一起参与？
+    content:
+      zh-CN:
+        title: 为什么值得参与
+        short_answer: 参与 GCC，是一起支持真实的公共基础设施，并进入一个可持续贡献的华语社区。
+        paragraphs: []
+        bullets:
+          - label: 支持真实的基础设施
+            text: 你的投入会流向真正被需要的公共物品，而不是某个公司的商业指标。
+          - label: 不是一个人在做事
+            text: GCC 是一个华语社区，一群因为「公共物品值得被持续支持」而聚在一起的人。
+          - label: 有清晰的参与路径
+            text: 从参加活动、认领任务，到成为建设 GCC 的人，每一步都看得见、走得到。
+        next_prompt: 想继续的话，可以问「如何加入 GCC？」。
+        links: []
+
+  - id: official-channels
+    journey_id: join-gcc
+    status: approved_for_integration
+    suggested_questions:
+      - GCC 有哪些官方入口？
+      - 怎样联系 GCC？
+      - GCC 的 Telegram 或邮箱是什么？
+    content:
+      zh-CN:
+        title: 官方入口
+        short_answer: 你可以通过 GCC 官网、X、Telegram 志愿者大群或公开邮箱联系 GCC。
+        paragraphs: []
+        bullets:
+          - label: 官网
+            text: https://www.gccofficial.org/
+          - label: X（Twitter）
+            text: https://x.com/GCCofCommons
+          - label: Telegram
+            text: https://t.me/+GpdpcPIN2fY5YTZl
+          - label: 邮箱
+            text: admin@gccofficial.org
+        next_prompt: 如果你已经找到 GCC，可以继续了解如何加入志愿者大群。
+        links:
+          - label: GCC 官网
+            url: https://www.gccofficial.org/
+          - label: GCC Telegram 志愿者大群
+            url: https://t.me/+GpdpcPIN2fY5YTZl
+
+  - id: join-volunteer-community
+    journey_id: join-gcc
+    status: approved_for_integration
+    suggested_questions:
+      - 如何加入 GCC？
+      - 怎样加入志愿者大群？
+      - 我从哪里开始参与？
+    content:
+      zh-CN:
+        title: 加入志愿者大群
+        short_answer: 通过 GCC 的公开官方入口加入志愿者大群，即可进入 GCC 志愿者社群。
+        paragraphs: []
+        bullets:
+          - label: 第一步
+            text: 通过任一官方入口找到 GCC。
+          - label: 第二步
+            text: 获取志愿者大群的入群链接或二维码。
+          - label: 第三步
+            text: 加入大群，进入 GCC 志愿者社群。
+        next_prompt: 加入后，你可以继续问「如何参与活动与任务？」。
+        links:
+          - label: GCC Telegram 志愿者大群
+            url: https://t.me/+GpdpcPIN2fY5YTZl
+
+  - id: activities-and-tasks
+    journey_id: participate
+    status: approved_for_integration
+    suggested_questions:
+      - 如何参与 GCC 的活动？
+      - GCC 的任务在哪里发布？
+      - 报名任务后会怎样？
+    content:
+      zh-CN:
+        title: 参与活动与任务
+        short_answer: GCC 的活动与任务会不定期在志愿者大群发布。
+        paragraphs:
+          - 筛选通过后，会有负责人与你对接具体的参与安排。
+        bullets:
+          - label: 查看
+            text: 在志愿者大群查看最新发布的活动与任务。
+          - label: 报名
+            text: 选择想参与的项目，填写报名表。
+          - label: 等待反馈
+            text: 提交后，GCC 将进行筛选与统计，并反馈结果。
+        next_prompt: 如果想更深入参与，可以继续了解志愿者与建设者的分别。
+        links: []
+
+  - id: volunteer-and-builder
+    journey_id: become-builder
+    status: approved_for_integration
+    suggested_questions:
+      - 志愿者和建设者有什么分别？
+      - 什么是 GCC 建设者？
+      - 加入工作组是什么意思？
+    content:
+      zh-CN:
+        title: 志愿者与建设者
+        short_answer: 在 GCC，参与可以分为志愿者和建设者两种深度。
+        paragraphs:
+          - 成为建设者，意味着从「参与活动」走向「参与建设」。
+        bullets:
+          - label: 志愿者
+            text: 加入志愿者大群，参与活动与任务。
+          - label: 建设者
+            text: 进入 GCC 工作组，稳定参与 GCC 的建设。
+        next_prompt: 你可以继续问「如何成为 GCC 建设者？」。
+        links: []
+
+  - id: become-gcc-builder
+    journey_id: become-builder
+    status: approved_for_integration
+    suggested_questions:
+      - 如何成为 GCC 建设者？
+      - 怎样加入 GCC 工作组？
+      - GCC 会招募建设者吗？
+    content:
+      zh-CN:
+        title: 如何成为建设 GCC 的人
+        short_answer: GCC 会通过建设者招募和持续贡献记录，让志愿者逐步进入工作组。
+        paragraphs:
+          - GCC 会定期发布建设者招募，招募信息在志愿者大群及官方入口发布。
+          - 持续参与、留下贡献记录的志愿者，也可能被邀请进入工作组。
+          - 进入工作组后，你将更深入地参与 GCC 的建设，并获得完整的成员说明。
+          - 招募的具体周期与流程，以最新发布为准。
+        bullets:
+          - label: 第一步
+            text: 查看招募信息，确认想加入的方向。
+          - label: 第二步
+            text: 填写招募报名表，说明意向方向与可投入时间。
+          - label: 第三步
+            text: 经过沟通确认后，进入对应工作组。
+        next_prompt: 你也可以先从志愿者大群中的活动或任务开始参与。
+        links:
+          - label: GCC Telegram 志愿者大群
+            url: https://t.me/+GpdpcPIN2fY5YTZl
