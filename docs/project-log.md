@@ -3,6 +3,19 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-16：建立兩條獨立資助線的後續案例入口
+
+- GCC owner 確認 ETH City 與高校 Web3 興趣小組是兩條獨立資助線；現有 2025
+  Snapshot 是共同提案來源，並非單一個別受助案例，也不證明實際撥款。
+- 兩條線各有固定識別碼；日後每個已核實個別案例以 `funding_track_id` 指向其中一條，
+  金額、日期、成果和來源留在該案例，不混合兩個資助池。入口及所需資料見
+  [`funding-track-case-intake.md`](funding-track-case-intake.md)。
+- ETH Beijing 2025、Devconnect 機票 2025 暫無 owner 可補的詳細資料；不補猜測。
+  現有 ETH Beijing 案例不因名稱而自動歸入 ETH City 資助線。
+- 共同提案不再標作可供 AI review 使用；本次只建立資料入口及測試，沒有新增個別資助案例、
+  改 Bot runtime 或開放 AI 評分。87 項本地回歸測試通過；
+  證據、私隱及撥款核對工作仍按 [`docs/todo.md`](todo.md) 跟進。
+
 ## 2026-09-15：`GROUP-ACCESS-002` 完成，群組成員可使用私人一般問答
 
 - GCC owner 指出 email verification 收起後，普通私人訊息只餘 welcome，明確決定讓

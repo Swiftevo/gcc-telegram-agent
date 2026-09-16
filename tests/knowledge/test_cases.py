@@ -35,7 +35,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                 "Gitcoin",
             },
         )
-        self.assertEqual(len(ai_cases), 5)
+        self.assertEqual(len(ai_cases), 4)
         self.assertTrue(
             any(
                 case.get("case_id") == "gcc-gitcoin-placeholder"
@@ -78,17 +78,26 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
+        self.assertFalse(eth_city["ai_review_usage"]["allowed"])
         eth_city_details = eth_city["public_record"]["program_details"]
         self.assertEqual(
             eth_city_details["application_deadline"],
             "rolling until 2025-12-30 or until quota filled",
         )
-        self.assertEqual(eth_city["public_record"]["lifecycle_status"]["delivery_status"], "in_progress")
+        self.assertEqual(eth_city["public_record"]["lifecycle_status"]["delivery_status"], "unknown")
         self.assertEqual(eth_city["public_record"]["links"]["announcement_url"], "https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ")
         self.assertEqual(len(eth_city_details["funding_tracks"]), 2)
         self.assertEqual(
             [track["track_type"] for track in eth_city_details["funding_tracks"]],
             ["university_group", "city_event"],
+        )
+        self.assertEqual(
+            [track["track_id"] for track in eth_city_details["funding_tracks"]],
+            ["gcc-university-web3-2025", "gcc-eth-city-2025"],
+        )
+        self.assertEqual(
+            [track["status"] for track in eth_city_details["funding_tracks"]],
+            ["unknown", "unknown"],
         )
         self.assertEqual(
             [track["total_pool_usd"] for track in eth_city_details["funding_tracks"]],
@@ -99,8 +108,22 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             ["pending_import", "pending_import"],
         )
         self.assertEqual(len(eth_city["evidence"]["snapshots"]), 2)
+        self.assertTrue(all(
+            track["source_snapshot_id"] == "snap-eth-city-university-web3-snapshot-proposal"
+            for track in eth_city_details["funding_tracks"]
+        ))
+        all_track_ids = [
+            track["track_id"]
+            for case in cases.values()
+            for track in case.get("public_record", {}).get("program_details", {}).get("funding_tracks", [])
+        ]
+        self.assertEqual(len(all_track_ids), len(set(all_track_ids)))
+        for case in cases.values():
+            if "funding_track_id" in case:
+                self.assertIn(case["funding_track_id"], all_track_ids)
 
         eth_beijing = cases["gcc-eth-city-eth-beijing-2025"]
+        self.assertNotIn("funding_track_id", eth_beijing)
         self.assertEqual(eth_beijing["public_record"]["amount_usd"], 3000)
         self.assertEqual(eth_beijing["public_record"]["activity_year"], 2025)
         self.assertEqual(
@@ -146,6 +169,8 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertEqual(database_schema["properties"]["cases"]["items"]["$ref"], "project.schema.json")
         self.assertIn("funding_tracks", case_schema["$defs"]["programDetails"]["properties"])
         self.assertIn("fundingTrack", case_schema["$defs"])
+        self.assertIn("funding_track_id", case_schema["properties"])
+        self.assertIn("track_id", case_schema["$defs"]["fundingTrack"]["required"])
         for field in ("public_record", "evidence", "ai_review_usage"):
             self.assertIn(field, case_schema["required"])
 

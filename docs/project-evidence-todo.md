@@ -54,12 +54,20 @@ Complete these before describing the affected records as verified public cases.
 
 ### ETH City / University Web3 Funding Tracks 2025
 
-- [ ] Decide whether downstream applications are child records, independent case
-  records, or rows in a linked subgrant table before importing any of them.
+- [x] GCC owner confirmed these are two independent funding tracks under one
+  shared proposal. Stable track ids and the future individual-case intake route
+  are documented in [`funding-track-case-intake.md`](funding-track-case-intake.md).
+- [ ] Obtain verifiable individual award/activity details and link each new case
+  to exactly one funding track; do not infer that an existing ETH City Series
+  case belongs to the ETH City track from its name alone.
 - [ ] Define public/internal/redacted treatment for applications, reviewers,
   decisions, amounts and applicant identity.
 - [ ] Link public or shareable approval decisions and approval dates to the
   correct funding track without exposing private reviewer data.
+
+ETH Beijing 2025 and Devconnect Flight Scholarship 2025 currently have no
+additional owner-supplied detailed records. Keep their unresolved fields
+unknown and do not manufacture missing application, selection, or payment data.
 
 ## Tier B — outcome and impact evidence
 

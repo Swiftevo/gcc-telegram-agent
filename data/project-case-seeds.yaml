@@ -1,5 +1,5 @@
 schema_version: "0.1.0"
-updated_at: "2026-08-30"
+updated_at: "2026-09-16"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category and reserves
@@ -239,8 +239,8 @@ cases:
         total_budget_usd: 60000
         per_person_cap_usd:
         currency: USD
-        disbursement_type: one_time
-        notes: "Umbrella funding-track approval: 30,000 USD for university Web3 groups and 30,000 USD for ETH City events."
+        disbursement_type: unknown
+        notes: "The shared proposal records two separate 30,000 USD funding pools. This is not evidence of any individual award, actual disbursement, or current remaining balance."
       program_details:
         start_date: "2025-01-01"
         end_date: "2025-12-30"
@@ -272,7 +272,9 @@ cases:
           - ETH City developer salons, public goods roadshows, hackathons, and open research activities.
           - Activity records and follow-up reports.
         funding_tracks:
-          - name: 高校 Web3 興趣小組資助計劃
+          - track_id: gcc-university-web3-2025
+            name: 高校 Web3 興趣小組資助計劃
+            source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
             track_type: university_group
             total_pool_usd: 30000
             min_grant_usd: 2000
@@ -286,10 +288,12 @@ cases:
               - Decentralized technology workshops.
               - Open-source student project development with GPL or MIT style licenses.
               - Community operations, lectures, salons, competitions, and hackathons.
-            status: active
+            status: unknown
             child_records_status: pending_import
-            notes: The track is already operating; individual applications, approvals, completed sub-projects, and reports should be imported as child records later.
-          - name: ETH City 資助計劃
+            notes: This is one independent funding track under a shared proposal. The source describes a 2025 application period; current status is unconfirmed. Add verified individual cases later with funding_track_id gcc-university-web3-2025; no individual award or payment is recorded here.
+          - track_id: gcc-eth-city-2025
+            name: ETH City 資助計劃
+            source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
             track_type: city_event
             total_pool_usd: 30000
             min_grant_usd:
@@ -305,11 +309,11 @@ cases:
               - Ethereum hackathons and open-source tool or protocol building.
               - Community building events and cross-sector blockchain case sharing.
               - Open research on Ethereum, blockchain, society, and public goods.
-            status: active
+            status: unknown
             child_records_status: pending_import
-            notes: The track is already operating; individual applications, approvals, completed activities, and reports should be imported as child records later.
+            notes: This is one independent funding track under a shared proposal. The source describes a 2025 application period; current status is unconfirmed. Add verified individual cases later with funding_track_id gcc-eth-city-2025; no individual award or payment is recorded here.
         milestones: []
-        notes: Bundled dual-track rolling funding program; the source says applications are rolling, each track has no more than 10 slots, and places close when full. This case records the creation and approval of the two tracks, not a single downstream applicant project.
+        notes: Shared proposal for two independently identifiable rolling funding tracks; the source says each track has no more than 10 slots and places close when full. This case records the proposal and governance decision, not a third funding track or an individual applicant, disbursement, or milestone outcome.
       public_goods_dimensions:
         open_source:
           value: medium
@@ -338,7 +342,7 @@ cases:
         notes: Strong community infrastructure case with two distinct tracks.
       impact_evidence:
         - type: funding_access
-          description: Creates two 30,000 USD rolling grant pools for university Web3 groups and ETH City activities.
+          description: The shared proposal records two separate 30,000 USD rolling funding pools for university Web3 groups and ETH City activities; individual allocations and payments are not evidenced here.
           metric: total_pool_usd
           value: 60000
           source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
@@ -357,9 +361,9 @@ cases:
           notes:
       lifecycle_status:
         grant_status: approved
-        delivery_status: in_progress
-        reporting_status: expected
-        notes: Snapshot is closed and the two funding tracks are operating. Individual applications, approvals, completed sub-projects, and delivery reports should be imported later as child records or linked cases.
+        delivery_status: unknown
+        reporting_status: unknown
+        notes: The shared Snapshot records a governance decision, not individual approvals, payments, completed activities, or the tracks' current operating status. Link verified downstream cases to exactly one track when evidence becomes available.
       regions: [global, Chinese-speaking community]
       tags: [university Web3 groups, ETH City, education, local community, open-source activities]
       summary: >
@@ -442,7 +446,7 @@ cases:
         source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
         notes: Full Snapshot proposal body and WeChat public announcement are stored under Raw Data. Downstream project applications, approvals, and completion records are pending import.
     ai_review_usage:
-      allowed: true
+      allowed: false
       retrieval_text: >
         Funding-track precedent for rolling support to campus Web3 groups and
         local ETH City activities. Useful for reviewing education, workshop,
@@ -454,8 +458,10 @@ cases:
         - feasibility
         - precedent_similarity
       cautions:
+        - Keep this shared proposal out of AI review until the two independent tracks and their verified individual cases have been assessed separately.
         - Because this proposal bundles two tracks, compare new applicants to the relevant track only.
         - This is not a single applicant project; use it as funding-track precedent and import downstream applications as child records when evidence is available.
+        - The two 30,000 USD pools are proposal-level allocations, not evidence of money disbursed or remaining balances.
     governance:
       visibility: public
       license:
