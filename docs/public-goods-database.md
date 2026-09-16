@@ -18,6 +18,14 @@ Initial scope:
 - Define snapshot metadata so each project can later point to immutable source
   material.
 
+The 2025 ETH City / university Web3 seed is a shared governance-proposal record,
+not one downstream award. GCC owner confirmed its two funding tracks are
+independent. Each has a stable `track_id`; a future verified individual case
+uses `funding_track_id` to identify exactly one track. See
+[`funding-track-case-intake.md`](funding-track-case-intake.md) for the intake
+fields and privacy boundary. The proposal's two funding pools do not prove
+individual approval, disbursement, or current operating status.
+
 Out of scope for this first step:
 
 - Importing all 67 projects.

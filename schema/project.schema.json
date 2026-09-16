@@ -26,6 +26,10 @@
       "type": "string",
       "description": "Optional link to the legacy projects.yaml slug or future canonical id."
     },
+    "funding_track_id": {
+      "type": "string",
+      "description": "For an individual award or activity case, the stable id of exactly one funding track in this database. Omit for umbrella proposals and cases without a verified track relationship."
+    },
     "title": {
       "type": "string"
     },
@@ -245,9 +249,17 @@
     },
     "fundingTrack": {
       "type": "object",
-      "required": ["name"],
+      "required": ["track_id", "name"],
       "properties": {
+        "track_id": {
+          "type": "string",
+          "description": "Stable id referenced by an individual case's funding_track_id."
+        },
         "name": { "type": "string" },
+        "source_snapshot_id": {
+          "type": ["string", "null"],
+          "description": "Source for the track's announced rules; not evidence of an individual award or payment."
+        },
         "track_type": {
           "type": ["string", "null"],
           "enum": ["university_group", "city_event", "travel_scholarship", "open_source", "other", null]
