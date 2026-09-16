@@ -148,13 +148,18 @@ class MonitoringTests(unittest.IsolatedAsyncioTestCase):
         runtime._state = self.previous_state
 
     async def test_webhook_error_and_backlog_create_generic_deduplicated_alerts(self) -> None:
+        class FixedDateTime(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return cls(2026, 9, 16, 13, 53, 25, tzinfo=tz)
+
         state = runtime._state
         bot = SimpleNamespace(
             get_webhook_info=AsyncMock(
                 return_value=SimpleNamespace(
                     url="https://example.test/webhook",
                     pending_update_count=25,
-                    last_error_date=datetime.fromtimestamp(110, tz=UTC),
+                    last_error_date=FixedDateTime.fromtimestamp(110, tz=UTC),
                 )
             ),
             send_message=AsyncMock(),
@@ -164,17 +169,27 @@ class MonitoringTests(unittest.IsolatedAsyncioTestCase):
             webhook_url="https://example.test/webhook",
             admin_user_id=42,
         )
-        with patch.object(runtime, "settings", fake_settings):
+        with patch.object(runtime, "settings", fake_settings), patch.object(runtime, "datetime", FixedDateTime):
             await runtime.check_telegram_webhook(application, state)
             await runtime.check_telegram_webhook(application, state)
 
         self.assertTrue(state.pending_updates_high)
         self.assertEqual(110, state.last_webhook_error_timestamp)
         self.assertEqual(2, bot.send_message.await_count)
-        messages = " ".join(call.kwargs["text"] for call in bot.send_message.await_args_list)
+        alert_texts = [call.kwargs["text"] for call in bot.send_message.await_args_list]
+        messages = " ".join(alert_texts)
         self.assertIn("telegram_webhook_backlog", messages)
         self.assertIn("telegram_webhook_delivery_error", messages)
-        self.assertNotIn("25", messages)
+        self.assertTrue(all("UTC: 2026-09-16T13:53:25+00:00" in alert for alert in alert_texts))
+        # The timestamp can contain "25" even though the backlog count is omitted.
+        non_timestamp_lines = " ".join(
+            line
+            for alert in alert_texts
+            for line in alert.splitlines()
+            if not line.startswith("UTC: ")
+        )
+        self.assertNotIn("25", non_timestamp_lines)
+        self.assertNotIn("110", non_timestamp_lines)
 
     async def test_three_telegram_failures_mark_ops_degraded(self) -> None:
         state = runtime._state
