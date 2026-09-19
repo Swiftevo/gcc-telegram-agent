@@ -57,9 +57,12 @@ Complete these before describing the affected records as verified public cases.
 - [x] GCC owner confirmed these are two independent funding tracks under one
   shared proposal. Stable track ids and the future individual-case intake route
   are documented in [`funding-track-case-intake.md`](funding-track-case-intake.md).
-- [ ] Obtain verifiable individual award/activity details and link each new case
-  to exactly one funding track; do not infer that an existing ETH City Series
-  case belongs to the ETH City track from its name alone.
+- [x] GCC owner confirmed on 2026-09-20 that the existing ETH Beijing 2025 case
+  belongs to `gcc-eth-city-2025`; its case record now carries that link. This
+  confirms track membership only, not the unresolved amount, date, payment, or
+  outcome facts.
+- [ ] Obtain verifiable individual award/activity details for further cases and
+  link each to exactly one funding track; do not infer membership from a name.
 - [ ] Define public/internal/redacted treatment for applications, reviewers,
   decisions, amounts and applicant identity.
 - [ ] Link public or shareable approval decisions and approval dates to the

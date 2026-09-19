@@ -3,6 +3,15 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-20：確認 ETH Beijing 2025 屬於 ETH City 資助線
+
+- GCC owner 明確確認現有 `ETH Beijing 2025` 案例是 ETH City 資助線的項目之一；案例以
+  `funding_track_id: gcc-eth-city-2025` 連到既有獨立資助線。
+- 這項確認只處理案例歸屬，不把共同 Snapshot 資助池當成個別撥款，也不核實仍有疑問的
+  `3000` 金額意義、項目頁日期、實際付款、申請／投票紀錄或成果資料。
+- 沒有更改 Bot runtime、回答內容或 AI 評分開關；其餘證據缺口繼續留在
+  [`project-evidence-todo.md`](project-evidence-todo.md)。
+
 ## 2026-09-16：建立兩條獨立資助線的後續案例入口
 
 - GCC owner 確認 ETH City 與高校 Web3 興趣小組是兩條獨立資助線；現有 2025

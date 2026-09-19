@@ -105,7 +105,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
         self.assertEqual(
             [track["child_records_status"] for track in eth_city_details["funding_tracks"]],
-            ["pending_import", "pending_import"],
+            ["pending_import", "partial"],
         )
         self.assertEqual(len(eth_city["evidence"]["snapshots"]), 2)
         self.assertTrue(all(
@@ -123,7 +123,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                 self.assertIn(case["funding_track_id"], all_track_ids)
 
         eth_beijing = cases["gcc-eth-city-eth-beijing-2025"]
-        self.assertNotIn("funding_track_id", eth_beijing)
+        self.assertEqual(eth_beijing["funding_track_id"], "gcc-eth-city-2025")
         self.assertEqual(eth_beijing["public_record"]["amount_usd"], 3000)
         self.assertEqual(eth_beijing["public_record"]["activity_year"], 2025)
         self.assertEqual(

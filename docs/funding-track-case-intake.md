@@ -13,7 +13,9 @@ GCC owner 已確認，ETH City 資助計劃與高校 Web3 興趣小組資助計�
 `funding_track_id` 填上其中一個 ID。兩條資助線的規則留在共同提案紀錄的
 `public_record.program_details.funding_tracks`；個別案例的金額、日期、成果與來源只放在自己的紀錄。
 不在資助線紀錄預填、累加或推算個別資助。已存在的 ETH Beijing 2025 案例亦**不因名稱相近而自動歸入**
-ETH City 資助線；要有 GCC 確認或可核實來源才可建立連結。
+ETH City 資助線；GCC owner 已於 2026-09-20 明確確認其歸屬，因此該案例現以
+`funding_track_id: gcc-eth-city-2025` 建立連結。此確認只證明資助線歸屬，不核實案例中仍待確認的
+金額意義、頁面日期、實際付款或成果資料。
 
 ## Owner 日後提供一個案例時
 
@@ -29,6 +31,7 @@ ETH City 資助線；要有 GCC 確認或可核實來源才可建立連結。
 預設為 `seed`；經來源、私隱及內容審核後才可考慮公開或供 Bot 使用。共同 Snapshot
 只能證明提案／治理決定，不能代替個別資助批准、實際撥款或 milestone 證據。
 
-ETH Beijing 2025 和 Devconnect 機票 2025 的詳細資料目前未有，維持現有不確定狀態；
+ETH Beijing 2025 已確認屬於 ETH City 資助線，但其他詳細資料仍未補齊；Devconnect 機票 2025
+的詳細資料目前亦未有。兩者未核實欄位維持現有不確定狀態；
 其待補證據見 [`project-evidence-todo.md`](project-evidence-todo.md)。本入口不改 Bot runtime、
 不啟用案例評分，也不表示已收到任何個別資助案例。
