@@ -1,5 +1,5 @@
 schema_version: "0.1.0"
-updated_at: "2026-09-16"
+updated_at: "2026-09-20"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category and reserves
@@ -310,8 +310,8 @@ cases:
               - Community building events and cross-sector blockchain case sharing.
               - Open research on Ethereum, blockchain, society, and public goods.
             status: unknown
-            child_records_status: pending_import
-            notes: This is one independent funding track under a shared proposal. The source describes a 2025 application period; current status is unconfirmed. Add verified individual cases later with funding_track_id gcc-eth-city-2025; no individual award or payment is recorded here.
+            child_records_status: partial
+            notes: This is one independent funding track under a shared proposal. ETH Beijing 2025 is the first owner-confirmed linked case; further individual cases remain pending import. The source describes a 2025 application period, but current track status is unconfirmed and no individual payment is recorded here.
         milestones: []
         notes: Shared proposal for two independently identifiable rolling funding tracks; the source says each track has no more than 10 slots and places close when full. This case records the proposal and governance decision, not a third funding track or an individual applicant, disbursement, or milestone outcome.
       public_goods_dimensions:
@@ -659,6 +659,7 @@ cases:
   - case_id: gcc-eth-city-eth-beijing-2025
     schema_version: "0.1.0"
     canonical_project_id: project-ethbeijing-2025
+    funding_track_id: gcc-eth-city-2025
     title: ETH Beijing 2025
     category: ETH City Series
     fund_type: special
@@ -744,7 +745,7 @@ cases:
         grant_status: funded
         delivery_status: completed
         reporting_status: unknown
-        notes: GCC project page confirms GCC funding relationship and amount 3000; recap source confirms the hackathon had completed by 2025-06-07. Detailed application, voting record, currency, and report status still need verification.
+        notes: GCC owner confirmed on 2026-09-20 that ETH Beijing 2025 is an ETH City funding-track project. GCC project page confirms GCC funding relationship and amount 3000; recap source confirms the hackathon had completed by 2025-06-07. Detailed application, voting record, currency, payment, and report status still need verification.
       regions: [Beijing, Chinese-speaking community]
       tags: [ETH Beijing, hackathon, Ethereum, AI agents, blockchain, university builders]
       summary: >
