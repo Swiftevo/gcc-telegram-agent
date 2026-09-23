@@ -35,6 +35,10 @@ class ProjectCaseValidationTests(unittest.TestCase):
             case_schema=self.case_schema,
         )
 
+    @staticmethod
+    def case(database, case_id):
+        return next(case for case in database["cases"] if case["case_id"] == case_id)
+
     def test_seed_database_passes_schema_and_cross_record_validation(self):
         self.assertEqual([], validate_paths())
 
@@ -50,13 +54,14 @@ class ProjectCaseValidationTests(unittest.TestCase):
 
     def test_duplicate_funding_track_is_rejected(self):
         database = deepcopy(self.database)
-        tracks = database["cases"][1]["public_record"]["program_details"]["funding_tracks"]
+        programme = self.case(database, "gcc-community-eth-city-university-web3-2025")
+        tracks = programme["public_record"]["program_details"]["funding_tracks"]
         tracks[1]["track_id"] = tracks[0]["track_id"]
         self.assertIn("duplicate_track_id", {issue.code for issue in self.validate(database)})
 
     def test_only_grant_case_can_link_to_funding_track(self):
         database = deepcopy(self.database)
-        programme = database["cases"][1]
+        programme = self.case(database, "gcc-community-eth-city-university-web3-2025")
         programme["funding_track_id"] = "gcc-eth-city-2025"
         self.assertIn("invalid_funding_track_owner", {issue.code for issue in self.validate(database)})
 

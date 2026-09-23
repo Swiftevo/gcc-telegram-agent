@@ -144,6 +144,18 @@ Completed foundations:
 - Draft 2020-12 and cross-record validation run locally and in the release gate.
 - A loader exposes all cases and the subset explicitly allowed for AI review.
 - Source snapshots preserve raw material separately from interpreted summaries.
+- The first post-migration batch adds OSKey and OpenRPC as `draft` grant cases.
+  For both records, the public proposal amount, closed governance vote and GCC
+  project-page amount agree. Actual disbursement, milestone acceptance, unlock
+  and delivery remain `unknown`; neither case is available to Bot QA or AI review.
+
+The first batch also exposed a deliberate compatibility limitation: proposed
+milestone amounts are denominated in USDC, while the legacy milestone field is
+named `unlock_amount_usd`. The import therefore preserves the original USDC
+amount in the milestone description and leaves `unlock_amount_usd` empty rather
+than silently converting currencies. A future schema revision may replace that
+legacy field with the same amount／currency fact shape used by `funding` and
+`execution_events`.
 
 The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
