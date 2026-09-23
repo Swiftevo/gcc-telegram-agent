@@ -4,3 +4,4 @@ aiosqlite==0.22.1
 pyyaml==6.0.3
 python-dotenv==1.2.2
 aiofiles==25.1.0
+jsonschema==4.25.1

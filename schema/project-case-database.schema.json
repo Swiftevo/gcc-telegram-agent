@@ -7,10 +7,11 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "0.1.0"
+      "const": "0.2.0"
     },
     "updated_at": {
       "type": "string",
+      "format": "date",
       "description": "Date when the seed database was last materially updated."
     },
     "purpose": {

@@ -3,6 +3,21 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-24：建立 project case schema 0.2 與驗證閘門
+
+- PR #38 將現有六筆 seed 由 schema 0.1 遷移至 0.2，沒有加入新案例，也沒有把案例庫接入
+  Bot runtime；新增 `funding_program`／`grant_case`／`placeholder` 分類。
+- 申請額、治理核准額和實際付款成為三個獨立、帶原始幣別、來源及狀態的 facts；另保留
+  governance decision、disbursement、milestone acceptance／unlock、完成及報告的獨立事件入口。
+- 所有現有 seed 暫時 `ai_review_usage.allowed: false`；只有 public 且經人工
+  `reviewed`／`published`、並記錄日期與 reviewer role 的案例才可能開放，任何
+  `pending_reconciliation` 仍會由跨紀錄驗證器阻止。
+- 新 validator 同時執行 JSON Schema Draft 2020-12、case／track／snapshot ID 唯一性、
+  track 與來源引用完整性及 AI 安全規則；`Verify release` 會直接執行。遷移亦修正三個未加引號的
+  `0x...` Snapshot proposal ID 被 YAML 當成超大型整數的舊問題。
+- 本地 validator、`pip check` 及完整 19 個測試檔通過。後續才選 2–3 個沒有已知衝突的
+  public cases 作首批匯入；schema migration 不代表內容已獲核實或允許評分。
+
 ## 2026-09-20：確認 ETH Beijing 2025 屬於 ETH City 資助線
 
 - GCC owner 明確確認現有 `ETH Beijing 2025` 案例是 ETH City 資助線的項目之一；案例以
