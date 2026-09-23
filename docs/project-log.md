@@ -5,7 +5,7 @@
 
 ## 2026-09-24：schema 0.2 首批匯入 OSKey 與 OpenRPC
 
-- 首批只加入兩個沒有已知金額衝突的公開 Open Source 案例：OSKey 的 Snapshot
+- PR #39 首批只加入兩個沒有已知金額衝突的公開 Open Source 案例：OSKey 的 Snapshot
   申請額及 GCC 項目頁均為 30,000；OpenRPC 均為 25,000，且公開金額投票為不調整。
 - 每案分別保存 GCC 項目頁及 Snapshot 提案 extract，建立穩定 snapshot id、公開申請
   pointer、vote summary、治理決定事件、原始 USDC 幣別、來源及限制說明；沒有加入私人材料。
