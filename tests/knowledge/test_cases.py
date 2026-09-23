@@ -23,7 +23,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         categories = {case.get("category") for case in cases}
 
         self.assertEqual(db.get("schema_version"), "0.2.0")
-        self.assertEqual(len(cases), 6)
+        self.assertEqual(len(cases), 8)
         self.assertEqual(
             categories,
             {
@@ -68,6 +68,12 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                 self.assertIn("impact_evidence", public_record)
                 self.assertIn("lifecycle_status", public_record)
                 self.assertIn("raw_data_status", evidence)
+                for snapshot in evidence.get("snapshots", []):
+                    storage_uri = snapshot.get("storage_uri")
+                    if storage_uri:
+                        stored_source = (ROOT / storage_uri).resolve()
+                        self.assertTrue(stored_source.is_relative_to(ROOT.resolve()))
+                        self.assertTrue(stored_source.is_file(), storage_uri)
 
     def test_legacy_conversion(self):
         cases = load_project_cases(force_reload=True)
@@ -91,6 +97,24 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             vyper["public_record"]["links"]["repository_url"],
             "https://github.com/vyperlang/vyper",
         )
+
+        oskey = cases["gcc-open-source-oskey"]
+        self.assertEqual(oskey["governance"]["review_status"], "draft")
+        self.assertFalse(oskey["ai_review_usage"]["allowed"])
+        self.assertEqual(oskey["public_record"]["funding"]["requested"]["amount"], 30000)
+        self.assertEqual(oskey["public_record"]["funding"]["governance_approved"]["amount"], 30000)
+        self.assertEqual(oskey["public_record"]["funding"]["disbursed"]["status"], "unknown")
+        self.assertEqual(oskey["public_record"]["execution_events"][0]["event_type"], "governance_decision")
+        self.assertEqual(len(oskey["evidence"]["snapshots"]), 2)
+
+        openrpc = cases["gcc-open-source-openrpc"]
+        self.assertEqual(openrpc["governance"]["review_status"], "draft")
+        self.assertFalse(openrpc["ai_review_usage"]["allowed"])
+        self.assertEqual(openrpc["public_record"]["funding"]["requested"]["amount"], 25000)
+        self.assertEqual(openrpc["public_record"]["funding"]["governance_approved"]["amount"], 25000)
+        self.assertEqual(openrpc["public_record"]["funding"]["disbursed"]["status"], "unknown")
+        self.assertEqual(openrpc["evidence"]["vote_summary"]["total_score"], 8)
+        self.assertEqual(len(openrpc["evidence"]["snapshots"]), 2)
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
         self.assertEqual(eth_city["record_type"], "funding_program")

@@ -3,6 +3,20 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-24：schema 0.2 首批匯入 OSKey 與 OpenRPC
+
+- PR #39 首批只加入兩個沒有已知金額衝突的公開 Open Source 案例：OSKey 的 Snapshot
+  申請額及 GCC 項目頁均為 30,000；OpenRPC 均為 25,000，且公開金額投票為不調整。
+- 每案分別保存 GCC 項目頁及 Snapshot 提案 extract，建立穩定 snapshot id、公開申請
+  pointer、vote summary、治理決定事件、原始 USDC 幣別、來源及限制說明；沒有加入私人材料。
+- 兩案只證明公開提案及治理決定。實際撥款、milestone 驗收／解鎖及交付狀態繼續為
+  `unknown`，官網通用的「部分解鎖／全部解鎖」介面文字不當作執行證據。
+- 兩案均為 `draft`、`ai_review_usage.allowed: false`，不會進 Bot QA 或申請評分；須由 GCC
+  content owner 審核內容後才可提升狀態。
+- 首批亦確認 schema 0.2 的 funding／execution event 分離可用；但 milestone 的舊
+  `unlock_amount_usd` 欄位不能忠實表示 USDC，因此留空、在描述保存原值，列作未來 schema
+  改版事項，不作貨幣假轉換。
+
 ## 2026-09-24：建立 project case schema 0.2 與驗證閘門
 
 - PR #38 將現有六筆 seed 由 schema 0.1 遷移至 0.2，沒有加入新案例，也沒有把案例庫接入

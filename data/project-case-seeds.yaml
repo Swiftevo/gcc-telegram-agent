@@ -2,9 +2,9 @@ schema_version: "0.2.0"
 updated_at: "2026-09-24"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
-  includes one representative case from each current GCC category and reserves
-  extension points for project snapshots, detailed grant applications, and
-  committee voting records.
+  includes one representative case from each current GCC category plus a small,
+  draft expansion batch. It reserves extension points for project snapshots,
+  detailed grant applications, and committee voting records.
 
 cases:
   - case_id: gcc-open-source-vyper
@@ -241,6 +241,421 @@ cases:
       license:
       maintainers: [GCC]
       review_status: seed
+
+  - case_id: gcc-open-source-oskey
+    schema_version: "0.2.0"
+    record_type: grant_case
+    canonical_project_id: project-oskey
+    title: OSKey
+    category: Open Source
+    fund_type: public
+    public_record:
+      grant_year: 2025
+      activity_year: 2025
+      language_community: [global, Chinese-speaking community]
+      funding:
+        requested:
+          amount: 30000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
+          notes: The public Snapshot proposal requests 30,000u.
+        governance_approved:
+          amount: 30000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-oskey-snapshot-proposal, snap-oskey-gcc-project-page]
+          notes: The closed vote passed 6 to 0 with no amount-adjustment ballot, and the GCC project page lists 30,000.
+        disbursed:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: Neither the proposal nor the project page proves the amount actually transferred or unlocked.
+        total_budget_usd:
+        per_person_cap_usd:
+        disbursement_type: milestone
+        notes: Proposal-denominated values are recorded as USDC facts; no USD conversion is inferred.
+      execution_events:
+        - event_type: governance_decision
+          date: "2025-08-17"
+          amount: 30000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
+          notes: Snapshot closed with 6 For, 0 Against and 0 Abstain. This is not disbursement evidence.
+      program_details:
+        start_date:
+        end_date:
+        application_deadline:
+        location: global
+        eligibility: []
+        selection_criteria: []
+        deliverables:
+          - Improve firmware, browser and application usability for a general-purpose open-source hardware wallet.
+          - Publish deployment and development guidance for independently building OSKey devices.
+          - Maintain embedded wallet libraries and support additional boards, screens, chains and algorithms.
+          - Provide open-source contributor incentives and development kits.
+        milestones:
+          - name: M0
+            description: Vote approval; proposal schedules 6,000 USDC for the initial 20% unlock.
+            unlock_amount_usd:
+            unlock_percentage: 20
+            expected_completion: vote approval
+            status: planned
+          - name: M1
+            description: Improve firmware and wallet-management usability; proposal schedules 9,000 USDC.
+            unlock_amount_usd:
+            unlock_percentage: 30
+            expected_completion: 2025 Q3-Q4
+            status: planned
+          - name: M2
+            description: Deliver desktop and mobile applications and broader chain support; proposal schedules 9,000 USDC.
+            unlock_amount_usd:
+            unlock_percentage: 30
+            expected_completion: 2026 Q1
+            status: planned
+          - name: M3
+            description: Extend the modular general-purpose hardware design; proposal schedules 6,000 USDC.
+            unlock_amount_usd:
+            unlock_percentage: 20
+            expected_completion: 2026 Q2
+            status: planned
+        notes: All milestones are proposal commitments only. Completion, acceptance and unlocks remain unverified.
+      public_goods_dimensions:
+        open_source:
+          value: high
+          notes: The proposal describes OSKey as a fully open-source, non-commercial hardware wallet project.
+          source_snapshot_id: snap-oskey-snapshot-proposal
+        accessibility:
+          value: high
+          notes: The project aims to run on thousands of third-party development boards, including low-cost hardware.
+          source_snapshot_id: snap-oskey-snapshot-proposal
+        knowledge_transfer:
+          value: high
+          notes: Public deployment, development and hardware guidance are explicit proposed outputs.
+          source_snapshot_id: snap-oskey-snapshot-proposal
+        community_impact:
+          value: medium
+          notes: The proposal includes contributor incentives and developer-kit support; realised impact is not yet evidenced.
+          source_snapshot_id: snap-oskey-snapshot-proposal
+        non_excludable:
+          value: high
+          notes: Open firmware, libraries and instructions are intended for public reuse.
+          source_snapshot_id: snap-oskey-snapshot-proposal
+        non_rivalrous:
+          value: high
+          notes: Software, designs and instructions can be reused without depletion; physical hardware remains rivalrous.
+          source_snapshot_id: snap-oskey-snapshot-proposal
+        notes: Draft assessment based on the public proposal, not a completed-outcome review.
+      impact_evidence: []
+      lifecycle_status:
+        grant_status: approved
+        delivery_status: unknown
+        reporting_status: expected
+        notes: Governance approval is public; payment, milestone acceptance, unlock and delivery remain unknown.
+      regions: [global, Chinese-speaking community]
+      tags: [OSKey, hardware wallet, self-custody, open source, embedded systems, security]
+      summary: >
+        OSKey is an open-source, non-commercial hardware-wallet project designed
+        to run on general-purpose development boards. The proposal focuses on
+        improving firmware and application usability, publishing reusable build
+        guidance, maintaining embedded wallet libraries, and supporting an open
+        contributor community.
+      why_funded: >
+        The public proposal frames verifiable, reusable wallet firmware and
+        hardware guidance as shared self-custody infrastructure that reduces
+        dependence on proprietary hardware and lowers participation barriers.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-oskey
+        official_website: https://www.oskey.xyz/
+        repository_url: https://github.com/butterfly-communtiy/oskey-elf-firmware
+    evidence:
+      source_urls:
+        - https://www.gccofficial.org/project/project-oskey
+        - https://snapshot.org/#/s:gccofficial.eth/proposal/0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
+        - https://www.oskey.xyz/
+        - https://github.com/butterfly-communtiy/oskey-elf-firmware
+      snapshots:
+        - snapshot_id: snap-oskey-gcc-project-page
+          captured_at: "2026-09-24"
+          source_type: gcc_project_page
+          access_level: public
+          source_url: https://www.gccofficial.org/project/project-oskey
+          storage_uri: data/source-snapshots/oskey-gcc-project-page.md
+          checksum:
+          notes: GCC page title, category, displayed amount, publication date, description and proposal link.
+        - snapshot_id: snap-oskey-snapshot-proposal
+          captured_at: "2026-09-24"
+          source_type: snapshot_proposal
+          access_level: public
+          source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
+          storage_uri: data/source-snapshots/oskey-snapshot-proposal.md
+          checksum:
+          notes: Snapshot proposal amount, deliverables, milestone plan, closed state and public vote totals.
+      grant_application:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
+        snapshot_id: snap-oskey-snapshot-proposal
+        summary: Public proposal describing OSKey, its requested amount, budget, team, public problem and milestones.
+        notes: No private application material is imported.
+      voting_record:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
+        snapshot_id: snap-oskey-snapshot-proposal
+        summary: Closed public vote with 6 For, 0 Against and 0 Abstain.
+        notes: The vote proves a governance decision, not a payment or milestone unlock.
+      vote_summary:
+        platform: snapshot
+        proposal_id: "0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d"
+        state: closed
+        choices:
+          - label: For
+            score: 6
+          - label: Against
+            score: 0
+          - label: Abstain
+            score: 0
+        total_score: 6
+        source_snapshot_id: snap-oskey-snapshot-proposal
+        notes: Snapshot API data captured on 2026-09-24.
+      raw_data_status:
+        status: captured
+        verification: api
+        storage_uri: data/source-snapshots/oskey-snapshot-proposal.md
+        source_snapshot_id: snap-oskey-snapshot-proposal
+        notes: Relevant public proposal fields and vote data are preserved locally.
+    ai_review_usage:
+      allowed: false
+      retrieval_text: >
+        Open-source hardware-wallet and self-custody infrastructure case focused
+        on reusable firmware, embedded libraries, hardware guidance and lower-cost
+        general-purpose devices.
+      screening_dimensions:
+        - mission_fit
+        - public_goods_nature
+        - feasibility
+        - risk
+        - precedent_similarity
+      cautions:
+        - Draft import; do not use for AI review until a GCC content owner completes review.
+        - Do not describe proposed milestones as completed, accepted, paid or unlocked.
+        - Hardware-wallet security claims require separate technical verification.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: draft
+
+  - case_id: gcc-open-source-openrpc
+    schema_version: "0.2.0"
+    record_type: grant_case
+    canonical_project_id: project-openrpc
+    title: OpenRPC
+    category: Open Source
+    fund_type: public
+    public_record:
+      grant_year: 2026
+      activity_year: 2026
+      language_community: [global, Chinese-speaking developers]
+      funding:
+        requested:
+          amount: 25000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
+          notes: The public Snapshot proposal requests 25,000 USDC.
+        governance_approved:
+          amount: 25000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal, snap-openrpc-gcc-project-page]
+          notes: The closed vote passed 6 to 0 and the amount ballot recorded 6 for no change; the GCC page lists 25,000.
+        disbursed:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: Neither the proposal nor the project page proves the amount actually transferred or unlocked.
+        total_budget_usd:
+        per_person_cap_usd:
+        disbursement_type: milestone
+        notes: Proposal-denominated values are recorded as USDC facts; no USD conversion is inferred.
+      execution_events:
+        - event_type: governance_decision
+          date: "2026-03-03"
+          amount: 25000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
+          notes: Snapshot closed at 2026-03-03 16:00 UTC with approval and no amount change; the GCC page displays 2026-03-04 in its publication context.
+      program_details:
+        start_date:
+        end_date:
+        application_deadline:
+        location: global
+        eligibility: []
+        selection_criteria: []
+        deliverables:
+          - Release a production-ready OpenRPC linter with versioning, CI, documentation, examples and a recommended ruleset.
+          - Modernize the OpenRPC test-coverage tool as an ESM module with regression tests, migration guidance and CI documentation.
+        milestones:
+          - name: M1
+            description: Release the production-ready OpenRPC linter; proposal schedules 12,500 USDC.
+            unlock_amount_usd:
+            unlock_percentage: 50
+            expected_completion: "2026-05-01"
+            status: planned
+          - name: M2
+            description: Modernize the test-coverage tool for ESM; proposal schedules 12,500 USDC.
+            unlock_amount_usd:
+            unlock_percentage: 50
+            expected_completion: "2026-06-15"
+            status: planned
+        notes: All milestones are proposal commitments only. Completion, acceptance and unlocks remain unverified.
+      public_goods_dimensions:
+        open_source:
+          value: high
+          notes: The proposal identifies OpenRPC as an Apache 2.0 open standard with open-source tooling.
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+        accessibility:
+          value: high
+          notes: A machine-readable standard, documentation tools and linter are designed for broad public use.
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+        knowledge_transfer:
+          value: high
+          notes: Documentation, examples, rulesets and migration guidance are explicit proposed deliverables.
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+        community_impact:
+          value: high
+          notes: The proposal reports adoption by multiple major JSON-RPC ecosystems; the exact adoption figures remain source-reported.
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+        non_excludable:
+          value: high
+          notes: The standard and core tools are published for open ecosystem use.
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+        non_rivalrous:
+          value: high
+          notes: The specification and software tooling can be reused without depletion.
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+        notes: Draft assessment based on the public proposal, not a completed-outcome review.
+      impact_evidence:
+        - type: adoption
+          description: The proposal reports more than 5.9 million TypeScript/NPM toolkit downloads in the preceding year.
+          metric: annual_npm_downloads
+          value: 5900000
+          source_snapshot_id: snap-openrpc-snapshot-proposal
+          notes: Source-reported metric; capture does not independently reproduce the package-registry query.
+      lifecycle_status:
+        grant_status: approved
+        delivery_status: unknown
+        reporting_status: expected
+        notes: Governance approval is public; payment, milestone acceptance, unlock and delivery remain unknown.
+      regions: [global, Chinese-speaking developer ecosystem]
+      tags: [OpenRPC, JSON-RPC, API standard, Apache-2.0, developer tooling, interoperability]
+      summary: >
+        OpenRPC is an Apache 2.0 open standard for describing JSON-RPC APIs.
+        The proposal funds a production-ready linter and modernization of its
+        test-coverage tooling, with documentation and migration guidance intended
+        for broad reuse across blockchain and other JSON-RPC ecosystems.
+      why_funded: >
+        The proposal treats a stable, machine-readable JSON-RPC specification and
+        its open tooling as shared infrastructure that reduces documentation drift,
+        fragile integrations and duplicated work across projects and languages.
+      links:
+        gcc_project_url: https://www.gccofficial.org/project/project-openrpc
+        official_website: https://open-rpc.org/
+        repository_url: https://github.com/open-rpc
+    evidence:
+      source_urls:
+        - https://www.gccofficial.org/project/project-openrpc
+        - https://snapshot.org/#/s:gccofficial.eth/proposal/0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
+        - https://open-rpc.org/
+        - https://github.com/open-rpc
+      snapshots:
+        - snapshot_id: snap-openrpc-gcc-project-page
+          captured_at: "2026-09-24"
+          source_type: gcc_project_page
+          access_level: public
+          source_url: https://www.gccofficial.org/project/project-openrpc
+          storage_uri: data/source-snapshots/openrpc-gcc-project-page.md
+          checksum:
+          notes: GCC page title, category, displayed amount, publication date, description and proposal link.
+        - snapshot_id: snap-openrpc-snapshot-proposal
+          captured_at: "2026-09-24"
+          source_type: snapshot_proposal
+          access_level: public
+          source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
+          storage_uri: data/source-snapshots/openrpc-snapshot-proposal.md
+          checksum:
+          notes: Snapshot proposal amount, deliverables, milestone plan, closed state and public vote totals.
+      grant_application:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
+        snapshot_id: snap-openrpc-snapshot-proposal
+        summary: Public proposal describing OpenRPC, its requested amount, public problem, ecosystem use and milestones.
+        notes: No private application material is imported.
+      voting_record:
+        status: available
+        access_level: public
+        document_ref: snapshot:0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
+        snapshot_id: snap-openrpc-snapshot-proposal
+        summary: Closed public vote with 6 approval votes, 0 opposition votes, 2 abstentions and 6 amount-unchanged selections.
+        notes: Snapshot choice scores represent parallel approval and amount ballots, not twelve distinct voters.
+      vote_summary:
+        platform: snapshot
+        proposal_id: "0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b"
+        state: closed
+        choices:
+          - label: 赞成
+            score: 6
+          - label: 反对
+            score: 0
+          - label: 弃权
+            score: 2
+          - label: 增加10%
+            score: 0
+          - label: 增加5%
+            score: 0
+          - label: 金额不变
+            score: 6
+          - label: 减少5%
+            score: 0
+          - label: 减少10%
+            score: 0
+        total_score: 8
+        source_snapshot_id: snap-openrpc-snapshot-proposal
+        notes: Snapshot API data captured on 2026-09-24; approval and amount selections are parallel choices.
+      raw_data_status:
+        status: captured
+        verification: api
+        storage_uri: data/source-snapshots/openrpc-snapshot-proposal.md
+        source_snapshot_id: snap-openrpc-snapshot-proposal
+        notes: Relevant public proposal fields and vote data are preserved locally.
+    ai_review_usage:
+      allowed: false
+      retrieval_text: >
+        Open-standard and developer-tooling precedent focused on machine-readable
+        JSON-RPC specifications, interoperability, validation, documentation and
+        reducing duplicated integration work.
+      screening_dimensions:
+        - mission_fit
+        - public_goods_nature
+        - chinese_community
+        - feasibility
+        - precedent_similarity
+      cautions:
+        - Draft import; do not use for AI review until a GCC content owner completes review.
+        - Do not describe proposed milestones as completed, accepted, paid or unlocked.
+        - Adoption figures are proposal-reported unless separately reproduced.
+    governance:
+      visibility: public
+      license:
+      maintainers: [GCC]
+      review_status: draft
 
   - case_id: gcc-community-eth-city-university-web3-2025
     schema_version: "0.2.0"
