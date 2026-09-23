@@ -1,5 +1,5 @@
-schema_version: "0.1.0"
-updated_at: "2026-09-20"
+schema_version: "0.2.0"
+updated_at: "2026-09-24"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category and reserves
@@ -8,7 +8,8 @@ purpose: >
 
 cases:
   - case_id: gcc-open-source-vyper
-    schema_version: "0.1.0"
+    schema_version: "0.2.0"
+    record_type: grant_case
     canonical_project_id: project-vyper
     title: Vyper
     category: Open Source
@@ -19,6 +20,24 @@ cases:
       activity_year: 2025
       language_community: [Chinese-speaking developers, Chinese-speaking community]
       funding:
+        requested:
+          amount: 40000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
+          notes: The public proposal requests 40,000u.
+        governance_approved:
+          amount: 40000
+          currency: USDC
+          status: pending_reconciliation
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
+          notes: Preserve the signed proposal value while the 30,000/40,000 meanings are reconciled.
+        disbursed:
+          amount:
+          currency:
+          status: pending_reconciliation
+          source_snapshot_ids: []
+          notes: Snapshot does not prove the transferred or unlocked amount.
         requested_amount_usd: 40000
         approved_amount_usd: 40000
         total_budget_usd: 40000
@@ -26,6 +45,7 @@ cases:
         currency: USDC
         disbursement_type: milestone
         notes: Proposal uses "u"; recorded as USDC-equivalent for structured search.
+      execution_events: []
       program_details:
         start_date: "2026-03"
         end_date:
@@ -174,7 +194,7 @@ cases:
         notes: Public Snapshot scores are recorded as vote-summary evidence, not as final legal accounting.
       vote_summary:
         platform: snapshot
-        proposal_id: 0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
+        proposal_id: "0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5"
         state: closed
         choices:
           - label: 赞成
@@ -203,7 +223,7 @@ cases:
         source_snapshot_id: snap-vyper-snapshot-proposal
         notes: Full Snapshot proposal body stored under Raw Data.
     ai_review_usage:
-      allowed: true
+      allowed: false
       retrieval_text: >
         Open-source precedent for security-first developer infrastructure,
         Chinese localization, Ethereum tooling education, and reusable learning
@@ -223,7 +243,8 @@ cases:
       review_status: seed
 
   - case_id: gcc-community-eth-city-university-web3-2025
-    schema_version: "0.1.0"
+    schema_version: "0.2.0"
+    record_type: funding_program
     canonical_project_id: project-universityblockchain
     title: 年度 ETH City 活動與高校 Web3 興趣小組資助方案
     category: Community
@@ -234,6 +255,24 @@ cases:
       activity_year: 2025
       language_community: [Chinese-speaking community, university students, local Ethereum communities]
       funding:
+        requested:
+          amount: 60000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+          notes: Shared proposal requests two separate 30,000 USD funding pools.
+        governance_approved:
+          amount: 60000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+          notes: Closed Snapshot records the shared governance decision; it does not prove downstream awards.
+        disbursed:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: No programme-level payment or remaining-balance evidence is imported.
         requested_amount_usd: 60000
         approved_amount_usd: 60000
         total_budget_usd: 60000
@@ -241,6 +280,7 @@ cases:
         currency: USD
         disbursement_type: unknown
         notes: "The shared proposal records two separate 30,000 USD funding pools. This is not evidence of any individual award, actual disbursement, or current remaining balance."
+      execution_events: []
       program_details:
         start_date: "2025-01-01"
         end_date: "2025-12-30"
@@ -427,7 +467,7 @@ cases:
           records show five 1 GCC votes: three For and two Abstain.
       vote_summary:
         platform: snapshot
-        proposal_id: 0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
+        proposal_id: "0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476"
         state: closed
         choices:
           - label: For
@@ -469,7 +509,8 @@ cases:
       review_status: seed
 
   - case_id: gcc-event-wamotopia-2026
-    schema_version: "0.1.0"
+    schema_version: "0.2.0"
+    record_type: grant_case
     canonical_project_id: project-wamotopia2026
     title: Wamotopia 2026
     category: Event
@@ -480,6 +521,24 @@ cases:
       activity_year: 2026
       language_community: [Chinese-speaking community, international community]
       funding:
+        requested:
+          amount: 8000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
+          notes: The public proposal requests 8,000 USDC.
+        governance_approved:
+          amount: 8000
+          currency: USDC
+          status: pending_reconciliation
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
+          notes: Preserve the proposal value while the 8,000/8,800 meanings are reconciled.
+        disbursed:
+          amount:
+          currency:
+          status: pending_reconciliation
+          source_snapshot_ids: []
+          notes: Snapshot does not prove the amount actually paid after the activity.
         requested_amount_usd: 8000
         approved_amount_usd: 8000
         total_budget_usd: 16000
@@ -487,6 +546,7 @@ cases:
         currency: USDC
         disbursement_type: retroactive
         notes: Proposal is a retroactive confirmation after the activity was already held.
+      execution_events: []
       program_details:
         start_date: "2026-01-21"
         end_date: "2026-02-04"
@@ -608,7 +668,7 @@ cases:
         notes: Public Snapshot scores are recorded as evidence.
       vote_summary:
         platform: snapshot
-        proposal_id: 0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
+        proposal_id: "0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6"
         state: closed
         choices:
           - label: 赞成
@@ -637,7 +697,7 @@ cases:
         source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
         notes: Full Snapshot proposal body stored under Raw Data.
     ai_review_usage:
-      allowed: true
+      allowed: false
       retrieval_text: >
         Event precedent for public talent, governance experiments, pop-up city
         organization, and cross-community collaboration. Useful when assessing
@@ -657,7 +717,8 @@ cases:
       review_status: seed
 
   - case_id: gcc-eth-city-eth-beijing-2025
-    schema_version: "0.1.0"
+    schema_version: "0.2.0"
+    record_type: grant_case
     canonical_project_id: project-ethbeijing-2025
     funding_track_id: gcc-eth-city-2025
     title: ETH Beijing 2025
@@ -669,6 +730,24 @@ cases:
       activity_year: 2025
       language_community: [Chinese-speaking community, Beijing Ethereum builders, university builders]
       funding:
+        requested:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: No detailed application amount has been imported.
+        governance_approved:
+          amount: 3000
+          currency: USD
+          status: pending_reconciliation
+          source_snapshot_ids: [snap-eth-beijing-2025-gcc-project-page]
+          notes: GCC project page lists 3000, but its currency and accounting meaning require confirmation.
+        disbursed:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: The project page does not prove actual payment.
         requested_amount_usd:
         approved_amount_usd: 3000
         total_budget_usd:
@@ -676,6 +755,7 @@ cases:
         currency: USD
         disbursement_type: unknown
         notes: GCC official project page lists amount 3000; currency is recorded as USD for amount_usd compatibility and should be verified later.
+      execution_events: []
       program_details:
         start_date:
         end_date: "2025-06-07"
@@ -818,7 +898,7 @@ cases:
           warning: the current ETH Beijing official website is for the 2026
           edition, so it should not overwrite this 2025 recap evidence.
     ai_review_usage:
-      allowed: true
+      allowed: false
       retrieval_text: >
         ETH City Series precedent for an in-person Ethereum hackathon in
         Beijing, co-hosted by PKU Blockchain and WTF Academy, focused on public
@@ -838,7 +918,8 @@ cases:
       review_status: seed
 
   - case_id: gcc-travel-scholarship-devconnect-2025
-    schema_version: "0.1.0"
+    schema_version: "0.2.0"
+    record_type: funding_program
     canonical_project_id: project-devconnect-2025
     title: Devconnect 機票 2025
     category: Travel Scholarship
@@ -849,6 +930,24 @@ cases:
       activity_year: 2025
       language_community: [Chinese-speaking builders, Asian builders, Ethereum community]
       funding:
+        requested:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: No separate application amount is imported for the programme.
+        governance_approved:
+          amount: 5000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-devconnect-2025-gcc-project-page]
+          notes: GCC project page reports a 5,000 USD programme pool.
+        disbursed:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: Recipient selection, reimbursement, and payment evidence are not imported.
         requested_amount_usd:
         approved_amount_usd: 5000
         total_budget_usd: 5000
@@ -856,6 +955,7 @@ cases:
         currency: USD
         disbursement_type: reimbursement
         notes: GCC project page and X announcement list a 5,000 USD support pool with a 1,000 USD reimbursement cap per person.
+      execution_events: []
       program_details:
         start_date: "2025-11-17"
         end_date: "2025-11-22"
@@ -1010,7 +1110,7 @@ cases:
         source_snapshot_id: snap-devconnect-2025-x-post
         notes: GCC project page and raw X announcement text were manually supplied by the user; archive or screenshot verification should be added later.
     ai_review_usage:
-      allowed: true
+      allowed: false
       retrieval_text: >
         Travel scholarship precedent for helping Chinese-speaking public goods
         and open-source builders attend Devconnect 2025 in Buenos Aires. Useful
@@ -1032,7 +1132,8 @@ cases:
       review_status: seed
 
   - case_id: gcc-gitcoin-placeholder
-    schema_version: "0.1.0"
+    schema_version: "0.2.0"
+    record_type: placeholder
     canonical_project_id: project-gg21
     title: Gitcoin 類別案例占位
     category: Gitcoin
@@ -1043,6 +1144,24 @@ cases:
       activity_year:
       language_community: []
       funding:
+        requested:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: Placeholder only.
+        governance_approved:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: Placeholder only.
+        disbursed:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: Placeholder only.
         requested_amount_usd:
         approved_amount_usd:
         total_budget_usd:
@@ -1050,6 +1169,7 @@ cases:
         currency:
         disbursement_type: matching_pool
         notes: Placeholder only; no funding data imported yet.
+      execution_events: []
       program_details:
         start_date:
         end_date:

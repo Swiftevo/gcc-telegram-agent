@@ -28,7 +28,7 @@ ETH City 資助線；GCC owner 已於 2026-09-20 明確確認其歸屬，因此�
 5. **私隱與審核**：哪些資料可公開、須遮蓋、只限內部；由哪位 GCC 內容負責人核准。請勿把私人申請、評審、身份或付款明細直接貼進公開 repo。
 
 匯入時，新增紀錄的 `ai_review_usage.allowed` 預設為 `false`、`governance.review_status`
-預設為 `seed`；經來源、私隱及內容審核後才可考慮公開或供 Bot 使用。共同 Snapshot
+預設為 `draft`；既有基礎案例可維持 `seed`。經來源、私隱及內容審核後才可考慮公開或供 Bot 使用。共同 Snapshot
 只能證明提案／治理決定，不能代替個別資助批准、實際撥款或 milestone 證據。
 
 ETH Beijing 2025 已確認屬於 ETH City 資助線，但其他詳細資料仍未補齊；Devconnect 機票 2025

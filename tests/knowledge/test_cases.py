@@ -22,7 +22,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         ai_cases = load_ai_review_cases()
         categories = {case.get("category") for case in cases}
 
-        self.assertEqual(db.get("schema_version"), "0.1.0")
+        self.assertEqual(db.get("schema_version"), "0.2.0")
         self.assertEqual(len(cases), 6)
         self.assertEqual(
             categories,
@@ -35,7 +35,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                 "Gitcoin",
             },
         )
-        self.assertEqual(len(ai_cases), 4)
+        self.assertEqual(len(ai_cases), 0)
         self.assertTrue(
             any(
                 case.get("case_id") == "gcc-gitcoin-placeholder"
@@ -49,11 +49,21 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             public_record = case.get("public_record", {})
             is_placeholder = case.get("case_id") == "gcc-gitcoin-placeholder"
             with self.subTest(case_id=case.get("case_id")):
-                self.assertEqual(case.get("schema_version"), "0.1.0")
+                self.assertEqual(case.get("schema_version"), "0.2.0")
+                self.assertIn(case.get("record_type"), {"funding_program", "grant_case", "placeholder"})
                 self.assertTrue(evidence.get("snapshots") or is_placeholder)
                 self.assertIn("grant_application", evidence)
                 self.assertIn("voting_record", evidence)
                 self.assertIn("funding", public_record)
+                self.assertIn("execution_events", public_record)
+                self.assertEqual(
+                    {"requested", "governance_approved", "disbursed"},
+                    {
+                        key
+                        for key in public_record["funding"]
+                        if key in {"requested", "governance_approved", "disbursed"}
+                    },
+                )
                 self.assertIn("public_goods_dimensions", public_record)
                 self.assertIn("impact_evidence", public_record)
                 self.assertIn("lifecycle_status", public_record)
@@ -72,12 +82,18 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         }
 
         vyper = cases["gcc-open-source-vyper"]
+        self.assertEqual(vyper["record_type"], "grant_case")
+        self.assertEqual(
+            vyper["public_record"]["funding"]["governance_approved"]["status"],
+            "pending_reconciliation",
+        )
         self.assertEqual(
             vyper["public_record"]["links"]["repository_url"],
             "https://github.com/vyperlang/vyper",
         )
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
+        self.assertEqual(eth_city["record_type"], "funding_program")
         self.assertFalse(eth_city["ai_review_usage"]["allowed"])
         eth_city_details = eth_city["public_record"]["program_details"]
         self.assertEqual(
@@ -135,6 +151,10 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             "funded",
         )
         self.assertEqual(eth_beijing["public_record"]["funding"]["approved_amount_usd"], 3000)
+        self.assertEqual(
+            eth_beijing["public_record"]["funding"]["disbursed"]["status"],
+            "unknown",
+        )
 
         devconnect = cases["gcc-travel-scholarship-devconnect-2025"]
         self.assertEqual(devconnect["public_record"]["amount_usd"], 5000)
@@ -157,21 +177,23 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
         self.assertEqual(len(devconnect["evidence"]["snapshots"]), 2)
 
-    def test_schema_v0_1_contract_files_exist(self):
+    def test_schema_v0_2_contract_files_exist(self):
         case_schema_path = ROOT / "schema" / "project.schema.json"
         database_schema_path = ROOT / "schema" / "project-case-database.schema.json"
         case_schema = json.loads(case_schema_path.read_text(encoding="utf-8"))
         database_schema = json.loads(database_schema_path.read_text(encoding="utf-8"))
 
-        self.assertEqual(case_schema["properties"]["schema_version"]["const"], "0.1.0")
-        self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.1.0")
+        self.assertEqual(case_schema["properties"]["schema_version"]["const"], "0.2.0")
+        self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.2.0")
         self.assertIn("cases", database_schema["required"])
         self.assertEqual(database_schema["properties"]["cases"]["items"]["$ref"], "project.schema.json")
         self.assertIn("funding_tracks", case_schema["$defs"]["programDetails"]["properties"])
         self.assertIn("fundingTrack", case_schema["$defs"])
+        self.assertIn("amountFact", case_schema["$defs"])
+        self.assertIn("executionEvent", case_schema["$defs"])
         self.assertIn("funding_track_id", case_schema["properties"])
         self.assertIn("track_id", case_schema["$defs"]["fundingTrack"]["required"])
-        for field in ("public_record", "evidence", "ai_review_usage"):
+        for field in ("record_type", "public_record", "evidence", "ai_review_usage", "governance"):
             self.assertIn(field, case_schema["required"])
 
 

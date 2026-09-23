@@ -6,12 +6,14 @@
   "required": [
     "case_id",
     "schema_version",
+    "record_type",
     "title",
     "category",
     "fund_type",
     "public_record",
     "evidence",
-    "ai_review_usage"
+    "ai_review_usage",
+    "governance"
   ],
   "properties": {
     "case_id": {
@@ -20,7 +22,12 @@
     },
     "schema_version": {
       "type": "string",
-      "const": "0.1.0"
+      "const": "0.2.0"
+    },
+    "record_type": {
+      "type": "string",
+      "enum": ["funding_program", "grant_case", "placeholder"],
+      "description": "Distinguishes a shared funding programme from an individual funded case and an intentionally empty placeholder."
     },
     "canonical_project_id": {
       "type": "string",
@@ -50,7 +57,7 @@
     },
     "public_record": {
       "type": "object",
-      "required": ["summary", "why_funded", "links"],
+      "required": ["summary", "why_funded", "funding", "execution_events", "links"],
       "properties": {
         "amount_usd": {
           "deprecated": true,
@@ -86,6 +93,11 @@
         },
         "funding": {
           "$ref": "#/$defs/funding"
+        },
+        "execution_events": {
+          "type": "array",
+          "description": "Governance and real-world execution events. An empty array means no event has yet been safely modeled.",
+          "items": { "$ref": "#/$defs/executionEvent" }
         },
         "program_details": {
           "$ref": "#/$defs/programDetails"
@@ -169,6 +181,7 @@
     },
     "governance": {
       "type": "object",
+      "required": ["visibility", "maintainers", "review_status"],
       "properties": {
         "visibility": {
           "type": "string",
@@ -184,21 +197,98 @@
         "review_status": {
           "type": "string",
           "enum": ["seed", "draft", "reviewed", "published", "deprecated"]
+        },
+        "reviewed_at": {
+          "type": ["string", "null"],
+          "format": "date"
+        },
+        "reviewed_by_role": {
+          "type": ["string", "null"],
+          "description": "Role or governance function that approved the record; do not put private reviewer notes here."
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "review_status": { "enum": ["reviewed", "published"] }
+            },
+            "required": ["review_status"]
+          },
+          "then": {
+            "required": ["reviewed_at", "reviewed_by_role"],
+            "properties": {
+              "reviewed_at": { "type": "string", "format": "date" },
+              "reviewed_by_role": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "ai_review_usage": {
+            "properties": { "allowed": { "const": true } },
+            "required": ["allowed"]
+          }
+        },
+        "required": ["ai_review_usage"]
+      },
+      "then": {
+        "properties": {
+          "governance": {
+            "properties": {
+              "visibility": { "const": "public" },
+              "review_status": { "enum": ["reviewed", "published"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "record_type": { "const": "placeholder" } },
+        "required": ["record_type"]
+      },
+      "then": {
+        "properties": {
+          "ai_review_usage": {
+            "properties": { "allowed": { "const": false } }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "funding": {
       "type": "object",
+      "required": ["requested", "governance_approved", "disbursed"],
       "properties": {
-        "requested_amount_usd": { "type": ["number", "null"] },
-        "approved_amount_usd": { "type": ["number", "null"] },
+        "requested": { "$ref": "#/$defs/amountFact" },
+        "governance_approved": { "$ref": "#/$defs/amountFact" },
+        "disbursed": { "$ref": "#/$defs/amountFact" },
+        "requested_amount_usd": {
+          "deprecated": true,
+          "description": "Legacy compatibility field. Use requested.amount and requested.currency.",
+          "type": ["number", "null"]
+        },
+        "approved_amount_usd": {
+          "deprecated": true,
+          "description": "Legacy compatibility field. Use governance_approved.amount and governance_approved.currency.",
+          "type": ["number", "null"]
+        },
         "total_budget_usd": { "type": ["number", "null"] },
         "per_person_cap_usd": { "type": ["number", "null"] },
-        "currency": { "type": ["string", "null"] },
+        "currency": {
+          "deprecated": true,
+          "description": "Legacy shared currency. Structured funding facts each carry their own currency.",
+          "type": ["string", "null"]
+        },
         "disbursement_type": {
           "type": ["string", "null"],
           "enum": [
@@ -214,6 +304,84 @@
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false
+    },
+    "factStatus": {
+      "type": "string",
+      "enum": [
+        "source_reported",
+        "owner_confirmed",
+        "verified",
+        "pending_reconciliation",
+        "unknown",
+        "not_applicable"
+      ]
+    },
+    "amountFact": {
+      "type": "object",
+      "required": ["amount", "currency", "status", "source_snapshot_ids", "notes"],
+      "properties": {
+        "amount": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"] },
+        "status": { "$ref": "#/$defs/factStatus" },
+        "source_snapshot_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "amount": { "type": "number" } },
+            "required": ["amount"]
+          },
+          "then": {
+            "properties": { "currency": { "type": "string", "minLength": 1 } }
+          }
+        }
+      ]
+    },
+    "executionEvent": {
+      "type": "object",
+      "required": ["event_type", "date", "amount", "currency", "status", "source_snapshot_ids", "notes"],
+      "properties": {
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "governance_decision",
+            "disbursement",
+            "milestone_acceptance",
+            "milestone_unlock",
+            "activity_completed",
+            "report_submitted"
+          ]
+        },
+        "date": { "type": ["string", "null"], "format": "date" },
+        "amount": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"] },
+        "milestone_name": { "type": ["string", "null"] },
+        "status": { "$ref": "#/$defs/factStatus" },
+        "source_snapshot_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "amount": { "type": "number" } },
+            "required": ["amount"]
+          },
+          "then": {
+            "properties": { "currency": { "type": "string", "minLength": 1 } }
+          }
+        }
+      ]
     },
     "programDetails": {
       "type": "object",

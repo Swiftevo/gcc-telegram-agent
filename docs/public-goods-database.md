@@ -90,19 +90,26 @@ Each case should separate four things:
 - What evidence supports it: source URLs, snapshots, applications, votes.
 - What AI may use: concise retrieval text and allowed screening dimensions.
 
-## Schema Direction
+## Schema 0.2
 
-The schema is intentionally additive and tolerant. New records should prefer the
-structured fields below, while existing seed records can continue to use simpler
-legacy fields until we migrate them case by case.
+Schema 0.2 migrates all existing seed records and provides the validation boundary
+for the next small import batch. It distinguishes a funding programme, an
+individual grant case, and a placeholder; separates requested, governance-approved,
+and disbursed amounts; and reserves independently sourced execution events for
+governance decisions, payments, milestone acceptance／unlock, activity completion,
+and reports. Full field and validation rules are documented in
+[`project-case-schema-v0.2.md`](project-case-schema-v0.2.md).
 
 New public record fields:
 
 - `grant_year`: when GCC approved or recorded the grant.
 - `activity_year`: when the activity or project work mainly happens.
 - `language_community`: language or cultural communities served.
-- `funding`: requested amount, approved amount, total budget, per-person cap,
-  currency, and disbursement type.
+- `funding`: requested, governance-approved, and disbursed facts with original
+  currency, evidence references, and uncertainty status; legacy USD fields are
+  temporarily retained for compatibility.
+- `execution_events`: separately sourced governance and real-world execution
+  events; an empty list does not imply that no event occurred.
 - `program_details`: dates, location, application deadline, eligibility,
   selection criteria, deliverables, and milestones.
 - `public_goods_dimensions`: flexible assessments for open source,
@@ -132,7 +139,9 @@ Fields deliberately not duplicated:
 
 Completed foundations:
 
-- The seed file is populated and covered by YAML/schema-oriented tests.
+- The six existing seeds are migrated to schema 0.2; this migration imports no
+  additional cases.
+- Draft 2020-12 and cross-record validation run locally and in the release gate.
 - A loader exposes all cases and the subset explicitly allowed for AI review.
 - Source snapshots preserve raw material separately from interpreted summaries.
 
