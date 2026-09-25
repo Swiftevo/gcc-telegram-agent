@@ -23,7 +23,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         ai_cases = load_ai_review_cases()
         categories = {case.get("category") for case in cases}
 
-        self.assertEqual(db.get("schema_version"), "0.2.0")
+        self.assertEqual(db.get("schema_version"), "0.2.1")
         self.assertEqual(len(cases), 8)
         self.assertEqual(
             categories,
@@ -50,7 +50,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             public_record = case.get("public_record", {})
             is_placeholder = case.get("case_id") == "gcc-gitcoin-placeholder"
             with self.subTest(case_id=case.get("case_id")):
-                self.assertEqual(case.get("schema_version"), "0.2.0")
+                self.assertEqual(case.get("schema_version"), "0.2.1")
                 self.assertIn(case.get("record_type"), {"funding_program", "grant_case", "placeholder"})
                 self.assertTrue(evidence.get("snapshots") or is_placeholder)
                 self.assertIn("grant_application", evidence)
@@ -71,15 +71,20 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                 self.assertIn("raw_data_status", evidence)
                 for snapshot in evidence.get("snapshots", []):
                     storage_uri = snapshot.get("storage_uri")
-                    if storage_uri:
-                        stored_source = (ROOT / storage_uri).resolve()
-                        self.assertTrue(stored_source.is_relative_to(ROOT.resolve()))
-                        self.assertTrue(stored_source.is_file(), storage_uri)
+                    stored_source = (ROOT / storage_uri).resolve()
+                    processing = snapshot["processing"]
+                    self.assertTrue(stored_source.is_relative_to(ROOT.resolve()))
+                    self.assertTrue(stored_source.is_file(), storage_uri)
+                    self.assertRegex(snapshot["checksum"], r"^sha256:[0-9a-f]{64}$")
+                    self.assertEqual(processing["sanitization_status"], "automated_checked")
+                    self.assertEqual(processing["review_status"], "pending")
+                    self.assertEqual(processing["allowed_uses"], ["evidence_only"])
 
     def test_legacy_conversion(self):
         cases = load_project_cases(force_reload=True)
         legacy = case_to_legacy_project(cases[0])
         self.assertEqual(legacy["name"], cases[0]["title"])
+        self.assertEqual(legacy["amount"], 40000)
         self.assertTrue(legacy["summary"])
 
     def test_seed_case_known_values(self):
@@ -185,25 +190,29 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
 
         eth_beijing = cases["gcc-eth-city-eth-beijing-2025"]
         self.assertEqual(eth_beijing["funding_track_id"], "gcc-eth-city-2025")
-        self.assertEqual(eth_beijing["public_record"]["amount_usd"], 3000)
+        self.assertNotIn("amount_usd", eth_beijing["public_record"])
         self.assertEqual(eth_beijing["public_record"]["activity_year"], 2025)
         self.assertEqual(
             eth_beijing["public_record"]["lifecycle_status"]["delivery_status"],
             "completed",
         )
         self.assertEqual(
-            eth_beijing["public_record"]["lifecycle_status"]["grant_status"],
-            "funded",
+            eth_beijing["public_record"]["funding"]["governance_approved"]["amount"],
+            3000,
         )
-        self.assertEqual(eth_beijing["public_record"]["funding"]["approved_amount_usd"], 3000)
+        self.assertEqual(eth_beijing["public_record"]["lifecycle_status"]["grant_status"], "approved")
         self.assertEqual(
             eth_beijing["public_record"]["funding"]["disbursed"]["status"],
             "unknown",
         )
 
         devconnect = cases["gcc-travel-scholarship-devconnect-2025"]
-        self.assertEqual(devconnect["public_record"]["amount_usd"], 5000)
-        self.assertEqual(devconnect["public_record"]["funding"]["approved_amount_usd"], 5000)
+        self.assertNotIn("amount_usd", devconnect["public_record"])
+        self.assertEqual(
+            devconnect["public_record"]["funding"]["governance_approved"]["amount"],
+            5000,
+        )
+        self.assertEqual(devconnect["public_record"]["lifecycle_status"]["grant_status"], "approved")
         self.assertEqual(
             devconnect["public_record"]["links"]["official_website"],
             "https://devconnect.org/",
@@ -211,10 +220,6 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertEqual(
             devconnect["public_record"]["links"]["announcement_url"],
             "https://x.com/GCCofCommons/status/1978782504216559740",
-        )
-        self.assertEqual(
-            devconnect["public_record"]["lifecycle_status"]["grant_status"],
-            "funded",
         )
         self.assertEqual(
             devconnect["public_record"]["lifecycle_status"]["delivery_status"],
@@ -228,24 +233,22 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         case_schema = json.loads(case_schema_path.read_text(encoding="utf-8"))
         database_schema = json.loads(database_schema_path.read_text(encoding="utf-8"))
 
-        self.assertEqual(case_schema["properties"]["schema_version"]["const"], "0.2.0")
-        self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.2.0")
+        self.assertEqual(case_schema["properties"]["schema_version"]["const"], "0.2.1")
+        self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.2.1")
         self.assertIn("cases", database_schema["required"])
         self.assertEqual(database_schema["properties"]["cases"]["items"]["$ref"], "project.schema.json")
         self.assertIn("funding_tracks", case_schema["$defs"]["programDetails"]["properties"])
         self.assertIn("fundingTrack", case_schema["$defs"])
         self.assertIn("amountFact", case_schema["$defs"])
         self.assertIn("executionEvent", case_schema["$defs"])
+        self.assertIn("sourceProcessing", case_schema["$defs"])
         self.assertIn("funding_track_id", case_schema["properties"])
         self.assertIn("track_id", case_schema["$defs"]["fundingTrack"]["required"])
         for field in ("record_type", "public_record", "evidence", "ai_review_usage", "governance"):
             self.assertIn(field, case_schema["required"])
 
-    def test_sanitized_application_evidence_excludes_voter_identity_and_credentials(self):
-        evidence_paths = (
-            ROOT / "data" / "source-snapshots" / "oskey-sanitized-application-evidence.md",
-            ROOT / "data" / "source-snapshots" / "openrpc-sanitized-application-evidence.md",
-        )
+    def test_all_local_evidence_excludes_row_level_votes_wallets_and_credentials(self):
+        evidence_paths = tuple((ROOT / "data" / "source-snapshots").glob("*.md"))
         forbidden_fragments = (
             "fishbiscuit",
             "lurenbian",
@@ -253,6 +256,8 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             "vvntp6.eth",
             "rec/share",
             "访问密码",
+            "| voter |",
+            "| voting power |",
         )
         wallet_pattern = re.compile(r"(?<![0-9A-Fa-f])0x[0-9A-Fa-f]{40}(?![0-9A-Fa-f])")
 

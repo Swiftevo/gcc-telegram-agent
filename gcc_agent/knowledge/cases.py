@@ -53,12 +53,16 @@ def load_ai_review_cases(force_reload: bool = False) -> list[dict]:
 def case_to_legacy_project(case: dict) -> dict:
     public_record = case.get("public_record", {})
     links = public_record.get("links", {})
+    funding = public_record.get("funding", {})
+    approved_amount = funding.get("governance_approved", {}).get("amount")
+    requested_amount = funding.get("requested", {}).get("amount")
+    amount = approved_amount if approved_amount is not None else requested_amount
     return {
         "name": case.get("title", ""),
         "slug": case.get("canonical_project_id", ""),
         "category": case.get("category", ""),
         "fund_type": case.get("fund_type", "unknown"),
-        "amount": public_record.get("amount_usd"),
+        "amount": amount,
         "keywords": public_record.get("tags", []),
         "region": public_record.get("regions", []),
         "summary": public_record.get("summary", ""),

@@ -1,0 +1,49 @@
+schema_version: "1.0.0"
+updated_at: "2026-09-25"
+canonical_database: data/project-case-seeds.yaml
+
+legacy_catalog:
+  path: projects.yaml
+  frozen: true
+  record_count: 63
+  unmapped_status: legacy_only
+  unmapped_record_count: 55
+  canonical_json_sha256: ffa3973b5009772075d83b4a80c64108902f4c252e5d46edeb89f33f16ccf153
+  notes: >
+    This catalog remains the current runtime compatibility source. New funding
+    cases must not be added here. Corrections require an explicit digest update
+    and must be reconciled with any mapped canonical case.
+
+mappings:
+  - legacy_slug: project-vyper
+    case_id: gcc-open-source-vyper
+    status: migrated_seed
+  - legacy_slug: project-oskey
+    case_id: gcc-open-source-oskey
+    status: migrated_draft
+  - legacy_slug: project-openrpc
+    case_id: gcc-open-source-openrpc
+    status: migrated_draft
+  - legacy_slug: project-universityblockchain
+    case_id: gcc-community-eth-city-university-web3-2025
+    status: migrated_seed
+  - legacy_slug: project-wamotopia2026
+    case_id: gcc-event-wamotopia-2026
+    status: migrated_seed
+  - legacy_slug: project-ethbeijing-2025
+    case_id: gcc-eth-city-eth-beijing-2025
+    status: migrated_seed
+  - legacy_slug: project-devconnect-2025
+    case_id: gcc-travel-scholarship-devconnect-2025
+    status: migrated_seed
+  - legacy_slug: project-gg21
+    case_id: gcc-gitcoin-placeholder
+    status: placeholder
+
+policy:
+  new_records: canonical_only
+  bot_runtime_source: legacy_catalog_until_reviewed_migration
+  old_schema_storage: git_history_only
+  source_files_must_be_referenced: true
+  source_review_required_before_bot_use: true
+  case_review_required_before_bot_use: true

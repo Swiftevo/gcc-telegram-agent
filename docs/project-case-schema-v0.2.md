@@ -1,6 +1,6 @@
-# Project Case Schema 0.2
+# Project Case Schema 0.2.1
 
-Schema 0.2 is the safety boundary for importing additional public GCC funding
+Schema 0.2.1 is the safety boundary for importing additional public GCC funding
 cases. It migrates the six existing seed records but does not add new projects or
 connect the case database to Bot runtime answers.
 
@@ -35,8 +35,10 @@ Each fact stores the original amount and currency, a status, supporting
 - `unknown`
 - `not_applicable`
 
-The existing `*_amount_usd` fields remain temporarily for legacy compatibility;
-new imports must not use them as a substitute for the structured facts. A signed
+The JSON Schema still recognizes the former compatibility amount fields, but the
+canonical repository validator rejects them so one fact is not maintained in two
+places. Runtime legacy conversion now derives its amount from the structured
+facts. A signed
 Snapshot can support `requested` or `governance_approved`, but cannot by itself
 support `disbursed`.
 
@@ -57,13 +59,18 @@ safely modelled; it does not mean that nothing happened.
 
 ## Review and AI boundary
 
-All migrated seed cases have `ai_review_usage.allowed: false`. Schema 0.2 only
+All migrated seed cases have `ai_review_usage.allowed: false`. Schema 0.2.1 only
 permits AI review for a public record whose status is `reviewed` or `published`,
 with review date and reviewer role recorded. The cross-record validator also
 rejects AI use when any part of the case is `pending_reconciliation`.
 
 Changing a case to `reviewed`, `published`, or AI-allowed is a separate content
 and governance decision. Schema migration alone never performs that approval.
+
+Every local source snapshot also declares a handling profile, sanitization
+status, source-review status, allowed uses, policy version, and normalized
+SHA-256 checksum. Automated checking is not human approval; all current sources
+remain `pending` and `evidence_only`.
 
 ## Validation
 
@@ -83,6 +90,10 @@ Validation covers JSON Schema Draft 2020-12 plus database-wide rules:
 - reviewed/public requirements for AI use;
 - no AI use while reconciliation is pending;
 - date and amount/currency structure.
+- source-file existence, checksum and orphan detection;
+- row-level voter, wallet and recording-access data scanning;
+- canonical-to-legacy migration mappings and frozen legacy digest;
+- no deprecated duplicate amount fields or unsupported `funded` claims.
 
 The validator reports all detectable issues and exits non-zero. It does not fetch
 websites, decide whether a source is truthful, reconcile accounting records, or

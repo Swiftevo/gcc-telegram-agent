@@ -12,7 +12,9 @@ data model.
 Initial scope:
 
 - Seed one representative case from each existing GCC project category.
-- Preserve compatibility with the existing `projects.yaml` knowledge base.
+- Preserve runtime compatibility with the frozen `projects.yaml` knowledge base
+  while `data/project-case-seeds.yaml` becomes the only destination for new
+  structured cases.
 - Define schema fields for future detailed application imports.
 - Define schema fields for future committee voting record imports.
 - Define snapshot metadata so each project can later point to immutable source
@@ -77,6 +79,10 @@ credentials, unnecessary biographies and private material. The structured case
 points to this evidence but remains unavailable to Bot／AI use until human review.
 See [`sanitized-application-evidence.md`](sanitized-application-evidence.md).
 
+Source processing and legacy migration are now enforced by the reusable
+pipeline in [`project-data-pipeline.md`](project-data-pipeline.md). Old schema
+copies remain in Git history rather than as parallel live databases.
+
 ### 4. Voting Record
 
 Voting records are also modeled as linked evidence. The schema supports public
@@ -98,9 +104,9 @@ Each case should separate four things:
 - What evidence supports it: source URLs, snapshots, applications, votes.
 - What AI may use: concise retrieval text and allowed screening dimensions.
 
-## Schema 0.2
+## Schema 0.2.1
 
-Schema 0.2 migrates all existing seed records and provides the validation boundary
+Schema 0.2.1 migrates all existing case records and provides the validation boundary
 for the next small import batch. It distinguishes a funding programme, an
 individual grant case, and a placeholder; separates requested, governance-approved,
 and disbursed amounts; and reserves independently sourced execution events for
@@ -114,8 +120,8 @@ New public record fields:
 - `activity_year`: when the activity or project work mainly happens.
 - `language_community`: language or cultural communities served.
 - `funding`: requested, governance-approved, and disbursed facts with original
-  currency, evidence references, and uncertainty status; legacy USD fields are
-  temporarily retained for compatibility.
+  currency, evidence references, and uncertainty status. Canonical records do
+  not retain duplicate legacy amount fields.
 - `execution_events`: separately sourced governance and real-world execution
   events; an empty list does not imply that no event occurred.
 - `program_details`: dates, location, application deadline, eligibility,
@@ -134,6 +140,8 @@ New evidence fields:
   state.
 - `raw_data_status`: whether raw data is captured by API, official site, manual
   user supply, pending, unavailable, or not applicable.
+- `processing`: per-source handling profile, sanitization and review state,
+  allowed uses, policy version, and normalized SHA-256 checksum.
 
 Fields deliberately not duplicated:
 
@@ -147,9 +155,11 @@ Fields deliberately not duplicated:
 
 Completed foundations:
 
-- The six existing seeds are migrated to schema 0.2; this migration imports no
-  additional cases.
+- All eight existing cases are migrated to schema 0.2.1.
 - Draft 2020-12 and cross-record validation run locally and in the release gate.
+- Repository validation locks the 63-record legacy catalog, tracks 8 mappings
+  and 55 `legacy_only` records, verifies every source checksum, rejects orphan
+  files, and scans for prohibited row-level voter, wallet, and access data.
 - A loader exposes all cases and the subset explicitly allowed for AI review.
 - Source snapshots preserve raw material separately from interpreted summaries.
 - The first post-migration batch adds OSKey and OpenRPC as `draft` grant cases.
@@ -165,7 +175,7 @@ than silently converting currencies. A future schema revision may replace that
 legacy field with the same amount／currency fact shape used by `funding` and
 `execution_events`.
 
-The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
+The remaining work is governed by `PGDATA-002`, `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
 [`docs/todo.md`](todo.md). That ordering is intentional: privacy, screening
 guardrails, provenance, and licensing must be stable before importing private
