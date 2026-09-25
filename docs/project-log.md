@@ -3,6 +3,19 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-25：OSKey／OpenRPC 加入 sanitized application evidence
+
+- PR #40 按 GCC owner 決定，在公開 Snapshot 與結構化案例之間加入「經清理的完整申請證據」層；首批
+  涵蓋 OSKey 與 OpenRPC 的公共問題、資金用途、deliverables、milestones、可持續性、
+  匿名治理風險及項目方回應。
+- 不複製 voter／ENS／wallet、逐票日期與 voting power、具名 reviewer attribution、會議或
+  錄影密碼、不必要個人履歷、private application 或 internal notes；OpenRPC 的華語開發者
+  承諾疑問及 OSKey 的 hardware threat-model／執行能力疑問以匿名 substantive concern 保存。
+- 每案新增獨立 `grant_application` snapshot id 及 local evidence file；aggregate vote 與原
+  Snapshot proposal extract 繼續分開。提案或討論不會被寫成實際撥款、驗收、解鎖或成果。
+- 兩案維持 `draft`、`ai_review_usage.allowed: false`，不接入 Bot QA／評分；content owner
+  後續仍需審核 summary、public-goods assessment、links 及 cautions。
+
 ## 2026-09-24：schema 0.2 首批匯入 OSKey 與 OpenRPC
 
 - PR #39 首批只加入兩個沒有已知金額衝突的公開 Open Source 案例：OSKey 的 Snapshot
