@@ -22,7 +22,7 @@
     },
     "schema_version": {
       "type": "string",
-      "const": "0.2.0"
+      "const": "0.2.1"
     },
     "record_type": {
       "type": "string",
@@ -624,7 +624,14 @@
     },
     "snapshot": {
       "type": "object",
-      "required": ["snapshot_id", "source_type", "access_level"],
+      "required": [
+        "snapshot_id",
+        "source_type",
+        "access_level",
+        "storage_uri",
+        "checksum",
+        "processing"
+      ],
       "properties": {
         "snapshot_id": { "type": "string" },
         "captured_at": { "type": ["string", "null"] },
@@ -649,11 +656,68 @@
           "enum": ["public", "internal", "private", "redacted"]
         },
         "source_url": { "type": ["string", "null"] },
-        "storage_uri": { "type": ["string", "null"] },
-        "checksum": { "type": ["string", "null"] },
+        "storage_uri": { "type": "string", "minLength": 1 },
+        "checksum": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "processing": { "$ref": "#/$defs/sourceProcessing" },
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false
+    },
+    "sourceProcessing": {
+      "type": "object",
+      "required": [
+        "handling_profile",
+        "sanitization_status",
+        "review_status",
+        "allowed_uses",
+        "policy_version"
+      ],
+      "properties": {
+        "handling_profile": {
+          "type": "string",
+          "enum": ["public_source_extract", "sanitized_public_application"]
+        },
+        "sanitization_status": {
+          "type": "string",
+          "enum": ["pending", "automated_checked", "human_reviewed"]
+        },
+        "review_status": {
+          "type": "string",
+          "enum": ["pending", "approved", "rejected"]
+        },
+        "allowed_uses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["evidence_only", "bot_qa", "application_review"]
+          }
+        },
+        "policy_version": { "const": "1.0" },
+        "reviewed_at": { "type": ["string", "null"], "format": "date" },
+        "reviewed_by_role": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "review_status": { "const": "approved" } },
+            "required": ["review_status"]
+          },
+          "then": {
+            "required": ["reviewed_at", "reviewed_by_role"],
+            "properties": {
+              "reviewed_at": { "type": "string", "format": "date" },
+              "reviewed_by_role": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ]
     },
     "privateEvidencePointer": {
       "type": "object",

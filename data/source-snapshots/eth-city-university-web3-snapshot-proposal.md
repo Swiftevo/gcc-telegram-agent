@@ -32,15 +32,11 @@ free of charge.
 - Scores: 3, 0, 2
 - Total voter score: 5
 
-## Voter Records
+## Aggregate Vote Record
 
-| Voter | Choice | Date | Voting power |
-|---|---|---|---|
-| 0x2fA4c0F1fD0902bD0B050E8F7D654242267c5e1D | For | 2025-03-05 | 1 GCC |
-| lurenbian.eth / 0x267a6522BFFC76D61A633d231d9ef84059bC3e27 | Abstain | 2025-03-05 | 1 GCC |
-| 1click.eth / 0x87c424D32a4DeD5B8513DE5D9D712B33DEaF120A | For | 2025-03-09 | 1 GCC |
-| 0x8409Bd2368163b5e02579F0410EbFF4172494270 | Abstain | 2025-03-09 | 1 GCC |
-| 0xeB0f1EaA17d510249962Db364A934B4Ef09F66f7 | For | 2025-03-05 | 1 GCC |
+Only aggregate choices and scores are retained. Voter identities, wallet or ENS
+identifiers, per-voter timestamps, and per-voter voting power are intentionally
+excluded under the public-source handling policy.
 
 ## Raw Data
 

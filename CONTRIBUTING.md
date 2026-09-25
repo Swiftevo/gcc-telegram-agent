@@ -109,6 +109,23 @@ required checks 及适用的审查要求通过后，由维护者合入 `main`。
 
 不确定是否安全时，按「有风险」处理，并在 PR 里写明。
 
+## 项目案例与证据数据
+
+新的资助案例只写入 `data/project-case-seeds.yaml`，不要向 legacy
+`projects.yaml` 增加记录。先阅读 `docs/project-data-pipeline.md`，并使用
+`data/templates/` 下的案例及 sanitized application 模板。
+
+来源文件必须经过清理、登记处理状态并计算 checksum；不要复制逐票身份、wallet／ENS、
+逐票日期或 voting power、访问密码、私人申请或内部评审。未知的拨款、milestone 或成果保持
+`unknown`／`pending_reconciliation`，不得由提案或网页标签推断。
+
+修改案例或来源后同时运行：
+
+```bash
+python -m gcc_agent.knowledge.validate_cases
+python -m tests
+```
+
 ## 文档
 
 用户能直接感知的变化，请同步 `README.md`。若改了安装、命令或贡献流程，也请更新 `README.zh-TW.md`、`README.en.md` 和本文件。

@@ -1,0 +1,143 @@
+# Copy one case into data/project-case-seeds.yaml. Do not add this template to
+# the database unchanged. Unknown facts stay null/unknown; never infer them.
+- case_id: replace-with-stable-case-id
+  schema_version: "0.2.1"
+  record_type: grant_case
+  canonical_project_id: replace-with-stable-project-id
+  title: Replace with public title
+  category: Open Source
+  fund_type: unknown
+  public_record:
+    grant_year:
+    activity_year:
+    language_community: []
+    regions: []
+    tags: []
+    summary: ""
+    why_funded: ""
+    funding:
+      requested:
+        amount:
+        currency:
+        status: unknown
+        source_snapshot_ids: []
+        notes:
+      governance_approved:
+        amount:
+        currency:
+        status: unknown
+        source_snapshot_ids: []
+        notes:
+      disbursed:
+        amount:
+        currency:
+        status: unknown
+        source_snapshot_ids: []
+        notes:
+      total_budget_usd:
+      per_person_cap_usd:
+      disbursement_type: unknown
+      notes:
+    execution_events: []
+    program_details:
+      start_date:
+      end_date:
+      application_deadline:
+      location:
+      eligibility: []
+      selection_criteria: []
+      deliverables: []
+      milestones: []
+      notes:
+    public_goods_dimensions:
+      non_excludability:
+        level: unknown
+        rationale: ""
+        source_snapshot_id:
+      non_rivalry:
+        level: unknown
+        rationale: ""
+        source_snapshot_id:
+      openness:
+        level: unknown
+        rationale: ""
+        source_snapshot_id:
+      positive_externalities:
+        level: unknown
+        rationale: ""
+        source_snapshot_id:
+      chinese_community_value:
+        level: unknown
+        rationale: ""
+        source_snapshot_id:
+      notes:
+    impact_evidence: []
+    lifecycle_status:
+      grant_status: unknown
+      delivery_status: unknown
+      reporting_status: unknown
+      notes:
+    links:
+      gcc_project_url:
+      official_website:
+      announcement_url:
+      repository_url:
+  evidence:
+    source_urls: []
+    snapshots:
+      - snapshot_id: replace-with-source-id
+        captured_at: "YYYY-MM-DD"
+        source_type: other
+        access_level: public
+        source_url:
+        storage_uri: data/source-snapshots/replace-with-file.md
+        checksum: sha256:replace-after-cleaning
+        processing:
+          handling_profile: public_source_extract
+          sanitization_status: pending
+          review_status: pending
+          allowed_uses: [evidence_only]
+          policy_version: "1.0"
+          notes: Run the validator after cleaning and calculating the checksum.
+        notes:
+    grant_application:
+      status: unknown
+      access_level: private
+      document_ref:
+      snapshot_id:
+      summary:
+      notes:
+    voting_record:
+      status: unknown
+      access_level: private
+      document_ref:
+      snapshot_id:
+      summary:
+      notes:
+    vote_summary:
+      platform: unknown
+      proposal_id:
+      state:
+      choices: []
+      total_score:
+      source_snapshot_id:
+      notes:
+    raw_data_status:
+      status: pending
+      verification: unverified
+      storage_uri:
+      source_snapshot_id:
+      notes:
+  ai_review_usage:
+    allowed: false
+    retrieval_text: ""
+    screening_dimensions: []
+    cautions:
+      - Draft import; do not use for Bot QA or application review.
+  governance:
+    visibility: public
+    license:
+    maintainers: [GCC]
+    review_status: draft
+    reviewed_at:
+    reviewed_by_role:

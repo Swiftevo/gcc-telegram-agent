@@ -149,14 +149,12 @@ A：正在计算非人力成本的部分，目前还没有最终数字。（TK W
 
 ---
 
-Demo Day 完整回放
-GCC Cohort 2 Demo Day（2026.2.12）完整录像：
+Demo Day evidence note
 
-https://zoom.us/rec/share/IT7IUtmFBRwT3GDlD6qQWq1vz6JiwjgLKR72D1LalEtlE4PWWclRXRcKlG3oU_qZ.4j1an9k6OLb0MvTb?startTime=1770875903000
-
-访问密码：t%1A$KQ5
-
-演讲片段：01:44:57 – 01:56:26
+The source supplied a recording link, access credential, and presentation time
+range. The link and credential are not retained because they are unnecessary
+access data. The substantive project statements are preserved in this cleaned
+extract.
 
 投票规则
 共有 9 名投委，投票率超过 50% 方可生效；赞成票数 ≥ 总票数的 2/3 视为通过。
