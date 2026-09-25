@@ -5,7 +5,7 @@
 
 ## 2026-09-25：OSKey／OpenRPC 加入 sanitized application evidence
 
-- GCC owner 核准在公開 Snapshot 與結構化案例之間加入「經清理的完整申請證據」層；首批
+- PR #40 按 GCC owner 決定，在公開 Snapshot 與結構化案例之間加入「經清理的完整申請證據」層；首批
   涵蓋 OSKey 與 OpenRPC 的公共問題、資金用途、deliverables、milestones、可持續性、
   匿名治理風險及項目方回應。
 - 不複製 voter／ENS／wallet、逐票日期與 voting power、具名 reviewer attribution、會議或
