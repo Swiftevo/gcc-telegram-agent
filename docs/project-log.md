@@ -3,6 +3,26 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-09-25：PGDATA-002 收斂 canonical data pipeline
+
+- PR #41 將現有 8 筆 canonical case 全部升至 schema 0.2.1；每份 local evidence 都有
+  handling profile、清理狀態、source review 狀態、allowed use、policy version 及以 LF
+  正規化的 SHA-256 checksum。所有來源仍是 `pending`／`evidence_only`，沒有開放 Bot／AI。
+- `projects.yaml` 繼續作 production runtime compatibility catalog，但以 canonical JSON digest
+  鎖定；migration ledger 明確記錄 63 筆 legacy records 中 8 筆已映射、55 筆仍為
+  `legacy_only`。新案例只准進 canonical database，舊 schema 只留在 Git history。
+- validator 新增 local evidence 存在／checksum／孤立檔、逐票 voter／wallet／錄影存取資料、
+  source review／allowed-use、legacy digest／mapping、duplicate legacy amount、無付款證據卻標
+  `funded` 等閘門；加入錯誤注入測試。
+- 現有 ETH City／高校 Snapshot extract 移除逐票 wallet／ENS、日期及 voting power，改留
+  aggregate vote；Wamotopia extract 移除不必要的錄影連結及存取 credential；沒有來源的
+  Gitcoin placeholder 文件移除。較早 Git 歷史仍可能保存舊版本，history rewrite 不在本項。
+- canonical data 不再保存重複 `amount_usd`／`requested_amount_usd`／`approved_amount_usd`／
+  shared `currency`；ETH Beijing 及 Devconnect 在沒有 disbursement 證據時由 `funded` 改為
+  `approved`。runtime legacy conversion 改由 structured approved／requested amount 衍生。
+- 提供 reusable case template、sanitized application template、清理政策及 human review
+  checklist。validator、26 項 knowledge tests、完整 19 個測試檔及 diff check 均通過。
+
 ## 2026-09-25：OSKey／OpenRPC 加入 sanitized application evidence
 
 - PR #40 按 GCC owner 決定，在公開 Snapshot 與結構化案例之間加入「經清理的完整申請證據」層；首批
