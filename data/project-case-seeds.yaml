@@ -393,13 +393,21 @@ cases:
           storage_uri: data/source-snapshots/oskey-snapshot-proposal.md
           checksum:
           notes: Snapshot proposal amount, deliverables, milestone plan, closed state and public vote totals.
+        - snapshot_id: snap-oskey-sanitized-application-evidence
+          captured_at: "2026-09-25"
+          source_type: grant_application
+          access_level: public
+          source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
+          storage_uri: data/source-snapshots/oskey-sanitized-application-evidence.md
+          checksum:
+          notes: Sanitized public application evidence covering funding use, deliverables, sustainability, governance risks and applicant responses without voter identity data or meeting credentials.
       grant_application:
         status: available
         access_level: public
-        document_ref: snapshot:0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
-        snapshot_id: snap-oskey-snapshot-proposal
-        summary: Public proposal describing OSKey, its requested amount, budget, team, public problem and milestones.
-        notes: No private application material is imported.
+        document_ref: data/source-snapshots/oskey-sanitized-application-evidence.md
+        snapshot_id: snap-oskey-sanitized-application-evidence
+        summary: Sanitized public application evidence covering OSKey's public problem, source-reported current state, funding plan, deliverables, milestones, sustainability, governance risks and applicant responses.
+        notes: Voter identities, wallets, per-voter metadata, named reviewer attribution, unnecessary biographies and meeting credentials are excluded.
       voting_record:
         status: available
         access_level: public
@@ -443,6 +451,7 @@ cases:
         - Draft import; do not use for AI review until a GCC content owner completes review.
         - Do not describe proposed milestones as completed, accepted, paid or unlocked.
         - Hardware-wallet security claims require separate technical verification.
+        - Governance concerns include the general-purpose hardware threat model, secure-element choices, firmware flashing, delivery capacity and milestone acceptance.
     governance:
       visibility: public
       license:
@@ -591,20 +600,28 @@ cases:
           storage_uri: data/source-snapshots/openrpc-snapshot-proposal.md
           checksum:
           notes: Snapshot proposal amount, deliverables, milestone plan, closed state and public vote totals.
+        - snapshot_id: snap-openrpc-sanitized-application-evidence
+          captured_at: "2026-09-25"
+          source_type: grant_application
+          access_level: public
+          source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
+          storage_uri: data/source-snapshots/openrpc-sanitized-application-evidence.md
+          checksum:
+          notes: Sanitized public application evidence covering public problem, funding context, deliverables, sustainability, governance risks and discussion responses without voter identity data or meeting credentials.
       grant_application:
         status: available
         access_level: public
-        document_ref: snapshot:0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
-        snapshot_id: snap-openrpc-snapshot-proposal
-        summary: Public proposal describing OpenRPC, its requested amount, public problem, ecosystem use and milestones.
-        notes: No private application material is imported.
+        document_ref: data/source-snapshots/openrpc-sanitized-application-evidence.md
+        snapshot_id: snap-openrpc-sanitized-application-evidence
+        summary: Sanitized public application evidence covering OpenRPC's public problem, source-reported adoption, Chinese-speaking community contribution, funding and sustainability context, deliverables, governance risks and discussion responses.
+        notes: Voter identities, wallets, per-voter metadata, named reviewer attribution, unnecessary biographies and meeting credentials are excluded.
       voting_record:
         status: available
         access_level: public
         document_ref: snapshot:0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
         snapshot_id: snap-openrpc-snapshot-proposal
         summary: Closed public vote with 6 approval votes, 0 opposition votes, 2 abstentions and 6 amount-unchanged selections.
-        notes: Snapshot choice scores represent parallel approval and amount ballots, not twelve distinct voters.
+        notes: Snapshot choice scores represent parallel approval and amount ballots, not twelve distinct voters. One supporting comment asked for a concrete Chinese-developer commitment; attribution is intentionally omitted.
       vote_summary:
         platform: snapshot
         proposal_id: "0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b"
@@ -651,6 +668,7 @@ cases:
         - Draft import; do not use for AI review until a GCC content owner completes review.
         - Do not describe proposed milestones as completed, accepted, paid or unlocked.
         - Adoption figures are proposal-reported unless separately reproduced.
+        - Public governance feedback questioned marginal funding value and asked for a concrete Chinese-developer commitment beyond translation; discussion did not make this a formal milestone.
     governance:
       visibility: public
       license:

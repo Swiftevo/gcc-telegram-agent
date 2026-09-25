@@ -69,6 +69,14 @@ Applications are modeled as linked evidence, not copied into the public database
 by default. A case can say that an application exists, whether it is public,
 private, or redacted, and where an authorized system can find it later.
 
+For an owner-approved public application, a local sanitized evidence layer may
+preserve the public problem, source-reported state, funding plan, deliverables,
+milestones, sustainability claims, anonymized governance risks and applicant
+responses. It excludes voter identity data, per-voter metadata, meeting
+credentials, unnecessary biographies and private material. The structured case
+points to this evidence but remains unavailable to Bot／AI use until human review.
+See [`sanitized-application-evidence.md`](sanitized-application-evidence.md).
+
 ### 4. Voting Record
 
 Voting records are also modeled as linked evidence. The schema supports public

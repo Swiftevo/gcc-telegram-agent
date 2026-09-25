@@ -1,6 +1,7 @@
 """Project case database smoke tests."""
 
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -105,7 +106,17 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertEqual(oskey["public_record"]["funding"]["governance_approved"]["amount"], 30000)
         self.assertEqual(oskey["public_record"]["funding"]["disbursed"]["status"], "unknown")
         self.assertEqual(oskey["public_record"]["execution_events"][0]["event_type"], "governance_decision")
-        self.assertEqual(len(oskey["evidence"]["snapshots"]), 2)
+        self.assertEqual(len(oskey["evidence"]["snapshots"]), 3)
+        self.assertEqual(
+            oskey["evidence"]["grant_application"]["snapshot_id"],
+            "snap-oskey-sanitized-application-evidence",
+        )
+        oskey_application = next(
+            snapshot
+            for snapshot in oskey["evidence"]["snapshots"]
+            if snapshot["snapshot_id"] == "snap-oskey-sanitized-application-evidence"
+        )
+        self.assertEqual(oskey_application["source_type"], "grant_application")
 
         openrpc = cases["gcc-open-source-openrpc"]
         self.assertEqual(openrpc["governance"]["review_status"], "draft")
@@ -114,7 +125,17 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertEqual(openrpc["public_record"]["funding"]["governance_approved"]["amount"], 25000)
         self.assertEqual(openrpc["public_record"]["funding"]["disbursed"]["status"], "unknown")
         self.assertEqual(openrpc["evidence"]["vote_summary"]["total_score"], 8)
-        self.assertEqual(len(openrpc["evidence"]["snapshots"]), 2)
+        self.assertEqual(len(openrpc["evidence"]["snapshots"]), 3)
+        self.assertEqual(
+            openrpc["evidence"]["grant_application"]["snapshot_id"],
+            "snap-openrpc-sanitized-application-evidence",
+        )
+        openrpc_application = next(
+            snapshot
+            for snapshot in openrpc["evidence"]["snapshots"]
+            if snapshot["snapshot_id"] == "snap-openrpc-sanitized-application-evidence"
+        )
+        self.assertEqual(openrpc_application["source_type"], "grant_application")
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
         self.assertEqual(eth_city["record_type"], "funding_program")
@@ -219,6 +240,28 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertIn("track_id", case_schema["$defs"]["fundingTrack"]["required"])
         for field in ("record_type", "public_record", "evidence", "ai_review_usage", "governance"):
             self.assertIn(field, case_schema["required"])
+
+    def test_sanitized_application_evidence_excludes_voter_identity_and_credentials(self):
+        evidence_paths = (
+            ROOT / "data" / "source-snapshots" / "oskey-sanitized-application-evidence.md",
+            ROOT / "data" / "source-snapshots" / "openrpc-sanitized-application-evidence.md",
+        )
+        forbidden_fragments = (
+            "fishbiscuit",
+            "lurenbian",
+            "1click.eth",
+            "vvntp6.eth",
+            "rec/share",
+            "访问密码",
+        )
+        wallet_pattern = re.compile(r"(?<![0-9A-Fa-f])0x[0-9A-Fa-f]{40}(?![0-9A-Fa-f])")
+
+        for path in evidence_paths:
+            content = path.read_text(encoding="utf-8")
+            with self.subTest(path=path.name):
+                self.assertFalse(wallet_pattern.search(content))
+                for fragment in forbidden_fragments:
+                    self.assertNotIn(fragment.casefold(), content.casefold())
 
 
 if __name__ == "__main__":

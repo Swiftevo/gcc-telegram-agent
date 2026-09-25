@@ -37,6 +37,10 @@ non-conflicting case evidence.
   stable snapshot id.
 - [x] Keep actual disbursement, milestone acceptance／unlock and delivery unknown.
 - [x] Keep both cases `draft` and excluded from Bot QA／AI review.
+- [x] Add owner-approved sanitized application evidence covering public problems,
+  funding use, deliverables, milestones, sustainability, anonymized governance
+  concerns and applicant responses. Exclude voter identity data, per-voter
+  metadata, meeting credentials and unnecessary biographies.
 - [ ] GCC content owner reviews the two public summaries, public-goods assessments,
   links and cautions before either record may move to `reviewed`／`published`.
 - [ ] If milestone amounts need structured querying, revise the legacy
