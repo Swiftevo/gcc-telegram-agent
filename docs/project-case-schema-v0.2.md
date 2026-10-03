@@ -1,8 +1,9 @@
 # Project Case Schema 0.2.1
 
 Schema 0.2.1 is the safety boundary for importing additional public GCC funding
-cases. It migrates the six existing seed records but does not add new projects or
-connect the case database to Bot runtime answers.
+cases. It covers all eight current records: the six migrated seeds plus the OSKey
+and OpenRPC draft imports. It does not connect the case database to Bot runtime
+answers.
 
 ## Record identity
 
@@ -99,10 +100,11 @@ The validator reports all detectable issues and exits non-zero. It does not fetc
 websites, decide whether a source is truthful, reconcile accounting records, or
 approve private material for publication. Those remain human review tasks.
 
-## First import after 0.2
+## First import after 0.2 — completed
 
-Import only two or three non-conflicting public cases in the first batch. Keep
-them as `draft`, leave AI disabled, preserve the official GCC page and Snapshot
-as separate sources, and use `unknown` rather than inferring payments or
-outcomes. The pilot should test whether 0.2 needs an additive 0.2.x adjustment
-before a larger import.
+The first batch imported two non-conflicting public cases, OSKey and OpenRPC.
+Both remain `draft`, AI is disabled, the official GCC page and Snapshot are
+separate sources, and unknown payments or outcomes were not inferred. The batch
+confirmed the core 0.2 structure and exposed the remaining currency-field issue
+documented in `public-goods-database.md`; resolve that separately before a larger
+multi-currency import.

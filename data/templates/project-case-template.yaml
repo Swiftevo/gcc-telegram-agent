@@ -1,9 +1,11 @@
-# Copy one case into data/project-case-seeds.yaml. Do not add this template to
-# the database unchanged. Unknown facts stay null/unknown; never infer them.
+# Copy one case into data/project-case-seeds.yaml. The template is structurally
+# valid schema 0.2.1, but every replace-* value, source path, and zero checksum
+# must be replaced before insertion. Unknown facts stay null/unknown; never infer them.
 - case_id: replace-with-stable-case-id
   schema_version: "0.2.1"
   record_type: grant_case
-  canonical_project_id: replace-with-stable-project-id
+  # Optional: use only when migrating the exact legacy projects.yaml slug.
+  # canonical_project_id: replace-with-exact-legacy-slug
   title: Replace with public title
   category: Open Source
   fund_type: unknown
@@ -50,25 +52,29 @@
       milestones: []
       notes:
     public_goods_dimensions:
-      non_excludability:
-        level: unknown
-        rationale: ""
+      open_source:
+        value: unknown
+        notes: ""
         source_snapshot_id:
-      non_rivalry:
-        level: unknown
-        rationale: ""
+      accessibility:
+        value: unknown
+        notes: ""
         source_snapshot_id:
-      openness:
-        level: unknown
-        rationale: ""
+      knowledge_transfer:
+        value: unknown
+        notes: ""
         source_snapshot_id:
-      positive_externalities:
-        level: unknown
-        rationale: ""
+      community_impact:
+        value: unknown
+        notes: ""
         source_snapshot_id:
-      chinese_community_value:
-        level: unknown
-        rationale: ""
+      non_excludable:
+        value: unknown
+        notes: ""
+        source_snapshot_id:
+      non_rivalrous:
+        value: unknown
+        notes: ""
         source_snapshot_id:
       notes:
     impact_evidence: []
@@ -86,12 +92,14 @@
     source_urls: []
     snapshots:
       - snapshot_id: replace-with-source-id
-        captured_at: "YYYY-MM-DD"
+        captured_at:
         source_type: other
         access_level: public
         source_url:
         storage_uri: data/source-snapshots/replace-with-file.md
-        checksum: sha256:replace-after-cleaning
+        # Schema-valid sentinel only; the repository validator rejects it unless
+        # it matches the cleaned source file.
+        checksum: sha256:0000000000000000000000000000000000000000000000000000000000000000
         processing:
           handling_profile: public_source_extract
           sanitization_status: pending

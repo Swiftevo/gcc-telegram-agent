@@ -30,7 +30,7 @@ individual approval, disbursement, or current operating status.
 
 Out of scope for this first step:
 
-- Importing all 67 projects.
+- Importing all 63 projects in the frozen legacy catalog.
 - Publishing private applications or committee records.
 - Fully automating grant review.
 - Replacing the current `pre_screen()` scoring logic.
@@ -175,7 +175,7 @@ than silently converting currencies. A future schema revision may replace that
 legacy field with the same amount／currency fact shape used by `funding` and
 `execution_events`.
 
-The remaining work is governed by `PGDATA-002`, `PGDATA-001`, `CONTENT-001`,
+The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
 [`docs/todo.md`](todo.md). That ordering is intentional: privacy, screening
 guardrails, provenance, and licensing must be stable before importing private
