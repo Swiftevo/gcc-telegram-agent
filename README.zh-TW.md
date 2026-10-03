@@ -178,6 +178,12 @@ main.py                      # 啟動入口
 - 私訊、群組、群組用戶及 Telegram topic 使用相互隔離的 Session
 - 價值觀 system prompt 始終位於用戶對話之前
 
+## 公共物品案例資料庫
+
+案例資料保存在 `data/project-case-seeds.yaml`。目前共有 8 筆 schema 0.2.1 案例，覆蓋開源專案、社群資助、單次活動、ETH City 系列、機票支持計劃和 Gitcoin 類別占位共 6 個代表類別。
+
+63 筆 legacy 專案中目前有 8 筆映射至 canonical cases，其餘 55 筆仍為 `legacy_only`。所有 canonical cases 目前均未開放給 Bot／AI；production 問答暫時繼續讀取 frozen `projects.yaml`。新增案例只寫入 canonical database，並須通過來源清理、checksum、review 和 allowed-use 驗證。
+
 ## 部署
 
 Production SQLite 的 snapshot、備份、還原演練及事故程序見

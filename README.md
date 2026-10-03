@@ -182,14 +182,14 @@ main.py                      # 启动入口
 
 ## 公共物品案例资料库
 
-第一批案例种子保存在 `data/project-case-seeds.yaml`，目前覆盖 6 个代表类别：开源项目、社区资助、单次活动、ETH City 系列、机票支持计划和 Gitcoin 类别占位。
+案例资料保存在 `data/project-case-seeds.yaml`。目前共有 8 笔案例，覆盖 6 个代表类别：开源项目、社区资助、单次活动、ETH City 系列、机票支持计划和 Gitcoin 类别占位。
 
-v0.1 schema 分成两层：
+schema 0.2.1 分成两层：
 
 - `schema/project-case-database.schema.json`：定义整个资料库文件，包括 `schema_version`、`updated_at`、`purpose` 和 `cases`
 - `schema/project.schema.json`：定义单个案例，包括公开记录、资金结构、公共物品维度、影响证据、原始资料指针、投票记录和 AI 初审引用方式
 
-这批资料是可追溯的 seed database，不等同于完整 GCC 历史资助库。新增案例时应保留原始申请书、Snapshot 或投票记录的指针，并明确标记资料质量、隐私和是否可用于 AI 初审。
+这批资料是可追溯的 seed database，不等同于完整 GCC 历史资助库。63 笔 legacy 项目中目前有 8 笔映射至 canonical cases，其余 55 笔仍为 `legacy_only`。所有 canonical cases 目前均未开放给 Bot／AI；production 问答暂时继续读取 frozen `projects.yaml`。新增案例只写入 canonical database，并须通过来源清理、checksum、review 和 allowed-use 验证。
 
 ## 部署
 

@@ -22,6 +22,7 @@ DATABASE_SCHEMA_PATH = ROOT / "schema" / "project-case-database.schema.json"
 CASE_SCHEMA_PATH = ROOT / "schema" / "project.schema.json"
 MIGRATION_PATH = ROOT / "data" / "project-case-migration.yaml"
 LEGACY_CATALOG_PATH = ROOT / "projects.yaml"
+CASE_TEMPLATE_PATH = ROOT / "data" / "templates" / "project-case-template.yaml"
 
 
 def load_inputs():
@@ -65,6 +66,19 @@ class ProjectCaseValidationTests(unittest.TestCase):
 
     def test_seed_database_passes_schema_and_cross_record_validation(self):
         self.assertEqual([], validate_paths())
+
+    def test_project_case_template_conforms_to_current_schema(self):
+        template_cases = yaml.safe_load(CASE_TEMPLATE_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(1, len(template_cases))
+        self.assertNotIn("canonical_project_id", template_cases[0])
+        template_database = {
+            "schema_version": "0.2.1",
+            "updated_at": "2026-10-04",
+            "purpose": "Schema conformance probe for the reusable case template.",
+            "cases": template_cases,
+        }
+
+        self.assertEqual([], self.validate(template_database))
 
     def test_duplicate_case_id_is_rejected(self):
         database = deepcopy(self.database)

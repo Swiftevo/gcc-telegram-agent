@@ -1,5 +1,5 @@
 schema_version: "0.2.1"
-updated_at: "2026-09-25"
+updated_at: "2026-10-04"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category plus a small,
@@ -1369,7 +1369,7 @@ cases:
         status: expected
         access_level: private
         document_ref:
-        snapshot_id: snap-eth-beijing-2025-gcc-project-page
+        snapshot_id:
         summary: GCC project page confirms the ETH Beijing 2025 project page and lists amount 3000, but does not include the detailed application.
         notes: Reserved for the detailed GCC application if available; follow-up is tracked in docs/project-evidence-todo.md.
       voting_record:
