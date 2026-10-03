@@ -3,6 +3,18 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-04：PGDATA schema alignment 第一步
+
+- PR #42 修正 reusable case template，使其直接符合現行 schema 0.2.1，並新增 template
+  contract test，防止未來 schema 更新後模板再次落後。
+- ETH Beijing 2025 的 private application pointer 不再錯指向公開 GCC project page；詳細申請
+  仍維持 `expected`，但未捕捉的私有文件不再冒充已有 snapshot。
+- 三份 README、schema 說明、database design、legacy catalog 計數及 TODO 已統一為現況：
+  8 筆 canonical cases、6 個代表類別、63 筆 legacy records、8 mapped、55 `legacy_only`；
+  PGDATA-002 移入 Done，漏合併的 REPO-HISTORY-001 補回 P1。
+- 沒有升級 schema、沒有新增案例、沒有改 runtime 或 AI eligibility。case validator、template
+  validation、完整 19 個測試檔及 diff check 均通過。
+
 ## 2026-09-25：PGDATA-002 收斂 canonical data pipeline
 
 - PR #41 將現有 8 筆 canonical case 全部升至 schema 0.2.1；每份 local evidence 都有
