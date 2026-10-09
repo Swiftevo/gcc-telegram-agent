@@ -41,6 +41,8 @@ _SOURCE_PRIVACY_PATTERNS = (
     ),
 )
 
+_NONPUBLIC_POINTER_URL = re.compile(r"(?:https?|file)://|www\.", re.IGNORECASE)
+
 
 @dataclass(frozen=True)
 class ValidationIssue:
@@ -211,12 +213,54 @@ def validate_case_database(
                             str(snapshot_id),
                         )
                     )
+                if isinstance(pointer, dict) and pointer.get("access_level") in {
+                    "internal",
+                    "private",
+                }:
+                    for field_name in ("document_ref", "snapshot_id", "summary"):
+                        if pointer.get(field_name) not in {None, ""}:
+                            issues.append(
+                                ValidationIssue(
+                                    "unsafe_nonpublic_pointer_content",
+                                    f"{case_path}.evidence.{pointer_name}.{field_name}",
+                                    "internal/private evidence is metadata-only in the public repository",
+                                )
+                            )
+                    notes = pointer.get("notes")
+                    if isinstance(notes, str) and _NONPUBLIC_POINTER_URL.search(notes):
+                        issues.append(
+                            ValidationIssue(
+                                "unsafe_nonpublic_pointer_url",
+                                f"{case_path}.evidence.{pointer_name}.notes",
+                                "internal/private evidence notes must not contain a URL",
+                            )
+                        )
 
             snapshots = evidence.get("snapshots", [])
             for snapshot_index, snapshot in enumerate(snapshots if isinstance(snapshots, list) else []):
                 if not isinstance(snapshot, dict):
                     continue
                 processing = snapshot.get("processing", {})
+                access_level = snapshot.get("access_level")
+                if access_level in {"internal", "private"}:
+                    issues.append(
+                        ValidationIssue(
+                            "unsafe_local_source_access",
+                            f"{case_path}.evidence.snapshots[{snapshot_index}].access_level",
+                            "repository-local evidence must be public or reviewed redacted material",
+                        )
+                    )
+                if access_level == "redacted" and (
+                    processing.get("sanitization_status") != "human_reviewed"
+                    or processing.get("review_status") != "approved"
+                ):
+                    issues.append(
+                        ValidationIssue(
+                            "unsafe_redacted_source",
+                            f"{case_path}.evidence.snapshots[{snapshot_index}].processing",
+                            "redacted local evidence requires human_reviewed sanitization and approved review",
+                        )
+                    )
                 expected_profile = (
                     "sanitized_public_application"
                     if snapshot.get("source_type") == "grant_application"

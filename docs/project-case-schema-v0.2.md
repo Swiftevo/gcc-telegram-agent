@@ -73,6 +73,13 @@ status, source-review status, allowed uses, policy version, and normalized
 SHA-256 checksum. Automated checking is not human approval; all current sources
 remain `pending` and `evidence_only`.
 
+The schema's access-level enum remains reusable, but this public repository has
+a narrower canonical profile. Local snapshots must be `public`, or `redacted`
+with human-reviewed sanitization and approved source review. `internal` and
+`private` application or voting pointers may keep only status, access level, and
+a generic note; their document reference, snapshot id, content summary, and URL
+must remain empty. The underlying material stays outside public Git.
+
 ## Validation
 
 Run the same validator locally and in CI:
@@ -93,6 +100,8 @@ Validation covers JSON Schema Draft 2020-12 plus database-wide rules:
 - date and amount/currency structure.
 - source-file existence, checksum and orphan detection;
 - row-level voter, wallet and recording-access data scanning;
+- public-repository access boundaries for local snapshots and non-public
+  metadata pointers;
 - canonical-to-legacy migration mappings and frozen legacy digest;
 - no deprecated duplicate amount fields or unsupported `funded` claims.
 

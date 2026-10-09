@@ -108,6 +108,8 @@
           policy_version: "1.0"
           notes: Run the validator after cleaning and calculating the checksum.
         notes:
+    # In this public repository, internal/private pointers are metadata-only.
+    # Keep document_ref, snapshot_id, and summary empty; do not put URLs in notes.
     grant_application:
       status: unknown
       access_level: private

@@ -44,9 +44,11 @@ summary, why funded, region, tags, links, and source URLs.
 
 ### 2. Source Snapshots
 
-Snapshots are point-in-time references to source material. A snapshot can point
-to a public web page, a private application, an exported PDF, a vote record, or a
-future content-addressed archive.
+Snapshots are point-in-time references to source material. In this public
+repository, a local snapshot may contain only public material or a redacted
+extract that has been human-reviewed and approved. Private applications and
+internal committee records remain outside the repository and are represented
+only by metadata-only pointers.
 
 The schema reserves fields for:
 
@@ -67,9 +69,11 @@ an authorized GCC owner confirms it.
 
 ### 3. Grant Application
 
-Applications are modeled as linked evidence, not copied into the public database
-by default. A case can say that an application exists, whether it is public,
-private, or redacted, and where an authorized system can find it later.
+Applications are modeled as evidence, not copied into the public database by
+default. A case can say that a private or internal application exists, but its
+public-repository pointer cannot contain the document, a URL, a local snapshot,
+or a content summary. Authorized systems outside this repository may manage the
+actual material separately.
 
 For an owner-approved public application, a local sanitized evidence layer may
 preserve the public problem, source-reported state, funding plan, deliverables,
@@ -85,9 +89,9 @@ copies remain in Git history rather than as parallel live databases.
 
 ### 4. Voting Record
 
-Voting records are also modeled as linked evidence. The schema supports public
-aggregate records now and can later support committee-level records if GCC
-chooses to publish or internally expose them.
+Voting records are also modeled as evidence. The repository supports cleaned
+public aggregate records now. Internal committee records remain metadata-only
+unless GCC later publishes an approved, redacted extract.
 
 ### 5. AI Screening Context
 
