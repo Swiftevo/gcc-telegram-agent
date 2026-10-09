@@ -3,6 +3,19 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-10：PGDATA-001 第三步統一 schema 0.3 金額模型
+
+- PR #44 將 canonical case database、8 筆現有案例及 reusable template 升至 schema 0.3.0；
+  申請額、治理核准額、實付額、總預算、每人上限、資助線金額及 milestone 金額，現在統一使用
+  `amount`、`currency`、`status`、`source_snapshot_ids` 和 `notes`。
+- 舊 `_usd` 欄位及 funding shared currency 已移除。validator 會拒絕任何層級殘留的 `_usd`
+  欄位；數值金額必須同時有原幣別和至少一個來源，`unknown`／`not_applicable` 不可帶數值。
+- OSKey、OpenRPC 及其他既有 proposal milestone 金額以原有 USDC／USD 結構化保存，但明確只
+  是提案安排，不代表已付款、已驗收或已解鎖；執行結果仍須另有 execution evidence。
+- migration ledger 現在鎖定 canonical schema 版本，文件、contributor guide、README 和 TODO
+  已同步。沒有新增案例、改動已知金額、review／reconciliation／AI flags、Bot runtime 或部署。
+- canonical validator、34 項 focused knowledge tests、完整 19 個測試檔及 diff check 均通過。
+
 ## 2026-10-10：PGDATA-001 第二步收緊 public repo evidence 邊界
 
 - PR #43 將 canonical repository profile 固定為：local evidence 只可為 `public`，或已
