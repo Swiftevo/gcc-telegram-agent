@@ -42,6 +42,25 @@ Use `data/templates/project-case-template.yaml` for a new case and
 `data/templates/sanitized-public-application.md` when a full public application
 needs a cleaned evidence layer.
 
+## Public repository evidence boundary
+
+The canonical database may contain a repository-local evidence snapshot only
+when it is:
+
+- `public`; or
+- `redacted`, with `sanitization_status: human_reviewed` and
+  `review_status: approved`.
+
+`internal` and `private` evidence stays outside this public Git repository. Its
+application or voting pointer is metadata-only: keep `document_ref`,
+`snapshot_id`, and `summary` empty, and do not put a URL in `notes`. The pointer
+may record only its status, access level, and a generic note such as whether the
+material is expected or unavailable.
+
+The schema retains all four access-level values so the data model remains
+reusable outside this repository. The canonical validator applies the stricter
+public-repository profile above.
+
 ## Source processing states
 
 Every local source has a `processing` object:
@@ -81,7 +100,8 @@ row-level vote, wallet, and recording-access patterns.
 
 Before approving a source:
 
-1. Confirm the source is public or publication is authorized.
+1. Confirm the source is public, or that a redacted extract has been human
+   reviewed and approved for this public repository.
 2. Confirm the extract accurately represents the source and distinguishes
    applicant claims from independently verified facts.
 3. Confirm requested, approved, and disbursed amounts are separated.

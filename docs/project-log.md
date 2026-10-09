@@ -3,6 +3,20 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-10：PGDATA-001 第二步收緊 public repo evidence 邊界
+
+- PR #43 將 canonical repository profile 固定為：local evidence 只可為 `public`，或已
+  `human_reviewed` 且 `approved` 的 `redacted` extract；`internal`／`private` 申請及投票
+  pointer 只可留下 status、access level 與不含 URL 的一般 notes。
+- validator 現在拒絕 public repo 內的 internal／private local snapshot，也拒絕 non-public
+  pointer 帶有 `document_ref`、`snapshot_id`、內容摘要或 URL；template、data pipeline、
+  schema 說明及 contributor guide 已同步，避免規則只存在於文件或口頭決定。
+- 現有唯一不符合邊界的 ETH Beijing private application 摘要已清空；其詳細申請仍保持
+  `expected`，實際文件留在 repo 外，後續缺口繼續由 `project-evidence-todo.md` 跟進。
+- canonical case validator、25 項 knowledge validation tests、完整 19 個測試檔及 diff check
+  均通過。沒有改 Bot runtime、使用者回覆、schema 版本、案例狀態或 AI-use flag；
+  `PGDATA-001` 仍需內容 owner review、QA 欄位定義及 runtime provenance 接入。
+
 ## 2026-10-04：PGDATA schema alignment 第一步
 
 - PR #42 修正 reusable case template，使其直接符合現行 schema 0.2.1，並新增 template

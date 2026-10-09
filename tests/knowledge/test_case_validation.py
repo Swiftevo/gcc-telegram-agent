@@ -110,6 +110,44 @@ class ProjectCaseValidationTests(unittest.TestCase):
         ] = ["missing-snapshot"]
         self.assertIn("unknown_snapshot_reference", {issue.code for issue in self.validate(database)})
 
+    def test_internal_or_private_pointer_is_metadata_only(self):
+        database = deepcopy(self.database)
+        case = self.case(database, "gcc-eth-city-eth-beijing-2025")
+        application = case["evidence"]["grant_application"]
+        application["summary"] = "Content copied from a private application."
+        application["notes"] = "Available at https://internal.example/application"
+        codes = {issue.code for issue in self.validate(database)}
+        self.assertIn("unsafe_nonpublic_pointer_content", codes)
+        self.assertIn("unsafe_nonpublic_pointer_url", codes)
+
+    def test_internal_or_private_local_snapshot_is_rejected(self):
+        database = deepcopy(self.database)
+        database["cases"][0]["evidence"]["snapshots"][0]["access_level"] = "private"
+        self.assertIn(
+            "unsafe_local_source_access",
+            {issue.code for issue in self.validate(database)},
+        )
+
+    def test_redacted_local_snapshot_requires_human_review_and_approval(self):
+        database = deepcopy(self.database)
+        snapshot = database["cases"][0]["evidence"]["snapshots"][0]
+        snapshot["access_level"] = "redacted"
+        self.assertIn(
+            "unsafe_redacted_source",
+            {issue.code for issue in self.validate(database)},
+        )
+
+        snapshot["processing"].update(
+            sanitization_status="human_reviewed",
+            review_status="approved",
+            reviewed_at="2026-10-10",
+            reviewed_by_role="GCC content owner",
+        )
+        self.assertNotIn(
+            "unsafe_redacted_source",
+            {issue.code for issue in self.validate(database)},
+        )
+
     def test_duplicate_snapshot_id_is_rejected(self):
         database = deepcopy(self.database)
         first_snapshot_id = database["cases"][0]["evidence"]["snapshots"][0]["snapshot_id"]

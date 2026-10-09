@@ -119,6 +119,10 @@ required checks 及适用的审查要求通过后，由维护者合入 `main`。
 逐票日期或 voting power、访问密码、私人申请或内部评审。未知的拨款、milestone 或成果保持
 `unknown`／`pending_reconciliation`，不得由提案或网页标签推断。
 
+这个公开 repo 的本地 evidence 只允许 `public`，或已经人工清理并批准的 `redacted`。
+`internal`／`private` 申请及投票资料只保留 status、access level 和不含 URL 的一般说明；
+`document_ref`、`snapshot_id`、`summary` 必须留空，实际文件须存放在 repo 之外。
+
 修改案例或来源后同时运行：
 
 ```bash
