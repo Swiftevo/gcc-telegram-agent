@@ -184,7 +184,7 @@ main.py                      # 启动入口
 
 案例资料保存在 `data/project-case-seeds.yaml`。目前共有 8 笔案例，覆盖 6 个代表类别：开源项目、社区资助、单次活动、ETH City 系列、机票支持计划和 Gitcoin 类别占位。
 
-schema 0.2.1 分成两层：
+schema 0.3.0 分成两层，并以相同的金额、币别、状态与来源结构记录申请额、核准额、实付额、预算、上限、资助线和 milestone：
 
 - `schema/project-case-database.schema.json`：定义整个资料库文件，包括 `schema_version`、`updated_at`、`purpose` 和 `cases`
 - `schema/project.schema.json`：定义单个案例，包括公开记录、资金结构、公共物品维度、影响证据、原始资料指针、投票记录和 AI 初审引用方式

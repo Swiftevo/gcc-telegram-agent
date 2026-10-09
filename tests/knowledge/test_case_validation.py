@@ -72,8 +72,8 @@ class ProjectCaseValidationTests(unittest.TestCase):
         self.assertEqual(1, len(template_cases))
         self.assertNotIn("canonical_project_id", template_cases[0])
         template_database = {
-            "schema_version": "0.2.1",
-            "updated_at": "2026-10-04",
+            "schema_version": "0.3.0",
+            "updated_at": "2026-10-10",
             "purpose": "Schema conformance probe for the reusable case template.",
             "cases": template_cases,
         }
@@ -172,6 +172,21 @@ class ProjectCaseValidationTests(unittest.TestCase):
         issues = self.validate(database)
         self.assertTrue(any(issue.code == "schema" for issue in issues))
 
+    def test_structured_amount_requires_source(self):
+        database = deepcopy(self.database)
+        database["cases"][0]["public_record"]["funding"]["requested"][
+            "source_snapshot_ids"
+        ] = []
+        issues = self.validate(database)
+        self.assertTrue(any(issue.code == "schema" for issue in issues))
+
+    def test_unknown_amount_fact_cannot_carry_a_value(self):
+        database = deepcopy(self.database)
+        fact = database["cases"][1]["public_record"]["funding"]["total_budget"]
+        fact.update(amount=30000, currency="USDC")
+        issues = self.validate(database)
+        self.assertTrue(any(issue.code == "schema" for issue in issues))
+
     def test_pending_reconciliation_cannot_be_enabled_for_ai_review(self):
         database = deepcopy(self.database)
         case = database["cases"][0]
@@ -189,6 +204,15 @@ class ProjectCaseValidationTests(unittest.TestCase):
     def test_deprecated_amount_fields_are_rejected(self):
         database = deepcopy(self.database)
         database["cases"][0]["public_record"]["amount_usd"] = 40000
+        self.assertIn(
+            "deprecated_amount_field",
+            {issue.code for issue in self.validate(database)},
+        )
+
+    def test_nested_deprecated_usd_field_is_rejected(self):
+        database = deepcopy(self.database)
+        milestone = database["cases"][0]["public_record"]["program_details"]["milestones"][0]
+        milestone["unlock_amount_usd"] = 8000
         self.assertIn(
             "deprecated_amount_field",
             {issue.code for issue in self.validate(database)},
@@ -263,6 +287,14 @@ class ProjectCaseValidationTests(unittest.TestCase):
         migration["mappings"] = migration["mappings"][1:]
         self.assertIn(
             "missing_migration_mapping",
+            {issue.code for issue in self.validate_repository(migration=migration)},
+        )
+
+    def test_migration_ledger_tracks_canonical_schema_version(self):
+        migration = yaml.safe_load(MIGRATION_PATH.read_text(encoding="utf-8"))
+        migration["canonical_schema_version"] = "0.2.1"
+        self.assertIn(
+            "migration_schema_version_mismatch",
             {issue.code for issue in self.validate_repository(migration=migration)},
         )
 

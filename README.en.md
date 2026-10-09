@@ -179,7 +179,7 @@ Scores are preliminary only and are not a final decision:
 
 ## Public-goods case database
 
-Cases live in `data/project-case-seeds.yaml`. The database currently contains eight schema 0.2.1 cases across six representative categories: open-source projects, community funding, one-off events, the ETH City series, travel scholarships, and a Gitcoin placeholder.
+Cases live in `data/project-case-seeds.yaml`. The database currently contains eight schema 0.3.0 cases across six representative categories: open-source projects, community funding, one-off events, the ETH City series, travel scholarships, and a Gitcoin placeholder. Requested, approved, disbursed, budget, cap, funding-track, and milestone values use the same amount, currency, status, and source structure.
 
 Eight of the 63 legacy projects map to canonical cases; the other 55 remain `legacy_only`. No canonical case is currently enabled for Bot or AI use, and production Q&A continues to read the frozen `projects.yaml` catalog. New cases go only to the canonical database and must pass source-cleaning, checksum, review, and allowed-use validation.
 

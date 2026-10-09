@@ -108,15 +108,15 @@ Each case should separate four things:
 - What evidence supports it: source URLs, snapshots, applications, votes.
 - What AI may use: concise retrieval text and allowed screening dimensions.
 
-## Schema 0.2.1
+## Schema 0.3.0
 
-Schema 0.2.1 migrates all existing case records and provides the validation boundary
+Schema 0.3.0 migrates all existing case records and provides the validation boundary
 for the next small import batch. It distinguishes a funding programme, an
 individual grant case, and a placeholder; separates requested, governance-approved,
 and disbursed amounts; and reserves independently sourced execution events for
 governance decisions, payments, milestone acceptance／unlock, activity completion,
 and reports. Full field and validation rules are documented in
-[`project-case-schema-v0.2.md`](project-case-schema-v0.2.md).
+[`project-case-schema-v0.3.md`](project-case-schema-v0.3.md).
 
 New public record fields:
 
@@ -124,8 +124,8 @@ New public record fields:
 - `activity_year`: when the activity or project work mainly happens.
 - `language_community`: language or cultural communities served.
 - `funding`: requested, governance-approved, and disbursed facts with original
-  currency, evidence references, and uncertainty status. Canonical records do
-  not retain duplicate legacy amount fields.
+  currency, evidence references, and uncertainty status. Total budget and
+  per-person cap use the same fact shape.
 - `execution_events`: separately sourced governance and real-world execution
   events; an empty list does not imply that no event occurred.
 - `program_details`: dates, location, application deadline, eligibility,
@@ -159,7 +159,7 @@ Fields deliberately not duplicated:
 
 Completed foundations:
 
-- All eight existing cases are migrated to schema 0.2.1.
+- All eight existing cases are migrated to schema 0.3.0.
 - Draft 2020-12 and cross-record validation run locally and in the release gate.
 - Repository validation locks the 63-record legacy catalog, tracks 8 mappings
   and 55 `legacy_only` records, verifies every source checksum, rejects orphan
@@ -171,13 +171,11 @@ Completed foundations:
   project-page amount agree. Actual disbursement, milestone acceptance, unlock
   and delivery remain `unknown`; neither case is available to Bot QA or AI review.
 
-The first batch also exposed a deliberate compatibility limitation: proposed
-milestone amounts are denominated in USDC, while the legacy milestone field is
-named `unlock_amount_usd`. The import therefore preserves the original USDC
-amount in the milestone description and leaves `unlock_amount_usd` empty rather
-than silently converting currencies. A future schema revision may replace that
-legacy field with the same amount／currency fact shape used by `funding` and
-`execution_events`.
+Schema 0.3 resolves the first batch's currency limitation. Case budgets,
+per-person caps, funding-track pools／limits, and proposed milestone unlocks all
+use the same amount／currency／status／source fact shape. The former `_usd` fields
+are removed; no USDC proposal is silently converted to USD. A proposed unlock
+still does not prove payment, milestone acceptance, or actual unlock.
 
 The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
