@@ -28,7 +28,7 @@ claim from bot factual answers, comparison examples and application review. This
 work is tracked as `GRANT-RECON-001` and does not block unrelated repairs or
 non-conflicting case evidence.
 
-## First schema 0.2 import batch — OSKey and OpenRPC
+## First schema import batch — OSKey and OpenRPC
 
 - [x] Match each Snapshot requested amount to the GCC project-page amount.
 - [x] Preserve the closed public vote and amount ballot without treating either
@@ -43,9 +43,9 @@ non-conflicting case evidence.
   metadata, meeting credentials and unnecessary biographies.
 - [ ] GCC content owner reviews the two public summaries, public-goods assessments,
   links and cautions before either record may move to `reviewed`／`published`.
-- [ ] If milestone amounts need structured querying, revise the legacy
-  `unlock_amount_usd` field in a future schema version; do not convert proposal
-  USDC values into USD merely to fill it.
+- [x] Schema 0.3 replaces the legacy milestone USD field with a structured
+  amount fact and records proposal milestone amounts in their original USDC
+  currency, without treating them as actual payments or unlocks.
 
 This batch has no identified amount conflict: OSKey is 30,000 in both its public
 proposal and GCC page, while OpenRPC is 25,000 and its public amount ballot records

@@ -1,6 +1,7 @@
 schema_version: "1.0.0"
-updated_at: "2026-09-25"
+updated_at: "2026-10-10"
 canonical_database: data/project-case-seeds.yaml
+canonical_schema_version: "0.3.0"
 
 legacy_catalog:
   path: projects.yaml

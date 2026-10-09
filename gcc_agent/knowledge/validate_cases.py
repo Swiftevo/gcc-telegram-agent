@@ -87,6 +87,18 @@ def _walk_source_references(value: Any, path: tuple[Any, ...] = ()):
             yield from _walk_source_references(child, (*path, index))
 
 
+def _walk_deprecated_usd_fields(value: Any, path: tuple[Any, ...] = ()):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = (*path, key)
+            if isinstance(key, str) and key.endswith("_usd"):
+                yield child_path
+            yield from _walk_deprecated_usd_fields(child, child_path)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from _walk_deprecated_usd_fields(child, (*path, index))
+
+
 def _contains_status(value: Any, expected: str) -> bool:
     if isinstance(value, dict):
         return any(_contains_status(child, expected) for child in value.values())
@@ -300,24 +312,24 @@ def validate_case_database(
 
         public_record = case.get("public_record", {})
         funding = public_record.get("funding", {}) if isinstance(public_record, dict) else {}
-        if isinstance(public_record, dict) and "amount_usd" in public_record:
-            issues.append(
-                ValidationIssue(
-                    "deprecated_amount_field",
-                    f"{case_path}.public_record.amount_usd",
-                    "use the structured requested, governance_approved, and disbursed facts",
-                )
-            )
-        if isinstance(funding, dict):
-            for field in ("requested_amount_usd", "approved_amount_usd", "currency"):
-                if field in funding:
-                    issues.append(
-                        ValidationIssue(
-                            "deprecated_amount_field",
-                            f"{case_path}.public_record.funding.{field}",
-                            "do not duplicate structured funding facts",
-                        )
+        if isinstance(public_record, dict):
+            for relative_path in _walk_deprecated_usd_fields(public_record):
+                issues.append(
+                    ValidationIssue(
+                        "deprecated_amount_field",
+                        _format_path(("cases", index, "public_record", *relative_path)),
+                        "use an amount fact with amount, currency, status, sources, and notes",
                     )
+                )
+        if isinstance(funding, dict):
+            if "currency" in funding:
+                issues.append(
+                    ValidationIssue(
+                        "deprecated_amount_field",
+                        f"{case_path}.public_record.funding.currency",
+                        "each amount fact must carry its own currency",
+                    )
+                )
             grant_status = public_record.get("lifecycle_status", {}).get("grant_status")
             disbursed_status = funding.get("disbursed", {}).get("status")
             if grant_status == "funded" and disbursed_status not in {
@@ -439,6 +451,16 @@ def validate_repository_data(
     }
     for orphan in sorted(actual_files - referenced_files):
         issues.append(ValidationIssue("orphan_source_file", "$.source_files", orphan))
+
+    canonical_schema_version = migration.get("canonical_schema_version")
+    if canonical_schema_version != database.get("schema_version"):
+        issues.append(
+            ValidationIssue(
+                "migration_schema_version_mismatch",
+                "$.canonical_schema_version",
+                f"ledger {canonical_schema_version}; database {database.get('schema_version')}",
+            )
+        )
 
     legacy_config = migration.get("legacy_catalog", {})
     legacy_projects = legacy_catalog.get("funded_projects", [])

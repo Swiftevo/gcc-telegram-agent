@@ -22,7 +22,7 @@
     },
     "schema_version": {
       "type": "string",
-      "const": "0.2.1"
+      "const": "0.3.0"
     },
     "record_type": {
       "type": "string",
@@ -59,11 +59,6 @@
       "type": "object",
       "required": ["summary", "why_funded", "funding", "execution_events", "links"],
       "properties": {
-        "amount_usd": {
-          "deprecated": true,
-          "description": "Legacy simple amount field. Prefer funding.* for new records.",
-          "type": ["number", "null"]
-        },
         "grant_year": {
           "type": ["integer", "null"],
           "description": "Year when GCC approved or recorded the grant."
@@ -267,28 +262,19 @@
   "$defs": {
     "funding": {
       "type": "object",
-      "required": ["requested", "governance_approved", "disbursed"],
+      "required": [
+        "requested",
+        "governance_approved",
+        "disbursed",
+        "total_budget",
+        "per_person_cap"
+      ],
       "properties": {
         "requested": { "$ref": "#/$defs/amountFact" },
         "governance_approved": { "$ref": "#/$defs/amountFact" },
         "disbursed": { "$ref": "#/$defs/amountFact" },
-        "requested_amount_usd": {
-          "deprecated": true,
-          "description": "Legacy compatibility field. Use requested.amount and requested.currency.",
-          "type": ["number", "null"]
-        },
-        "approved_amount_usd": {
-          "deprecated": true,
-          "description": "Legacy compatibility field. Use governance_approved.amount and governance_approved.currency.",
-          "type": ["number", "null"]
-        },
-        "total_budget_usd": { "type": ["number", "null"] },
-        "per_person_cap_usd": { "type": ["number", "null"] },
-        "currency": {
-          "deprecated": true,
-          "description": "Legacy shared currency. Structured funding facts each carry their own currency.",
-          "type": ["string", "null"]
-        },
+        "total_budget": { "$ref": "#/$defs/amountFact" },
+        "per_person_cap": { "$ref": "#/$defs/amountFact" },
         "disbursement_type": {
           "type": ["string", "null"],
           "enum": [
@@ -338,7 +324,27 @@
             "required": ["amount"]
           },
           "then": {
-            "properties": { "currency": { "type": "string", "minLength": 1 } }
+            "properties": {
+              "currency": { "type": "string", "minLength": 1 },
+              "source_snapshot_ids": { "minItems": 1 }
+            }
+          },
+          "else": {
+            "properties": { "currency": { "type": "null" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "enum": ["unknown", "not_applicable"] }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "amount": { "type": "null" },
+              "currency": { "type": "null" }
+            }
           }
         }
       ]
@@ -378,7 +384,27 @@
             "required": ["amount"]
           },
           "then": {
-            "properties": { "currency": { "type": "string", "minLength": 1 } }
+            "properties": {
+              "currency": { "type": "string", "minLength": 1 },
+              "source_snapshot_ids": { "minItems": 1 }
+            }
+          },
+          "else": {
+            "properties": { "currency": { "type": "null" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "enum": ["unknown", "not_applicable"] }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "amount": { "type": "null" },
+              "currency": { "type": "null" }
+            }
           }
         }
       ]
@@ -417,7 +443,7 @@
     },
     "fundingTrack": {
       "type": "object",
-      "required": ["track_id", "name"],
+      "required": ["track_id", "name", "total_pool", "min_grant", "max_grant"],
       "properties": {
         "track_id": {
           "type": "string",
@@ -432,9 +458,9 @@
           "type": ["string", "null"],
           "enum": ["university_group", "city_event", "travel_scholarship", "open_source", "other", null]
         },
-        "total_pool_usd": { "type": ["number", "null"] },
-        "min_grant_usd": { "type": ["number", "null"] },
-        "max_grant_usd": { "type": ["number", "null"] },
+        "total_pool": { "$ref": "#/$defs/amountFact" },
+        "min_grant": { "$ref": "#/$defs/amountFact" },
+        "max_grant": { "$ref": "#/$defs/amountFact" },
         "slot_limit": { "type": ["integer", "null"] },
         "application_mode": { "type": ["string", "null"] },
         "application_url": { "type": ["string", "null"] },
@@ -470,11 +496,11 @@
     },
     "milestone": {
       "type": "object",
-      "required": ["name"],
+      "required": ["name", "unlock_amount"],
       "properties": {
         "name": { "type": "string" },
         "description": { "type": ["string", "null"] },
-        "unlock_amount_usd": { "type": ["number", "null"] },
+        "unlock_amount": { "$ref": "#/$defs/amountFact" },
         "unlock_percentage": { "type": ["number", "null"] },
         "expected_completion": { "type": ["string", "null"] },
         "status": {

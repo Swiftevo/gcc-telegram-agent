@@ -1,8 +1,8 @@
 # Copy one case into data/project-case-seeds.yaml. The template is structurally
-# valid schema 0.2.1, but every replace-* value, source path, and zero checksum
+# valid schema 0.3.0, but every replace-* value, source path, and zero checksum
 # must be replaced before insertion. Unknown facts stay null/unknown; never infer them.
 - case_id: replace-with-stable-case-id
-  schema_version: "0.2.1"
+  schema_version: "0.3.0"
   record_type: grant_case
   # Optional: use only when migrating the exact legacy projects.yaml slug.
   # canonical_project_id: replace-with-exact-legacy-slug
@@ -36,8 +36,18 @@
         status: unknown
         source_snapshot_ids: []
         notes:
-      total_budget_usd:
-      per_person_cap_usd:
+      total_budget:
+        amount:
+        currency:
+        status: unknown
+        source_snapshot_ids: []
+        notes:
+      per_person_cap:
+        amount:
+        currency:
+        status: unknown
+        source_snapshot_ids: []
+        notes:
       disbursement_type: unknown
       notes:
     execution_events: []

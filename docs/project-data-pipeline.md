@@ -61,6 +61,18 @@ The schema retains all four access-level values so the data model remains
 reusable outside this repository. The canonical validator applies the stricter
 public-repository profile above.
 
+## Amount and currency rule
+
+Every structured amount uses the same fact shape: `amount`, `currency`,
+`status`, `source_snapshot_ids`, and `notes`. This applies to requested,
+governance-approved and disbursed funding, total budget, per-person cap,
+funding-track pool／limits, and proposed milestone unlock amounts.
+
+Preserve the source currency. Do not add an `_usd` field or silently convert
+USDC, another token, or an unconfirmed denomination into USD. A proposal amount
+or proposed milestone unlock remains a proposal fact; actual payment,
+acceptance, and unlock require separate execution evidence.
+
 ## Source processing states
 
 Every local source has a `processing` object:

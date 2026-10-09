@@ -1,4 +1,4 @@
-schema_version: "0.2.1"
+schema_version: "0.3.0"
 updated_at: "2026-10-10"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
@@ -8,7 +8,7 @@ purpose: >
 
 cases:
   - case_id: gcc-open-source-vyper
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: grant_case
     canonical_project_id: project-vyper
     title: Vyper
@@ -37,8 +37,18 @@ cases:
           status: pending_reconciliation
           source_snapshot_ids: []
           notes: Snapshot does not prove the transferred or unlocked amount.
-        total_budget_usd: 40000
-        per_person_cap_usd:
+        total_budget:
+          amount: 40000
+          currency: USDC
+          status: source_reported
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
+          notes: The proposal presents 40,000u as the project budget.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: This project grant has no per-person cap.
         disbursement_type: milestone
         notes: Proposal uses "u"; recorded as USDC-equivalent for structured search.
       execution_events: []
@@ -59,31 +69,56 @@ cases:
         milestones:
           - name: M0
             description: Vote approval unlock
-            unlock_amount_usd: 8000
+            unlock_amount:
+              amount: 8000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-vyper-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion:
             status: planned
           - name: M1
             description: Course and infrastructure setup
-            unlock_amount_usd: 12000
+            unlock_amount:
+              amount: 12000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-vyper-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 30
             expected_completion: 0-3 months
             status: planned
           - name: M2
             description: Online cohort and hackathon connection
-            unlock_amount_usd: 8000
+            unlock_amount:
+              amount: 8000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-vyper-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion: 3-5 months
             status: planned
           - name: M3
             description: Five city offline tour
-            unlock_amount_usd: 8000
+            unlock_amount:
+              amount: 8000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-vyper-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion: 4-8 months
             status: planned
           - name: M4
             description: Community consolidation and evaluation
-            unlock_amount_usd: 4000
+            unlock_amount:
+              amount: 4000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-vyper-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 10
             expected_completion: 6-9 months
             status: planned
@@ -246,7 +281,7 @@ cases:
       review_status: seed
 
   - case_id: gcc-open-source-oskey
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: grant_case
     canonical_project_id: project-oskey
     title: OSKey
@@ -275,8 +310,18 @@ cases:
           status: unknown
           source_snapshot_ids: []
           notes: Neither the proposal nor the project page proves the amount actually transferred or unlocked.
-        total_budget_usd:
-        per_person_cap_usd:
+        total_budget:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: The imported sources do not separately establish total project budget.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: This project grant has no per-person cap.
         disbursement_type: milestone
         notes: Proposal-denominated values are recorded as USDC facts; no USD conversion is inferred.
       execution_events:
@@ -302,25 +347,45 @@ cases:
         milestones:
           - name: M0
             description: Vote approval; proposal schedules 6,000 USDC for the initial 20% unlock.
-            unlock_amount_usd:
+            unlock_amount:
+              amount: 6000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-oskey-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion: vote approval
             status: planned
           - name: M1
             description: Improve firmware and wallet-management usability; proposal schedules 9,000 USDC.
-            unlock_amount_usd:
+            unlock_amount:
+              amount: 9000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-oskey-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 30
             expected_completion: 2025 Q3-Q4
             status: planned
           - name: M2
             description: Deliver desktop and mobile applications and broader chain support; proposal schedules 9,000 USDC.
-            unlock_amount_usd:
+            unlock_amount:
+              amount: 9000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-oskey-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 30
             expected_completion: 2026 Q1
             status: planned
           - name: M3
             description: Extend the modular general-purpose hardware design; proposal schedules 6,000 USDC.
-            unlock_amount_usd:
+            unlock_amount:
+              amount: 6000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-oskey-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion: 2026 Q2
             status: planned
@@ -483,7 +548,7 @@ cases:
       review_status: draft
 
   - case_id: gcc-open-source-openrpc
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: grant_case
     canonical_project_id: project-openrpc
     title: OpenRPC
@@ -512,8 +577,18 @@ cases:
           status: unknown
           source_snapshot_ids: []
           notes: Neither the proposal nor the project page proves the amount actually transferred or unlocked.
-        total_budget_usd:
-        per_person_cap_usd:
+        total_budget:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: The imported sources do not separately establish total project budget.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: This project grant has no per-person cap.
         disbursement_type: milestone
         notes: Proposal-denominated values are recorded as USDC facts; no USD conversion is inferred.
       execution_events:
@@ -537,13 +612,23 @@ cases:
         milestones:
           - name: M1
             description: Release the production-ready OpenRPC linter; proposal schedules 12,500 USDC.
-            unlock_amount_usd:
+            unlock_amount:
+              amount: 12500
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-openrpc-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 50
             expected_completion: "2026-05-01"
             status: planned
           - name: M2
             description: Modernize the test-coverage tool for ESM; proposal schedules 12,500 USDC.
-            unlock_amount_usd:
+            unlock_amount:
+              amount: 12500
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-openrpc-snapshot-proposal]
+              notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 50
             expected_completion: "2026-06-15"
             status: planned
@@ -721,7 +806,7 @@ cases:
       review_status: draft
 
   - case_id: gcc-community-eth-city-university-web3-2025
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: funding_program
     canonical_project_id: project-universityblockchain
     title: 年度 ETH City 活動與高校 Web3 興趣小組資助方案
@@ -750,8 +835,18 @@ cases:
           status: unknown
           source_snapshot_ids: []
           notes: No programme-level payment or remaining-balance evidence is imported.
-        total_budget_usd: 60000
-        per_person_cap_usd:
+        total_budget:
+          amount: 60000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+          notes: The shared proposal records two separate 30,000 USD funding pools.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: Programme limits are recorded per funding track, not as one person-level cap.
         disbursement_type: unknown
         notes: "The shared proposal records two separate 30,000 USD funding pools. This is not evidence of any individual award, actual disbursement, or current remaining balance."
       execution_events: []
@@ -790,9 +885,24 @@ cases:
             name: 高校 Web3 興趣小組資助計劃
             source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
             track_type: university_group
-            total_pool_usd: 30000
-            min_grant_usd: 2000
-            max_grant_usd: 3000
+            total_pool:
+              amount: 30000
+              currency: USD
+              status: source_reported
+              source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+              notes: Announced track pool; not evidence of downstream awards or payments.
+            min_grant:
+              amount: 2000
+              currency: USD
+              status: source_reported
+              source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+              notes: Announced minimum grant for this track.
+            max_grant:
+              amount: 3000
+              currency: USD
+              status: source_reported
+              source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+              notes: Announced maximum grant for this track.
             slot_limit: 10
             application_mode: rolling
             application_url: https://tally.so/r/3EMJ5N
@@ -809,9 +919,24 @@ cases:
             name: ETH City 資助計劃
             source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
             track_type: city_event
-            total_pool_usd: 30000
-            min_grant_usd:
-            max_grant_usd: 5000
+            total_pool:
+              amount: 30000
+              currency: USD
+              status: source_reported
+              source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+              notes: Announced track pool; not evidence of downstream awards or payments.
+            min_grant:
+              amount:
+              currency:
+              status: unknown
+              source_snapshot_ids: []
+              notes: No minimum grant is established by the imported source.
+            max_grant:
+              amount: 5000
+              currency: USD
+              status: source_reported
+              source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
+              notes: Announced maximum grant for this track.
             slot_limit: 10
             application_mode: rolling
             application_url: https://tally.so/r/3EMJ5N
@@ -857,7 +982,7 @@ cases:
       impact_evidence:
         - type: funding_access
           description: The shared proposal records two separate 30,000 USD rolling funding pools for university Web3 groups and ETH City activities; individual allocations and payments are not evidenced here.
-          metric: total_pool_usd
+          metric: total_pool_amount
           value: 60000
           source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
           notes:
@@ -997,7 +1122,7 @@ cases:
       review_status: seed
 
   - case_id: gcc-event-wamotopia-2026
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: grant_case
     canonical_project_id: project-wamotopia2026
     title: Wamotopia 2026
@@ -1026,8 +1151,18 @@ cases:
           status: pending_reconciliation
           source_snapshot_ids: []
           notes: Snapshot does not prove the amount actually paid after the activity.
-        total_budget_usd: 16000
-        per_person_cap_usd:
+        total_budget:
+          amount: 16000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
+          notes: Proposal-reported total event budget.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: This event grant has no per-person cap.
         disbursement_type: retroactive
         notes: Proposal is a retroactive confirmation after the activity was already held.
       execution_events: []
@@ -1046,7 +1181,12 @@ cases:
         milestones:
           - name: M0
             description: Retroactive confirmation after completed activity and GCC visibility delivery.
-            unlock_amount_usd: 8000
+            unlock_amount:
+              amount: 8000
+              currency: USDC
+              status: source_reported
+              source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
+              notes: Retroactive proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 100
             expected_completion: after funds received
             status: completed
@@ -1208,7 +1348,7 @@ cases:
       review_status: seed
 
   - case_id: gcc-eth-city-eth-beijing-2025
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: grant_case
     canonical_project_id: project-ethbeijing-2025
     funding_track_id: gcc-eth-city-2025
@@ -1238,8 +1378,18 @@ cases:
           status: unknown
           source_snapshot_ids: []
           notes: The project page does not prove actual payment.
-        total_budget_usd:
-        per_person_cap_usd:
+        total_budget:
+          amount:
+          currency:
+          status: unknown
+          source_snapshot_ids: []
+          notes: No total event budget is established by the imported sources.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: This event case has no per-person cap.
         disbursement_type: unknown
         notes: GCC official project page lists amount 3000; its currency and accounting meaning should be verified later.
       execution_events: []
@@ -1419,7 +1569,7 @@ cases:
       review_status: seed
 
   - case_id: gcc-travel-scholarship-devconnect-2025
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: funding_program
     canonical_project_id: project-devconnect-2025
     title: Devconnect 機票 2025
@@ -1448,8 +1598,18 @@ cases:
           status: unknown
           source_snapshot_ids: []
           notes: Recipient selection, reimbursement, and payment evidence are not imported.
-        total_budget_usd: 5000
-        per_person_cap_usd: 1000
+        total_budget:
+          amount: 5000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-devconnect-2025-gcc-project-page, snap-devconnect-2025-x-post]
+          notes: GCC project page and public announcement report the programme pool.
+        per_person_cap:
+          amount: 1000
+          currency: USD
+          status: source_reported
+          source_snapshot_ids: [snap-devconnect-2025-gcc-project-page, snap-devconnect-2025-x-post]
+          notes: GCC project page and public announcement report the reimbursement cap per person.
         disbursement_type: reimbursement
         notes: GCC project page and X announcement list a 5,000 USD support pool with a 1,000 USD reimbursement cap per person.
       execution_events: []
@@ -1513,7 +1673,7 @@ cases:
       impact_evidence:
         - type: funding_access
           description: Provides 5,000 USD total travel support with a 1,000 USD per-person cap.
-          metric: total_pool_usd
+          metric: total_pool_amount
           value: 5000
           source_snapshot_id: snap-devconnect-2025-gcc-project-page
           notes: GCC project page lists amount 5000; X announcement confirms 5,000 USD total support and 1,000 USD per-person reimbursement cap.
@@ -1643,7 +1803,7 @@ cases:
       review_status: seed
 
   - case_id: gcc-gitcoin-placeholder
-    schema_version: "0.2.1"
+    schema_version: "0.3.0"
     record_type: placeholder
     canonical_project_id: project-gg21
     title: Gitcoin 類別案例占位
@@ -1672,8 +1832,18 @@ cases:
           status: not_applicable
           source_snapshot_ids: []
           notes: Placeholder only.
-        total_budget_usd:
-        per_person_cap_usd:
+        total_budget:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: Placeholder only.
+        per_person_cap:
+          amount:
+          currency:
+          status: not_applicable
+          source_snapshot_ids: []
+          notes: Placeholder only.
         disbursement_type: matching_pool
         notes: Placeholder only; no funding data imported yet.
       execution_events: []
