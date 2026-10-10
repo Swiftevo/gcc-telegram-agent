@@ -108,15 +108,15 @@ Each case should separate four things:
 - What evidence supports it: source URLs, snapshots, applications, votes.
 - What AI may use: concise retrieval text and allowed screening dimensions.
 
-## Schema 0.3.0
+## Schema 0.4.0
 
-Schema 0.3.0 migrates all existing case records and provides the validation boundary
+Schema 0.4.0 migrates all existing case records and provides the validation boundary
 for the next small import batch. It distinguishes a funding programme, an
 individual grant case, and a placeholder; separates requested, governance-approved,
 and disbursed amounts; and reserves independently sourced execution events for
 governance decisions, payments, milestone acceptance／unlock, activity completion,
 and reports. Full field and validation rules are documented in
-[`project-case-schema-v0.3.md`](project-case-schema-v0.3.md).
+[`project-case-schema-v0.4.md`](project-case-schema-v0.4.md).
 
 New public record fields:
 
@@ -159,7 +159,7 @@ Fields deliberately not duplicated:
 
 Completed foundations:
 
-- All eight existing cases are migrated to schema 0.3.0.
+- All eight existing cases are migrated to schema 0.4.0.
 - Draft 2020-12 and cross-record validation run locally and in the release gate.
 - Repository validation locks the 63-record legacy catalog, tracks 8 mappings
   and 55 `legacy_only` records, verifies every source checksum, rejects orphan
@@ -176,6 +176,11 @@ per-person caps, funding-track pools／limits, and proposed milestone unlocks al
 use the same amount／currency／status／source fact shape. The former `_usd` fields
 are removed; no USDC proposal is silently converted to USD. A proposed unlock
 still does not prove payment, milestone acceptance, or actual unlock.
+
+Schema 0.4 separates canonical case identity from the frozen legacy catalog
+slug and makes factual source references consistently plural and case-local.
+General `reference_urls` remain navigation aids rather than evidence; claims
+must point to registered snapshots before they can be cited.
 
 The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical

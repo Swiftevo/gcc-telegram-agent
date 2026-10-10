@@ -59,7 +59,7 @@ def case_to_legacy_project(case: dict) -> dict:
     amount = approved_amount if approved_amount is not None else requested_amount
     return {
         "name": case.get("title", ""),
-        "slug": case.get("canonical_project_id", ""),
+        "slug": case.get("legacy_project_slug", ""),
         "category": case.get("category", ""),
         "fund_type": case.get("fund_type", "unknown"),
         "amount": amount,

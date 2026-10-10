@@ -1,11 +1,11 @@
 # Copy one case into data/project-case-seeds.yaml. The template is structurally
-# valid schema 0.3.0, but every replace-* value, source path, and zero checksum
+# valid schema 0.4.0, but every replace-* value, source path, and zero checksum
 # must be replaced before insertion. Unknown facts stay null/unknown; never infer them.
 - case_id: replace-with-stable-case-id
-  schema_version: "0.3.0"
+  schema_version: "0.4.0"
   record_type: grant_case
   # Optional: use only when migrating the exact legacy projects.yaml slug.
-  # canonical_project_id: replace-with-exact-legacy-slug
+  # legacy_project_slug: replace-with-exact-legacy-slug
   title: Replace with public title
   category: Open Source
   fund_type: unknown
@@ -65,27 +65,27 @@
       open_source:
         value: unknown
         notes: ""
-        source_snapshot_id:
+        source_snapshot_ids: []
       accessibility:
         value: unknown
         notes: ""
-        source_snapshot_id:
+        source_snapshot_ids: []
       knowledge_transfer:
         value: unknown
         notes: ""
-        source_snapshot_id:
+        source_snapshot_ids: []
       community_impact:
         value: unknown
         notes: ""
-        source_snapshot_id:
+        source_snapshot_ids: []
       non_excludable:
         value: unknown
         notes: ""
-        source_snapshot_id:
+        source_snapshot_ids: []
       non_rivalrous:
         value: unknown
         notes: ""
-        source_snapshot_id:
+        source_snapshot_ids: []
       notes:
     impact_evidence: []
     lifecycle_status:
@@ -99,7 +99,7 @@
       announcement_url:
       repository_url:
   evidence:
-    source_urls: []
+    reference_urls: []
     snapshots:
       - snapshot_id: replace-with-source-id
         captured_at:
@@ -140,13 +140,13 @@
       state:
       choices: []
       total_score:
-      source_snapshot_id:
+      source_snapshot_ids: []
       notes:
     raw_data_status:
       status: pending
       verification: unverified
       storage_uri:
-      source_snapshot_id:
+      source_snapshot_ids: []
       notes:
   ai_review_usage:
     allowed: false

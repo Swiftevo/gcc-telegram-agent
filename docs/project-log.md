@@ -3,6 +3,20 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-11：PGDATA-001 第四步統一案例身份與來源引用
+
+- PR #45 將 canonical database、8 筆現有案例及 reusable template 升至 schema 0.4.0；
+  `case_id` 明確成為唯一 canonical identity，原本名稱含糊但實際保存舊 runtime slug 的
+  `canonical_project_id` 政名為 `legacy_project_slug`。
+- 一般導航／發現連結由 `source_urls` 政名為 `reference_urls`，避免未捕捉的 URL 被誤當成
+  可引用證據；所有 factual claim 統一使用 plural `source_snapshot_ids`。
+- validator 現在要求每個來源 ID 必須指向同一案例內已登記的 snapshot，拒絕跨案例借用證據、
+  重複 legacy slug 及舊 identity／source 欄位；snapshot 本身和單一 evidence pointer 才保留
+  `snapshot_id`。
+- 反向正規化至 schema 0.3 的逐欄語義比較通過，確認金額、幣別、案例內容、review／source
+  review／reconciliation／AI flags 均未改變；沒有新增案例、證據或 Bot runtime 接入。
+- canonical validator、37 項 focused knowledge tests、完整 19 個測試檔及 diff check 均通過。
+
 ## 2026-10-10：PGDATA-001 第三步統一 schema 0.3 金額模型
 
 - PR #44 將 canonical case database、8 筆現有案例及 reusable template 升至 schema 0.3.0；

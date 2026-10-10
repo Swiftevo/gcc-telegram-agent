@@ -23,7 +23,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         ai_cases = load_ai_review_cases()
         categories = {case.get("category") for case in cases}
 
-        self.assertEqual(db.get("schema_version"), "0.3.0")
+        self.assertEqual(db.get("schema_version"), "0.4.0")
         self.assertEqual(len(cases), 8)
         self.assertEqual(
             categories,
@@ -50,7 +50,11 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             public_record = case.get("public_record", {})
             is_placeholder = case.get("case_id") == "gcc-gitcoin-placeholder"
             with self.subTest(case_id=case.get("case_id")):
-                self.assertEqual(case.get("schema_version"), "0.3.0")
+                self.assertEqual(case.get("schema_version"), "0.4.0")
+                self.assertTrue(case.get("case_id"))
+                self.assertTrue(case.get("legacy_project_slug"))
+                self.assertIn("reference_urls", evidence)
+                self.assertNotIn("source_urls", evidence)
                 self.assertIn(case.get("record_type"), {"funding_program", "grant_case", "placeholder"})
                 self.assertTrue(evidence.get("snapshots") or is_placeholder)
                 self.assertIn("grant_application", evidence)
@@ -97,6 +101,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         cases = load_project_cases(force_reload=True)
         legacy = case_to_legacy_project(cases[0])
         self.assertEqual(legacy["name"], cases[0]["title"])
+        self.assertEqual(legacy["slug"], cases[0]["legacy_project_slug"])
         self.assertEqual(legacy["amount"], 40000)
         self.assertTrue(legacy["summary"])
 
@@ -192,7 +197,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
         self.assertEqual(len(eth_city["evidence"]["snapshots"]), 2)
         self.assertTrue(all(
-            track["source_snapshot_id"] == "snap-eth-city-university-web3-snapshot-proposal"
+            track["source_snapshot_ids"] == ["snap-eth-city-university-web3-snapshot-proposal"]
             for track in eth_city_details["funding_tracks"]
         ))
         all_track_ids = [
@@ -244,14 +249,14 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
         self.assertEqual(len(devconnect["evidence"]["snapshots"]), 2)
 
-    def test_schema_v0_3_contract_files_exist(self):
+    def test_schema_v0_4_contract_files_exist(self):
         case_schema_path = ROOT / "schema" / "project.schema.json"
         database_schema_path = ROOT / "schema" / "project-case-database.schema.json"
         case_schema = json.loads(case_schema_path.read_text(encoding="utf-8"))
         database_schema = json.loads(database_schema_path.read_text(encoding="utf-8"))
 
-        self.assertEqual(case_schema["properties"]["schema_version"]["const"], "0.3.0")
-        self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.3.0")
+        self.assertEqual(case_schema["properties"]["schema_version"]["const"], "0.4.0")
+        self.assertEqual(database_schema["properties"]["schema_version"]["const"], "0.4.0")
         self.assertIn("cases", database_schema["required"])
         self.assertEqual(database_schema["properties"]["cases"]["items"]["$ref"], "project.schema.json")
         self.assertIn("funding_tracks", case_schema["$defs"]["programDetails"]["properties"])
@@ -260,6 +265,10 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertIn("executionEvent", case_schema["$defs"])
         self.assertIn("sourceProcessing", case_schema["$defs"])
         self.assertIn("funding_track_id", case_schema["properties"])
+        self.assertIn("legacy_project_slug", case_schema["properties"])
+        self.assertNotIn("canonical_project_id", case_schema["properties"])
+        self.assertIn("reference_urls", case_schema["properties"]["evidence"]["properties"])
+        self.assertNotIn("source_urls", case_schema["properties"]["evidence"]["properties"])
         self.assertIn("track_id", case_schema["$defs"]["fundingTrack"]["required"])
         self.assertIn("total_budget", case_schema["$defs"]["funding"]["required"])
         self.assertIn("per_person_cap", case_schema["$defs"]["funding"]["required"])

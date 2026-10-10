@@ -1,12 +1,13 @@
-# Project Case Schema 0.3.0
+# Project Case Schema 0.4.0
 
-Schema 0.3.0 is the canonical safety boundary for importing additional public
+Schema 0.4.0 is the canonical safety boundary for importing additional public
 GCC funding cases. It migrates all eight current records without connecting the
 case database to Bot runtime answers or changing any review／AI eligibility.
 
 ## Record identity
 
-Every record declares one `record_type`:
+`case_id` is the canonical, stable identity of a database record. Every record
+also declares one `record_type`:
 
 - `funding_program`: an umbrella programme or shared funding proposal, not an
   individual recipient;
@@ -16,6 +17,23 @@ Every record declares one `record_type`:
 
 This prevents a programme pool, funding track, and individual award from being
 treated as the same thing.
+
+`legacy_project_slug` is optional and has one purpose only: link a migrated case
+to its exact slug in the frozen `projects.yaml` runtime catalog. It is not a
+second canonical identity. `funding_track_id` is a foreign key from one
+`grant_case` to a stable `track_id` declared by a funding programme.
+
+## One source reference model
+
+Every factual source reference uses `source_snapshot_ids`, even when there is
+currently only one source. Each ID must refer to a snapshot registered inside
+the same case. This prevents a claim from silently borrowing another case's
+evidence and leaves room for corroborating sources later.
+
+`snapshot_id` remains singular only where it identifies the snapshot record
+itself, or where a public／redacted evidence pointer points to exactly one local
+snapshot. `reference_urls` contains discovery or navigation links; a URL there
+does not become citable evidence until it is captured as a registered snapshot.
 
 ## One amount model
 
@@ -41,7 +59,7 @@ Allowed fact statuses are `source_reported`, `owner_confirmed`, `verified`,
 carry its original currency. Unknown or disputed execution must not be converted
 to USD merely to fill a field.
 
-Schema 0.3 removes the former `_usd` amount fields rather than keeping two
+Schema 0.3 removed the former `_usd` amount fields rather than keeping two
 representations. Runtime legacy conversion still derives its compatibility
 amount from the structured requested／governance-approved facts.
 
@@ -86,6 +104,9 @@ Validation covers JSON Schema Draft 2020-12 plus database-wide rules:
 
 - unique case, funding-track, and source-snapshot IDs;
 - valid funding-track and source references;
+- one canonical case identity and a separately named legacy catalog slug;
+- one case-local `source_snapshot_ids` model and rejection of former singular
+  source-reference fields;
 - one structured amount model and rejection of `_usd` fields;
 - source-file existence, checksum, and orphan detection;
 - row-level voter, wallet, and recording-access data scanning;
@@ -98,14 +119,16 @@ The validator does not decide whether a source is truthful, reconcile accounting
 records, or approve private material for publication. Those remain human review
 tasks.
 
-## Migration from 0.2.1
+## Migration from 0.3.0
 
-The migration changes structure, not the meaning of known facts:
+The 0.4 migration changes identity and source-reference structure, not the
+meaning of known facts:
 
-- existing budget, track, cap, and milestone values retain their recorded
-  number, original currency, status, and source;
-- OSKey and OpenRPC proposal milestone amounts can now be structured in USDC
-  instead of being trapped in prose by an incorrectly named USD field;
+- `canonical_project_id` becomes the accurately named `legacy_project_slug`;
+- `source_urls` becomes `reference_urls` so uncaptured links are not mistaken
+  for evidence;
+- claim-level `source_snapshot_id` values become `source_snapshot_ids` arrays;
+- source references are restricted to snapshots registered in the same case;
 - unknown and not-applicable values remain explicit;
-- case review status, source review status, reconciliation status, and AI flags
-  remain unchanged.
+- amounts, currencies, content, case review status, source review status,
+  reconciliation status, and AI flags remain unchanged.
