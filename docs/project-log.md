@@ -3,6 +3,20 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-11：PGDATA-001 第五步完成全量遷移驗收
+
+- PR #46 沒有再改 schema 欄位或案例內容；它為 schema 0.4 的現有 canonical dataset
+  建立可由 validator 重算的 `canonical_inventory`。
+- 已核對 8 筆 cases、2 條 funding tracks、14 筆 registered snapshots／14 個本地來源檔、
+  6 筆 `seed`、2 筆 `draft`、8 條 legacy mappings、55 條 `legacy_only` records，AI-enabled
+  case 維持 0；`current_cases_verified` 只代表現有 canonical records 對齊，不代表 63 筆
+  legacy records 已全部匯入。
+- validator 會在 inventory 與實際資料不同步、canonical database 路徑被改動，或 `data/`
+  出現另一份 case-like YAML database 時失敗；reusable single-case template 明確排除。
+- canonical validator、34 項 focused knowledge tests、完整 19 個測試檔及 diff check 均通過；
+  production 仍使用 frozen `projects.yaml`，沒有改 Bot runtime、內容 review、AI eligibility 或
+  reconciliation 狀態。
+
 ## 2026-10-11：PGDATA-001 第四步統一案例身份與來源引用
 
 - PR #45 將 canonical database、8 筆現有案例及 reusable template 升至 schema 0.4.0；
