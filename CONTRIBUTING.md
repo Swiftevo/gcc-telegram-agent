@@ -122,6 +122,11 @@ required checks 及适用的审查要求通过后，由维护者合入 `main`。
 所有结构化金额使用 `amount`、`currency`、`status`、`source_snapshot_ids` 和 `notes`；
 不要新增 `_usd` 字段，也不要为了填字段把 USDC、其他代币或未确认币别换算成 USD。
 
+`case_id` 是 canonical identity；`legacy_project_slug` 只用于映射冻结的 `projects.yaml`。
+事实来源一律使用 case-local `source_snapshot_ids`；`reference_urls` 只是参考入口，未保存为
+registered snapshot 前不可作为证据。不要重新加入 `canonical_project_id`、`source_urls` 或
+claim-level `source_snapshot_id`。
+
 这个公开 repo 的本地 evidence 只允许 `public`，或已经人工清理并批准的 `redacted`。
 `internal`／`private` 申请及投票资料只保留 status、access level 和不含 URL 的一般说明；
 `document_ref`、`snapshot_id`、`summary` 必须留空，实际文件须存放在 repo 之外。

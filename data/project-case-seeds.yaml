@@ -1,5 +1,5 @@
-schema_version: "0.3.0"
-updated_at: "2026-10-10"
+schema_version: "0.4.0"
+updated_at: "2026-10-11"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category plus a small,
@@ -8,9 +8,9 @@ purpose: >
 
 cases:
   - case_id: gcc-open-source-vyper
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: grant_case
-    canonical_project_id: project-vyper
+    legacy_project_slug: project-vyper
     title: Vyper
     category: Open Source
     fund_type: public
@@ -127,46 +127,46 @@ cases:
         open_source:
           value: true
           notes: Vyper is open-source infrastructure and the proposal creates reusable learning materials.
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
         accessibility:
           value: high
           notes: Chinese localization lowers language and onboarding barriers.
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
         knowledge_transfer:
           value: high
           notes: Course, handbook, FAQ, workshops, and hackathon path are explicit deliverables.
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
         community_impact:
           value: high
           notes: Targets Chinese-speaking developer community growth and cross-region collaboration.
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
         non_excludable:
           value: unknown
           notes: Learning outputs are public-good oriented, but access terms need later verification.
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
         non_rivalrous:
           value: high
           notes: Educational content and open-source tooling can be reused without depletion.
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
         notes: Strong open-source education and developer infrastructure case.
       impact_evidence:
         - type: education
           description: Proposal targets 500+ developers through online cohort learning.
           metric: target_developers
           value: 500
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
           notes:
         - type: deliverable
           description: Proposal includes 30 course sessions, handbook, FAQ, platform, and demos.
           metric: planned_course_sessions
           value: 30
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
           notes:
         - type: community
           description: Proposal targets a 500-800 person Chinese Vyper developer community.
           metric: target_community_size
           value: 500-800
-          source_snapshot_id: snap-vyper-snapshot-proposal
+          source_snapshot_ids: [snap-vyper-snapshot-proposal]
           notes:
       lifecycle_status:
         grant_status: approved
@@ -190,7 +190,7 @@ cases:
         official_website: https://vyperlang.org/
         repository_url: https://github.com/vyperlang/vyper
     evidence:
-      source_urls:
+      reference_urls:
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0xa699f6d04f81eb321b87d3491fcc3ebb97fc26ab8047e12587fe88bbc17e86a5
         - https://www.gccofficial.org/project/project-vyper
         - https://vyperlang.org/
@@ -252,13 +252,13 @@ cases:
           - label: 减少10%
             score: 2
         total_score: 9
-        source_snapshot_id: snap-vyper-snapshot-proposal
+        source_snapshot_ids: [snap-vyper-snapshot-proposal]
         notes: Vote choices include both approval and amount adjustment options.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/vyper-snapshot-proposal.md
-        source_snapshot_id: snap-vyper-snapshot-proposal
+        source_snapshot_ids: [snap-vyper-snapshot-proposal]
         notes: Full Snapshot proposal body stored under Raw Data.
     ai_review_usage:
       allowed: false
@@ -281,9 +281,9 @@ cases:
       review_status: seed
 
   - case_id: gcc-open-source-oskey
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: grant_case
-    canonical_project_id: project-oskey
+    legacy_project_slug: project-oskey
     title: OSKey
     category: Open Source
     fund_type: public
@@ -394,27 +394,27 @@ cases:
         open_source:
           value: high
           notes: The proposal describes OSKey as a fully open-source, non-commercial hardware wallet project.
-          source_snapshot_id: snap-oskey-snapshot-proposal
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
         accessibility:
           value: high
           notes: The project aims to run on thousands of third-party development boards, including low-cost hardware.
-          source_snapshot_id: snap-oskey-snapshot-proposal
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
         knowledge_transfer:
           value: high
           notes: Public deployment, development and hardware guidance are explicit proposed outputs.
-          source_snapshot_id: snap-oskey-snapshot-proposal
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
         community_impact:
           value: medium
           notes: The proposal includes contributor incentives and developer-kit support; realised impact is not yet evidenced.
-          source_snapshot_id: snap-oskey-snapshot-proposal
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
         non_excludable:
           value: high
           notes: Open firmware, libraries and instructions are intended for public reuse.
-          source_snapshot_id: snap-oskey-snapshot-proposal
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
         non_rivalrous:
           value: high
           notes: Software, designs and instructions can be reused without depletion; physical hardware remains rivalrous.
-          source_snapshot_id: snap-oskey-snapshot-proposal
+          source_snapshot_ids: [snap-oskey-snapshot-proposal]
         notes: Draft assessment based on the public proposal, not a completed-outcome review.
       impact_evidence: []
       lifecycle_status:
@@ -439,7 +439,7 @@ cases:
         official_website: https://www.oskey.xyz/
         repository_url: https://github.com/butterfly-communtiy/oskey-elf-firmware
     evidence:
-      source_urls:
+      reference_urls:
         - https://www.gccofficial.org/project/project-oskey
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
         - https://www.oskey.xyz/
@@ -516,13 +516,13 @@ cases:
           - label: Abstain
             score: 0
         total_score: 6
-        source_snapshot_id: snap-oskey-snapshot-proposal
+        source_snapshot_ids: [snap-oskey-snapshot-proposal]
         notes: Snapshot API data captured on 2026-09-24.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/oskey-snapshot-proposal.md
-        source_snapshot_id: snap-oskey-snapshot-proposal
+        source_snapshot_ids: [snap-oskey-snapshot-proposal]
         notes: Relevant public proposal fields and vote data are preserved locally.
     ai_review_usage:
       allowed: false
@@ -548,9 +548,9 @@ cases:
       review_status: draft
 
   - case_id: gcc-open-source-openrpc
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: grant_case
-    canonical_project_id: project-openrpc
+    legacy_project_slug: project-openrpc
     title: OpenRPC
     category: Open Source
     fund_type: public
@@ -637,34 +637,34 @@ cases:
         open_source:
           value: high
           notes: The proposal identifies OpenRPC as an Apache 2.0 open standard with open-source tooling.
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         accessibility:
           value: high
           notes: A machine-readable standard, documentation tools and linter are designed for broad public use.
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         knowledge_transfer:
           value: high
           notes: Documentation, examples, rulesets and migration guidance are explicit proposed deliverables.
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         community_impact:
           value: high
           notes: The proposal reports adoption by multiple major JSON-RPC ecosystems; the exact adoption figures remain source-reported.
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         non_excludable:
           value: high
           notes: The standard and core tools are published for open ecosystem use.
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         non_rivalrous:
           value: high
           notes: The specification and software tooling can be reused without depletion.
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         notes: Draft assessment based on the public proposal, not a completed-outcome review.
       impact_evidence:
         - type: adoption
           description: The proposal reports more than 5.9 million TypeScript/NPM toolkit downloads in the preceding year.
           metric: annual_npm_downloads
           value: 5900000
-          source_snapshot_id: snap-openrpc-snapshot-proposal
+          source_snapshot_ids: [snap-openrpc-snapshot-proposal]
           notes: Source-reported metric; capture does not independently reproduce the package-registry query.
       lifecycle_status:
         grant_status: approved
@@ -687,7 +687,7 @@ cases:
         official_website: https://open-rpc.org/
         repository_url: https://github.com/open-rpc
     evidence:
-      source_urls:
+      reference_urls:
         - https://www.gccofficial.org/project/project-openrpc
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0x0aae273f428a71c6b5cabbd78305fe48dc0346facfc2772652fde056cc14f88b
         - https://open-rpc.org/
@@ -774,13 +774,13 @@ cases:
           - label: 减少10%
             score: 0
         total_score: 8
-        source_snapshot_id: snap-openrpc-snapshot-proposal
+        source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         notes: Snapshot API data captured on 2026-09-24; approval and amount selections are parallel choices.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/openrpc-snapshot-proposal.md
-        source_snapshot_id: snap-openrpc-snapshot-proposal
+        source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         notes: Relevant public proposal fields and vote data are preserved locally.
     ai_review_usage:
       allowed: false
@@ -806,9 +806,9 @@ cases:
       review_status: draft
 
   - case_id: gcc-community-eth-city-university-web3-2025
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: funding_program
-    canonical_project_id: project-universityblockchain
+    legacy_project_slug: project-universityblockchain
     title: 年度 ETH City 活動與高校 Web3 興趣小組資助方案
     category: Community
     fund_type: public
@@ -883,7 +883,7 @@ cases:
         funding_tracks:
           - track_id: gcc-university-web3-2025
             name: 高校 Web3 興趣小組資助計劃
-            source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+            source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
             track_type: university_group
             total_pool:
               amount: 30000
@@ -917,7 +917,7 @@ cases:
             notes: This is one independent funding track under a shared proposal. The source describes a 2025 application period; current status is unconfirmed. Add verified individual cases later with funding_track_id gcc-university-web3-2025; no individual award or payment is recorded here.
           - track_id: gcc-eth-city-2025
             name: ETH City 資助計劃
-            source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+            source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
             track_type: city_event
             total_pool:
               amount: 30000
@@ -957,46 +957,46 @@ cases:
         open_source:
           value: medium
           notes: University track explicitly encourages GPL/MIT open-source outputs; ETH City track prioritizes open-source and public goods themes.
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         accessibility:
           value: high
           notes: ETH City activities must focus on Chinese-speaking groups and be free/open.
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         knowledge_transfer:
           value: high
           notes: Workshops, salons, technical training, and open research are core funding uses.
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         community_impact:
           value: high
           notes: Supports both campus and city-level community infrastructure.
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         non_excludable:
           value: medium
           notes: Free public activities are required for ETH City, but individual sub-grant outputs may vary.
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         non_rivalrous:
           value: medium
           notes: Educational outputs and open-source projects are reusable, while event seats and grants are limited.
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         notes: Strong community infrastructure case with two distinct tracks.
       impact_evidence:
         - type: funding_access
           description: The shared proposal records two separate 30,000 USD rolling funding pools for university Web3 groups and ETH City activities; individual allocations and payments are not evidenced here.
           metric: total_pool_amount
           value: 60000
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
           notes:
         - type: education
           description: Funds workshops, training, salons, public goods roadshows, hackathons, and open research.
           metric:
           value:
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
           notes:
         - type: community
           description: Supports campus and city-based organizers serving Chinese-speaking communities.
           metric:
           value:
-          source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+          source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
           notes:
       lifecycle_status:
         grant_status: approved
@@ -1023,7 +1023,7 @@ cases:
         announcement_url: https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
         repository_url:
     evidence:
-      source_urls:
+      reference_urls:
         - https://snapshot.box/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0x407f8915291757db03ae1b19e30162bb785e0dc61a6ab5e9ad958b1911fe8476
         - https://mp.weixin.qq.com/s/p8oXiK90tbZbsjTC-g7GhQ
@@ -1090,13 +1090,13 @@ cases:
           - label: Abstain
             score: 2
         total_score: 5
-        source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         notes: Proposal id is the normalized Snapshot Hub id. Vote ran from 2025-03-05 16:57 to 2025-03-09 23:59.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/eth-city-university-web3-snapshot-proposal.md
-        source_snapshot_id: snap-eth-city-university-web3-snapshot-proposal
+        source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         notes: Cleaned public proposal extract and WeChat announcement are stored locally. Downstream project applications, approvals, and completion records are pending import.
     ai_review_usage:
       allowed: false
@@ -1122,9 +1122,9 @@ cases:
       review_status: seed
 
   - case_id: gcc-event-wamotopia-2026
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: grant_case
-    canonical_project_id: project-wamotopia2026
+    legacy_project_slug: project-wamotopia2026
     title: Wamotopia 2026
     category: Event
     fund_type: public
@@ -1195,46 +1195,46 @@ cases:
         open_source:
           value: medium
           notes: Proposal frames Wamotopia as open and reusable; source code/output terms need further verification.
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         accessibility:
           value: medium
           notes: Pop-up city participation is place-bound, but the model and brand are described as openly reusable.
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         knowledge_transfer:
           value: medium
           notes: Activities connect public thought, AI ethics, hacker retreat, P2P Foundation, and community practice.
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         community_impact:
           value: high
           notes: Proposal estimates more than 1,000 participants across Wamotopia and surrounding activities.
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         non_excludable:
           value: low
           notes: Physical event participation is limited by location and capacity.
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         non_rivalrous:
           value: medium
           notes: The organizing model and public narrative can be reused, while event attendance is rivalrous.
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         notes: Event public value comes mainly from community connection and organizing model experimentation.
       impact_evidence:
         - type: participation
           description: Proposal estimates more than 1,000 participants across Wamotopia and surrounding activities.
           metric: estimated_participants
           value: 1000
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
           notes:
         - type: community
           description: Proposal lists partner communities and camps spanning 706, Dweller, P2P Foundation, AI ethics, hacker retreat, rural DAO, and other communities.
           metric:
           value:
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
           notes:
         - type: other
           description: Proposal frames Wamotopia as a decentralized self-organization experiment and pop-up city practice in Chinese-speaking contexts.
           metric:
           value:
-          source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+          source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
           notes:
       lifecycle_status:
         grant_status: approved
@@ -1258,7 +1258,7 @@ cases:
         official_website: https://x.com/wamo_topia
         repository_url: https://github.com/wamotopia
     evidence:
-      source_urls:
+      reference_urls:
         - https://snapshot.box/#/s:gccofficial.eth/proposal/0x39117bee4ce2bc254abc61c2e94600a1331c8671887b5bfe32cccdc5324f59b6
         - https://github.com/wamotopia
         - https://x.com/wamo_topia
@@ -1319,13 +1319,13 @@ cases:
           - label: 减少10%
             score: 0
         total_score: 9
-        source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         notes: Vote choices include both approval and amount adjustment options.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/wamotopia-2026-snapshot-proposal.md
-        source_snapshot_id: snap-wamotopia-2026-snapshot-proposal
+        source_snapshot_ids: [snap-wamotopia-2026-snapshot-proposal]
         notes: Cleaned public proposal extract is stored locally; unnecessary recording access data is excluded.
     ai_review_usage:
       allowed: false
@@ -1348,9 +1348,9 @@ cases:
       review_status: seed
 
   - case_id: gcc-eth-city-eth-beijing-2025
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: grant_case
-    canonical_project_id: project-ethbeijing-2025
+    legacy_project_slug: project-ethbeijing-2025
     funding_track_id: gcc-eth-city-2025
     title: ETH Beijing 2025
     category: ETH City Series
@@ -1411,52 +1411,52 @@ cases:
         open_source:
           value: medium
           notes: Recap focuses on public goods and AI tracks; open-source licensing not verified.
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
         accessibility:
           value: high
           notes: Offline participation is in-person and therefore location constrained.
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
         knowledge_transfer:
           value: high
           notes: Hackathon participation supports practical learning and builder exchange.
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
         community_impact:
           value: medium
           notes: Recap says hundreds of developers followed the event and more than one hundred participated offline.
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
         non_excludable:
           value: low
           notes: In-person event attendance is location and capacity constrained.
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
         non_rivalrous:
           value: medium
           notes: Event knowledge can spread, but attendance is rivalrous.
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
         notes: City-series case with X recap evidence rather than Snapshot proposal evidence.
       impact_evidence:
         - type: participation
           description: Recap describes an in-person ETH Beijing Hackathon 2025 in Beijing.
           metric:
           value:
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
           notes:
         - type: education
           description: Recap says the event focused on public goods and AI tracks.
           metric:
           value:
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
           notes:
         - type: deliverable
           description: Recap says more than one hundred developers participated in offline hackathon development.
           metric:
           value:
-          source_snapshot_id: snap-eth-beijing-2025-x-recap
+          source_snapshot_ids: [snap-eth-beijing-2025-x-recap]
           notes:
         - type: funding_access
           description: GCC official project page lists ETH Beijing 2025 with amount 3000 under Eth city series.
           metric: gcc_project_page_amount
           value: 3000
-          source_snapshot_id: snap-eth-beijing-2025-gcc-project-page
+          source_snapshot_ids: [snap-eth-beijing-2025-gcc-project-page]
           notes: Currency and accounting interpretation need later verification.
       lifecycle_status:
         grant_status: approved
@@ -1481,7 +1481,7 @@ cases:
         official_website:
         repository_url:
     evidence:
-      source_urls:
+      reference_urls:
         - https://x.com/PKUBlockchain/status/1931281003378880948
         - https://www.gccofficial.org/project/project-ethbeijing-2025
       snapshots:
@@ -1535,13 +1535,13 @@ cases:
         state:
         choices: []
         total_score:
-        source_snapshot_id:
+        source_snapshot_ids: []
         notes: No vote source imported for this case.
       raw_data_status:
         status: captured
         verification: api
         storage_uri: data/source-snapshots/eth-beijing-2025-gcc-project-page.md
-        source_snapshot_id: snap-eth-beijing-2025-gcc-project-page
+        source_snapshot_ids: [snap-eth-beijing-2025-gcc-project-page]
         notes: >
           GCC project page and X recap are both captured as public evidence. X
           recap text preserves the event completion evidence; GCC project page
@@ -1569,9 +1569,9 @@ cases:
       review_status: seed
 
   - case_id: gcc-travel-scholarship-devconnect-2025
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: funding_program
-    canonical_project_id: project-devconnect-2025
+    legacy_project_slug: project-devconnect-2025
     title: Devconnect 機票 2025
     category: Travel Scholarship
     fund_type: special
@@ -1648,46 +1648,46 @@ cases:
         open_source:
           value: medium
           notes: Prioritizes builders with open-source or public goods contribution experience.
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
         accessibility:
           value: high
           notes: Reduces travel cost barrier for Chinese-speaking builders traveling to Buenos Aires.
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
         knowledge_transfer:
           value: high
           notes: Applicants must be willing to share post-event experience and learnings with the community.
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
         community_impact:
           value: high
           notes: Helps Chinese-speaking builders access global Ethereum collaboration and bring knowledge back.
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
         non_excludable:
           value: low
           notes: Travel reimbursement is limited to selected individuals.
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
         non_rivalrous:
           value: medium
           notes: Travel funds are rivalrous, but post-event knowledge sharing can be non-rivalrous.
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
         notes: Travel scholarship public value depends on applicant selection and post-event knowledge return.
       impact_evidence:
         - type: funding_access
           description: Provides 5,000 USD total travel support with a 1,000 USD per-person cap.
           metric: total_pool_amount
           value: 5000
-          source_snapshot_id: snap-devconnect-2025-gcc-project-page
+          source_snapshot_ids: [snap-devconnect-2025-gcc-project-page]
           notes: GCC project page lists amount 5000; X announcement confirms 5,000 USD total support and 1,000 USD per-person reimbursement cap.
         - type: community
           description: Prioritizes Chinese-speaking builders contributing to public goods, open protocols, on-chain governance, and crypto education.
           metric:
           value:
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
           notes:
         - type: education
           description: Requires recipients to share post-event experience and learnings with the community.
           metric:
           value:
-          source_snapshot_id: snap-devconnect-2025-x-post
+          source_snapshot_ids: [snap-devconnect-2025-x-post]
           notes:
       lifecycle_status:
         grant_status: approved
@@ -1713,7 +1713,7 @@ cases:
         announcement_url: https://x.com/GCCofCommons/status/1978782504216559740
         repository_url:
     evidence:
-      source_urls:
+      reference_urls:
         - https://x.com/GCCofCommons/status/1978782504216559740
         - https://www.gccofficial.org/project/project-devconnect-2025
         - https://devconnect.org/
@@ -1772,13 +1772,13 @@ cases:
         state:
         choices: []
         total_score:
-        source_snapshot_id:
+        source_snapshot_ids: []
         notes: No vote source imported for this travel scholarship announcement.
       raw_data_status:
         status: manual
         verification: user_supplied
         storage_uri: data/source-snapshots/devconnect-2025-x-post.md
-        source_snapshot_id: snap-devconnect-2025-x-post
+        source_snapshot_ids: [snap-devconnect-2025-x-post]
         notes: GCC project page and raw X announcement text were manually supplied by the user; archive or screenshot verification should be added later.
     ai_review_usage:
       allowed: false
@@ -1803,9 +1803,9 @@ cases:
       review_status: seed
 
   - case_id: gcc-gitcoin-placeholder
-    schema_version: "0.3.0"
+    schema_version: "0.4.0"
     record_type: placeholder
-    canonical_project_id: project-gg21
+    legacy_project_slug: project-gg21
     title: Gitcoin 類別案例占位
     category: Gitcoin
     fund_type: public
@@ -1861,27 +1861,27 @@ cases:
         open_source:
           value: unknown
           notes: Not imported yet.
-          source_snapshot_id:
+          source_snapshot_ids: []
         accessibility:
           value: unknown
           notes: Not imported yet.
-          source_snapshot_id:
+          source_snapshot_ids: []
         knowledge_transfer:
           value: unknown
           notes: Not imported yet.
-          source_snapshot_id:
+          source_snapshot_ids: []
         community_impact:
           value: unknown
           notes: Not imported yet.
-          source_snapshot_id:
+          source_snapshot_ids: []
         non_excludable:
           value: unknown
           notes: Not imported yet.
-          source_snapshot_id:
+          source_snapshot_ids: []
         non_rivalrous:
           value: unknown
           notes: Not imported yet.
-          source_snapshot_id:
+          source_snapshot_ids: []
         notes: Gitcoin category intentionally left as placeholder.
       impact_evidence: []
       lifecycle_status:
@@ -1903,7 +1903,7 @@ cases:
         official_website:
         repository_url:
     evidence:
-      source_urls: []
+      reference_urls: []
       snapshots: []
       grant_application:
         status: unknown
@@ -1925,13 +1925,13 @@ cases:
         state:
         choices: []
         total_score:
-        source_snapshot_id:
+        source_snapshot_ids: []
         notes: Intentionally left blank for now.
       raw_data_status:
         status: not_applicable
         verification: not_applicable
         storage_uri:
-        source_snapshot_id:
+        source_snapshot_ids: []
         notes: Placeholder only; no raw data imported by user instruction.
     ai_review_usage:
       allowed: false

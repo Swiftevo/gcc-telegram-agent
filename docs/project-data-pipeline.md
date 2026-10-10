@@ -73,6 +73,19 @@ USDC, another token, or an unconfirmed denomination into USD. A proposal amount
 or proposed milestone unlock remains a proposal fact; actual payment,
 acceptance, and unlock require separate execution evidence.
 
+## Identity and source-reference rule
+
+`case_id` is the canonical database identity. `legacy_project_slug` is only the
+optional mapping to the frozen `projects.yaml` catalog, while
+`funding_track_id` points from one grant case to a declared `track_id`.
+
+Every factual claim references registered evidence through the plural
+`source_snapshot_ids` array. References are case-local: a case cannot cite a
+snapshot that is registered only under another case. `reference_urls` are for
+discovery and navigation and are not evidence by themselves. The singular
+`snapshot_id` is reserved for a snapshot's own identity and an evidence pointer
+that refers to exactly one registered local snapshot.
+
 ## Source processing states
 
 Every local source has a `processing` object:

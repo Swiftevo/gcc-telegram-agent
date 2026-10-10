@@ -17,24 +17,25 @@
   ],
   "properties": {
     "case_id": {
-      "type": "string",
+      "$ref": "#/$defs/stableId",
       "description": "Stable database id for this case."
     },
     "schema_version": {
       "type": "string",
-      "const": "0.3.0"
+      "const": "0.4.0"
     },
     "record_type": {
       "type": "string",
       "enum": ["funding_program", "grant_case", "placeholder"],
       "description": "Distinguishes a shared funding programme from an individual funded case and an intentionally empty placeholder."
     },
-    "canonical_project_id": {
+    "legacy_project_slug": {
       "type": "string",
-      "description": "Optional link to the legacy projects.yaml slug or future canonical id."
+      "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Optional exact slug from the frozen legacy projects.yaml runtime catalog. This is not the canonical case identity."
     },
     "funding_track_id": {
-      "type": "string",
+      "$ref": "#/$defs/stableId",
       "description": "For an individual award or activity case, the stable id of exactly one funding track in this database. Omit for umbrella proposals and cases without a verified track relationship."
     },
     "title": {
@@ -122,11 +123,13 @@
     },
     "evidence": {
       "type": "object",
-      "required": ["source_urls", "snapshots", "grant_application", "voting_record"],
+      "required": ["reference_urls", "snapshots", "grant_application", "voting_record"],
       "properties": {
-        "source_urls": {
+        "reference_urls": {
           "type": "array",
-          "items": { "type": "string" }
+          "description": "Discovery or reference links. A URL is not citable evidence unless a registered snapshot captures it.",
+          "uniqueItems": true,
+          "items": { "type": "string", "format": "uri" }
         },
         "snapshots": {
           "type": "array",
@@ -260,6 +263,15 @@
     }
   ],
   "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "sourceSnapshotIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/stableId" }
+    },
     "funding": {
       "type": "object",
       "required": [
@@ -309,11 +321,7 @@
         "amount": { "type": ["number", "null"] },
         "currency": { "type": ["string", "null"] },
         "status": { "$ref": "#/$defs/factStatus" },
-        "source_snapshot_ids": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": { "type": "string" }
-        },
+        "source_snapshot_ids": { "$ref": "#/$defs/sourceSnapshotIds" },
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false,
@@ -369,11 +377,7 @@
         "currency": { "type": ["string", "null"] },
         "milestone_name": { "type": ["string", "null"] },
         "status": { "$ref": "#/$defs/factStatus" },
-        "source_snapshot_ids": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": { "type": "string" }
-        },
+        "source_snapshot_ids": { "$ref": "#/$defs/sourceSnapshotIds" },
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false,
@@ -443,15 +447,15 @@
     },
     "fundingTrack": {
       "type": "object",
-      "required": ["track_id", "name", "total_pool", "min_grant", "max_grant"],
+      "required": ["track_id", "name", "source_snapshot_ids", "total_pool", "min_grant", "max_grant"],
       "properties": {
         "track_id": {
-          "type": "string",
+          "$ref": "#/$defs/stableId",
           "description": "Stable id referenced by an individual case's funding_track_id."
         },
         "name": { "type": "string" },
-        "source_snapshot_id": {
-          "type": ["string", "null"],
+        "source_snapshot_ids": {
+          "$ref": "#/$defs/sourceSnapshotIds",
           "description": "Source for the track's announced rules; not evidence of an individual award or payment."
         },
         "track_type": {
@@ -525,20 +529,20 @@
     },
     "dimensionAssessment": {
       "type": "object",
-      "required": ["value"],
+      "required": ["value", "source_snapshot_ids"],
       "properties": {
         "value": {
           "type": ["string", "boolean", "null"],
           "enum": [true, false, "high", "medium", "low", "unknown", null]
         },
         "notes": { "type": ["string", "null"] },
-        "source_snapshot_id": { "type": ["string", "null"] }
+        "source_snapshot_ids": { "$ref": "#/$defs/sourceSnapshotIds" }
       },
       "additionalProperties": false
     },
     "impactEvidence": {
       "type": "object",
-      "required": ["type", "description"],
+      "required": ["type", "description", "source_snapshot_ids"],
       "properties": {
         "type": {
           "type": "string",
@@ -556,7 +560,7 @@
         "description": { "type": "string" },
         "metric": { "type": ["string", "null"] },
         "value": { "type": ["string", "number", "null"] },
-        "source_snapshot_id": { "type": ["string", "null"] },
+        "source_snapshot_ids": { "$ref": "#/$defs/sourceSnapshotIds" },
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false
@@ -604,6 +608,7 @@
     },
     "voteSummary": {
       "type": "object",
+      "required": ["source_snapshot_ids"],
       "properties": {
         "platform": {
           "type": ["string", "null"],
@@ -616,7 +621,7 @@
           "items": { "$ref": "#/$defs/voteChoice" }
         },
         "total_score": { "type": ["number", "null"] },
-        "source_snapshot_id": { "type": ["string", "null"] },
+        "source_snapshot_ids": { "$ref": "#/$defs/sourceSnapshotIds" },
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false
@@ -632,7 +637,7 @@
     },
     "rawDataStatus": {
       "type": "object",
-      "required": ["status"],
+      "required": ["status", "source_snapshot_ids"],
       "properties": {
         "status": {
           "type": "string",
@@ -643,7 +648,7 @@
           "enum": ["api", "official_site", "user_supplied", "unverified", "not_applicable", null]
         },
         "storage_uri": { "type": ["string", "null"] },
-        "source_snapshot_id": { "type": ["string", "null"] },
+        "source_snapshot_ids": { "$ref": "#/$defs/sourceSnapshotIds" },
         "notes": { "type": ["string", "null"] }
       },
       "additionalProperties": false
@@ -659,7 +664,7 @@
         "processing"
       ],
       "properties": {
-        "snapshot_id": { "type": "string" },
+        "snapshot_id": { "$ref": "#/$defs/stableId" },
         "captured_at": { "type": ["string", "null"] },
         "source_type": {
           "type": "string",

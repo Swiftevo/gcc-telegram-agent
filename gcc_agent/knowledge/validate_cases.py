@@ -75,9 +75,7 @@ def _walk_source_references(value: Any, path: tuple[Any, ...] = ()):
     if isinstance(value, dict):
         for key, child in value.items():
             child_path = (*path, key)
-            if key == "source_snapshot_id" and isinstance(child, str) and child:
-                yield child, child_path
-            elif key == "source_snapshot_ids" and isinstance(child, list):
+            if key == "source_snapshot_ids" and isinstance(child, list):
                 for index, snapshot_id in enumerate(child):
                     if isinstance(snapshot_id, str) and snapshot_id:
                         yield snapshot_id, (*child_path, index)
@@ -97,6 +95,19 @@ def _walk_deprecated_usd_fields(value: Any, path: tuple[Any, ...] = ()):
     elif isinstance(value, list):
         for index, child in enumerate(value):
             yield from _walk_deprecated_usd_fields(child, (*path, index))
+
+
+def _walk_deprecated_identity_source_fields(value: Any, path: tuple[Any, ...] = ()):
+    deprecated_fields = {"canonical_project_id", "source_urls", "source_snapshot_id"}
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = (*path, key)
+            if key in deprecated_fields:
+                yield child_path
+            yield from _walk_deprecated_identity_source_fields(child, child_path)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from _walk_deprecated_identity_source_fields(child, (*path, index))
 
 
 def _contains_status(value: Any, expected: str) -> bool:
@@ -158,6 +169,14 @@ def validate_case_database(
     for duplicate in sorted(_duplicates(value for value in case_ids if isinstance(value, str))):
         issues.append(ValidationIssue("duplicate_case_id", "$.cases", duplicate))
 
+    legacy_slugs = [
+        case.get("legacy_project_slug")
+        for case in cases
+        if isinstance(case, dict) and isinstance(case.get("legacy_project_slug"), str)
+    ]
+    for duplicate in sorted(_duplicates(legacy_slugs)):
+        issues.append(ValidationIssue("duplicate_legacy_project_slug", "$.cases", duplicate))
+
     track_ids: list[str] = []
     snapshot_ids: list[str] = []
     for case in cases:
@@ -180,7 +199,6 @@ def validate_case_database(
         issues.append(ValidationIssue("duplicate_snapshot_id", "$.cases", duplicate))
 
     known_track_ids = set(track_ids)
-    known_snapshot_ids = set(snapshot_ids)
     for index, case in enumerate(cases):
         if not isinstance(case, dict):
             continue
@@ -203,8 +221,19 @@ def validate_case_database(
                 )
             )
 
+        case_evidence = case.get("evidence", {})
+        case_snapshots = (
+            case_evidence.get("snapshots", [])
+            if isinstance(case_evidence, dict)
+            else []
+        )
+        case_snapshot_ids = {
+            snapshot.get("snapshot_id")
+            for snapshot in case_snapshots
+            if isinstance(snapshot, dict) and isinstance(snapshot.get("snapshot_id"), str)
+        }
         for snapshot_id, relative_path in _walk_source_references(case):
-            if snapshot_id not in known_snapshot_ids:
+            if snapshot_id not in case_snapshot_ids:
                 issues.append(
                     ValidationIssue(
                         "unknown_snapshot_reference",
@@ -217,7 +246,7 @@ def validate_case_database(
             for pointer_name in ("grant_application", "voting_record"):
                 pointer = evidence.get(pointer_name, {})
                 snapshot_id = pointer.get("snapshot_id") if isinstance(pointer, dict) else None
-                if snapshot_id and snapshot_id not in known_snapshot_ids:
+                if snapshot_id and snapshot_id not in case_snapshot_ids:
                     issues.append(
                         ValidationIssue(
                             "unknown_snapshot_reference",
@@ -311,6 +340,14 @@ def validate_case_database(
                         )
 
         public_record = case.get("public_record", {})
+        for relative_path in _walk_deprecated_identity_source_fields(case):
+            issues.append(
+                ValidationIssue(
+                    "deprecated_identity_source_field",
+                    _format_path(("cases", index, *relative_path)),
+                    "use legacy_project_slug, reference_urls, or source_snapshot_ids as applicable",
+                )
+            )
         funding = public_record.get("funding", {}) if isinstance(public_record, dict) else {}
         if isinstance(public_record, dict):
             for relative_path in _walk_deprecated_usd_fields(public_record):
@@ -550,14 +587,14 @@ def validate_repository_data(
                 )
 
     for case_id, case in cases_by_id.items():
-        legacy_slug = case.get("canonical_project_id")
+        legacy_slug = case.get("legacy_project_slug")
         if legacy_slug in legacy_slugs:
             mapping = mapping_by_slug.get(legacy_slug)
             if not mapping or mapping.get("case_id") != case_id:
                 issues.append(
                     ValidationIssue(
                         "missing_migration_mapping",
-                        f"$.cases.{case_id}.canonical_project_id",
+                        f"$.cases.{case_id}.legacy_project_slug",
                         str(legacy_slug),
                     )
                 )

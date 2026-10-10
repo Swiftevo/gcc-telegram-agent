@@ -70,10 +70,10 @@ class ProjectCaseValidationTests(unittest.TestCase):
     def test_project_case_template_conforms_to_current_schema(self):
         template_cases = yaml.safe_load(CASE_TEMPLATE_PATH.read_text(encoding="utf-8"))
         self.assertEqual(1, len(template_cases))
-        self.assertNotIn("canonical_project_id", template_cases[0])
+        self.assertNotIn("legacy_project_slug", template_cases[0])
         template_database = {
-            "schema_version": "0.3.0",
-            "updated_at": "2026-10-10",
+            "schema_version": "0.4.0",
+            "updated_at": "2026-10-11",
             "purpose": "Schema conformance probe for the reusable case template.",
             "cases": template_cases,
         }
@@ -84,6 +84,16 @@ class ProjectCaseValidationTests(unittest.TestCase):
         database = deepcopy(self.database)
         database["cases"][1]["case_id"] = database["cases"][0]["case_id"]
         self.assertIn("duplicate_case_id", {issue.code for issue in self.validate(database)})
+
+    def test_duplicate_legacy_project_slug_is_rejected(self):
+        database = deepcopy(self.database)
+        database["cases"][1]["legacy_project_slug"] = database["cases"][0][
+            "legacy_project_slug"
+        ]
+        self.assertIn(
+            "duplicate_legacy_project_slug",
+            {issue.code for issue in self.validate(database)},
+        )
 
     def test_unknown_funding_track_is_rejected(self):
         database = deepcopy(self.database)
@@ -109,6 +119,29 @@ class ProjectCaseValidationTests(unittest.TestCase):
             "source_snapshot_ids"
         ] = ["missing-snapshot"]
         self.assertIn("unknown_snapshot_reference", {issue.code for issue in self.validate(database)})
+
+    def test_cross_case_snapshot_reference_is_rejected(self):
+        database = deepcopy(self.database)
+        foreign_snapshot_id = database["cases"][1]["evidence"]["snapshots"][0]["snapshot_id"]
+        database["cases"][0]["public_record"]["funding"]["requested"][
+            "source_snapshot_ids"
+        ] = [foreign_snapshot_id]
+        self.assertIn(
+            "unknown_snapshot_reference",
+            {issue.code for issue in self.validate(database)},
+        )
+
+    def test_deprecated_identity_and_source_fields_are_rejected(self):
+        database = deepcopy(self.database)
+        case = database["cases"][0]
+        case["canonical_project_id"] = case.pop("legacy_project_slug")
+        case["evidence"]["source_urls"] = case["evidence"].pop("reference_urls")
+        dimension = case["public_record"]["public_goods_dimensions"]["open_source"]
+        dimension["source_snapshot_id"] = dimension.pop("source_snapshot_ids")[0]
+        self.assertIn(
+            "deprecated_identity_source_field",
+            {issue.code for issue in self.validate(database)},
+        )
 
     def test_internal_or_private_pointer_is_metadata_only(self):
         database = deepcopy(self.database)
@@ -311,7 +344,7 @@ class ProjectCaseValidationTests(unittest.TestCase):
                 "cases": [
                     {
                         "case_id": "test-case",
-                        "canonical_project_id": "new-project",
+                        "legacy_project_slug": "project-new-project",
                         "evidence": {
                             "snapshots": [
                                 {
