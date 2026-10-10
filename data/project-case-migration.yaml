@@ -3,6 +3,31 @@ updated_at: "2026-10-11"
 canonical_database: data/project-case-seeds.yaml
 canonical_schema_version: "0.4.0"
 
+canonical_inventory:
+  status: current_cases_verified
+  verified_at: "2026-10-11"
+  schema_version: "0.4.0"
+  case_count: 8
+  funding_track_count: 2
+  source_snapshot_count: 14
+  local_source_file_count: 14
+  mapped_legacy_count: 8
+  legacy_only_count: 55
+  ai_enabled_case_count: 0
+  review_status_counts:
+    draft: 2
+    seed: 6
+  record_type_counts:
+    funding_program: 2
+    grant_case: 5
+    placeholder: 1
+  source_review_status_counts:
+    pending: 14
+  notes: >
+    This verifies the complete set of cases currently present in the canonical
+    database. It does not claim that all 63 legacy records have been migrated;
+    55 records intentionally remain legacy_only.
+
 legacy_catalog:
   path: projects.yaml
   frozen: true

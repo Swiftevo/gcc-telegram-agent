@@ -113,11 +113,25 @@ Validation covers JSON Schema Draft 2020-12 plus database-wide rules:
 - public-repository evidence boundaries;
 - review and allowed-use gates before AI use;
 - canonical-to-legacy migration mappings and frozen legacy digest;
+- a recomputed canonical inventory covering cases, funding tracks, snapshots,
+  local evidence, review states, record types, AI eligibility and legacy
+  migration counts;
+- rejection of parallel case-like YAML databases under `data/`;
 - no unsupported `funded` claims.
 
 The validator does not decide whether a source is truthful, reconcile accounting
 records, or approve private material for publication. Those remain human review
 tasks.
+
+## Final migration audit
+
+The schema 0.4 migration is complete for the records that currently exist in
+the canonical database: 8 cases, 2 funding tracks and 14 registered local
+snapshots. Six cases remain `seed`, two remain `draft`, and none is enabled for
+AI use. The ledger separately preserves 8 mapped legacy records and 55
+`legacy_only` records. Therefore this audit confirms structural alignment; it
+does not claim complete historical import, source approval, content-owner
+approval, reconciliation, or Bot runtime integration.
 
 ## Migration from 0.3.0
 

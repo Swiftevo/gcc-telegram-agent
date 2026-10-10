@@ -21,8 +21,18 @@ Current inventory:
 - 63 legacy runtime records;
 - 8 mapped canonical cases;
 - 55 records explicitly remaining `legacy_only`;
+- 2 funding tracks and 14 registered source snapshots;
 - 14 referenced local evidence files;
+- 6 `seed` cases and 2 `draft` cases;
 - zero cases or sources approved for Bot／AI use.
+
+These values are not documentation-only estimates. The
+`canonical_inventory` in `data/project-case-migration.yaml` records the verified
+state, and the validator recomputes it from the database, migration mappings and
+local source directory. A data change must update the ledger in the same PR.
+`current_cases_verified` means every case currently in the canonical database
+has passed this repository audit; it does not mean the remaining 55 legacy
+records have been imported.
 
 ## Intake flow
 
@@ -121,6 +131,11 @@ The validator scans every referenced local evidence file, verifies its
 normalized SHA-256 checksum, rejects orphan source files, and blocks known
 row-level vote, wallet, and recording-access patterns.
 
+It also scans `data/**/*.yaml` for a second case-like database. The reusable
+single-case template is the only exception. Do not retain a schema migration as
+`cases-v0.x.yaml`, an archive copy, or another live data file; Git history is
+the rollback and audit trail.
+
 ## Human review checklist
 
 Before approving a source:
@@ -157,6 +172,11 @@ python -m tests
 
 Both commands are part of the release gate. Do not bypass a failure by copying
 data into a second file or lowering the review status.
+
+For a schema or case migration, verify that the gate checks all of the
+following together: canonical schema version, case／track／snapshot counts,
+review and record-type counts, AI-enabled count, source-file count, legacy
+mapping count, and the explicitly unmigrated legacy count.
 
 ## Existing public-history note
 

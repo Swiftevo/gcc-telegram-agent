@@ -115,6 +115,10 @@ required checks 及适用的审查要求通过后，由维护者合入 `main`。
 `projects.yaml` 增加记录。先阅读 `docs/project-data-pipeline.md`，并使用
 `data/templates/` 下的案例及 sanitized application 模板。
 
+不要在 `data/` 留下旧 schema、archive 或第二份 case database YAML；版本历史由 Git
+保存。新增、删除或修改案例／资助线／来源时，必须在同一个 PR 更新
+`data/project-case-migration.yaml` 的 `canonical_inventory`，validator 会用实际资料重算核对。
+
 来源文件必须经过清理、登记处理状态并计算 checksum；不要复制逐票身份、wallet／ENS、
 逐票日期或 voting power、访问密码、私人申请或内部评审。未知的拨款、milestone 或成果保持
 `unknown`／`pending_reconciliation`，不得由提案或网页标签推断。
