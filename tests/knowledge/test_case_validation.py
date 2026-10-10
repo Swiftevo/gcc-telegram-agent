@@ -331,6 +331,54 @@ class ProjectCaseValidationTests(unittest.TestCase):
             {issue.code for issue in self.validate_repository(migration=migration)},
         )
 
+    def test_migration_ledger_inventory_must_match_canonical_database(self):
+        migration = yaml.safe_load(MIGRATION_PATH.read_text(encoding="utf-8"))
+        migration["canonical_inventory"]["case_count"] = 9
+        self.assertIn(
+            "canonical_inventory_count_mismatch",
+            {issue.code for issue in self.validate_repository(migration=migration)},
+        )
+
+    def test_repository_rejects_parallel_case_database(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            alternate_path = root / "data" / "archive" / "cases-v0.3.yaml"
+            alternate_path.parent.mkdir(parents=True)
+            alternate_path.write_text(
+                yaml.safe_dump(
+                    {
+                        "schema_version": "0.3.0",
+                        "cases": [{"case_id": "old-copy", "schema_version": "0.3.0"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            legacy_catalog = {"funded_projects": []}
+            legacy_digest = hashlib.sha256(
+                json.dumps(
+                    legacy_catalog,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest()
+            issues = validate_repository_data(
+                {"schema_version": "0.4.0", "cases": []},
+                migration={
+                    "canonical_database": "data/project-case-seeds.yaml",
+                    "canonical_schema_version": "0.4.0",
+                    "legacy_catalog": {
+                        "record_count": 0,
+                        "unmapped_record_count": 0,
+                        "canonical_json_sha256": legacy_digest,
+                    },
+                    "mappings": [],
+                },
+                legacy_catalog=legacy_catalog,
+                root=root,
+            )
+            self.assertIn("unexpected_case_database", {issue.code for issue in issues})
+
     def test_repository_scan_rejects_row_level_wallet_vote_data(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)

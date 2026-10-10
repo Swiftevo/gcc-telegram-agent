@@ -164,6 +164,11 @@ Completed foundations:
 - Repository validation locks the 63-record legacy catalog, tracks 8 mappings
   and 55 `legacy_only` records, verifies every source checksum, rejects orphan
   files, and scans for prohibited row-level voter, wallet, and access data.
+- The final schema 0.4 migration audit records and recomputes the complete
+  current inventory: 8 cases, 2 funding tracks, 14 registered snapshots／local
+  source files, 6 seed plus 2 draft review states, and zero AI-enabled cases.
+  It rejects a second case-like YAML database so later imports cannot silently
+  continue on an obsolete schema copy.
 - A loader exposes all cases and the subset explicitly allowed for AI review.
 - Source snapshots preserve raw material separately from interpreted summaries.
 - The first post-migration batch adds OSKey and OpenRPC as `draft` grant cases.

@@ -189,7 +189,7 @@ schema 0.4.0 分成两层，并以相同的金额、币别、状态与来源结�
 - `schema/project-case-database.schema.json`：定义整个资料库文件，包括 `schema_version`、`updated_at`、`purpose` 和 `cases`
 - `schema/project.schema.json`：定义单个案例，包括公开记录、资金结构、公共物品维度、影响证据、原始资料指针、投票记录和 AI 初审引用方式
 
-这批资料是可追溯的 seed database，不等同于完整 GCC 历史资助库。63 笔 legacy 项目中目前有 8 笔映射至 canonical cases，其余 55 笔仍为 `legacy_only`。所有 canonical cases 目前均未开放给 Bot／AI；production 问答暂时继续读取 frozen `projects.yaml`。新增案例只写入 canonical database，并须通过来源清理、checksum、review 和 allowed-use 验证。
+这批资料是可追溯的 seed database，不等同于完整 GCC 历史资助库。最终迁移验收会自动核对目前 8 笔 cases、2 条资助线、14 份来源、review 状态及 AI 使用状态，并拒绝 `data/` 下散落的第二份案例资料库。63 笔 legacy 项目中目前有 8 笔映射至 canonical cases，其余 55 笔仍为 `legacy_only`。所有 canonical cases 目前均未开放给 Bot／AI；production 问答暂时继续读取 frozen `projects.yaml`。新增案例只写入 canonical database，并须通过来源清理、checksum、review 和 allowed-use 验证。
 
 ## 部署
 

@@ -133,6 +133,69 @@ def _canonical_json_checksum(value: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def _count_by(values: Iterable[Any]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for value in values:
+        if isinstance(value, str) and value:
+            counts[value] = counts.get(value, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def _canonical_inventory(
+    database: dict[str, Any],
+    *,
+    mappings: list[Any],
+    unmapped_legacy_count: int,
+    local_source_file_count: int,
+) -> dict[str, Any]:
+    cases = [case for case in database.get("cases", []) if isinstance(case, dict)]
+    tracks = [
+        track
+        for case in cases
+        for track in case.get("public_record", {}).get("program_details", {}).get(
+            "funding_tracks", []
+        )
+        if isinstance(track, dict)
+    ]
+    snapshots = [
+        snapshot
+        for case in cases
+        for snapshot in case.get("evidence", {}).get("snapshots", [])
+        if isinstance(snapshot, dict)
+    ]
+    return {
+        "case_count": len(cases),
+        "funding_track_count": len(tracks),
+        "source_snapshot_count": len(snapshots),
+        "local_source_file_count": local_source_file_count,
+        "mapped_legacy_count": len([item for item in mappings if isinstance(item, dict)]),
+        "legacy_only_count": unmapped_legacy_count,
+        "ai_enabled_case_count": sum(
+            case.get("ai_review_usage", {}).get("allowed") is True for case in cases
+        ),
+        "review_status_counts": _count_by(
+            case.get("governance", {}).get("review_status") for case in cases
+        ),
+        "record_type_counts": _count_by(case.get("record_type") for case in cases),
+        "source_review_status_counts": _count_by(
+            snapshot.get("processing", {}).get("review_status") for snapshot in snapshots
+        ),
+    }
+
+
+def _looks_like_case_database(value: Any) -> bool:
+    if isinstance(value, dict):
+        return isinstance(value.get("cases"), list)
+    if isinstance(value, list):
+        return any(
+            isinstance(item, dict)
+            and isinstance(item.get("case_id"), str)
+            and isinstance(item.get("schema_version"), str)
+            for item in value
+        )
+    return False
+
+
 def validate_case_database(
     database: dict[str, Any],
     *,
@@ -489,6 +552,39 @@ def validate_repository_data(
     for orphan in sorted(actual_files - referenced_files):
         issues.append(ValidationIssue("orphan_source_file", "$.source_files", orphan))
 
+    canonical_database_path = migration.get("canonical_database")
+    expected_database_path = "data/project-case-seeds.yaml"
+    if canonical_database_path != expected_database_path:
+        issues.append(
+            ValidationIssue(
+                "canonical_database_path_mismatch",
+                "$.canonical_database",
+                f"expected {expected_database_path}; actual {canonical_database_path}",
+            )
+        )
+
+    data_root = root / "data"
+    if data_root.is_dir():
+        for yaml_path in sorted((*data_root.rglob("*.yaml"), *data_root.rglob("*.yml"))):
+            relative_path = str(yaml_path.relative_to(root)).replace("\\", "/")
+            if relative_path in {
+                expected_database_path,
+                "data/templates/project-case-template.yaml",
+            }:
+                continue
+            try:
+                candidate = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, yaml.YAMLError):
+                continue
+            if _looks_like_case_database(candidate):
+                issues.append(
+                    ValidationIssue(
+                        "unexpected_case_database",
+                        "$.canonical_database",
+                        f"case-like YAML must be migrated into {expected_database_path}: {relative_path}",
+                    )
+                )
+
     canonical_schema_version = migration.get("canonical_schema_version")
     if canonical_schema_version != database.get("schema_version"):
         issues.append(
@@ -608,6 +704,49 @@ def validate_repository_data(
                 f"expected {legacy_config.get('unmapped_record_count')}; actual {unmapped_count}",
             )
         )
+
+    inventory = migration.get("canonical_inventory")
+    if not isinstance(inventory, dict):
+        issues.append(
+            ValidationIssue(
+                "missing_canonical_inventory",
+                "$.canonical_inventory",
+                "the migration ledger must record the verified canonical inventory",
+            )
+        )
+    else:
+        if inventory.get("status") != "current_cases_verified":
+            issues.append(
+                ValidationIssue(
+                    "canonical_inventory_status_invalid",
+                    "$.canonical_inventory.status",
+                    "expected current_cases_verified",
+                )
+            )
+        if inventory.get("schema_version") != database.get("schema_version"):
+            issues.append(
+                ValidationIssue(
+                    "canonical_inventory_schema_mismatch",
+                    "$.canonical_inventory.schema_version",
+                    f"inventory {inventory.get('schema_version')}; database {database.get('schema_version')}",
+                )
+            )
+        actual_inventory = _canonical_inventory(
+            database,
+            mappings=mappings,
+            unmapped_legacy_count=unmapped_count,
+            local_source_file_count=len(actual_files),
+        )
+        for field_name, actual_value in actual_inventory.items():
+            expected_value = inventory.get(field_name)
+            if expected_value != actual_value:
+                issues.append(
+                    ValidationIssue(
+                        "canonical_inventory_count_mismatch",
+                        f"$.canonical_inventory.{field_name}",
+                        f"expected {expected_value}; actual {actual_value}",
+                    )
+                )
 
     return issues
 
