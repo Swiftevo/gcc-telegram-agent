@@ -3,7 +3,9 @@
 from dataclasses import dataclass
 
 from gcc_agent.common.models import Session
+from gcc_agent.knowledge.cases import select_bot_qa_case_records
 from gcc_agent.qa.facts import check_official_fact
+from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.knowledge.loaders import (
     as_gcc_summary_block,
     as_system_block,
@@ -95,6 +97,13 @@ def check_link_first(
     fact = check_official_fact(text, lang, previous_messages)
     if fact.matched:
         return LinkResult(True, fact.reply, f"fact_{fact.fact_type}")
+    approved_cases = select_bot_qa_case_records(text, explicit_only=True, limit=2)
+    if approved_cases:
+        return LinkResult(
+            True,
+            format_case_fact_reply(approved_cases, lang),
+            "canonical_case",
+        )
     for name, url in PROJECT_LINKS.items():
         if name in value:
             return LinkResult(True, _link_reply(lang, "project", name.title(), url), "project")
@@ -127,11 +136,25 @@ def check_link_first(
     return LinkResult(False)
 
 
-def build_messages(user_text: str, session: Session, lang: str = "zh-TW") -> list[dict]:
+def build_messages(
+    user_text: str,
+    session: Session,
+    lang: str = "zh-TW",
+    *,
+    case_records: list[dict] | None = None,
+) -> list[dict]:
     values = load_values()
-    return [
+    selected_cases = (
+        select_bot_qa_case_records(user_text)
+        if case_records is None
+        else case_records
+    )
+    messages = [
         {"role": "system", "content": as_system_block(values)},
         {"role": "system", "content": as_gcc_summary_block(values)},
-        *session.get_context(),
-        {"role": "user", "content": user_text},
     ]
+    case_block = as_case_facts_system_block(selected_cases)
+    if case_block:
+        messages.append({"role": "system", "content": case_block})
+    messages.extend((*session.get_context(), {"role": "user", "content": user_text}))
+    return messages

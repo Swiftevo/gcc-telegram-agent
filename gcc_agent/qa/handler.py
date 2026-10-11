@@ -6,6 +6,8 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from gcc_agent.common.session import get_session, save_exchange
+from gcc_agent.knowledge.cases import select_bot_qa_case_records
+from gcc_agent.qa.case_facts import append_case_provenance, case_provenance_footer
 from gcc_agent.qa.messages import append_reminder, make_apply_markup
 from gcc_agent.qa.prompts import FUNDING_KEYWORDS, build_messages, check_link_first
 from gcc_agent.qa.service import call_ai
@@ -74,13 +76,28 @@ async def handle_general(
         )
         return
 
+    case_records = select_bot_qa_case_records(user_text)
     ai_reply, tokens_used = await call_ai(
-        build_messages(user_text=user_text, session=session, lang=lang),
+        build_messages(
+            user_text=user_text,
+            session=session,
+            lang=lang,
+            case_records=case_records,
+        ),
         lang,
     )
-    final_reply = append_reminder(ai_reply, lang)
+    final_reply = append_reminder(
+        append_case_provenance(ai_reply, case_records, lang),
+        lang,
+    )
     if len(final_reply) > 4000:
-        final_reply = final_reply[:4000] + "…"
+        if case_records:
+            footer = case_provenance_footer(case_records, lang)
+            suffix = append_reminder(f"\n\n{footer}", lang)
+            body_limit = max(0, 3999 - len(suffix))
+            final_reply = ai_reply[:body_limit].rstrip() + "…" + suffix
+        else:
+            final_reply = final_reply[:4000] + "…"
 
     await update.message.reply_text(
         final_reply,
