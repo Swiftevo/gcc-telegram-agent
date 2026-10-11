@@ -91,6 +91,12 @@ sanitization and approved source review. `internal`／`private` application and
 voting pointers are metadata-only; their document reference, snapshot id,
 content summary, and URL remain empty.
 
+Runtime authorization is stricter than schema validity. The Bot independently
+requires case approval, source approval plus `bot_qa`, safe source access,
+case-local source resolution, no reconciliation conflict and a non-placeholder
+record. It then projects only the public QA allowlist documented in
+[`project-case-runtime.md`](project-case-runtime.md).
+
 ## Validation
 
 Run:

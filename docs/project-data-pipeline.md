@@ -45,8 +45,13 @@ canonical draft case (AI disabled)
         ↓ source/fact/privacy/content-owner review
 reviewed or published case
         ↓ separate explicit allowed-use decision
-eligible for a later Bot runtime integration
+eligible for the deny-by-default Bot runtime gate
 ```
+
+The runtime integration now exists, but it is deny-by-default and currently
+returns zero cases. Schema validity is not publication approval. See
+[`project-case-runtime.md`](project-case-runtime.md) for the independent case,
+source, reconciliation, allowlist, provenance and rollback gates.
 
 Use `data/templates/project-case-template.yaml` for a new case and
 `data/templates/sanitized-public-application.md` when a full public application
@@ -111,6 +116,9 @@ Automated checks are not human approval. A pending or rejected source cannot be
 used for Bot QA or application review. A case cannot become `reviewed` or
 `published` until all linked sources are approved. AI use additionally requires
 an explicit `bot_qa` allowed use and no unresolved reconciliation status.
+
+The application repeats these checks at runtime instead of trusting only the
+merge-time validator.
 
 ## Reusable cleaning policy v1.0
 

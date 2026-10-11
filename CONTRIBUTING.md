@@ -135,6 +135,10 @@ claim-level `source_snapshot_id`。
 `internal`／`private` 申请及投票资料只保留 status、access level 和不含 URL 的一般说明；
 `document_ref`、`snapshot_id`、`summary` 必须留空，实际文件须存放在 repo 之外。
 
+不要把 schema-valid 或已汇入等同于可供 Bot 回答。启用一个 canonical case 前必须按
+`docs/project-case-runtime.md` 完成 case／source review、明确加入 `bot_qa`、解除所有
+`pending_reconciliation`，检查实际 runtime projection，并更新 migration inventory。
+
 修改案例或来源后同时运行：
 
 ```bash

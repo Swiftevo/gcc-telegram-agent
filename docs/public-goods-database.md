@@ -170,6 +170,10 @@ Completed foundations:
   It rejects a second case-like YAML database so later imports cannot silently
   continue on an obsolete schema copy.
 - A loader exposes all cases and the subset explicitly allowed for AI review.
+- A separate runtime gate and allowlist connect approved canonical cases to
+  deterministic／AI-assisted QA with source URLs and database dates. It currently
+  returns zero cases because no case or source has received the required content
+  approval and `bot_qa` permission; legacy production answers are unchanged.
 - Source snapshots preserve raw material separately from interpreted summaries.
 - The first post-migration batch adds OSKey and OpenRPC as `draft` grant cases.
   For both records, the public proposal amount, closed governance vote and GCC
@@ -187,7 +191,9 @@ slug and makes factual source references consistently plural and case-local.
 General `reference_urls` remain navigation aids rather than evidence; claims
 must point to registered snapshots before they can be cited.
 
-The remaining work is governed by `PGDATA-001`, `CONTENT-001`,
+The runtime contract and rollback are documented in
+[`project-case-runtime.md`](project-case-runtime.md). The remaining work is
+governed by `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
 [`docs/todo.md`](todo.md). That ordering is intentional: privacy, screening
 guardrails, provenance, and licensing must be stable before importing private
