@@ -3,6 +3,22 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-11：PGDATA-001 第六步接入 deny-by-default runtime gate
+
+- PR #47 把 schema 0.4 canonical cases 接到 QA runtime，但沒有批准或啟用任何現有案例；
+  production dataset 的 eligible case 數仍為 0，frozen `projects.yaml` 行為不變。
+- runtime 會獨立重查 public visibility、`reviewed/published` case review、reviewer role／date、
+  每份 source 的 approved review／`bot_qa` allowed-use／安全 access level、case-local source
+  references、schema 版本及非空摘要；placeholder 或任何 `pending_reconciliation` 均 fail closed。
+- prompt projection 改用明確 public allowlist，不帶 private／internal pointers、raw data path、
+  local storage URI、checksum、reference-only URL、reviewer identity、application-review retrieval
+  text、screening dimensions 或 cautions；redacted evidence 不輸出原始 URL。
+- 明確項目名稱可走 deterministic canonical 回覆；其他匹配問題只注入少量 approved records；
+  case-backed 回覆附公共來源 URL 和 canonical database 日期，長回覆截斷亦保留 provenance。
+- 新增逐案啟用與 rollback 文件；17 項 runtime focused tests、canonical validator、compile、
+  完整 20 個測試檔及 diff check 通過。下一步仍須內容 owner 逐案 review，不能以 code readiness
+  代替內容批准。
+
 ## 2026-10-11：PGDATA-001 第五步完成全量遷移驗收
 
 - PR #46 沒有再改 schema 欄位或案例內容；它為 schema 0.4 的現有 canonical dataset
