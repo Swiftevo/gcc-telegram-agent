@@ -483,6 +483,7 @@ def validate_repository_data(
     """Validate local evidence files and the canonical-to-legacy transition."""
     issues: list[ValidationIssue] = []
     referenced_files: set[str] = set()
+    case_referenced_files: set[str] = set()
 
     for case_index, case in enumerate(database.get("cases", [])):
         if not isinstance(case, dict):
@@ -498,6 +499,7 @@ def validate_repository_data(
                 continue
             normalized_storage_uri = storage_uri.replace("\\", "/")
             referenced_files.add(normalized_storage_uri)
+            case_referenced_files.add(normalized_storage_uri)
             case_storage_uris.add(normalized_storage_uri)
             stored_path = (root / storage_uri).resolve()
             try:
@@ -542,6 +544,23 @@ def validate_repository_data(
                     "raw data storage must point to a registered snapshot in the same case",
                 )
             )
+
+    history_registry_path = root / "data" / "gcc-public-history.yaml"
+    if history_registry_path.is_file():
+        try:
+            history_registry = yaml.safe_load(history_registry_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, yaml.YAMLError):
+            history_registry = None
+        if isinstance(history_registry, dict):
+            for source in history_registry.get("sources", []):
+                if not isinstance(source, dict):
+                    continue
+                extract = source.get("extract")
+                if not isinstance(extract, dict):
+                    continue
+                storage_uri = extract.get("storage_uri")
+                if isinstance(storage_uri, str) and storage_uri:
+                    referenced_files.add(storage_uri.replace("\\", "/"))
 
     source_root = root / "data" / "source-snapshots"
     actual_files = {
@@ -735,7 +754,7 @@ def validate_repository_data(
             database,
             mappings=mappings,
             unmapped_legacy_count=unmapped_count,
-            local_source_file_count=len(actual_files),
+            local_source_file_count=len(actual_files.intersection(case_referenced_files)),
         )
         for field_name, actual_value in actual_inventory.items():
             expected_value = inventory.get(field_name)

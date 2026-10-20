@@ -27,6 +27,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m compileall -q gcc_agent main.py
       - run: python -m gcc_agent.knowledge.validate_cases
+      - run: python -m gcc_agent.knowledge.validate_history
       - run: python -m tests
 
   deploy:

@@ -3,6 +3,23 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-20：REPORT-KB-001A 建立公開歷史證據層
+
+- 把公開的《2023–2025 GCC 公共物品之路》登記為獨立的組織歷史來源，而不是塞入
+  `values.yaml`、onboarding 或冒充一個 canonical project case；保存公共 Drive URL、檔案
+  metadata、原 PDF digest、報告／事件期間和逐節頁碼分類。
+- 建立經清理的 evidence extract：保留歷史定位、timeline、time-bounded aggregates、歷史
+  fund／governance 結構、project catalogue 名稱及 programme context；清楚標示這不是現行
+  政策、付款／milestone 證據或完整 PDF transcription。
+- Builder flight 頁面的 122 person-times／132 people 衝突及未定義的 50.4% 比率維持
+  `pending_reconciliation`，不得進 Bot QA；逐項案例內容仍須另走 canonical case intake。
+- 個人照片／證言、捐助人名單、partner current-status claims、QR 及逐項未審核金額／impact
+  claim 沒有複製到 Bot extract；公開不代表 QA 必須收集。
+- 新增 schema、checksum／storage／period／privacy／use-gate validator、7 項錯誤注入測試及
+  CI gate；compile、兩個 validators 及完整 21 個測試檔通過。全部來源仍是 `pending`、
+  `evidence_only`，整層 `runtime.connected: false`；下一步
+  `REPORT-KB-001B` 需要 content owner 審核後才可設計少量 approved projection。
+
 ## 2026-10-11：PGDATA-001 第六步接入 deny-by-default runtime gate
 
 - PR #47 把 schema 0.4 canonical cases 接到 QA runtime，但沒有批准或啟用任何現有案例；

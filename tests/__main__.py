@@ -21,6 +21,7 @@ REQUIRED_TEST_SUITES = LEGACY_EXECUTABLE_SUITES | {
     Path("tests/knowledge/test_cases.py"),
     Path("tests/knowledge/test_case_validation.py"),
     Path("tests/knowledge/test_case_runtime.py"),
+    Path("tests/knowledge/test_history_validation.py"),
     Path("tests/knowledge/test_onboarding.py"),
     Path("tests/ops/test_sqlite_backup.py"),
     Path("tests/ops/test_runtime.py"),
