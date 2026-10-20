@@ -84,15 +84,41 @@ def validate_history_registry(
         issues.append(HistoryValidationIssue("duplicate_source_id", "$.sources", duplicate))
 
     section_ids: list[str] = []
+    sources_by_id: dict[str, dict[str, Any]] = {}
+    sections_by_source: dict[str, dict[str, dict[str, Any]]] = {}
     for source_index, source in enumerate(sources):
         if not isinstance(source, dict):
             continue
+        source_id = source.get("source_id")
+        if isinstance(source_id, str):
+            sources_by_id[source_id] = source
+            sections_by_source[source_id] = {}
+        processing = source.get("processing", {})
+        if isinstance(processing, dict) and processing.get("review_status") == "approved":
+            if processing.get("sanitization_status") != "human_reviewed":
+                issues.append(
+                    HistoryValidationIssue(
+                        "unsafe_approved_source",
+                        f"$.sources[{source_index}].processing.sanitization_status",
+                        "an approved history source must be human reviewed",
+                    )
+                )
+            if set(processing.get("allowed_uses", [])) != {"evidence_only", "bot_qa"}:
+                issues.append(
+                    HistoryValidationIssue(
+                        "unsafe_approved_source",
+                        f"$.sources[{source_index}].processing.allowed_uses",
+                        "an approved history source must retain evidence_only and explicitly allow bot_qa",
+                    )
+                )
         for section_index, section in enumerate(source.get("sections", [])):
             if not isinstance(section, dict):
                 continue
             section_id = section.get("section_id")
             if isinstance(section_id, str):
                 section_ids.append(section_id)
+                if isinstance(source_id, str):
+                    sections_by_source[source_id][section_id] = section
             pages = section.get("pages", {})
             if isinstance(pages, dict) and isinstance(pages.get("start"), int) and isinstance(
                 pages.get("end"), int
@@ -118,6 +144,104 @@ def validate_history_registry(
 
     for duplicate in sorted(_duplicates(section_ids)):
         issues.append(HistoryValidationIssue("duplicate_section_id", "$.sources[].sections", duplicate))
+
+    projections = registry.get("approved_projections", [])
+    projection_ids = [
+        item.get("projection_id") for item in projections if isinstance(item, dict)
+    ]
+    for duplicate in sorted(
+        _duplicates(value for value in projection_ids if isinstance(value, str))
+    ):
+        issues.append(
+            HistoryValidationIssue("duplicate_projection_id", "$.approved_projections", duplicate)
+        )
+    for projection_index, projection in enumerate(projections):
+        if not isinstance(projection, dict):
+            continue
+        projection_path = f"$.approved_projections[{projection_index}]"
+        answer_text = projection.get("answer_text")
+        if isinstance(answer_text, str):
+            if "歷史" not in answer_text and "報告期" not in answer_text:
+                issues.append(
+                    HistoryValidationIssue(
+                        "missing_historical_boundary",
+                        f"{projection_path}.answer_text",
+                        "an approved projection must state its historical scope",
+                    )
+                )
+            if "50.4%" in answer_text or "50.4％" in answer_text:
+                issues.append(
+                    HistoryValidationIssue(
+                        "unresolved_selection_rate",
+                        f"{projection_path}.answer_text",
+                        "the unresolved 50.4% selection rate cannot appear in an approved answer",
+                    )
+                )
+        citation = projection.get("citation")
+        citation_url = citation.get("url") if isinstance(citation, dict) else None
+        source_references = projection.get("source_references")
+        for reference_index, reference in enumerate(
+            source_references if isinstance(source_references, list) else []
+        ):
+            if not isinstance(reference, dict):
+                continue
+            reference_path = f"{projection_path}.source_references[{reference_index}]"
+            referenced_source_id = reference.get("source_id")
+            referenced_source = sources_by_id.get(referenced_source_id)
+            if referenced_source is None:
+                issues.append(
+                    HistoryValidationIssue(
+                        "unknown_projection_source", f"{reference_path}.source_id", str(referenced_source_id)
+                    )
+                )
+                continue
+            source_processing = referenced_source.get("processing")
+            if not isinstance(source_processing, dict):
+                source_processing = {}
+            if (
+                source_processing.get("review_status") != "approved"
+                or "bot_qa" not in source_processing.get("allowed_uses", [])
+            ):
+                issues.append(
+                    HistoryValidationIssue(
+                        "unapproved_projection_source",
+                        f"{reference_path}.source_id",
+                        "approved projections require an approved source with bot_qa allowed",
+                    )
+                )
+            if citation_url != referenced_source.get("source_url"):
+                issues.append(
+                    HistoryValidationIssue(
+                        "projection_citation_mismatch",
+                        f"{projection_path}.citation.url",
+                        "citation URL must match the registered public source",
+                    )
+                )
+            known_sections = sections_by_source.get(referenced_source_id, {})
+            referenced_section_ids = reference.get("section_ids")
+            for section_reference_index, referenced_section_id in enumerate(
+                referenced_section_ids if isinstance(referenced_section_ids, list) else []
+            ):
+                section = known_sections.get(referenced_section_id)
+                section_reference_path = (
+                    f"{reference_path}.section_ids[{section_reference_index}]"
+                )
+                if section is None:
+                    issues.append(
+                        HistoryValidationIssue(
+                            "unknown_projection_section",
+                            section_reference_path,
+                            str(referenced_section_id),
+                        )
+                    )
+                elif section.get("classification") == "excluded_from_bot":
+                    issues.append(
+                        HistoryValidationIssue(
+                            "excluded_projection_section",
+                            section_reference_path,
+                            "excluded_from_bot sections cannot support a projection",
+                        )
+                    )
     return issues
 
 
@@ -224,7 +348,7 @@ def main() -> int:
         for issue in issues:
             print(f"- {issue}")
         return 1
-    print("GCC public-history validation passed: source layer is evidence-only and runtime-disconnected.")
+    print("GCC public-history validation passed: approved projections exist but runtime remains disconnected.")
     return 0
 
 

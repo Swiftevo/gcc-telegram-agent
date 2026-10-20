@@ -3,6 +3,21 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-20：REPORT-KB-001B 批准首批歷史問答 projection
+
+- GCC content owner 確認 2023–2025 報告清理摘錄為已核實的歷史內容；來源狀態升為
+  `human_reviewed`／`approved`，並明確允許作為經批准 projection 的 Bot-QA 證據。
+- Builder flight 採用截至報告期「297 份申請、支持 132 人次」；正文 122 記為 typo，年度數字
+  亦合計 132。50.4% 因沒有可核對的分母／定義，繼續 `pending_reconciliation`，不得出現在
+  approved answer；報告亦沒有證明去重後的獨立受支持人數。
+- 建立五個繁中 approved projections：GCC 歷史、過往基金方向、歷史項目分類、Builder flight、
+  歷史治理／資助流程。每個 projection 固定 historical-only scope、問題例子、回答、source／
+  section references、citation、排除 claim 及 content-owner review metadata。
+- schema 升至 0.2；validator 會拒絕 duplicate／unknown／excluded section reference、未批准來源、
+  citation mismatch、缺歷史邊界和 50.4% 洩漏。整個 registry 仍 `runtime.connected: false`，
+  production Bot 未能讀取；compile、兩個 validators、14 項 focused tests 及完整 21 個測試檔
+  通過。接入另列 `REPORT-KB-RUNTIME-001`。
+
 ## 2026-10-20：REPORT-KB-001A 建立公開歷史證據層
 
 - 把公開的《2023–2025 GCC 公共物品之路》登記為獨立的組織歷史來源，而不是塞入

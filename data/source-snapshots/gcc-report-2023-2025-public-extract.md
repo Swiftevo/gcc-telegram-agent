@@ -3,8 +3,8 @@
 Historical source - not current policy.
 
 This file is a manually checked, purpose-limited extract from an image-only PDF. It is not a complete transcription,
-current policy, proof of payment, proof of milestone acceptance, or an
-approved Bot knowledge source.
+current policy, proof of payment, proof of milestone acceptance, or a document that may be loaded
+wholesale into the Bot. Only separately approved projections may support future Bot answers.
 
 ## Source identity and limits
 
@@ -14,8 +14,9 @@ approved Bot knowledge source.
 - Original document SHA-256: `a6a199a650ad2dce827af2b50339f07636677fca393720fef611d2c14e9bdb83`.
 - The PDF has 31 image-only pages. Text below was checked against rendered pages rather than
   treated as authoritative OCR.
-- Every statement remains `evidence_only` and pending content-owner review. Current GCC website
-  and subsequently approved policy sources take precedence.
+- The GCC content owner confirmed this cleaned extract as verified historical material on
+  2026-10-20. Approval does not convert historical statements into current policy. The current GCC
+  website and subsequently approved policy sources take precedence.
 
 ## Historical organization context (pages 5–8)
 
@@ -60,7 +61,7 @@ China USD 533K.
 
 All figures in this section are report-stated historical aggregates. The report page alone does
 not establish definitions, denominators, transaction-level payment, or project-level milestone
-acceptance; none is approved for Bot QA.
+acceptance. These page-9 aggregates are not included in the approved Bot-QA projections.
 
 ## Historical fund structure and directions (page 10)
 
@@ -99,11 +100,14 @@ the builder flight programme covered five regions, ETH City covered six regions,
 Web3 programme covered 13 universities. It also describes university interest groups and ETH City
 nodes including Hangzhou, Beijing, Huangshan, Shenzhen and Shanghai.
 
-Page 22 contains an unresolved internal numerical conflict: its narrative says the builder flight
-programme supported 122 person-times through 2025, while a summary box says total supported people
-132. The same page also displays 297 total applications and a 50.4% overall selection rate without
-enough definitions to reconcile the figures. Status: `pending_reconciliation`. None of these
-programme aggregates is approved for Bot QA.
+The GCC content owner confirmed that the Builder flight programme supported 132 person-times
+through the report period; the narrative value 122 is a report-body typo. The annual chart also
+totals 132. The programme projection may therefore state 297 applications and 132 supported
+person-times.
+
+The same page displays a 50.4% overall selection rate without a denominator or definition that
+reconciles it with those totals. That percentage remains `pending_reconciliation` and is excluded
+from every approved projection. The report does not establish a deduplicated unique-person count.
 
 Page 23 is an activity collage. It is retained only as historical visual context, not as structured
 evidence of an event outcome.

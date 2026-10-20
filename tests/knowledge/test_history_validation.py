@@ -30,6 +30,31 @@ class PublicHistoryValidationTests(unittest.TestCase):
     def test_current_history_source_layer_passes(self):
         self.assertEqual([], validate_paths())
 
+    def test_source_and_five_projections_are_content_owner_approved(self):
+        source = self.registry["sources"][0]
+        self.assertEqual("human_reviewed", source["processing"]["sanitization_status"])
+        self.assertEqual("approved", source["processing"]["review_status"])
+        self.assertEqual(
+            {"evidence_only", "bot_qa"}, set(source["processing"]["allowed_uses"])
+        )
+        self.assertEqual(5, len(self.registry["approved_projections"]))
+        self.assertTrue(
+            all(
+                item["review"]["status"] == "approved"
+                for item in self.registry["approved_projections"]
+            )
+        )
+
+    def test_builder_flight_projection_uses_confirmed_person_times(self):
+        projection = next(
+            item
+            for item in self.registry["approved_projections"]
+            if item["projection_id"] == "gcc-builder-flight-history"
+        )
+        self.assertIn("132 人次", projection["answer_text"])
+        self.assertNotIn("50.4%", projection["answer_text"])
+        self.assertNotIn("50.4％", projection["answer_text"])
+
     def test_runtime_connection_is_rejected(self):
         registry = deepcopy(self.registry)
         registry["runtime"]["connected"] = True
@@ -51,6 +76,50 @@ class PublicHistoryValidationTests(unittest.TestCase):
             "duplicate_section_id", {issue.code for issue in self.validate_registry(registry)}
         )
 
+    def test_duplicate_projection_id_is_rejected(self):
+        registry = deepcopy(self.registry)
+        registry["approved_projections"][1]["projection_id"] = registry[
+            "approved_projections"
+        ][0]["projection_id"]
+        self.assertIn(
+            "duplicate_projection_id", {issue.code for issue in self.validate_registry(registry)}
+        )
+
+    def test_projection_cannot_use_excluded_section(self):
+        registry = deepcopy(self.registry)
+        registry["approved_projections"][0]["source_references"][0]["section_ids"] = [
+            "testimonials"
+        ]
+        self.assertIn(
+            "excluded_projection_section",
+            {issue.code for issue in self.validate_registry(registry)},
+        )
+
+    def test_projection_cannot_reference_unknown_section(self):
+        registry = deepcopy(self.registry)
+        registry["approved_projections"][0]["source_references"][0]["section_ids"] = [
+            "missing-section"
+        ]
+        self.assertIn(
+            "unknown_projection_section", {issue.code for issue in self.validate_registry(registry)}
+        )
+
+    def test_projection_rejects_unresolved_selection_rate(self):
+        registry = deepcopy(self.registry)
+        registry["approved_projections"][0]["answer_text"] += " 入選率是 50.4%。"
+        self.assertIn(
+            "unresolved_selection_rate",
+            {issue.code for issue in self.validate_registry(registry)},
+        )
+
+    def test_projection_requires_approved_bot_qa_source(self):
+        registry = deepcopy(self.registry)
+        registry["sources"][0]["processing"]["review_status"] = "pending"
+        registry["sources"][0]["processing"]["allowed_uses"] = ["evidence_only"]
+        self.assertIn(
+            "unapproved_projection_source", {issue.code for issue in self.validate_registry(registry)}
+        )
+
     def test_time_bounded_aggregate_requires_both_dates(self):
         registry = deepcopy(self.registry)
         aggregate = next(
@@ -65,6 +134,7 @@ class PublicHistoryValidationTests(unittest.TestCase):
 
     def test_unreviewed_source_cannot_enable_bot_qa(self):
         registry = deepcopy(self.registry)
+        registry["sources"][0]["processing"]["review_status"] = "pending"
         registry["sources"][0]["processing"]["allowed_uses"] = ["bot_qa"]
         self.assertIn(
             "unsafe_unreviewed_source_use",
