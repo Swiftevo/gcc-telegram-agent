@@ -1,7 +1,7 @@
 # GCC public-history evidence layer
 
 Decision date: 2026-10-20
-Task: `REPORT-KB-001A`
+Tasks: `REPORT-KB-001A`, `REPORT-KB-001B`
 
 ## Purpose and boundary
 
@@ -13,15 +13,17 @@ public historical report
         ↓
 cleaned, page-scoped evidence extract
         ↓ automated schema / checksum / privacy gate
-history registry: pending + evidence_only
-        ↓ content-owner review and present-policy comparison
-future approved projection (separate task)
+history registry: reviewed historical evidence
+        ↓ content-owner approval + explicit fact boundaries
+approved projections only
         ↓
 Bot runtime, only after an explicit implementation and release decision
 ```
 
-The current registry is deliberately disconnected from runtime. It is not read by `values.yaml`,
-the QA prompt, onboarding, case retrieval or application review. A valid file is not an approval.
+The source and five initial projections are content-owner approved, but the registry remains
+deliberately disconnected from runtime. It is not read by `values.yaml`, the QA prompt, onboarding,
+case retrieval or application review. Approval makes the projections eligible for a later runtime
+change; it does not itself change Bot behaviour.
 
 ## Why this is not a project case
 
@@ -61,32 +63,41 @@ into a current one.
 Public availability does not make every name, image, quotation, QR code or partner claim necessary
 for a Bot answer. The cleaned extract applies data minimization even to public material.
 
-## Known conflict and review state
+## Reconciliation and review state
 
-The report's Builder flight page says both 122 supported person-times and 132 total supported
-people. It also shows 297 applications and a 50.4% selection rate without definitions sufficient
-to reconcile the figures. These values remain `pending_reconciliation` and are not approved for
-Bot QA.
+The GCC content owner confirmed that Builder flight supported 132 person-times through the report
+period. The value 122 in the report body is recorded as a typo, while the annual figures also total 132. The
+approved projection uses 297 applications and 132 supported person-times.
 
-The entire first source is currently:
+The page's 50.4% selection rate still has no definition or denominator that reconciles with those
+totals. It remains `pending_reconciliation` and is prohibited from approved answer text. The report
+also does not establish a deduplicated unique-person count.
 
-- `sanitization_status: pending`;
-- `review_status: pending`;
-- `allowed_uses: [evidence_only]`;
+The source is now:
+
+- `sanitization_status: human_reviewed`;
+- `review_status: approved`;
+- `allowed_uses: [evidence_only, bot_qa]`;
 - runtime disconnected.
 
-## Review and future release
+## Approved projection boundary
 
-Before any section is used by the Bot, a follow-up change must:
+The five approved projections cover only:
 
-1. compare present-tense claims with current official sources;
-2. reconcile or exclude contradictory aggregates;
-3. have a GCC content owner review the cleaned extract and its page mapping;
-4. define a small projection containing only approved claims and citations;
-5. add deterministic questions and fact-boundary tests;
-6. separately authorize and implement runtime loading, with rollback instructions.
+1. GCC historical development from 2022-10 through the 2023–2025 report period;
+2. historical fund structure and funding directions;
+3. project names grouped by the report's historical categories;
+4. Builder flight history, using 132 person-times and excluding 50.4%;
+5. the historical governance and funding process.
 
-Until all six steps are complete, the report remains research evidence only.
+Each projection carries its question examples, fixed Traditional-Chinese answer, exact source and
+section references, citation URL, excluded claims and content-owner review metadata. Projections
+cannot cite an `excluded_from_bot` section.
+
+Before the Bot may answer from them, a separate runtime PR must implement deterministic projection
+selection, current-versus-historical routing, source citation, private／group tests and rollback. It
+must load only `approved_projections`, never the full extract. Until then, production behaviour is
+unchanged.
 
 ## Validation
 
@@ -98,7 +109,8 @@ python -m gcc_agent.knowledge.validate_cases
 python -m tests
 ```
 
-The history validator checks schema, unique identifiers, page ranges, aggregate periods, storage
-location, normalized checksum, public source URL, required warning／conflict markers, unsafe voter
-or access data, and the evidence-only gate. The case validator also recognizes history extracts as
-registered files so they are not mistaken for orphan case evidence.
+The history validator checks schema, unique source／section／projection identifiers, page ranges,
+aggregate periods, storage location, normalized checksum, public source URL, warning／reconciliation
+markers, unsafe voter or access data, source review gates, projection references and citations,
+historical wording, excluded sections and the 50.4% block. The case validator also recognizes
+history extracts as registered files so they are not mistaken for orphan case evidence.

@@ -1,4 +1,4 @@
-schema_version: 0.1.0
+schema_version: 0.2.0
 updated_at: '2026-10-20'
 purpose: Register cleaned, time-bounded public evidence about GCC organization history outside the canonical project-case database.
 runtime:
@@ -24,15 +24,18 @@ sources:
     original_document_sha256: sha256:a6a199a650ad2dce827af2b50339f07636677fca393720fef611d2c14e9bdb83
     extract:
       storage_uri: data/source-snapshots/gcc-report-2023-2025-public-extract.md
-      checksum: sha256:43cef249b8fd10696fe0063e60e985a47a5711e4acbca61811549ca22d5d4402
+      checksum: sha256:f38ad7a6f91bfcf603f40aabf3ca171b31980cfdf37d20bae3ef44e1494162cb
       format: markdown
     processing:
-      sanitization_status: pending
-      review_status: pending
+      sanitization_status: human_reviewed
+      review_status: approved
       allowed_uses:
         - evidence_only
+        - bot_qa
       policy_version: '1.0'
-      notes: Image-only PDF manually checked page by page; content-owner review remains required.
+      reviewed_at: '2026-10-20'
+      reviewed_by_role: GCC content owner
+      notes: Content owner confirmed the cleaned report contents as verified historical material; Bot use remains limited to the explicit approved projections below.
     sections:
       - section_id: organization-context
         title: GCC description, public-goods framing and timeline
@@ -63,7 +66,7 @@ sources:
         pages: {start: 20, end: 23}
         classification: historical_programme
         temporal_scope: {status: historical, label: programme history through report period, start: '2023', end: '2025'}
-        notes: Page 22 has a 122 versus 132 conflict and remains pending_reconciliation.
+        notes: Content owner confirmed 132 supported person-times; 122 is a report-body typo. The 50.4% selection-rate definition remains pending_reconciliation and is excluded from projections.
       - section_id: testimonials
         title: Named testimonials and portraits
         pages: {start: 24, end: 25}
@@ -82,3 +85,97 @@ sources:
         classification: excluded_from_bot
         temporal_scope: {status: historical, label: report partner pages, start: null, end: '2025'}
         notes: Names and logos are not copied into the Bot extract or treated as current relationships.
+approved_projections:
+  - projection_id: gcc-history-2022-2025
+    topic: GCC historical development
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC 在 2023 至 2025 年做過甚麼？
+      - GCC 的發展歷史是怎樣？
+    answer_text: 根據 GCC《2023–2025 公共物品之路》，GCC 的發展由 2022 年 10 月 Gitcoin Grants 15／16 的華語 matching round 起步；2023 年建立初期治理與營運、展開定向資助及 Builder 機票支持；2024 年推進社群治理與 Gitcoin Asia Round；2025 年建立 ETH City、高校 Web3 興趣小組專項基金及 Cohort 申請制度。這是報告期內的歷史概覽，不代表所有計劃或政策目前仍然相同。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [organization-context]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - present policy or programme availability
+      - individual payment or milestone execution
+    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-historical-funding-directions
+    topic: Historical fund structure and directions
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC 過往支持哪些公共物品方向？
+      - 報告中的公共基金和專項基金是甚麼？
+    answer_text: 在《2023–2025 公共物品之路》所描述的歷史架構中，公共基金方向包括反審查與加密隱私、全球公共人才網絡、自由開源軟件，以及治理研究與實驗；專項基金例子包括 Builder 機票、ETH City 與高校、GCC × 706 和 GCC × Mastodon。這是報告期內的歷史方向，現行資助政策應以 GCC 最新官方資料為準。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [fund-structure]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - current application eligibility
+      - current funding priorities
+    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-historical-project-catalogue
+    topic: Historical project catalogue
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC 報告列出過哪些項目？
+      - 報告中的資助項目有哪些類別？
+    answer_text: 報告按歷史類別列出多個項目：隱私與安全包括 Tornado Cash／WeWantJusticeDAO、DeFi Hacklabs、Web3 Privacy Now、ZKP2P、Community Privacy Residency、ZKPunk、Chain Mirror、Mastodon、OSKey、Primus、SnarkExpress 和 Vyper；開發者與黑客松包括 The Mu、登鏈社區、EPF 協議研究、AdventureX、Colony House、Remix 中文、Herstory 和 Invisible Garden Argentina；另有社會科學、去中心化治理，以及媒體與開放資訊類別。這份名單只反映報告期內的歷史收錄，不單獨證明個別付款、milestone 或現況。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [project-catalogue]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - individual payment or milestone execution
+      - current project status
+      - detailed per-project impact claims
+    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-builder-flight-history
+    topic: Builder flight historical programme
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC Builder 機票計劃是甚麼？
+      - Builder flight 過往支持了多少人？
+    answer_text: GCC Builder 機票計劃由 2023 年 Istanbul Devconnect 開始。根據 GCC 已核實的 2023–2025 歷史報告，截至報告期共有 297 份申請，並支持 132 人次參與 Devcon、ETH Denver、EDCON、ETHCC、Devconnect 等活動。報告正文中的 122 是 typo；132 人次是 GCC content owner 確認採用的數字。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [participation-programmes]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - 50.4 percent selection rate pending denominator definition
+      - unique supported-person count
+      - current programme availability
+    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-historical-governance-process
+    topic: Historical governance and funding process
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC 當時的治理方式是怎樣？
+      - 報告中的歷史資助流程是甚麼？
+    answer_text: 《2023–2025 公共物品之路》描述的歷史治理架構包括九人投委會、資助決定需要三分之二支持、小型營運團隊、鏈上支出及公開披露投票決定；當時流程包括初步篩選、評審、盡職調查、決策及協議。這是報告所述的歷史做法，不能用來代替 GCC 現行申請或治理政策。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [principles-and-process]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - current governance composition
+      - current application process
+      - fixed review duration or outcome guarantee
+    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
