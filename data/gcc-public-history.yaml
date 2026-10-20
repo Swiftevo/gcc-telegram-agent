@@ -1,0 +1,84 @@
+schema_version: 0.1.0
+updated_at: '2026-10-20'
+purpose: Register cleaned, time-bounded public evidence about GCC organization history outside the canonical project-case database.
+runtime:
+  connected: false
+  note: No history source or extract is loaded into the Bot prompt or retrieval path.
+sources:
+  - source_id: gcc-report-2023-2025-cn
+    title: 2023-2025 GCC 公共物品之路 / The Path Of Public Goods
+    language: zh-CN
+    source_type: public_report
+    source_url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    access_level: public
+    report_period:
+      label: '2023-2025'
+      event_start: 2022-10
+      event_end: 2025-11
+    drive_metadata:
+      file_id: 15HztLjCcUtatmknZuUZbjb1ifEojzKfR
+      mime_type: application/pdf
+      byte_size: 25891125
+      created_at: '2026-03-03T06:43:10.306Z'
+      modified_at: '2026-03-03T06:44:00.455Z'
+    original_document_sha256: sha256:a6a199a650ad2dce827af2b50339f07636677fca393720fef611d2c14e9bdb83
+    extract:
+      storage_uri: data/source-snapshots/gcc-report-2023-2025-public-extract.md
+      checksum: sha256:43cef249b8fd10696fe0063e60e985a47a5711e4acbca61811549ca22d5d4402
+      format: markdown
+    processing:
+      sanitization_status: pending
+      review_status: pending
+      allowed_uses:
+        - evidence_only
+      policy_version: '1.0'
+      notes: Image-only PDF manually checked page by page; content-owner review remains required.
+    sections:
+      - section_id: organization-context
+        title: GCC description, public-goods framing and timeline
+        pages: {start: 5, end: 8}
+        classification: historical_context
+        temporal_scope: {status: historical, label: report and timeline period, start: 2022-10, end: 2025-11}
+        notes: Historical self-description; later approved current sources take precedence.
+      - section_id: two-year-aggregate
+        title: Two-year donation, category and geography aggregates
+        pages: {start: 9, end: 9}
+        classification: time_bounded_aggregate
+        temporal_scope: {status: historical, label: report-stated two-year aggregate, start: '2023', end: '2025'}
+        notes: Report-stated figures only; not transaction or milestone evidence.
+      - section_id: fund-structure
+        title: Public and special fund structure and directions
+        pages: {start: 10, end: 10}
+        classification: historical_policy
+        temporal_scope: {status: historical, label: structure described by the report, start: null, end: '2025'}
+        notes: Not approved as current funding policy.
+      - section_id: project-catalogue
+        title: Historical project catalogue
+        pages: {start: 11, end: 19}
+        classification: case_catalog
+        temporal_scope: {status: historical, label: projects presented in the report, start: '2023', end: '2025'}
+        notes: Names and categories only; per-project claims require canonical case intake and review.
+      - section_id: participation-programmes
+        title: Builder flight, ETH City and university programmes
+        pages: {start: 20, end: 23}
+        classification: historical_programme
+        temporal_scope: {status: historical, label: programme history through report period, start: '2023', end: '2025'}
+        notes: Page 22 has a 122 versus 132 conflict and remains pending_reconciliation.
+      - section_id: testimonials
+        title: Named testimonials and portraits
+        pages: {start: 24, end: 25}
+        classification: excluded_from_bot
+        temporal_scope: {status: historical, label: report testimonials, start: null, end: '2025'}
+        notes: Excluded by data minimization; public status does not make personal material necessary for Bot QA.
+      - section_id: principles-and-process
+        title: Donation principles, governance process and cooperation methods
+        pages: {start: 26, end: 28}
+        classification: historical_policy
+        temporal_scope: {status: historical, label: process described by the report, start: null, end: '2025'}
+        notes: Current official process sources take precedence.
+      - section_id: partners-and-donors
+        title: Partner, sponsor, donor and media lists
+        pages: {start: 29, end: 30}
+        classification: excluded_from_bot
+        temporal_scope: {status: historical, label: report partner pages, start: null, end: '2025'}
+        notes: Names and logos are not copied into the Bot extract or treated as current relationships.

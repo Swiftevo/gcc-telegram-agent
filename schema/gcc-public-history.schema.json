@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gccofficial.org/schemas/gcc-public-history.schema.json",
+  "title": "GCC public history source registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "updated_at", "purpose", "runtime", "sources"],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "updated_at": { "type": "string", "format": "date" },
+    "purpose": { "type": "string", "minLength": 1 },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connected", "note"],
+      "properties": {
+        "connected": { "const": false },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "temporal_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "label", "start", "end"],
+      "properties": {
+        "status": { "const": "historical" },
+        "label": { "type": "string", "minLength": 1 },
+        "start": { "type": ["string", "null"] },
+        "end": { "type": ["string", "null"] }
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section_id", "title", "pages", "classification", "temporal_scope", "notes"],
+      "properties": {
+        "section_id": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1 },
+        "pages": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {
+            "start": { "type": "integer", "minimum": 1 },
+            "end": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "classification": {
+          "enum": [
+            "historical_context",
+            "time_bounded_aggregate",
+            "historical_policy",
+            "case_catalog",
+            "historical_programme",
+            "excluded_from_bot"
+          ]
+        },
+        "temporal_scope": { "$ref": "#/$defs/temporal_scope" },
+        "notes": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id", "title", "language", "source_type", "source_url",
+        "access_level", "report_period", "drive_metadata",
+        "original_document_sha256", "extract", "processing", "sections"
+      ],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 2 },
+        "source_type": { "const": "public_report" },
+        "source_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "access_level": { "const": "public" },
+        "report_period": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "event_start", "event_end"],
+          "properties": {
+            "label": { "type": "string", "minLength": 1 },
+            "event_start": { "type": "string", "minLength": 4 },
+            "event_end": { "type": "string", "minLength": 4 }
+          }
+        },
+        "drive_metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["file_id", "mime_type", "byte_size", "created_at", "modified_at"],
+          "properties": {
+            "file_id": { "type": "string", "minLength": 1 },
+            "mime_type": { "const": "application/pdf" },
+            "byte_size": { "type": "integer", "minimum": 1 },
+            "created_at": { "type": "string", "format": "date-time" },
+            "modified_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "original_document_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "extract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["storage_uri", "checksum", "format"],
+          "properties": {
+            "storage_uri": { "type": "string", "pattern": "^data/source-snapshots/.+\\.md$" },
+            "checksum": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "format": { "const": "markdown" }
+          }
+        },
+        "processing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sanitization_status", "review_status", "allowed_uses", "policy_version", "notes"],
+          "properties": {
+            "sanitization_status": { "enum": ["pending", "automated_checked", "human_reviewed"] },
+            "review_status": { "enum": ["pending", "approved", "rejected"] },
+            "allowed_uses": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["evidence_only", "bot_qa"] }
+            },
+            "policy_version": { "type": "string", "minLength": 1 },
+            "notes": { "type": "string", "minLength": 1 }
+          }
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/section" }
+        }
+      }
+    }
+  }
+}

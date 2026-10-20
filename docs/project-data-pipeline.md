@@ -34,6 +34,13 @@ local source directory. A data change must update the ledger in the same PR.
 has passed this repository audit; it does not mean the remaining 55 legacy
 records have been imported.
 
+Organization-level historical evidence has a different canonical destination:
+`data/gcc-public-history.yaml`. It may register a cleaned report extract, but it
+must not duplicate or replace a project case. A project name found in a report
+is only an intake lead; project-specific amounts, decisions, outcomes and
+milestones still require a separate case record and case-local evidence. See
+[`gcc-public-history.md`](gcc-public-history.md).
+
 ## Intake flow
 
 ```text
