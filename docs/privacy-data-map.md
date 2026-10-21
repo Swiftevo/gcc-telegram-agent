@@ -183,13 +183,15 @@ database／backup 被 Git 追蹤。離站 object storage 尚未啟用；如日�
 ## Public-goods repository 資料
 
 GitHub repository 現時是 public。`projects.yaml`、`data/project-case-seeds.yaml`、schema
-及九份 `data/source-snapshots/*.md` 均被 Git 追蹤，所以其中任何內容實際上都是公開資料。
+及十五份 `data/source-snapshots/*.md` 均被 Git 追蹤，所以其中任何內容實際上都是公開資料。
 
 詳細案例 schema 容許 `public`、`internal`、`private`、`redacted` evidence pointer；現行
 seed 亦有標成 internal／private 的 pointer 或缺失資料說明。盤點未發現 raw private
 application document 被 Git 追蹤，但 classification label 不能為 public repository 內的
-文字提供存取控制。現行 runtime 只測試／載入案例 loader，尚未把詳細案例接入 QA；
-`PGDATA-001`／`CONTENT-001` 在接入前必須按 `PRIV-001H` 的公開邊界審核。
+文字提供存取控制。canonical 詳細案例目前仍沒有 eligible Bot-QA case；
+`PGDATA-001`／`CONTENT-001` 在逐案接入前必須按 `PRIV-001H` 的公開邊界審核。獨立的
+public-history runtime 只載入七個經內容 owner 批准的固定 projection，不載入完整報告
+extract、照片、證言、捐助人、partner 名單或 QR code，也不把報告內容注入 AI prompt。
 
 公開來源也可能包含姓名、團隊或社交帳戶。公開可見不等於可以不設用途、來源、更正及
 撤回規則；這部分同時屬於 `GOVERNANCE-001`。

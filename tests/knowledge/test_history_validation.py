@@ -30,14 +30,14 @@ class PublicHistoryValidationTests(unittest.TestCase):
     def test_current_history_source_layer_passes(self):
         self.assertEqual([], validate_paths())
 
-    def test_source_and_five_projections_are_content_owner_approved(self):
+    def test_source_and_seven_projections_are_content_owner_approved(self):
         source = self.registry["sources"][0]
         self.assertEqual("human_reviewed", source["processing"]["sanitization_status"])
         self.assertEqual("approved", source["processing"]["review_status"])
         self.assertEqual(
             {"evidence_only", "bot_qa"}, set(source["processing"]["allowed_uses"])
         )
-        self.assertEqual(5, len(self.registry["approved_projections"]))
+        self.assertEqual(7, len(self.registry["approved_projections"]))
         self.assertTrue(
             all(
                 item["review"]["status"] == "approved"
@@ -52,12 +52,12 @@ class PublicHistoryValidationTests(unittest.TestCase):
             if item["projection_id"] == "gcc-builder-flight-history"
         )
         self.assertIn("132 人次", projection["answer_text"])
-        self.assertNotIn("50.4%", projection["answer_text"])
-        self.assertNotIn("50.4％", projection["answer_text"])
+        self.assertIn("50.4%", projection["answer_text"])
+        self.assertIn("沒有交代分母", projection["answer_text"])
 
-    def test_runtime_connection_is_rejected(self):
+    def test_runtime_must_be_connected_for_schema_0_3(self):
         registry = deepcopy(self.registry)
-        registry["runtime"]["connected"] = True
+        registry["runtime"]["connected"] = False
         self.assertIn("schema", {issue.code for issue in self.validate_registry(registry)})
 
     def test_duplicate_source_id_is_rejected(self):
@@ -104,11 +104,11 @@ class PublicHistoryValidationTests(unittest.TestCase):
             "unknown_projection_section", {issue.code for issue in self.validate_registry(registry)}
         )
 
-    def test_projection_rejects_unresolved_selection_rate(self):
+    def test_projection_rejects_selection_rate_without_denominator_boundary(self):
         registry = deepcopy(self.registry)
         registry["approved_projections"][0]["answer_text"] += " 入選率是 50.4%。"
         self.assertIn(
-            "unresolved_selection_rate",
+            "unbounded_selection_rate",
             {issue.code for issue in self.validate_registry(registry)},
         )
 

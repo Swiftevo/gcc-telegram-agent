@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schema_version", "updated_at", "purpose", "runtime", "sources", "approved_projections"],
   "properties": {
-    "schema_version": { "const": "0.2.0" },
+    "schema_version": { "const": "0.3.0" },
     "updated_at": { "type": "string", "format": "date" },
     "purpose": { "type": "string", "minLength": 1 },
     "runtime": {
@@ -14,7 +14,7 @@
       "additionalProperties": false,
       "required": ["connected", "note"],
       "properties": {
-        "connected": { "const": false },
+        "connected": { "const": true },
         "note": { "type": "string", "minLength": 1 }
       }
     },

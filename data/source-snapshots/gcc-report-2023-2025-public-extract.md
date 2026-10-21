@@ -61,7 +61,7 @@ China USD 533K.
 
 All figures in this section are report-stated historical aggregates. The report page alone does
 not establish definitions, denominators, transaction-level payment, or project-level milestone
-acceptance. These page-9 aggregates are not included in the approved Bot-QA projections.
+acceptance. They may be repeated only through the approved aggregate projection with that boundary.
 
 ## Historical fund structure and directions (page 10)
 
@@ -105,9 +105,10 @@ through the report period; the narrative value 122 is a report-body typo. The an
 totals 132. The programme projection may therefore state 297 applications and 132 supported
 person-times.
 
-The same page displays a 50.4% overall selection rate without a denominator or definition that
-reconciles it with those totals. That percentage remains `pending_reconciliation` and is excluded
-from every approved projection. The report does not establish a deduplicated unique-person count.
+The same page displays a 50.4% overall selection rate. The GCC content owner directed that 50.4%
+be used as the report-stated historical answer. Its denominator and calculation remain
+`pending_reconciliation`: the Bot must not derive it from 297 applications and 132 supported
+person-times, present it as a current programme rate, or infer a deduplicated unique-person count.
 
 Page 23 is an activity collage. It is retained only as historical visual context, not as structured
 evidence of an event outcome.

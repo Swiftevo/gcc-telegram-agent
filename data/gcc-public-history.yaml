@@ -1,9 +1,9 @@
-schema_version: 0.2.0
-updated_at: '2026-10-20'
+schema_version: 0.3.0
+updated_at: '2026-10-22'
 purpose: Register cleaned, time-bounded public evidence about GCC organization history outside the canonical project-case database.
 runtime:
-  connected: false
-  note: No history source or extract is loaded into the Bot prompt or retrieval path.
+  connected: true
+  note: Only approved projections are available through deterministic link-first matching; the full report extract is never loaded into the Bot prompt or retrieval path.
 sources:
   - source_id: gcc-report-2023-2025-cn
     title: 2023-2025 GCC 公共物品之路 / The Path Of Public Goods
@@ -24,7 +24,7 @@ sources:
     original_document_sha256: sha256:a6a199a650ad2dce827af2b50339f07636677fca393720fef611d2c14e9bdb83
     extract:
       storage_uri: data/source-snapshots/gcc-report-2023-2025-public-extract.md
-      checksum: sha256:f38ad7a6f91bfcf603f40aabf3ca171b31980cfdf37d20bae3ef44e1494162cb
+      checksum: sha256:f483f6fc5c74c8d27c4e4e7a237caf99bbf08a09292570d0952b45877c4e1272
       format: markdown
     processing:
       sanitization_status: human_reviewed
@@ -66,7 +66,7 @@ sources:
         pages: {start: 20, end: 23}
         classification: historical_programme
         temporal_scope: {status: historical, label: programme history through report period, start: '2023', end: '2025'}
-        notes: Content owner confirmed 132 supported person-times; 122 is a report-body typo. The 50.4% selection-rate definition remains pending_reconciliation and is excluded from projections.
+        notes: Content owner confirmed 132 supported person-times; 122 is a report-body typo. The report-stated 50.4% overall selection rate is approved for historical answers, while its denominator and calculation remain pending_reconciliation.
       - section_id: testimonials
         title: Named testimonials and portraits
         pages: {start: 24, end: 25}
@@ -93,7 +93,7 @@ approved_projections:
     question_examples:
       - GCC 在 2023 至 2025 年做過甚麼？
       - GCC 的發展歷史是怎樣？
-    answer_text: 根據 GCC《2023–2025 公共物品之路》，GCC 的發展由 2022 年 10 月 Gitcoin Grants 15／16 的華語 matching round 起步；2023 年建立初期治理與營運、展開定向資助及 Builder 機票支持；2024 年推進社群治理與 Gitcoin Asia Round；2025 年建立 ETH City、高校 Web3 興趣小組專項基金及 Cohort 申請制度。這是報告期內的歷史概覽，不代表所有計劃或政策目前仍然相同。
+    answer_text: 根據 GCC《2023–2025 公共物品之路》，GCC 的發展由 2022 年 10 月 Gitcoin Grants 15／16 的華語 matching round 起步；2023 年建立初期治理與營運、展開定向資助及 Builder 機票支持；2024 年推進社群治理與 Gitcoin Asia Round，報告記錄累計直接捐贈超過 50 萬美元；2025 年建立 ETH City、高校 Web3 興趣小組專項基金及 Cohort 申請制度，報告記錄累計直接捐贈超過 100 萬美元。這是報告期內的歷史概覽，不代表所有計劃或政策目前仍然相同。
     source_references:
       - source_id: gcc-report-2023-2025-cn
         section_ids: [organization-context]
@@ -103,7 +103,7 @@ approved_projections:
     excluded_claims:
       - present policy or programme availability
       - individual payment or milestone execution
-    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+    review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}
   - projection_id: gcc-historical-funding-directions
     topic: Historical fund structure and directions
     language: zh-Hant
@@ -148,7 +148,7 @@ approved_projections:
     question_examples:
       - GCC Builder 機票計劃是甚麼？
       - Builder flight 過往支持了多少人？
-    answer_text: GCC Builder 機票計劃由 2023 年 Istanbul Devconnect 開始。根據 GCC 已核實的 2023–2025 歷史報告，截至報告期共有 297 份申請，並支持 132 人次參與 Devcon、ETH Denver、EDCON、ETHCC、Devconnect 等活動。報告正文中的 122 是 typo；132 人次是 GCC content owner 確認採用的數字。
+    answer_text: GCC Builder 機票計劃由 2023 年 Istanbul Devconnect 開始。根據 GCC 已核實的 2023–2025 歷史報告，截至報告期共有 297 份申請、支持 132 人次，報告列出的整體入選率為 50.4%。報告正文中的 122 是 typo；132 人次是 GCC content owner 確認採用的數字。50.4% 是報告所列的歷史統計，但報告沒有交代分母或計算方法，不應以 297 與 132 重新推算，也不代表現行計劃比率。
     source_references:
       - source_id: gcc-report-2023-2025-cn
         section_ids: [participation-programmes]
@@ -156,10 +156,9 @@ approved_projections:
       label: GCC 2023–2025 公共物品之路
       url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
     excluded_claims:
-      - 50.4 percent selection rate pending denominator definition
       - unique supported-person count
       - current programme availability
-    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+    review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}
   - projection_id: gcc-historical-governance-process
     topic: Historical governance and funding process
     language: zh-Hant
@@ -167,7 +166,7 @@ approved_projections:
     question_examples:
       - GCC 當時的治理方式是怎樣？
       - 報告中的歷史資助流程是甚麼？
-    answer_text: 《2023–2025 公共物品之路》描述的歷史治理架構包括九人投委會、資助決定需要三分之二支持、小型營運團隊、鏈上支出及公開披露投票決定；當時流程包括初步篩選、評審、盡職調查、決策及協議。這是報告所述的歷史做法，不能用來代替 GCC 現行申請或治理政策。
+    answer_text: 《2023–2025 公共物品之路》描述的歷史治理架構包括九人投委會、資助決定需要三分之二支持、小型營運團隊、鏈上支出及公開披露投票決定；當時流程包括初步篩選、全面評審、盡職調查、決策及協議與進度管理。報告亦列出直接捐贈、聯合資助、資源協作及活動合辦等合作方式。這是報告所述的歷史做法，不能用來代替 GCC 現行申請或治理政策。
     source_references:
       - source_id: gcc-report-2023-2025-cn
         section_ids: [principles-and-process]
@@ -178,4 +177,42 @@ approved_projections:
       - current governance composition
       - current application process
       - fixed review duration or outcome guarantee
-    review: {status: approved, reviewed_at: '2026-10-20', reviewed_by_role: GCC content owner}
+    review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-historical-aggregate-data
+    topic: Historical donation aggregate data
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC 報告中的兩年捐贈數據是多少？
+      - 報告記錄了多少資助、項目和營運開支？
+    answer_text: GCC《2023–2025 公共物品之路》的兩年歷史數據頁列出：捐贈金額超過 115 萬美元、支持項目 45+、直接捐贈及參與配捐 100+、支持個人 100+，營運開支率為 26%。分類金額／里程碑完成率分別為：隱私與安全 29.2 萬美元／89.6%、開發者與黑客松 23.63 萬美元／92.9%、社科人文研究 25.24 萬美元／100%、去中心化治理 19.32 萬美元／82.7%、媒體與開放資訊 2 萬美元／25%；Gitcoin 配捐為 16 萬美元，因項目過多未統計里程碑。報告列出的地區金額為：北美 7.1 萬美元、拉丁美洲 1.9 萬美元、歐洲 22.9 萬美元、亞洲其他地區 30.1 萬美元、中國 53.3 萬美元。這些都是報告所列的歷史 aggregates，不是交易級付款或逐項 milestone 驗收證據。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [two-year-aggregate]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - transaction-level payment proof
+      - project-level milestone acceptance
+      - current financial position
+    review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-historical-programme-reach
+    topic: Historical programme reach
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - 報告中的 Builder、ETH City 和高校 Web3 覆蓋多少地區？
+      - GCC 過往有哪些 ETH City 節點？
+    answer_text: 根據 GCC《2023–2025 公共物品之路》的歷史記錄，Builder 機票計劃覆蓋 5 個地區、ETH City 計劃覆蓋 6 個地區，高校 Web3 鏈協／興趣小組覆蓋 13 所高校。報告列出的 ETH City 節點包括杭州、北京、黃山、深圳及上海。這些是報告期內的覆蓋資料，不代表目前仍在運作的節點或現行招募安排。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [participation-programmes]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - current node availability
+      - current recruitment or application routes
+      - outcome claims inferred from activity photographs
+    review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}

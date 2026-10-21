@@ -4,8 +4,10 @@ from dataclasses import dataclass
 
 from gcc_agent.common.models import Session
 from gcc_agent.knowledge.cases import select_bot_qa_case_records
+from gcc_agent.knowledge.history import select_history_projection
 from gcc_agent.qa.facts import check_official_fact
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
+from gcc_agent.qa.history_facts import format_history_projection_reply
 from gcc_agent.knowledge.loaders import (
     as_gcc_summary_block,
     as_system_block,
@@ -94,6 +96,16 @@ def check_link_first(
     previous_messages: list[dict] | None = None,
 ) -> LinkResult:
     value = text.lower().strip()
+    history_projection = select_history_projection(
+        text,
+        previous_messages=previous_messages,
+    )
+    if history_projection:
+        return LinkResult(
+            True,
+            format_history_projection_reply(history_projection, lang),
+            f"history_{history_projection['projection_id']}",
+        )
     fact = check_official_fact(text, lang, previous_messages)
     if fact.matched:
         return LinkResult(True, fact.reply, f"fact_{fact.fact_type}")
