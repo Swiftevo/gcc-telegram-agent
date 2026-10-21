@@ -3,6 +3,22 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-22：REPORT-KB-RUNTIME-001 接入經批准的報告問答
+
+- schema 升至 0.3，`runtime.connected: true`；production loader 只投影七個明確 allowlist
+  欄位，不讀完整 cleaned extract 或 PDF，不把報告內容注入 AI prompt。匹配問題由
+  deterministic link-first 固定回答並附公共 Drive citation，無需 OpenAI 推理。
+- 五個原 projection 繼續涵蓋組織歷史、基金方向、項目分類、Builder flight 及歷史治理；
+  新增兩年捐贈／類別／里程碑率／地區／營運開支 aggregates，以及 Builder／ETH City／
+  高校 Web3 歷史覆蓋兩個 projection。歷史時間線及治理答案補入已核實的重點。
+- 依 content owner 2026-10-22 新決定，Builder flight 固定回答 297 份申請、132 支持人次及
+  報告所列 50.4% 整體入選率；同時明示報告未交代 50.4% 的分母或算法，不以 297／132
+  重算、不當成現行計劃比率，122 維持正文 typo。
+- present-tense 政策／申請路由保持 current official sources 優先；簡中／英文沒有擅自翻譯
+  固定答案，而是清楚回退至經審核繁中。private／group 共用同一 history selector 並維持原
+  access／session 邊界。merge 前完成 validators、focused／full tests 及 diff check；merge 後
+  尚需 production E2E 才可把 task 移入 Done。
+
 ## 2026-10-20：REPORT-KB-001B 批准首批歷史問答 projection
 
 - GCC content owner 確認 2023–2025 報告清理摘錄為已核實的歷史內容；來源狀態升為

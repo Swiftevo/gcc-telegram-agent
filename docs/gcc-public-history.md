@@ -1,7 +1,7 @@
 # GCC public-history evidence layer
 
-Decision date: 2026-10-20
-Tasks: `REPORT-KB-001A`, `REPORT-KB-001B`
+Decision dates: 2026-10-20, 2026-10-22
+Tasks: `REPORT-KB-001A`, `REPORT-KB-001B`, `REPORT-KB-RUNTIME-001`
 
 ## Purpose and boundary
 
@@ -17,13 +17,16 @@ history registry: reviewed historical evidence
         ↓ content-owner approval + explicit fact boundaries
 approved projections only
         ↓
-Bot runtime, only after an explicit implementation and release decision
+deterministic link-first selector
+        ↓
+fixed answer + public report citation
 ```
 
-The source and five initial projections are content-owner approved, but the registry remains
-deliberately disconnected from runtime. It is not read by `values.yaml`, the QA prompt, onboarding,
-case retrieval or application review. Approval makes the projections eligible for a later runtime
-change; it does not itself change Bot behaviour.
+The source and seven projections are content-owner approved and connected through a fail-closed
+runtime gate. The runtime reads only the explicit projection allowlist; it never reads the cleaned
+extract or original PDF into the AI prompt. Matching answers are returned without an OpenAI call.
+The history layer remains separate from `values.yaml`, onboarding, canonical case retrieval and
+application review.
 
 ## Why this is not a project case
 
@@ -69,35 +72,51 @@ The GCC content owner confirmed that Builder flight supported 132 person-times t
 period. The value 122 in the report body is recorded as a typo, while the annual figures also total 132. The
 approved projection uses 297 applications and 132 supported person-times.
 
-The page's 50.4% selection rate still has no definition or denominator that reconciles with those
-totals. It remains `pending_reconciliation` and is prohibited from approved answer text. The report
-also does not establish a deduplicated unique-person count.
+On 2026-10-22 the content owner directed the Bot to use the report-stated 50.4% overall selection
+rate as the historical answer. Its denominator and calculation remain `pending_reconciliation`.
+The approved answer therefore repeats 50.4%, says that the report does not define the denominator
+or method, and forbids deriving the percentage from 297 applications and 132 supported
+person-times. The report also does not establish a deduplicated unique-person count.
 
 The source is now:
 
 - `sanitization_status: human_reviewed`;
 - `review_status: approved`;
 - `allowed_uses: [evidence_only, bot_qa]`;
-- runtime disconnected.
+- `runtime.connected: true`, restricted to eligible approved projections.
 
 ## Approved projection boundary
 
-The five approved projections cover only:
+The seven approved projections cover only:
 
 1. GCC historical development from 2022-10 through the 2023–2025 report period;
 2. historical fund structure and funding directions;
 3. project names grouped by the report's historical categories;
-4. Builder flight history, using 132 person-times and excluding 50.4%;
-5. the historical governance and funding process.
+4. Builder flight history, using 132 person-times and the bounded report-stated 50.4% rate;
+5. the historical governance, funding process and cooperation methods;
+6. two-year donation, category, milestone-rate, regional and operating-expense aggregates;
+7. historical Builder／ETH City／university Web3 programme reach.
 
 Each projection carries its question examples, fixed Traditional-Chinese answer, exact source and
 section references, citation URL, excluded claims and content-owner review metadata. Projections
 cannot cite an `excluded_from_bot` section.
 
-Before the Bot may answer from them, a separate runtime PR must implement deterministic projection
-selection, current-versus-historical routing, source citation, private／group tests and rollback. It
-must load only `approved_projections`, never the full extract. Until then, production behaviour is
-unchanged.
+The runtime selector uses explicit historical intent and topic rules. Present-tense policy or
+application questions do not use the history layer; existing current official fact routes keep
+precedence. Builder questions may use the fixed historical answer unless they ask about current
+availability or applying. Simplified-Chinese and English users receive an explicit note that the
+approved answer remains in Traditional Chinese rather than an unreviewed translation.
+
+Every deterministic reply includes the public report citation. A source follow-up can reuse the
+projection from the recent assistant answer. Private and configured-group mention routes share the
+same selector while retaining their existing access and session boundaries.
+
+## Rollback
+
+Revert the runtime integration commit or set `runtime.connected: false` together with the matching
+schema／test rollback. The production loader then returns zero history records and existing current
+policy, canonical case, link-first and AI routes continue independently. Do not remove or weaken
+source review metadata as a runtime switch.
 
 ## Validation
 
@@ -112,5 +131,9 @@ python -m tests
 The history validator checks schema, unique source／section／projection identifiers, page ranges,
 aggregate periods, storage location, normalized checksum, public source URL, warning／reconciliation
 markers, unsafe voter or access data, source review gates, projection references and citations,
-historical wording, excluded sections and the 50.4% block. The case validator also recognizes
-history extracts as registered files so they are not mistaken for orphan case evidence.
+historical wording, excluded sections and the requirement that any 50.4% answer explicitly state
+the undefined denominator／calculation boundary. Runtime tests independently fail closed on schema,
+connection, review, source, section and citation regressions; verify seven minimal projections,
+current-versus-historical routing, locale fallback, private／group replies and AI-prompt isolation.
+The case validator also recognizes history extracts as registered files so they are not mistaken
+for orphan case evidence.

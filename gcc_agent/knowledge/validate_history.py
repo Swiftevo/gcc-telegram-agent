@@ -1,4 +1,4 @@
-"""Validate the non-runtime GCC public-history evidence registry."""
+"""Validate the GCC public-history evidence and approved runtime projections."""
 
 from __future__ import annotations
 
@@ -169,12 +169,24 @@ def validate_history_registry(
                         "an approved projection must state its historical scope",
                     )
                 )
-            if "50.4%" in answer_text or "50.4％" in answer_text:
+            if (
+                ("50.4%" in answer_text or "50.4％" in answer_text)
+                and not any(
+                    boundary in answer_text
+                    for boundary in (
+                        "沒有交代分母",
+                        "没有交代分母",
+                        "未交代分母",
+                        "分母或計算方法",
+                        "分母或计算方法",
+                    )
+                )
+            ):
                 issues.append(
                     HistoryValidationIssue(
-                        "unresolved_selection_rate",
+                        "unbounded_selection_rate",
                         f"{projection_path}.answer_text",
-                        "the unresolved 50.4% selection rate cannot appear in an approved answer",
+                        "the report-stated 50.4% selection rate requires an explicit undefined-denominator boundary",
                     )
                 )
         citation = projection.get("citation")
@@ -348,7 +360,7 @@ def main() -> int:
         for issue in issues:
             print(f"- {issue}")
         return 1
-    print("GCC public-history validation passed: approved projections exist but runtime remains disconnected.")
+    print("GCC public-history validation passed: approved projections are connected through the deterministic runtime gate.")
     return 0
 
 
