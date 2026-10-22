@@ -37,6 +37,39 @@ thresholds. They do not specify a duration for every review stage; Cohort 4's
 announcement adds planned dates for some stages. The bot must not infer
 unpublished durations or turn planned dates into actual execution claims.
 
+## University Builder plan 2026
+
+On 2026-10-22, the GCC content owner approved the supplied public announcement
+and 23-page appendix for Bot Q&A. The external application is
+<https://survey.gccofficial.org/552158?lang=zh-Hans>; the owner-supplied
+[appendix](https://docs.google.com/document/d/1kxkpeluBX7k4sAi_uV7aAO0TFOw8BTvSLmkd7XhEWiI/edit?usp=sharing)
+contains category details. `data/university-builder-2026.yaml` is the small,
+reviewed runtime projection; the whole PDF and its fast-changing Appendix B
+topic list are not placed in the model prompt.
+
+This is an independent 2026 university programme, not the historical 2025
+university Web3 line, ETH City or Cohort 4 Public Fund. Its 30/25/20/15/10
+review weights belong **only** to this plan. Announced grant caps, cadence and
+milestone payment rules do not prove any award, accepted milestone or payment.
+The external form handles applications and private executor identity; the Bot
+must not solicit those details or show its legacy internal application button.
+
+Two public-source discrepancies remain. The form currently says alumni linkage
+is 200 USD/event, while the owner approved the appendix's **150 USD/event**.
+The appendix says daily operations are applied for by semester, while the owner
+approved the form's **annual application**. Bot answers use those owner-approved
+values and explicitly flag the mismatches. GCC must synchronize the form and
+appendix; until then, applicants should confirm the final amount with GCC.
+
+The approved Chinese text is Simplified Chinese. Traditional Chinese and
+English prompts receive an explicit language fallback, pending human-reviewed
+translations. `gcc_agent.qa.university_builder` fails closed without approval
+or source metadata and takes precedence over generic special-fund links only
+for current university-plan questions. Historical and ETH City questions retain
+their own routes. After merging, verify private/group answers and rollback by
+reverting the release or disabling this reviewed projection if a material fact
+is withdrawn.
+
 ## Required distinctions
 
 - The official website describes GCC's public process and considerations.
