@@ -3,7 +3,23 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-10-22：高校 Builder 計劃 2026 核准與來源差異（待 merge／production 驗證）
+## 2026-10-22：高校 Builder 問答 Telegram 發送回歸（hotfix 待 merge）
+
+- PR #52 已於 2026-10-22 merge（`d01490f`）；main 的 Verify release／Deploy app 成功，
+  公開 `/healthz`、`/readyz`、`/opsz` 均回 200。這只能證明服務運行，不代表每種
+  Telegram 訊息都成功發送。
+- owner 在私訊輸入「高校 Builder 2026 怎樣申請？」後收到
+  `unhandled_update_error` 管理告警，並由 Fly log 提供原始錯誤：
+  `telegram.error.BadRequest: Can't parse entities: can't find end of the entity starting at byte offset 853`。
+  相同原句本機可選中高校 `overview` 回答；重建原版 UTF-8 回覆後，附錄 URL 的
+  `_` 在 byte 749，尾句開頭 `_` 在 796，末尾 `_` 正在 853。handler 使用 Telegram
+  legacy Markdown，導致 URL 與尾句標記錯誤配對、最後標記無法閉合；錯誤位置與
+  production log 完全吻合。沒有輸出 token 或用戶資料。
+- hotfix 只將高校固定回答改為純文字發送，移除提醒尾句的 Markdown 標記；新增
+  繁中原句與 raw URL 的 handler 回歸測試。merge 後須重測真實私訊／群組，
+  再核對健康端點及無新告警，才可關閉 `UNIVERSITY-2026-FACT-001`。
+
+## 2026-10-22：高校 Builder 計劃 2026 核准與來源差異（已 merge；E2E 待完成）
 
 - GCC content owner 確認提供的宣傳稿及附錄已核准供 Bot 公開問答；高校 Builder 2026
   與 2025 高校 Web3 興趣小組、ETH City、Cohort 4 公共基金分開。現行正式申請在
@@ -14,8 +30,8 @@
 - 建立只含必要事實與 review metadata 的獨立 deterministic projection；附錄 B 的
   快速變動選題、完整 PDF、個人資料均不進 prompt。該計劃的 30/25/20/15/10
   權重不套用至公共基金；時間、里程碑和資助上限不是實際撥款證據。
-- 本地 24 個測試檔已通過；PR、merge 及 production 私訊／群組 E2E 仍需完成，
-  未宣稱已上線。
+- 本地 24 個測試檔、PR #52 的 Verify release／label checks 及 main 部署已通過；
+  首次真實私訊觸發上列告警，production E2E 尚未通過，不宣稱驗收完成。
 
 ## 2026-10-22：Cohort 4 已核准公告的現行問答修正（待 merge／production 驗證）
 

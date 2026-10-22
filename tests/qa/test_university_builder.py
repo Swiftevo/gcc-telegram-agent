@@ -83,9 +83,9 @@ class UniversityBuilderTests(TestCase):
 class UniversityBuilderHandlerTests(IsolatedAsyncioTestCase):
     async def test_no_legacy_application_button_or_ai_for_specific_route(self):
         update = MagicMock()
-        update.message.text = "高校 Builder 2026 怎么申请？"
+        update.message.text = "高校 Builder 2026 怎樣申請？"
         update.message.reply_text = AsyncMock()
-        guard = SimpleNamespace(lang="zh-CN", user=SimpleNamespace(user_id=123))
+        guard = SimpleNamespace(lang="zh-TW", user=SimpleNamespace(user_id=123))
         with (
             patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=Session(user_id=123))),
             patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
@@ -93,7 +93,12 @@ class UniversityBuilderHandlerTests(IsolatedAsyncioTestCase):
         ):
             await handle_general(update, MagicMock(), guard)
         call_ai.assert_not_awaited()
-        self.assertIsNone(update.message.reply_text.await_args.kwargs["reply_markup"])
+        sent = update.message.reply_text.await_args
+        self.assertIsNone(sent.kwargs["reply_markup"])
+        self.assertIsNone(sent.kwargs["parse_mode"])
+        self.assertIn("1kxkpeluBX7k4sAi_uV7aAO0TFOw8BTvSLmkd7XhEWiI", sent.args[0])
+        self.assertIn("如希望深入交流，歡迎參與 GCC 定期例會。", sent.args[0])
+        self.assertNotIn("_如希望深入交流", sent.args[0])
 
 
 if __name__ == "__main__":
