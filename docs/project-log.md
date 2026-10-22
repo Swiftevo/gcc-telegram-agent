@@ -14,8 +14,8 @@
 - 建立只含必要事實與 review metadata 的獨立 deterministic projection；附錄 B 的
   快速變動選題、完整 PDF、個人資料均不進 prompt。該計劃的 30/25/20/15/10
   權重不套用至公共基金；時間、里程碑和資助上限不是實際撥款證據。
-- 本地 24 個測試檔已通過；PR、merge 及 production 私訊／群組 E2E 仍需完成，
-  未宣稱已上線。
+- 本地 24 個測試檔已通過；PR #52 的 Verify release／label checks 已通過。
+  merge 及 production 私訊／群組 E2E 仍需完成，未宣稱已上線。
 
 ## 2026-10-22：Cohort 4 已核准公告的現行問答修正（待 merge／production 驗證）
 
