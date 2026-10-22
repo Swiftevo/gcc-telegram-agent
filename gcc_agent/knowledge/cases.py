@@ -62,10 +62,14 @@ def load_project_cases(force_reload: bool = False) -> list[dict]:
 
 
 def load_ai_review_cases(force_reload: bool = False) -> list[dict]:
+    """Require separate source approval for application review, not just Bot QA."""
     return [
         case
-        for case in load_project_cases(force_reload)
-        if case.get("ai_review_usage", {}).get("allowed") is True
+        for case in load_bot_qa_cases(force_reload)
+        if all(
+            "application_review" in snapshot.get("processing", {}).get("allowed_uses", [])
+            for snapshot in case.get("evidence", {}).get("snapshots", [])
+        )
     ]
 
 

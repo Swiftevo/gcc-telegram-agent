@@ -58,6 +58,8 @@ Selection is deterministic and limited to a small set matching the question.
 An explicit approved case-name question receives a deterministic overview before
 the language model. Other matching questions may receive the selected allowlist
 as a system data block marked as facts rather than instructions.
+The deterministic overview is sent as plain text: source labels and fact-status
+values contain underscores that Telegram's legacy Markdown parser can reject.
 
 Case-backed answers include public source URLs and the canonical database update
 date. Requested, governance-approved and disbursed values retain separate labels
@@ -65,14 +67,17 @@ and fact statuses. Unknown payment remains unknown; proposed milestones are not
 described as accepted, unlocked or paid. The length limiter preserves the
 provenance footer.
 
-## Current production state
+## Review state
 
-At implementation time, all eight canonical cases remain `seed` or `draft`, all
-14 sources remain `pending`／`evidence_only`, and every case has
-`ai_review_usage.allowed: false`. Therefore the runtime gate returns zero cases
-and the user-visible production behavior remains unchanged.
-
-This is intentional. Code readiness is not content approval.
+At initial implementation, all eight canonical cases were `seed` or `draft`, all
+14 sources were `pending`／`evidence_only`, and the runtime gate returned zero.
+The 2026-10-23 OSKey content-owner decision approves its three public extracts
+for historical `bot_qa` and moves that one case to `reviewed`; the gate now
+selects only OSKey. Its USD figures are owner-confirmed public reporting units,
+not transfer-token assertions. The Snapshot schedule and milestone review govern
+releases, but actual payment stages, amounts and dates remain undisclosed.
+The other seven records remain ineligible. Application-review use remains
+separately denied, including for OSKey.
 
 ## Enabling one case
 

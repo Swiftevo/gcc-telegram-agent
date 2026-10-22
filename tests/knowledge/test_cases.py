@@ -93,9 +93,14 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                     self.assertTrue(stored_source.is_relative_to(ROOT.resolve()))
                     self.assertTrue(stored_source.is_file(), storage_uri)
                     self.assertRegex(snapshot["checksum"], r"^sha256:[0-9a-f]{64}$")
-                    self.assertEqual(processing["sanitization_status"], "automated_checked")
-                    self.assertEqual(processing["review_status"], "pending")
-                    self.assertEqual(processing["allowed_uses"], ["evidence_only"])
+                    if case["case_id"] == "gcc-open-source-oskey":
+                        self.assertEqual(processing["sanitization_status"], "human_reviewed")
+                        self.assertEqual(processing["review_status"], "approved")
+                        self.assertEqual(processing["allowed_uses"], ["evidence_only", "bot_qa"])
+                    else:
+                        self.assertEqual(processing["sanitization_status"], "automated_checked")
+                        self.assertEqual(processing["review_status"], "pending")
+                        self.assertEqual(processing["allowed_uses"], ["evidence_only"])
 
     def test_legacy_conversion(self):
         cases = load_project_cases(force_reload=True)
@@ -123,10 +128,12 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
 
         oskey = cases["gcc-open-source-oskey"]
-        self.assertEqual(oskey["governance"]["review_status"], "draft")
-        self.assertFalse(oskey["ai_review_usage"]["allowed"])
+        self.assertEqual(oskey["governance"]["review_status"], "reviewed")
+        self.assertTrue(oskey["ai_review_usage"]["allowed"])
         self.assertEqual(oskey["public_record"]["funding"]["requested"]["amount"], 30000)
+        self.assertEqual(oskey["public_record"]["funding"]["requested"]["currency"], "USD")
         self.assertEqual(oskey["public_record"]["funding"]["governance_approved"]["amount"], 30000)
+        self.assertEqual(oskey["public_record"]["funding"]["governance_approved"]["currency"], "USD")
         self.assertEqual(oskey["public_record"]["funding"]["disbursed"]["status"], "unknown")
         self.assertEqual(oskey["public_record"]["execution_events"][0]["event_type"], "governance_decision")
         self.assertEqual(len(oskey["evidence"]["snapshots"]), 3)
@@ -140,6 +147,14 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             if snapshot["snapshot_id"] == "snap-oskey-sanitized-application-evidence"
         )
         self.assertEqual(oskey_application["source_type"], "grant_application")
+        self.assertTrue(
+            all(
+                snapshot["processing"]["review_status"] == "approved"
+                and "bot_qa" in snapshot["processing"]["allowed_uses"]
+                and "application_review" not in snapshot["processing"]["allowed_uses"]
+                for snapshot in oskey["evidence"]["snapshots"]
+            )
+        )
 
         openrpc = cases["gcc-open-source-openrpc"]
         self.assertEqual(openrpc["governance"]["review_status"], "draft")

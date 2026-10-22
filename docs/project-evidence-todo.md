@@ -36,20 +36,27 @@ non-conflicting case evidence.
 - [x] Store local public-source extracts and link every structured claim to a
   stable snapshot id.
 - [x] Keep actual disbursement, milestone acceptance／unlock and delivery unknown.
-- [x] Keep both cases `draft` and excluded from Bot QA／AI review.
+- [x] Keep both cases `draft` and excluded from Bot QA at import time; OSKey
+  was subsequently reviewed for historical Bot QA on 2026-10-23, while OpenRPC
+  remains a draft. Neither is approved for application review.
 - [x] Add owner-approved sanitized application evidence covering public problems,
   funding use, deliverables, milestones, sustainability, anonymized governance
   concerns and applicant responses. Exclude voter identity data, per-voter
   metadata, meeting credentials and unnecessary biographies.
-- [ ] GCC content owner reviews the two public summaries, public-goods assessments,
-  links and cautions before either record may move to `reviewed`／`published`.
+- [x] GCC content owner reviewed OSKey's three source extracts, historical summary,
+  public-goods assessment, links and cautions on 2026-10-23. Actual payment and
+  milestone execution details remain undisclosed, not inferred from the proposal.
+- [ ] GCC content owner reviews OpenRPC's public summary, public-goods assessment,
+  links and cautions before that record may move to `reviewed`／`published`.
 - [x] Schema 0.3 replaces the legacy milestone USD field with a structured
   amount fact and records proposal milestone amounts in their original USDC
   currency, without treating them as actual payments or unlocks.
 
-This batch has no identified amount conflict: OSKey is 30,000 in both its public
-proposal and GCC page, while OpenRPC is 25,000 and its public amount ballot records
-no adjustment. This does not establish that either amount was actually paid.
+This batch has no identified numerical amount conflict: OSKey is 30,000 in both
+its public proposal and GCC page, while OpenRPC is 25,000 and its public amount
+ballot records no adjustment. The OSKey proposal uses `u`; GCC's content owner
+confirmed USD as its public reporting unit, not its actual transfer token. None
+of these sources establishes which milestone amount was actually paid.
 
 ## Tier A — correctness and privacy blockers for existing seed cases
 

@@ -189,13 +189,13 @@ class ProjectCaseValidationTests(unittest.TestCase):
 
     def test_ai_review_requires_reviewed_public_record(self):
         database = deepcopy(self.database)
-        database["cases"][1]["ai_review_usage"]["allowed"] = True
+        database["cases"][2]["ai_review_usage"]["allowed"] = True
         issues = self.validate(database)
         self.assertTrue(any(issue.code == "schema" for issue in issues))
 
     def test_reviewed_record_requires_review_metadata(self):
         database = deepcopy(self.database)
-        database["cases"][1]["governance"]["review_status"] = "reviewed"
+        database["cases"][2]["governance"]["review_status"] = "reviewed"
         issues = self.validate(database)
         self.assertTrue(any(issue.code == "schema" for issue in issues))
 
@@ -285,7 +285,7 @@ class ProjectCaseValidationTests(unittest.TestCase):
 
     def test_case_cannot_be_reviewed_before_all_sources(self):
         database = deepcopy(self.database)
-        case = self.case(database, "gcc-open-source-oskey")
+        case = self.case(database, "gcc-open-source-openrpc")
         case["governance"].update(
             review_status="reviewed",
             reviewed_at="2026-09-25",
