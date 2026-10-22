@@ -105,7 +105,7 @@ def test_link_first():
     cases_project = [
         ("Vyper 是什麼",         "zh-TW", True,  "project"),
         ("tell me about vyper",  "en",    True,  "project"),
-        ("OSKey 介紹",            "zh-TW", True,  "project"),
+        ("OSKey 介紹",            "zh-TW", True,  "canonical_case"),
         ("zk punk 項目",         "zh-TW", True,  "project"),
         ("primus 是什麼",        "zh-CN", True,  "project"),
         ("agora citizen 詳情",   "zh-TW", True,  "project"),

@@ -12,6 +12,7 @@ from gcc_agent.common.models import Session
 from gcc_agent.knowledge.cases import (
     case_to_bot_qa_record,
     is_bot_qa_eligible_case,
+    load_ai_review_cases,
     load_bot_qa_cases,
     select_bot_qa_case_records,
 )
@@ -60,9 +61,19 @@ def approved_oskey_case() -> dict:
 
 
 class BotQACaseGateTests(unittest.TestCase):
-    def test_current_database_exposes_no_canonical_case_to_runtime(self):
-        self.assertEqual([], load_bot_qa_cases(force_reload=True))
-        self.assertEqual([], select_bot_qa_case_records("OSKey", force_reload=True))
+    def test_current_database_exposes_only_oskey_to_runtime(self):
+        self.assertEqual(
+            ["gcc-open-source-oskey"],
+            [case["case_id"] for case in load_bot_qa_cases(force_reload=True)],
+        )
+        self.assertEqual(
+            ["gcc-open-source-oskey"],
+            [record["case_id"] for record in select_bot_qa_case_records("OSKey", force_reload=True)],
+        )
+        self.assertEqual([], select_bot_qa_case_records("OpenRPC", force_reload=True))
+
+    def test_bot_qa_approval_does_not_enable_application_review(self):
+        self.assertEqual([], load_ai_review_cases(force_reload=True))
 
     def test_fully_approved_case_passes_runtime_gate(self):
         self.assertTrue(is_bot_qa_eligible_case(approved_oskey_case()))
@@ -224,10 +235,33 @@ class BotQACasePromptTests(unittest.TestCase):
     def test_case_reply_states_unknown_disbursement(self):
         reply = format_case_fact_reply([self.record], "zh-TW")
         self.assertIn("已實付額：未知 (unknown)", reply)
+        self.assertIn("撥付資料說明：", reply)
+        self.assertIn("30000 USD (owner_confirmed)", reply)
+        self.assertNotIn("USDC", reply)
         self.assertIn("Canonical database 更新日期：2026-10-11", reply)
 
 
 class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
+    async def test_real_oskey_case_reply_is_plain_text_with_private_payment_unknown(self):
+        update = MagicMock()
+        update.message.text = "OSKey 撥付了嗎？"
+        update.message.reply_text = AsyncMock()
+        guard = SimpleNamespace(lang="zh-TW", user=SimpleNamespace(user_id=123))
+        session = Session(user_id=123)
+
+        with (
+            patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=session)),
+            patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+        ):
+            await handle_general(update, MagicMock(), guard, allow_application=False)
+
+        reply = update.message.reply_text.await_args.args[0]
+        self.assertIsNone(update.message.reply_text.await_args.kwargs["parse_mode"])
+        self.assertIn("OSKey — Open Source", reply)
+        self.assertIn("30000 USD (owner_confirmed)", reply)
+        self.assertIn("已實付額：未知 (unknown)", reply)
+        self.assertNotIn("USDC", reply)
+
     async def test_long_ai_answer_keeps_provenance_after_length_limit(self):
         case = approved_oskey_case()
         record = case_to_bot_qa_record(case, database_updated_at="2026-10-11")
@@ -240,6 +274,10 @@ class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
         with (
             patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=session)),
             patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+            patch(
+                "gcc_agent.qa.handler.check_link_first",
+                return_value=SimpleNamespace(matched=False),
+            ),
             patch(
                 "gcc_agent.qa.handler.select_bot_qa_case_records",
                 return_value=[record],

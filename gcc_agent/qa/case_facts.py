@@ -65,6 +65,7 @@ def format_case_fact_reply(records: list[dict], lang: str) -> str:
             "requested": "申請額",
             "approved": "治理核准額",
             "disbursed": "已實付額",
+            "disbursed_note": "撥付資料說明",
             "unknown": "未知",
             "status": "目前記錄狀態",
             "sources": "已核准公開來源",
@@ -76,6 +77,7 @@ def format_case_fact_reply(records: list[dict], lang: str) -> str:
             "requested": "申请额",
             "approved": "治理核准额",
             "disbursed": "已实付额",
+            "disbursed_note": "拨付资料说明",
             "unknown": "未知",
             "status": "目前记录状态",
             "sources": "已核准公开来源",
@@ -87,6 +89,7 @@ def format_case_fact_reply(records: list[dict], lang: str) -> str:
             "requested": "Requested",
             "approved": "Governance-approved",
             "disbursed": "Disbursed",
+            "disbursed_note": "Disbursement note",
             "unknown": "Unknown",
             "status": "Recorded status",
             "sources": "Approved public sources",
@@ -99,6 +102,7 @@ def format_case_fact_reply(records: list[dict], lang: str) -> str:
         "requested": "申請額",
         "approved": "治理核准額",
         "disbursed": "已實付額",
+        "disbursed_note": "撥付資料說明",
         "unknown": "未知",
         "status": "目前記錄狀態",
         "sources": "已核准公開來源",
@@ -110,7 +114,7 @@ def format_case_fact_reply(records: list[dict], lang: str) -> str:
         public_record = record.get("public_record", {})
         funding = public_record.get("funding", {})
         lifecycle = public_record.get("lifecycle_status", {})
-        lines = [f"*{record.get('title', '')}* — {record.get('category', '')}"]
+        lines = [f"{record.get('title', '')} — {record.get('category', '')}"]
         if public_record.get("summary"):
             lines.append(f"{labels['summary']}：{_shorten(public_record['summary'])}")
         if public_record.get("why_funded"):
@@ -122,6 +126,9 @@ def format_case_fact_reply(records: list[dict], lang: str) -> str:
                 f"{labels['disbursed']}：{_amount_text(funding.get('disbursed'), unknown_label=labels['unknown'])}",
             )
         )
+        disbursed_note = funding.get("disbursed", {}).get("notes")
+        if disbursed_note:
+            lines.append(f"{labels['disbursed_note']}：{_shorten(disbursed_note)}")
         if lifecycle:
             lines.append(
                 f"{labels['status']}：grant={lifecycle.get('grant_status', 'unknown')}; "

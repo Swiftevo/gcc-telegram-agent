@@ -182,7 +182,7 @@ main.py                      # 啟動入口
 
 案例資料保存在 `data/project-case-seeds.yaml`。目前共有 8 筆 schema 0.4.0 案例，覆蓋開源專案、社群資助、單次活動、ETH City 系列、機票支持計劃和 Gitcoin 類別占位共 6 個代表類別。申請額、核准額、實付額、預算、上限、資助線和 milestone 均使用相同的金額、幣別、狀態與來源結構；`case_id` 是 canonical identity，舊 catalog slug 獨立記錄，事實來源統一使用 case-local snapshot ID 清單。
 
-最終遷移驗收會自動核對目前 8 筆 cases、2 條資助線、14 份來源、review 狀態及 AI 使用狀態，並拒絕 `data/` 下散落的第二份案例資料庫。63 筆 legacy 專案中目前有 8 筆映射至 canonical cases，其餘 55 筆仍為 `legacy_only`。Bot 已有 deny-by-default canonical runtime gate，但所有 cases／sources 仍未取得所需審批，因此目前 eligible 數為 0；production 問答繼續讀取 frozen `projects.yaml`，行為不變。新增案例只寫入 canonical database，並須通過來源清理、checksum、review 和 allowed-use 驗證。
+最終遷移驗收會自動核對目前 8 筆 cases、2 條資助線、14 份來源、review 狀態及 AI 使用狀態，並拒絕 `data/` 下散落的第二份案例資料庫。63 筆 legacy 專案中目前有 8 筆映射至 canonical cases，其餘 55 筆仍為 `legacy_only`。Bot 的 deny-by-default runtime gate 目前只放行經內容負責人審核的 OSKey 歷史問答；其申請及核准額以 USD 作公開計價，實際轉帳代幣、撥付期數和金額不公開。其餘案例仍未開放；申請評審亦未獲批准。舊 `projects.yaml` 繼續提供項目索引。新增案例只寫入 canonical database，並須通過來源清理、checksum、review 和 allowed-use 驗證。
 
 ## 部署
 

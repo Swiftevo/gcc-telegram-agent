@@ -59,10 +59,15 @@ async def handle_general(
         # Reviewed programmes use external forms, not the legacy in-Bot draft.
         if link_result.link_type.startswith(("cohort4_", "university2026_")):
             reply_markup = None
-        # The university appendix URL contains an underscore. Telegram's legacy
-        # Markdown parser treats it as an entity delimiter and can reject the
-        # entire message; this projection is intentionally plain text.
-        parse_mode = None if link_result.link_type.startswith("university2026_") else "Markdown"
+        # University URLs and canonical case statuses/source labels can contain
+        # underscores. Telegram's legacy Markdown parser may reject the whole
+        # message, so these fixed projections are sent as plain text.
+        parse_mode = (
+            None
+            if link_result.link_type.startswith("university2026_")
+            or link_result.link_type == "canonical_case"
+            else "Markdown"
+        )
         await update.message.reply_text(
             link_result.reply,
             parse_mode=parse_mode,

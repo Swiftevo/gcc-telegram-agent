@@ -3,6 +3,23 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-23：OSKey 歷史案例內容審核（待 PR／production 驗收）
+
+- GCC content owner 核准 OSKey 的 GCC 項目頁、Snapshot proposal／aggregate vote、
+  經清理申請證據三份來源，並批准其有來源的歷史描述供 Bot 問答；不授權申請評分。
+- owner 確認提案的 `u` 在 Bot 對外資料一律使用 USD 作計價單位，不推斷實際轉帳
+  代幣或作幣價換算。Snapshot 投票通過的事實可說明；提案 M0–M3 日程及金額
+  仍只屬計劃條款。
+- owner 指出 GCC 以 Snapshot proposal 日程及 milestone 作審核、發放依據，
+  但 GCC 與 OSKey 之間的實際安排、已撥期數／金額／日期及交易資料現階段不公開。
+  canonical `disbursed` 保持 `unknown`，不因通過投票或頁面標籤推定已付款。
+- 本 PR 將 OSKey 的三份來源升為 human-reviewed／approved、僅授權 `bot_qa`，
+  案例升為 `reviewed`；其餘 7 筆仍不放行。實際輸出、來源連結與 privacy
+  projection 須在 PR 測試及合併後 private／group E2E 再驗收。固定案例回答
+  使用純文字 Telegram 發送，避免來源類型／狀態中的底線觸發 Markdown 解析錯誤。
+- 本地 canonical validator 及完整 24 個測試檔通過；實際 Telegram 驗收與
+  Fly main 部署狀態仍須合併後核對。
+
 ## 2026-10-22：高校 Builder 問答 Telegram 發送回歸（已修復並驗收）
 
 - PR #52 已於 2026-10-22 merge（`d01490f`）；main 的 Verify release／Deploy app 成功，

@@ -1,5 +1,5 @@
 schema_version: "0.4.0"
-updated_at: "2026-10-11"
+updated_at: "2026-10-23"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category plus a small,
@@ -294,22 +294,22 @@ cases:
       funding:
         requested:
           amount: 30000
-          currency: USDC
-          status: source_reported
+          currency: USD
+          status: owner_confirmed
           source_snapshot_ids: [snap-oskey-snapshot-proposal]
-          notes: The public Snapshot proposal requests 30,000u.
+          notes: The Snapshot proposal says 30,000u; GCC content owner confirmed USD as the public reporting unit on 2026-10-23. This does not identify the transfer token or imply a conversion.
         governance_approved:
           amount: 30000
-          currency: USDC
-          status: source_reported
+          currency: USD
+          status: owner_confirmed
           source_snapshot_ids: [snap-oskey-snapshot-proposal, snap-oskey-gcc-project-page]
-          notes: The closed vote passed 6 to 0 with no amount-adjustment ballot, and the GCC project page lists 30,000.
+          notes: The vote passed 6 to 0 with no amount-adjustment ballot; the GCC page lists 30,000. GCC content owner confirmed USD as the public reporting unit on 2026-10-23. This does not prove any payment.
         disbursed:
           amount:
           currency:
           status: unknown
           source_snapshot_ids: []
-          notes: Neither the proposal nor the project page proves the amount actually transferred or unlocked.
+          notes: GCC content owner confirmed on 2026-10-23 that releases are reviewed against the Snapshot proposal schedule and milestones. Actual stages, amounts, dates, transfer tokens and internal arrangements are not public; no payment or unlock is inferred.
         total_budget:
           amount:
           currency:
@@ -323,15 +323,15 @@ cases:
           source_snapshot_ids: []
           notes: This project grant has no per-person cap.
         disbursement_type: milestone
-        notes: Proposal-denominated values are recorded as USDC facts; no USD conversion is inferred.
+        notes: Proposal uses the shorthand u. GCC content owner approved USD as the public reporting unit on 2026-10-23; the actual transfer token is intentionally unspecified and no exchange conversion is inferred.
       execution_events:
         - event_type: governance_decision
           date: "2025-08-17"
           amount: 30000
-          currency: USDC
-          status: source_reported
+          currency: USD
+          status: owner_confirmed
           source_snapshot_ids: [snap-oskey-snapshot-proposal]
-          notes: Snapshot closed with 6 For, 0 Against and 0 Abstain. This is not disbursement evidence.
+          notes: Snapshot closed with 6 For, 0 Against and 0 Abstain; GCC owner confirmed USD as the public reporting unit. This is not disbursement evidence.
       program_details:
         start_date:
         end_date:
@@ -346,50 +346,50 @@ cases:
           - Provide open-source contributor incentives and development kits.
         milestones:
           - name: M0
-            description: Vote approval; proposal schedules 6,000 USDC for the initial 20% unlock.
+            description: Vote approval; proposal schedules 6,000 USD for the initial 20% unlock, using the GCC owner-confirmed reporting unit.
             unlock_amount:
               amount: 6000
-              currency: USDC
-              status: source_reported
+              currency: USD
+              status: owner_confirmed
               source_snapshot_ids: [snap-oskey-snapshot-proposal]
               notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion: vote approval
             status: planned
           - name: M1
-            description: Improve firmware and wallet-management usability; proposal schedules 9,000 USDC.
+            description: Improve firmware and wallet-management usability; proposal schedules 9,000 USD in the GCC owner-confirmed reporting unit.
             unlock_amount:
               amount: 9000
-              currency: USDC
-              status: source_reported
+              currency: USD
+              status: owner_confirmed
               source_snapshot_ids: [snap-oskey-snapshot-proposal]
               notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 30
             expected_completion: 2025 Q3-Q4
             status: planned
           - name: M2
-            description: Deliver desktop and mobile applications and broader chain support; proposal schedules 9,000 USDC.
+            description: Deliver desktop and mobile applications and broader chain support; proposal schedules 9,000 USD in the GCC owner-confirmed reporting unit.
             unlock_amount:
               amount: 9000
-              currency: USDC
-              status: source_reported
+              currency: USD
+              status: owner_confirmed
               source_snapshot_ids: [snap-oskey-snapshot-proposal]
               notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 30
             expected_completion: 2026 Q1
             status: planned
           - name: M3
-            description: Extend the modular general-purpose hardware design; proposal schedules 6,000 USDC.
+            description: Extend the modular general-purpose hardware design; proposal schedules 6,000 USD in the GCC owner-confirmed reporting unit.
             unlock_amount:
               amount: 6000
-              currency: USDC
-              status: source_reported
+              currency: USD
+              status: owner_confirmed
               source_snapshot_ids: [snap-oskey-snapshot-proposal]
               notes: Proposal schedule only; not evidence of payment or unlock.
             unlock_percentage: 20
             expected_completion: 2026 Q2
             status: planned
-        notes: All milestones are proposal commitments only. Completion, acceptance and unlocks remain unverified.
+        notes: GCC uses the Snapshot proposal schedule and milestones to review and release funds, as confirmed by the content owner on 2026-10-23. The listed amounts and targets remain proposal terms; actual completion, acceptance, releases and dates are not disclosed here.
       public_goods_dimensions:
         open_source:
           value: high
@@ -415,13 +415,13 @@ cases:
           value: high
           notes: Software, designs and instructions can be reused without depletion; physical hardware remains rivalrous.
           source_snapshot_ids: [snap-oskey-snapshot-proposal]
-        notes: Draft assessment based on the public proposal, not a completed-outcome review.
+        notes: GCC content owner approved this sourced historical assessment on 2026-10-23; it is not an independent security test or completed-outcome review.
       impact_evidence: []
       lifecycle_status:
         grant_status: approved
         delivery_status: unknown
         reporting_status: expected
-        notes: Governance approval is public; payment, milestone acceptance, unlock and delivery remain unknown.
+        notes: Governance approval is public. GCC follows the Snapshot proposal schedule and milestone review for releases, but actual payment, acceptance, unlock and delivery details are not disclosed.
       regions: [global, Chinese-speaking community]
       tags: [OSKey, hardware wallet, self-custody, open source, embedded systems, security]
       summary: >
@@ -454,11 +454,13 @@ cases:
           checksum: sha256:a30cdb80dcf8c4b950b967f685419c74e6851216a7ddc7e75baf63ebf751e673
           processing:
             handling_profile: public_source_extract
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner approved the public project-page extract for sourced historical Bot QA; this is not payment evidence.
           notes: GCC page title, category, displayed amount, publication date, description and proposal link.
         - snapshot_id: snap-oskey-snapshot-proposal
           captured_at: "2026-09-24"
@@ -466,14 +468,16 @@ cases:
           access_level: public
           source_url: https://snapshot.org/#/s:gccofficial.eth/proposal/0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
           storage_uri: data/source-snapshots/oskey-snapshot-proposal.md
-          checksum: sha256:794400b4bdaa3eb97b845958e7d22cc2882f802d160fff8a80f32bbccc31b70f
+          checksum: sha256:6c8bbe71621d0174cf4a01342ada89335bfffa4e9319bd482f7c91b1598b4ae1
           processing:
             handling_profile: public_source_extract
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner approved the aggregate proposal and vote extract for sourced historical Bot QA; no voter-level or payment details are approved.
           notes: Snapshot proposal amount, deliverables, milestone plan, closed state and public vote totals.
         - snapshot_id: snap-oskey-sanitized-application-evidence
           captured_at: "2026-09-25"
@@ -484,11 +488,13 @@ cases:
           checksum: sha256:33e2a913d9021d8b78b0ebf575f8b7272977118958aa96e3a76ccf7770bbb4a8
           processing:
             handling_profile: sanitized_public_application
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner approved the sanitized application extract for sourced historical Bot QA; technical and execution claims remain source-reported.
           notes: Sanitized public application evidence covering funding use, deliverables, sustainability, governance risks and applicant responses without voter identity data or meeting credentials.
       grant_application:
         status: available
@@ -525,7 +531,7 @@ cases:
         source_snapshot_ids: [snap-oskey-snapshot-proposal]
         notes: Relevant public proposal fields and vote data are preserved locally.
     ai_review_usage:
-      allowed: false
+      allowed: true
       retrieval_text: >
         Open-source hardware-wallet and self-custody infrastructure case focused
         on reusable firmware, embedded libraries, hardware guidance and lower-cost
@@ -537,7 +543,7 @@ cases:
         - risk
         - precedent_similarity
       cautions:
-        - Draft import; do not use for AI review until a GCC content owner completes review.
+        - Approved for sourced historical Bot QA only, not application scoring or review.
         - Do not describe proposed milestones as completed, accepted, paid or unlocked.
         - Hardware-wallet security claims require separate technical verification.
         - Governance concerns include the general-purpose hardware threat model, secure-element choices, firmware flashing, delivery capacity and milestone acceptance.
@@ -545,7 +551,9 @@ cases:
       visibility: public
       license:
       maintainers: [GCC]
-      review_status: draft
+      review_status: reviewed
+      reviewed_at: "2026-10-23"
+      reviewed_by_role: GCC content owner
 
   - case_id: gcc-open-source-openrpc
     schema_version: "0.4.0"

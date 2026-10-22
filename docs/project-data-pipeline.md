@@ -23,8 +23,10 @@ Current inventory:
 - 55 records explicitly remaining `legacy_only`;
 - 2 funding tracks and 14 registered source snapshots;
 - 14 referenced local evidence files;
-- 6 `seed` cases and 2 `draft` cases;
-- zero cases or sources approved for Bot／AI use.
+- 6 `seed` cases, 1 `draft` case and 1 `reviewed` case;
+- OSKey alone approved for historical Bot QA, with 3 approved sources; 11 sources
+  and the other 7 cases remain outside Bot QA. No source is approved for
+  application review.
 
 These values are not documentation-only estimates. The
 `canonical_inventory` in `data/project-case-migration.yaml` records the verified
@@ -55,8 +57,9 @@ reviewed or published case
 eligible for the deny-by-default Bot runtime gate
 ```
 
-The runtime integration now exists, but it is deny-by-default and currently
-returns zero cases. Schema validity is not publication approval. See
+The runtime integration now exists and is deny-by-default. It currently returns
+only OSKey after content-owner approval; schema validity alone is not publication
+approval. See
 [`project-case-runtime.md`](project-case-runtime.md) for the independent case,
 source, reconciliation, allowlist, provenance and rollback gates.
 
@@ -90,8 +93,12 @@ Every structured amount uses the same fact shape: `amount`, `currency`,
 governance-approved and disbursed funding, total budget, per-person cap,
 funding-track pool／limits, and proposed milestone unlock amounts.
 
-Preserve the source currency. Do not add an `_usd` field or silently convert
-USDC, another token, or an unconfirmed denomination into USD. A proposal amount
+Preserve the source currency or reporting unit. Do not add an `_usd` field or
+silently convert USDC, another token, or an unconfirmed denomination into USD.
+For OSKey, the source's `u` shorthand is preserved in the extract while the GCC
+content owner explicitly confirmed USD as the public reporting unit on 2026-10-23;
+this does not identify the eventual transfer token or disclose an actual payment.
+A proposal amount
 or proposed milestone unlock remains a proposal fact; actual payment,
 acceptance, and unlock require separate execution evidence.
 

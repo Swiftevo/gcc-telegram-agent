@@ -41,5 +41,6 @@ general-purpose hardware design.
 
 The closed vote is governance-decision evidence. The milestone schedule is a
 proposal, not proof of completion, acceptance, payment or unlock. The source
-uses `u`; the case database records the proposal-denominated facts as USDC and
-does not infer a historical USD conversion.
+uses `u`; on 2026-10-23 GCC's content owner confirmed USD as the public
+reporting unit for this case, without specifying any transfer token or exchange
+conversion. Actual releases and internal arrangements are not disclosed.
