@@ -9,10 +9,12 @@
   公開 `/healthz`、`/readyz`、`/opsz` 均回 200。這只能證明服務運行，不代表每種
   Telegram 訊息都成功發送。
 - owner 在私訊輸入「高校 Builder 2026 怎樣申請？」後收到
-  `unhandled_update_error` 管理告警。相同原句本機可選中高校 `overview` 回答；
-  其附錄 URL 含 `_`，而 handler 以 Telegram legacy Markdown 發送整段文字。
-  Telegram 文件要求在該模式中跳脫實體外的 `_`；這是高度可信的送出失敗原因，
-  但此環境沒有 Fly CLI 存取權，尚未取得 production 原始 exception 確認。
+  `unhandled_update_error` 管理告警，並由 Fly log 提供原始錯誤：
+  `telegram.error.BadRequest: Can't parse entities: can't find end of the entity starting at byte offset 853`。
+  相同原句本機可選中高校 `overview` 回答；重建原版 UTF-8 回覆後，附錄 URL 的
+  `_` 在 byte 749，尾句開頭 `_` 在 796，末尾 `_` 正在 853。handler 使用 Telegram
+  legacy Markdown，導致 URL 與尾句標記錯誤配對、最後標記無法閉合；錯誤位置與
+  production log 完全吻合。沒有輸出 token 或用戶資料。
 - hotfix 只將高校固定回答改為純文字發送，移除提醒尾句的 Markdown 標記；新增
   繁中原句與 raw URL 的 handler 回歸測試。merge 後須重測真實私訊／群組，
   再核對健康端點及無新告警，才可關閉 `UNIVERSITY-2026-FACT-001`。
