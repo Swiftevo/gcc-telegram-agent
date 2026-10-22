@@ -3,6 +3,21 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-22：Cohort 4 已核准公告的現行問答修正（待 merge／production 驗證）
+
+- GCC content owner 確認 Cohort 4 宣傳稿已核准對外發布，並以 OPS 三方向及所列日期
+  優先於官網仍顯示的舊四類；提供公開 X 公告連結。官網公共基金頁及 Cohort 4 項目表格
+  另作交叉核對；X 頁在本環境無法獨立抓取，公告正文以 owner 提供內容為準。
+- 新增有來源與 review metadata 的 round-scoped 資料，Bot 以固定回答處理方向、申請期、
+  選拔因素、公告時間表及推薦獎勵；2026-10-31 23:59（UTC+8）後不再聲稱申請仍開放。
+  官網舊四類與未獲本輪公告支持的舊硬性排除項從一般 prompt 移除，常年開放的專項基金
+  維持獨立入口；此輪固定回答不顯示尚未退出的 Bot 內部申請按鈕。
+- 公告的 2026-11／12 後續節點只稱為計劃，不作實際結果／撥款證據；歷史捐贈總額
+  與報告統計口徑未核對，不新增 Bot 現行累計回答。簡中正文是已批准 baseline，繁中／
+  英文只標明 fallback，翻譯留在 `ONBOARDING-I18N-001`／`I18N-001` 跟進。
+- 已補日期過期、舊資料路由、評分邊界及缺審核 metadata 時 fail-closed 測試；PR 與
+  production 私訊／群組 E2E 待完成，未宣稱已上線。
+
 ## 2026-10-22：REPORT-KB-RUNTIME-001 接入經批准的報告問答
 
 - schema 升至 0.3，`runtime.connected: true`；production loader 只投影七個明確 allowlist

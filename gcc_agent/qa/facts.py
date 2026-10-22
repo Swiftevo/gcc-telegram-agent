@@ -7,6 +7,7 @@ from typing import Iterable
 ABOUT_URL = "https://www.gccofficial.org/about"
 PUBLIC_FUND_URL = "https://www.gccofficial.org/application/public"
 SPECIAL_FUND_URL = "https://www.gccofficial.org/application/special"
+COHORT4_URL = "https://x.com/GCCofCommons/status/2103414364414079142?s=20"
 
 
 @dataclass(frozen=True)
@@ -117,27 +118,30 @@ Published Public Fund considerations:
 {PUBLIC_FUND_URL}""",
     },
     "timeline": {
-        "zh-TW": f"""GCC 官網目前只公開公共基金每輪評選週期為 8–12 週，沒有公布初篩、全面評審、盡職調查及決策各階段分別需時多久。專項基金是滾動申請及較快速審批，但實際時間視乎具體專項。
+        "zh-TW": f"""GCC 官網的通用公共基金頁列出每輪評選週期為 8–12 週，沒有公布全面評審、盡職調查及決策各階段分別需時多久。Cohort 4 已核准公告另列出本輪初篩、閉門 Demo Day、結果公示及首期 M0 的計劃日期；詳情請看公告，計劃不代表事件或付款已發生。專項基金是滾動申請，實際時間視乎具體專項。
 
-因此，無法從公開資料推斷每個階段的確切時間。
+未列明的階段仍無法從公開資料推斷確切時間。
 
 官方來源：
 {PUBLIC_FUND_URL}
-{SPECIAL_FUND_URL}""",
-        "zh-CN": f"""GCC 官网目前只公开公共基金每轮评选周期为 8–12 周，没有公布初筛、全面评审、尽职调查及决策各阶段分别需要多久。专项基金是滚动申请及较快速审批，但实际时间取决于具体专项。
+{SPECIAL_FUND_URL}
+{COHORT4_URL}""",
+        "zh-CN": f"""GCC 官网的通用公共基金页列出每轮评选周期为 8–12 周，没有公布全面评审、尽职调查及决策各阶段分别需要多久。Cohort 4 已核准公告另列出本轮初筛、闭门 Demo Day、结果公示及首期 M0 的计划日期；详情请看公告，计划不代表事件或付款已发生。专项基金是滚动申请，实际时间取决于具体专项。
 
-因此，无法从公开资料推断每个阶段的确切时间。
+未列明的阶段仍无法从公开资料推断确切时间。
 
 官方来源：
 {PUBLIC_FUND_URL}
-{SPECIAL_FUND_URL}""",
-        "en": f"""The GCC website currently publishes an 8–12 week selection cycle for each Public Fund round, but it does not publish a duration for each individual screening, full-review, due-diligence, or decision stage. Special Funds accept rolling applications and are described as faster, but timing depends on the specific fund.
+{SPECIAL_FUND_URL}
+{COHORT4_URL}""",
+        "en": f"""The general GCC Public Fund page publishes an 8–12 week selection cycle without durations for full review, due diligence or decision stages. The approved Cohort 4 announcement separately gives planned dates for initial screening, a closed Demo Day, results and the first M0 payment; please consult that announcement. These plans do not prove that any event or payment occurred. Special Funds accept rolling applications, with timing depending on the fund.
 
-The duration of each stage therefore cannot be inferred from the public information.
+The duration of stages not listed in the announcement cannot be inferred from the public information.
 
 Official sources:
 {PUBLIC_FUND_URL}
-{SPECIAL_FUND_URL}""",
+{SPECIAL_FUND_URL}
+{COHORT4_URL}""",
     },
     "sources": {
         "zh-TW": f"""📚 官方來源：

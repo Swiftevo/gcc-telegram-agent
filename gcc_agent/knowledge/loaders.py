@@ -86,7 +86,7 @@ def as_system_block(values: Optional[AgentValues] = None) -> str:
 ## 優先資助方向
 {themes}
 
-## 不考慮的申請類型
+## 申請與評審邊界
 {rejections}
 
 ## 公開事實與來源邊界

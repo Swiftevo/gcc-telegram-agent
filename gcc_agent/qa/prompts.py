@@ -6,6 +6,7 @@ from gcc_agent.common.models import Session
 from gcc_agent.knowledge.cases import select_bot_qa_case_records
 from gcc_agent.knowledge.history import select_history_projection
 from gcc_agent.qa.facts import check_official_fact
+from gcc_agent.qa.cohort4 import select_cohort4_answer
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.qa.history_facts import format_history_projection_reply
 from gcc_agent.knowledge.loaders import (
@@ -20,8 +21,6 @@ GCC_LINKS = {
     "apply": "https://www.gccofficial.org/application",
     "apply_public": "https://www.gccofficial.org/application/public",
     "apply_special": "https://www.gccofficial.org/application/special",
-    "apply_form_project": "https://tally.so/r/w5R8R6",
-    "apply_form_personal": "https://tally.so/r/nPKbb5",
     "donate": "https://www.gccofficial.org/donate",
     "contact": "https://www.gccofficial.org/contact",
     "vote": "https://snapshot.box/#/s:gccofficial.eth",
@@ -106,6 +105,9 @@ def check_link_first(
             format_history_projection_reply(history_projection, lang),
             f"history_{history_projection['projection_id']}",
         )
+    cohort4 = select_cohort4_answer(text, lang)
+    if cohort4.matched:
+        return LinkResult(True, cohort4.reply, f"cohort4_{cohort4.answer_type}")
     fact = check_official_fact(text, lang, previous_messages)
     if fact.matched:
         return LinkResult(True, fact.reply, f"fact_{fact.fact_type}")
