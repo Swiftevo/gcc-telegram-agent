@@ -132,9 +132,9 @@ def select_university_answer(text: str, lang: str = "zh-TW") -> UniversityAnswer
         "en": "The approved university Builder plan summary is currently available in Simplified Chinese:\n\n",
     }.get(lang, "")
     reminder = {
-        "zh-TW": "_如希望深入交流，歡迎參與 GCC 定期例會。_",
-        "zh-CN": "_如希望深入交流，欢迎参与 GCC 定期例会。_",
-        "en": "_For deeper discussion, you're welcome to join GCC's regular community calls._",
-    }.get(lang, "_如希望深入交流，歡迎參與 GCC 定期例會。_")
+        "zh-TW": "如希望深入交流，歡迎參與 GCC 定期例會。",
+        "zh-CN": "如希望深入交流，欢迎参与 GCC 定期例会。",
+        "en": "For deeper discussion, you're welcome to join GCC's regular community calls.",
+    }.get(lang, "如希望深入交流，歡迎參與 GCC 定期例會。")
     reply = f"{fallback}{body}\n\n申请表：{source['application_url']}\n计划附录：{source['appendix_url']}\n\n{reminder}"
     return UniversityAnswer(True, reply, kind)
