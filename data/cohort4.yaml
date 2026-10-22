@@ -1,0 +1,42 @@
+# Content-owner-approved public announcement, supplied 2026-10-22.
+# The X post URL is the owner-supplied public citation. The website's older
+# four-category copy remains a general page, not this round's priority list.
+schema_version: "1.0"
+round_id: cohort-4
+review:
+  status: approved
+  reviewed_by_role: gcc_content_owner
+  reviewed_at: "2026-10-22"
+  access_level: public
+  allowed_uses: [bot_qa]
+source:
+  announcement_url: "https://x.com/GCCofCommons/status/2103414364414079142?s=20"
+  public_fund_url: "https://www.gccofficial.org/application/public"
+  special_fund_url: "https://www.gccofficial.org/application/special"
+application:
+  opens_at: "2026-09-25T00:00:00+08:00"
+  closes_at: "2026-10-31T23:59:59+08:00"
+  timezone: "UTC+8"
+focus:
+  - "Open Source（开源）：开放、可审计、可 fork 的代码与规范；包括开源 AI、本地部署、开放硬件、开放基础设施及高校基础研究。"
+  - "Privacy（隐私）：隐私可用性、数据主权与可验证计算、端侧及本地 AI 的隐私。"
+  - "Security（安全）：形式化验证、供应链与依赖安全、可复现构建、中立监测与审计基础设施。"
+  - "数字公共基础设施贯穿 OPS；上述例子并非限制，不严格属于某一类但服务于 OPS 的项目仍可申请。"
+criteria:
+  - 公共性与问题价值
+  - 赛道前瞻性
+  - 华语社区贡献
+  - 执行力
+  - 可持续性
+schedule:
+  - "资助组初筛：2026-11-01 至 2026-11-07（计划）"
+  - "Demo Day 闭门路演：2026-11-04 14:00（UTC+8，计划）"
+  - "结果正式公示：2026-11-20（计划）"
+  - "首期拨款 M0：2026-12-10（计划；不是已拨款证明）"
+referral:
+  "推荐项目成功入围 Demo Day 的推荐者，公告列有 100 USD 现金激励；申请团队应在表格如实填写推荐人信息。"
+boundaries:
+  - "公告没有公布百分制权重或自动通过门槛。"
+  - "公告时间表是计划，不证明结果、签约或拨款实际发生。"
+  - "Cohort 3 的约 260,000 USD 是计划资助，不是实际拨款。"
+  - "公告的历史总额、项目数和建设者数与 2023–2025 报告期间不同；未核对统计口径前不用于现行总额回答。"
