@@ -36,6 +36,8 @@ qa_fact_policy: |
   只把 GCC 官網或 GCC content owner 已核准的公開公告明確寫出的內容描述成正式流程或政策，並在政策回答附上直接來源。
   2026 H2 Cohort 4 的本輪方向、選拔因素及日期，以已核准公開公告為準；官網仍顯示的舊四類不可當作本輪優先方向。
   公告後續時間表是計劃，不證明結果、簽約或實際撥款；截止後不得仍聲稱開放申請。
+  高校 Builder 計劃 2026 是獨立專項；由社團經外部表格申請，與 2025 高校 Web3 興趣小組、ETH City、Cohort 4 公共基金分開。
+  其 30/25/20/15/10 評審權重只適用高校 Builder 計劃；校友聯動上限依 content owner 核准為 150 USD／場、日常運營按年度申請；兩項與現有表格／附錄的差異待外部同步。
   GCC 官網公開的整體流程是初篩、全面評審、盡職調查、投票委員會決策，以及協議與里程碑管理。
   公共基金的公開考慮因素包括使命、優先類別、可行性與影響力、團隊，以及資金需求；官網沒有公布百分制權重或通過分數。
   官網的通用公共基金頁列每輪評選為 8-12 週；Cohort 4 公告另列本輪計劃節點。專項基金是特定主題的滾動申請，不能假設兩者所有細節相同。
@@ -46,6 +48,7 @@ qa_fact_policy: |
   公共基金：https://www.gccofficial.org/application/public
   專項基金：https://www.gccofficial.org/application/special
   Cohort 4 公告：https://x.com/GCCofCommons/status/2103414364414079142?s=20
+  高校 Builder 計劃 2026 申請表：https://survey.gccofficial.org/552158?lang=zh-Hans
 
 # ── 語氣指引 ────────────────────────────────────────────
 tone_guidelines: |
@@ -59,5 +62,6 @@ tone_guidelines: |
 gcc_summary: |
   GCC 是全球華語數字公地資助機構，設有公共基金與專項基金。
   2026 H2 Cohort 4 公共基金聚焦 OPS：開源、隱私、安全；其他服務 OPS 的數字公共基礎設施亦可申請。
-  專項基金包括：Builder 機票計劃、高校 Web3 專項、GCC×706 專項、GCC×Mastodon 專項。
+  高校 Builder 計劃 2026 是現行獨立專項；2025 高校 Web3 興趣小組資助屬歷史計劃，不等同 ETH City。
+  其他專項基金例子包括 Builder 機票計劃、GCC×706 與 GCC×Mastodon；實際開放狀態以各官方入口為準。
   申請資助：gccofficial.org/application

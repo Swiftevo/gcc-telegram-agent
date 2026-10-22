@@ -1,0 +1,55 @@
+# GCC content-owner-approved public announcement and appendix, reviewed 2026-10-22.
+# This programme is separate from 2025 university Web3 and ETH City tracks.
+schema_version: "1.0"
+programme_id: university-builder-2026
+review:
+  status: approved
+  reviewed_by_role: gcc_content_owner
+  reviewed_at: "2026-10-22"
+  access_level: public
+  allowed_uses: [bot_qa]
+source:
+  application_url: "https://survey.gccofficial.org/552158?lang=zh-Hans"
+  appendix_url: "https://docs.google.com/document/d/1kxkpeluBX7k4sAi_uV7aAO0TFOw8BTvSLmkd7XhEWiI/edit?usp=sharing"
+scope:
+  audience: "全球高校区块链社团、兴趣小组及高校实验室下的学生团体；华语社区优先。由社团提交，负责人确认；执行人可为一人，探索类可跨校组队。"
+  separation: "城市级活动和黑客松（包括 ETH City）不属于本计划；2025 年高校 Web3 兴趣小组资助是历史计划，不可套用其单校额度。"
+  period: "计划执行期为 2026 年第四季度至 2027 年第四季度。"
+application:
+  quarterly: "Workshop、学术分享与开放提案：每季度首月 1–25 日收件，次月 15 日前公布评审结果。"
+  exploration: "工程／学术探索类可随时申请，预计约 3 周反馈；这是目标，不是保证。"
+  alumni: "高校校友联动专项按学期初提交排期表。"
+  operations: "日常运营类按年度申请，季度末凭票据报销。"
+categories:
+  operations: "① 日常运营：上限 500 USD／年；须同期执行至少一个②–⑥类项目，季度末凭票据报销。"
+  workshop: "② Workshop 教程：上限 1,000 USD／课程；至少 4 节、每节不少于 30 分钟，并有公开视频、仓库与练习。"
+  sharing: "③ 学术分享：上限 100 USD／场，或 500 USD／至少 4 场的系列；须由实际解决过问题的人分享，成果公开。"
+  exploration: "④ 工程／学术探索：上限 3,000 USD／项目，1–4 名执行人、最长 6 个月；至少一项可核验的公开硬产出。"
+  alumni: "⑤ 高校校友联动：上限 150 USD／场；每社团每学期最多 8 场，其中线下不超过 2 场。"
+  open: "⑥ 开放提案：通常上限 3,000 USD／项目；适用于不落入前五类的好想法，须约定可核验的交付。"
+focus:
+  - "真实的区块链产业与公共基础设施问题；优先附公开 EIP、研究讨论、GitHub issue 或协议需求。"
+  - "以太坊协议、ZK 与密码学、系统基础设施、DeFi、隐私与钱包安全、本地 AI／Agent × 区块链等是示例，非封闭清单。"
+  - "成果应公开、可复用；课程、研究、代码、提案或数据等须有可核验交付。"
+exclusions:
+  - "发币、空投、交易、投资或金融产品推广。"
+  - "纯宣传投放、流量采购、蓝标／会员订阅、礼品周边，以及与产出无关的成员激励或团建。"
+  - "城市级活动／黑客松承办属于独立 ETH City 计划；已获其他资助的重复申报部分须如实披露。"
+deliverables:
+  - "Workshop 至少四节、每节不少于 30 分钟，配公开录播、代码仓库和练习。"
+  - "探索类至少一项公开硬产出，例如论文预印本、EIP／ERC 草案、研究帖、实质性开源 PR、工具或经负责任披露的安全发现；不以论文录用或提案合并为结项前提。"
+  - "按类别和约定里程碑核验；成果公开后才可按约定结算尾款。"
+criteria:
+  - "问题真实性与产业相关性 30%"
+  - "方案可行性与执行人能力 25%"
+  - "交付物可核验性 20%"
+  - "预算合理性 15%"
+  - "公开复用价值 10%"
+boundaries:
+  - "这些权重只属于高校 Builder 计划 2026，不属于 Cohort 4 公共基金或 GCC 的所有资助。"
+  - "申请、评审时间和分期拨款规则不证明任何个别项目已获批、签约、完成 milestone 或收到款项。"
+  - "正式申请及执行人身份核验在 GCC 外部表格／人工流程进行；Bot 不收集身份资料或替代人类评审。"
+  - "附录 B 是可变的选题示例，不作为实时产业需求或当前外部事实的证明。"
+source_discrepancies:
+  alumni: "线上表格目前写 200 USD／场；内容 owner 明确核准附录的 150 USD／场，表格待同步。"
+  operations: "附录写按学期申请；内容 owner 明确核准线上表格的按年度申请，附录待同步。"

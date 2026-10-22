@@ -56,9 +56,8 @@ async def handle_general(
 
     link_result = check_link_first(user_text, lang, session.get_context())
     if link_result.matched:
-        # Cohort 4 uses the official external form; the legacy callback starts
-        # the Bot's unretired internal application draft instead.
-        if link_result.link_type.startswith("cohort4_"):
+        # Reviewed programmes use external forms, not the legacy in-Bot draft.
+        if link_result.link_type.startswith(("cohort4_", "university2026_")):
             reply_markup = None
         await update.message.reply_text(
             link_result.reply,

@@ -3,6 +3,20 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-22：高校 Builder 計劃 2026 核准與來源差異（待 merge／production 驗證）
+
+- GCC content owner 確認提供的宣傳稿及附錄已核准供 Bot 公開問答；高校 Builder 2026
+  與 2025 高校 Web3 興趣小組、ETH City、Cohort 4 公共基金分開。現行正式申請在
+  外部 survey 表格進行，Bot 不收集申請人或執行人身份資料。
+- owner 明確決定校友聯動每場上限採附錄的 150 USD（表格仍寫 200 USD），日常運營
+  採按年度申請（附錄仍寫按學期）。Bot 只採這兩個核准值，並在相關回答揭示差異；
+  表格與附錄的修正另列 `UNIVERSITY-2026-SOURCE-001`，未擅自修改外部來源。
+- 建立只含必要事實與 review metadata 的獨立 deterministic projection；附錄 B 的
+  快速變動選題、完整 PDF、個人資料均不進 prompt。該計劃的 30/25/20/15/10
+  權重不套用至公共基金；時間、里程碑和資助上限不是實際撥款證據。
+- 本地 24 個測試檔已通過；PR、merge 及 production 私訊／群組 E2E 仍需完成，
+  未宣稱已上線。
+
 ## 2026-10-22：Cohort 4 已核准公告的現行問答修正（待 merge／production 驗證）
 
 - GCC content owner 確認 Cohort 4 宣傳稿已核准對外發布，並以 OPS 三方向及所列日期

@@ -7,6 +7,7 @@ from gcc_agent.knowledge.cases import select_bot_qa_case_records
 from gcc_agent.knowledge.history import select_history_projection
 from gcc_agent.qa.facts import check_official_fact
 from gcc_agent.qa.cohort4 import select_cohort4_answer
+from gcc_agent.qa.university_builder import select_university_answer
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.qa.history_facts import format_history_projection_reply
 from gcc_agent.knowledge.loaders import (
@@ -105,6 +106,9 @@ def check_link_first(
             format_history_projection_reply(history_projection, lang),
             f"history_{history_projection['projection_id']}",
         )
+    university = select_university_answer(text, lang)
+    if university.matched:
+        return LinkResult(True, university.reply, f"university2026_{university.answer_type}")
     cohort4 = select_cohort4_answer(text, lang)
     if cohort4.matched:
         return LinkResult(True, cohort4.reply, f"cohort4_{cohort4.answer_type}")
