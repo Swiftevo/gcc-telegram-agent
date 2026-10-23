@@ -165,7 +165,7 @@ Completed foundations:
   and 55 `legacy_only` records, verifies every source checksum, rejects orphan
   files, and scans for prohibited row-level voter, wallet, and access data.
 - The final schema 0.4 migration audit records and recomputes the complete
-  current inventory: 8 cases, 2 funding tracks, 14 registered snapshots／local
+  current inventory: 8 cases, 2 funding tracks, 15 registered snapshots／local
   source files. The 2026-10-23 OSKey review changes the current states to 6 seed,
   1 draft and 1 reviewed, with 1 historical Bot-QA-enabled case.
   It rejects a second case-like YAML database so later imports cannot silently

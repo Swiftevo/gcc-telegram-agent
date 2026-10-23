@@ -81,6 +81,13 @@ for historical `bot_qa` and moves that one case to `reviewed`; the gate now
 selects only OSKey. Its USD figures are owner-confirmed public reporting units,
 not transfer-token assertions. The Snapshot schedule and milestone review govern
 releases, but actual payment stages, amounts and dates remain undisclosed.
+The public GCC interview dated 2026-10-10 is a fourth approved OSKey source.
+Its progress statements are attributed to the founder and tied to that date:
+the AI-assisted custom-hardware path was a proof of concept, while the manual
+and end-to-end workflow were still planned. The interview is not independent
+security testing, GCC milestone acceptance or disbursement evidence. The newer
+repository URL is retained as a reference without replacing the earlier
+canonical repository link pending owner reconciliation.
 The other seven records remain ineligible. Application-review use remains
 separately denied, including for OSKey.
 

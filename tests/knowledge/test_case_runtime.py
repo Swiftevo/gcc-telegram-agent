@@ -251,6 +251,38 @@ class BotQACasePromptTests(unittest.TestCase):
         self.assertIn("這不代表尚未撥款", reply)
         self.assertNotIn("非商業開源硬件錢包", reply)
         self.assertEqual(1, reply.count("snapshot.org/#/"))
+        self.assertNotIn("2108904248209789139", reply)
+
+    def test_interview_progress_is_dated_attributed_and_not_a_grant_outcome(self):
+        for lang, question, expected in (
+            ("zh-TW", "OSKey 最新進度？", "當時只完成概念驗證"),
+            ("zh-CN", "OSKey 最新进度？", "当时只完成概念验证"),
+            ("en", "What is OSKey's progress?", "only reached proof of concept"),
+        ):
+            with self.subTest(lang=lang):
+                reply = format_case_fact_reply([self.record], lang, question)
+                self.assertIn("2026-10-10", reply)
+                self.assertIn(expected, reply)
+                self.assertIn("2108904248209789139", reply)
+                self.assertNotIn("30,000 USD", reply)
+                self.assertNotIn("USDC", reply)
+
+    def test_interview_in_overview_does_not_infer_payment(self):
+        reply = format_case_fact_reply([self.record], "zh-TW", "OSKey 是甚麼？")
+        self.assertIn("項目方當時稱這條新路線僅完成概念驗證", reply)
+        self.assertIn("2108904248209789139", reply)
+        self.assertIn("不能公開確認已撥付多少", reply)
+
+    def test_interview_unavailable_falls_back_to_original_overview(self):
+        record = deepcopy(self.record)
+        record["sources"] = [
+            source for source in record["sources"]
+            if source["snapshot_id"] != "snap-oskey-gcc-interview-2026-10-10"
+        ]
+        reply = format_case_fact_reply([record], "zh-TW", "OSKey 最新進度？")
+        self.assertNotIn("概念驗證", reply)
+        self.assertNotIn("2108904248209789139", reply)
+        self.assertIn("不能公開確認已撥付多少", reply)
 
     def test_simplified_and_english_copy_do_not_leak_internal_status(self):
         for lang, question, expected in (
@@ -266,6 +298,36 @@ class BotQACasePromptTests(unittest.TestCase):
 
 
 class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
+    async def test_private_and_group_progress_keep_interview_boundary(self):
+        for scope_type in ("private", "group"):
+            with self.subTest(scope_type=scope_type):
+                update = MagicMock()
+                update.message.text = (
+                    "OSKey 最新進度？" if scope_type == "private"
+                    else "@GCCpublicgoods_bot OSKey 最新進度？"
+                )
+                update.message.reply_text = AsyncMock()
+                guard = SimpleNamespace(lang="zh-TW", user=SimpleNamespace(user_id=123))
+                session = Session(user_id=123)
+                with (
+                    patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=session)),
+                    patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+                ):
+                    await handle_general(
+                        update,
+                        MagicMock(),
+                        guard,
+                        user_text_override="OSKey 最新進度？" if scope_type == "group" else None,
+                        scope_type=scope_type,
+                        scope_id=-100123 if scope_type == "group" else 123,
+                        allow_application=False,
+                    )
+                reply = update.message.reply_text.await_args.args[0]
+                self.assertIn("當時只完成概念驗證", reply)
+                self.assertIn("不代表 GCC 已驗收里程碑", reply)
+                self.assertIn("2108904248209789139", reply)
+                self.assertIsNone(update.message.reply_text.await_args.kwargs["parse_mode"])
+
     async def test_real_oskey_case_reply_is_plain_text_with_private_payment_unknown(self):
         update = MagicMock()
         update.message.text = "OSKey 撥付了嗎？"
