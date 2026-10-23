@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-23：OSKey 首案問答語言及撥款措辭修正（待 PR／production 驗收）
+
+- 真實 Telegram 回覆顯示固定案例模板把英文敘述與 `owner_confirmed` 等內部狀態直接輸出，雖然提問及欄位標籤是中文。
+- 在展示層加入 OSKey 繁中、簡中、英文對應文案；原始英文證據、canonical facts、來源審核及 runtime gate 不變。撥款問題直接回答治理核准 30,000 USD 與實際撥付詳情不公開的界線，不推斷已付或未付。
+- 私訊／群組共用同一固定回答，維持純文字及公開來源／資料更新日期；增加語言、狀態碼、來源去重及兩個入口測試。`I18N-001` 仍保留全局語言選擇與其他回覆的工作。
+
 ## 2026-10-23：OSKey 歷史案例內容審核（待 PR／production 驗收）
 
 - GCC content owner 核准 OSKey 的 GCC 項目頁、Snapshot proposal／aggregate vote、

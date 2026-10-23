@@ -119,7 +119,7 @@ def check_link_first(
     if approved_cases:
         return LinkResult(
             True,
-            format_case_fact_reply(approved_cases, lang),
+            format_case_fact_reply(approved_cases, lang, text),
             "canonical_case",
         )
     for name, url in PROJECT_LINKS.items():
