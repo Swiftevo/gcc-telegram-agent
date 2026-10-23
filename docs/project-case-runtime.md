@@ -58,14 +58,19 @@ Selection is deterministic and limited to a small set matching the question.
 An explicit approved case-name question receives a deterministic overview before
 the language model. Other matching questions may receive the selected allowlist
 as a system data block marked as facts rather than instructions.
-The deterministic overview is sent as plain text: source labels and fact-status
-values contain underscores that Telegram's legacy Markdown parser can reject.
+The deterministic overview is sent as plain text, so source URLs cannot break
+Telegram's legacy Markdown parser. OSKey now has user-facing copy in
+Traditional Chinese, Simplified Chinese and English, separate from its canonical
+English evidence. Payment questions lead with the approval/payment distinction;
+internal fact-status codes are not exposed. Future Bot QA cases need their own
+localized presentation copy before activation (covered by a runtime test).
 
 Case-backed answers include public source URLs and the canonical database update
-date. Requested, governance-approved and disbursed values retain separate labels
-and fact statuses. Unknown payment remains unknown; proposed milestones are not
-described as accepted, unlocked or paid. The length limiter preserves the
-provenance footer.
+date. The canonical record keeps requested, governance-approved and disbursed
+facts separate. OSKey's public reply states the governance-approved USD amount
+and that actual disbursement details are undisclosed; it neither asserts payment
+nor implies that no payment occurred. Proposed milestones are not described as
+accepted, unlocked or paid. The length limiter preserves the provenance footer.
 
 ## Review state
 

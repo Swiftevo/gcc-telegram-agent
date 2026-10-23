@@ -21,6 +21,7 @@ from gcc_agent.qa.case_facts import (
     as_case_facts_system_block,
     case_provenance_footer,
     format_case_fact_reply,
+    has_localized_case_copy,
 )
 from gcc_agent.qa.prompts import build_messages, check_link_first
 from gcc_agent.qa.handler import handle_general
@@ -62,10 +63,9 @@ def approved_oskey_case() -> dict:
 
 class BotQACaseGateTests(unittest.TestCase):
     def test_current_database_exposes_only_oskey_to_runtime(self):
-        self.assertEqual(
-            ["gcc-open-source-oskey"],
-            [case["case_id"] for case in load_bot_qa_cases(force_reload=True)],
-        )
+        active_case_ids = [case["case_id"] for case in load_bot_qa_cases(force_reload=True)]
+        self.assertEqual(["gcc-open-source-oskey"], active_case_ids)
+        self.assertTrue(all(has_localized_case_copy(case_id) for case_id in active_case_ids))
         self.assertEqual(
             ["gcc-open-source-oskey"],
             [record["case_id"] for record in select_bot_qa_case_records("OSKey", force_reload=True)],
@@ -217,8 +217,8 @@ class BotQACasePromptTests(unittest.TestCase):
             result = check_link_first("What is OSKey?", "en")
         self.assertTrue(result.matched)
         self.assertEqual("canonical_case", result.link_type)
-        self.assertIn("Governance-approved", result.reply)
-        self.assertIn("Canonical database updated", result.reply)
+        self.assertIn("governance-approved amount is 30,000 USD", result.reply)
+        self.assertIn("Database updated", result.reply)
         self.assertIn("snapshot.org", result.reply)
 
     def test_ai_reply_gets_source_and_database_date_footer(self):
@@ -233,12 +233,36 @@ class BotQACasePromptTests(unittest.TestCase):
         )
 
     def test_case_reply_states_unknown_disbursement(self):
-        reply = format_case_fact_reply([self.record], "zh-TW")
-        self.assertIn("已實付額：未知 (unknown)", reply)
-        self.assertIn("撥付資料說明：", reply)
-        self.assertIn("30000 USD (owner_confirmed)", reply)
+        reply = format_case_fact_reply([self.record], "zh-TW", "OSKey 是甚麼？")
+        self.assertIn("非商業開源硬件錢包", reply)
+        self.assertIn("提案申請額為 30,000 USD", reply)
+        self.assertIn("OSKey 的 Snapshot 提案已獲通過；治理核准額為 30,000 USD", reply)
+        self.assertIn("實際撥付的期數、金額、日期", reply)
+        self.assertIn("資料庫更新日期：2026-10-11", reply)
+        self.assertNotIn("owner_confirmed", reply)
+        self.assertNotIn("unknown", reply)
+        self.assertNotIn("OSKey is an", reply)
         self.assertNotIn("USDC", reply)
-        self.assertIn("Canonical database 更新日期：2026-10-11", reply)
+
+    def test_payment_question_gets_direct_chinese_answer(self):
+        reply = format_case_fact_reply([self.record], "zh-TW", "OSKey 已撥款嗎？")
+        self.assertTrue(reply.startswith("OSKey 的 Snapshot 提案已獲通過"))
+        self.assertIn("不能公開確認已撥付多少", reply)
+        self.assertIn("這不代表尚未撥款", reply)
+        self.assertNotIn("非商業開源硬件錢包", reply)
+        self.assertEqual(1, reply.count("snapshot.org/#/"))
+
+    def test_simplified_and_english_copy_do_not_leak_internal_status(self):
+        for lang, question, expected in (
+            ("zh-CN", "OSKey 已拨付吗？", "不能公开确认已拨付多少"),
+            ("en", "Has OSKey been paid?", "no paid amount"),
+        ):
+            with self.subTest(lang=lang):
+                reply = format_case_fact_reply([self.record], lang, question)
+                self.assertIn(expected, reply)
+                self.assertNotIn("owner_confirmed", reply)
+                self.assertNotIn("grant=approved", reply)
+                self.assertNotIn("USDC", reply)
 
 
 class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
@@ -257,10 +281,37 @@ class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
 
         reply = update.message.reply_text.await_args.args[0]
         self.assertIsNone(update.message.reply_text.await_args.kwargs["parse_mode"])
-        self.assertIn("OSKey — Open Source", reply)
-        self.assertIn("30000 USD (owner_confirmed)", reply)
-        self.assertIn("已實付額：未知 (unknown)", reply)
+        self.assertIn("30,000 USD", reply)
+        self.assertIn("不能公開確認已撥付多少", reply)
+        self.assertNotIn("owner_confirmed", reply)
         self.assertNotIn("USDC", reply)
+
+    async def test_group_case_reply_uses_same_chinese_payment_boundary(self):
+        update = MagicMock()
+        update.message.text = "@GCCpublicgoods_bot OSKey 已撥款嗎？"
+        update.message.reply_text = AsyncMock()
+        guard = SimpleNamespace(lang="zh-TW", user=SimpleNamespace(user_id=123))
+        session = Session(user_id=123)
+
+        with (
+            patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=session)),
+            patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+        ):
+            await handle_general(
+                update,
+                MagicMock(),
+                guard,
+                user_text_override="OSKey 已撥款嗎？",
+                scope_type="group",
+                scope_id=-100123,
+                allow_application=False,
+            )
+
+        reply = update.message.reply_text.await_args.args[0]
+        self.assertIn("不能公開確認已撥付多少", reply)
+        self.assertIn("30,000 USD", reply)
+        self.assertNotIn("owner_confirmed", reply)
+        self.assertIsNone(update.message.reply_text.await_args.kwargs["parse_mode"])
 
     async def test_long_ai_answer_keeps_provenance_after_length_limit(self):
         case = approved_oskey_case()
