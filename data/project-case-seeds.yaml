@@ -416,7 +416,17 @@ cases:
           notes: Software, designs and instructions can be reused without depletion; physical hardware remains rivalrous.
           source_snapshot_ids: [snap-oskey-snapshot-proposal]
         notes: GCC content owner approved this sourced historical assessment on 2026-10-23; it is not an independent security test or completed-outcome review.
-      impact_evidence: []
+      impact_evidence:
+        - type: other
+          description: >
+            In a GCC-published interview dated 2026-10-10, OSKey's founder said
+            the AI-assisted personalized-hardware path had reached proof of
+            concept, while modularization, end-to-end testing and user guidance
+            were still in development. A late-October manual was a forecast.
+          metric:
+          value:
+          source_snapshot_ids: [snap-oskey-gcc-interview-2026-10-10]
+          notes: Interviewee self-report only; not independently verified delivery, security assurance, GCC milestone acceptance, disbursement or unlock.
       lifecycle_status:
         grant_status: approved
         delivery_status: unknown
@@ -444,6 +454,8 @@ cases:
         - https://snapshot.org/#/s:gccofficial.eth/proposal/0x097e42fd59cf33b51ca2ecfbc230809e7597bf879b748dcf1f49950379e98a8d
         - https://www.oskey.xyz/
         - https://github.com/butterfly-communtiy/oskey-elf-firmware
+        - https://x.com/GCCofCommons/status/2108904248209789139
+        - https://github.com/butterfly-community/oskey-firmware
       snapshots:
         - snapshot_id: snap-oskey-gcc-project-page
           captured_at: "2026-09-24"
@@ -496,6 +508,23 @@ cases:
             reviewed_by_role: GCC content owner
             notes: GCC content owner approved the sanitized application extract for sourced historical Bot QA; technical and execution claims remain source-reported.
           notes: Sanitized public application evidence covering funding use, deliverables, sustainability, governance risks and applicant responses without voter identity data or meeting credentials.
+        - snapshot_id: snap-oskey-gcc-interview-2026-10-10
+          captured_at: "2026-10-23"
+          source_type: media
+          access_level: public
+          source_url: https://x.com/GCCofCommons/status/2108904248209789139
+          storage_uri: data/source-snapshots/oskey-gcc-interview-2026-10-10.md
+          checksum: sha256:4e898f6e3b2e8ee67b7b90e5deb6692c01367f16fecf8656316a021ddbceca8f
+          processing:
+            handling_profile: public_source_extract
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
+            policy_version: "1.0"
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner supplied the approved public interview; the curated extract preserves dated, attributed project statements without security or grant-execution verification.
+          notes: Founder interview on OSKey's hardware-sovereignty rationale, existing DIY workflow and reported AI-assisted proof of concept; X could not be independently fetched during capture.
       grant_application:
         status: available
         access_level: public

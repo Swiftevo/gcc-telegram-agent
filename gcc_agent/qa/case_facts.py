@@ -6,6 +6,7 @@ import json
 # Presentation copy is deliberately separate from the canonical evidence. Only
 # reviewed cases with approved public Bot QA use may be projected here.
 OSKEY_CASE_ID = "gcc-open-source-oskey"
+OSKEY_INTERVIEW_SOURCE_ID = "snap-oskey-gcc-interview-2026-10-10"
 OSKEY_COPY = {
     "zh-TW": {
         "summary": (
@@ -16,6 +17,18 @@ OSKEY_COPY = {
         "why": (
             "公開提案指出，可核驗、可重用的錢包韌體與硬件指引可作為"
             "自託管的共用基礎設施，減少對專有硬件的依賴並降低參與門檻。"
+        ),
+        "interview_overview": (
+            "2026-10-10 的 GCC 訪談補充：OSKey 希望讓用戶藉助 AI 自訂硬件形態；"
+            "項目方當時稱這條新路線僅完成概念驗證，仍在開發。"
+        ),
+        "interview_progress": (
+            "截至 2026-10-10 的 GCC 訪談，OSKey 創辦人稱：AI 輔助用戶自訂電路板、"
+            "外殼及組合錢包模組的路線，當時只完成概念驗證。模組拆分、整套流程測試"
+            "及製作手冊仍在開發；希望於 2026 年 10 月底讓用戶依手冊製作，屬預期而非已完成。"
+        ),
+        "interview_boundary": (
+            "這是項目方在訪談中的自述，不代表 GCC 已驗收里程碑、證實產品安全性或公開撥款。"
         ),
         "requested": "提案申請額為 {amount}。",
         "approved": "OSKey 的 Snapshot 提案已獲通過；治理核准額為 {amount}。",
@@ -37,6 +50,18 @@ OSKEY_COPY = {
         "why": (
             "公开提案指出，可核验、可复用的钱包固件与硬件指引可作为"
             "自托管的共享基础设施，减少对专有硬件的依赖并降低参与门槛。"
+        ),
+        "interview_overview": (
+            "2026-10-10 的 GCC 访谈补充：OSKey 希望让用户借助 AI 定制硬件形态；"
+            "项目方当时称这条新路线仅完成概念验证，仍在开发。"
+        ),
+        "interview_progress": (
+            "截至 2026-10-10 的 GCC 访谈，OSKey 创始人称：AI 辅助用户定制电路板、"
+            "外壳及组合钱包模块的路线，当时只完成概念验证。模块拆分、完整流程测试"
+            "及制作手册仍在开发；希望于 2026 年 10 月底让用户依手册制作，属于预期而非已完成。"
+        ),
+        "interview_boundary": (
+            "这是项目方在访谈中的自述，不代表 GCC 已验收里程碑、证实产品安全性或公开拨款。"
         ),
         "requested": "提案申请额为 {amount}。",
         "approved": "OSKey 的 Snapshot 提案已获通过；治理核准额为 {amount}。",
@@ -61,6 +86,22 @@ OSKEY_COPY = {
             "and hardware guidance as shared self-custody infrastructure that "
             "reduces reliance on proprietary hardware and participation barriers."
         ),
+        "interview_overview": (
+            "In a GCC interview dated 2026-10-10, OSKey described a goal of "
+            "AI-assisted custom hardware. The team said this new path had only "
+            "reached proof of concept and was still in development."
+        ),
+        "interview_progress": (
+            "As of GCC's 2026-10-10 interview, OSKey's founder said the "
+            "AI-assisted custom-board, enclosure and wallet-module path had "
+            "only reached proof of concept. Modularization, end-to-end testing "
+            "and a build guide were still in development. A late-October 2026 "
+            "user-build target was a forecast, not a completed deliverable."
+        ),
+        "interview_boundary": (
+            "This is the project team's interview account, not GCC milestone "
+            "acceptance, independently verified product security or payment evidence."
+        ),
         "requested": "The proposal requested {amount}.",
         "approved": "OSKey's Snapshot proposal passed; the governance-approved amount is {amount}.",
         "payment": (
@@ -79,6 +120,11 @@ PAYMENT_TERMS = (
     "撥付", "拨付", "撥款", "拨款", "已付", "付款", "支付", "發放", "发放", "轉帳", "转账",
     "解鎖", "解锁", "到賬", "到账", "收款", "收到款", "paid", "payment",
     "disburs", "unlock", "release funds",
+)
+PROGRESS_TERMS = (
+    "進度", "进度", "進展", "进展", "最新", "現況", "现状", "做到哪", "現在做到",
+    "现在做到", "概念驗證", "概念验证", "自訂", "客製", "定制", "人工智能",
+    "ai", "pcb", "progress", "roadmap", "proof of concept", "custom hardware",
 )
 
 
@@ -104,27 +150,50 @@ def _oskey_reply(record: dict, lang: str, question: str) -> str:
         else ("Unknown" if lang == "en" else "未有可公開確認的金額")
     )
     payment_question = any(term in question.casefold() for term in PAYMENT_TERMS)
+    has_interview = any(
+        source.get("snapshot_id") == OSKEY_INTERVIEW_SOURCE_ID
+        for source in record.get("sources", [])
+    )
+    progress_question = (
+        not payment_question
+        and has_interview
+        and any(term in question.casefold() for term in PROGRESS_TERMS)
+    )
     lines = []
-    if not payment_question:
+    if progress_question:
+        lines.extend((copy["interview_progress"], copy["interview_boundary"]))
+    elif not payment_question:
         lines.extend((copy["summary"], copy["why"]))
+        if has_interview:
+            lines.append(copy["interview_overview"])
         if isinstance(requested.get("amount"), (int, float)) and requested.get("currency"):
             requested_amount = f"{requested['amount']:,} {requested['currency']}"
             lines.append(copy["requested"].format(amount=requested_amount))
-    lines.append(copy["approved"].format(amount=approved_amount))
-    lines.append(copy["payment"])
+    if not progress_question:
+        lines.append(copy["approved"].format(amount=approved_amount))
+        lines.append(copy["payment"])
 
     labels = {
-        "zh-TW": ("GCC 項目頁", "Snapshot 提案", "公開申請資料"),
-        "zh-CN": ("GCC 项目页", "Snapshot 提案", "公开申请资料"),
-        "en": ("GCC project page", "Snapshot proposal", "Public application"),
-    }.get(lang, ("GCC 項目頁", "Snapshot 提案", "公開申請資料"))
+        "zh-TW": ("GCC 項目頁", "Snapshot 提案", "公開申請資料", "GCC 訪談"),
+        "zh-CN": ("GCC 项目页", "Snapshot 提案", "公开申请资料", "GCC 访谈"),
+        "en": ("GCC project page", "Snapshot proposal", "Public application", "GCC interview"),
+    }.get(lang, ("GCC 項目頁", "Snapshot 提案", "公開申請資料", "GCC 訪談"))
     source_labels = dict(zip(
-        ("gcc_project_page", "snapshot_proposal", "grant_application"), labels
+        ("gcc_project_page", "snapshot_proposal", "grant_application", "media"), labels
     ))
     source_lines = []
     seen_urls = set()
     separator = ": " if lang == "en" else "："
+    allowed_source_ids = (
+        {OSKEY_INTERVIEW_SOURCE_ID}
+        if progress_question
+        else {"snap-oskey-gcc-project-page", "snap-oskey-snapshot-proposal"}
+        if payment_question
+        else {"snap-oskey-gcc-project-page", "snap-oskey-snapshot-proposal", OSKEY_INTERVIEW_SOURCE_ID}
+    )
     for source in record.get("sources", []):
+        if source.get("snapshot_id") not in allowed_source_ids:
+            continue
         url = source.get("source_url")
         if url and url not in seen_urls:
             seen_urls.add(url)

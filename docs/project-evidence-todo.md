@@ -46,6 +46,13 @@ non-conflicting case evidence.
 - [x] GCC content owner reviewed OSKey's three source extracts, historical summary,
   public-goods assessment, links and cautions on 2026-10-23. Actual payment and
   milestone execution details remain undisclosed, not inferred from the proposal.
+- [x] Curate the 2026-10-10 public GCC founder interview as a fourth OSKey source;
+  attribute the proof-of-concept statement, preserve the late-October manual as
+  a forecast, and exclude security guarantees and grant-execution inferences.
+- [ ] After merge, test a real private and group question about OSKey's progress;
+  check that the answer cites the interview and retains its date and caveats.
+- [ ] Ask the OSKey content owner whether the newer `oskey-firmware` repository
+  should replace the older `oskey-elf-firmware` canonical project link.
 - [ ] GCC content owner reviews OpenRPC's public summary, public-goods assessment,
   links and cautions before that record may move to `reviewed`／`published`.
 - [x] Schema 0.3 replaces the legacy milestone USD field with a structured

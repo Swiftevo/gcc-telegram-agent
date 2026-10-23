@@ -136,7 +136,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         self.assertEqual(oskey["public_record"]["funding"]["governance_approved"]["currency"], "USD")
         self.assertEqual(oskey["public_record"]["funding"]["disbursed"]["status"], "unknown")
         self.assertEqual(oskey["public_record"]["execution_events"][0]["event_type"], "governance_decision")
-        self.assertEqual(len(oskey["evidence"]["snapshots"]), 3)
+        self.assertEqual(len(oskey["evidence"]["snapshots"]), 4)
         self.assertEqual(
             oskey["evidence"]["grant_application"]["snapshot_id"],
             "snap-oskey-sanitized-application-evidence",

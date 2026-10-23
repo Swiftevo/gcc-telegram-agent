@@ -21,10 +21,10 @@ Current inventory:
 - 63 legacy runtime records;
 - 8 mapped canonical cases;
 - 55 records explicitly remaining `legacy_only`;
-- 2 funding tracks and 14 registered source snapshots;
-- 14 referenced local evidence files;
+- 2 funding tracks and 15 registered source snapshots;
+- 15 referenced local evidence files;
 - 6 `seed` cases, 1 `draft` case and 1 `reviewed` case;
-- OSKey alone approved for historical Bot QA, with 3 approved sources; 11 sources
+- OSKey alone approved for historical Bot QA, with 4 approved sources; 11 sources
   and the other 7 cases remain outside Bot QA. No source is approved for
   application review.
 
