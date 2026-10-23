@@ -55,6 +55,11 @@ FUNDING_KEYWORDS = [
     "专项基金", "机票计划", "资金", "apply", "grant", "funding", "application",
     "how to apply", "public fund", "special fund", "travel grant",
 ]
+LANGUAGE_INSTRUCTIONS = {
+    "zh-CN": "Always answer in Simplified Chinese (简体中文).",
+    "zh-TW": "Always answer in Traditional Chinese (繁體中文).",
+    "en": "Always answer in English.",
+}
 
 
 @dataclass(frozen=True)
@@ -169,7 +174,12 @@ def build_messages(
     )
     messages = [
         {"role": "system", "content": as_system_block(values)},
-        {"role": "system", "content": as_gcc_summary_block(values)},
+        {
+            "role": "system",
+            "content": as_gcc_summary_block(values)
+            + "\n\n"
+            + LANGUAGE_INSTRUCTIONS.get(lang, LANGUAGE_INSTRUCTIONS["zh-TW"]),
+        },
     ]
     case_block = as_case_facts_system_block(selected_cases)
     if case_block:

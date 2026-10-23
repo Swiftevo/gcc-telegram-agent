@@ -40,7 +40,7 @@ This assistant takes that first layer: it answers with official links when it ca
 |---|---|
 | Tiered access | Current human members of the configured GCC group may use group and private general Q&A; other users and unauthorized agents get a welcome message only |
 | Link-first answers | Questions that match official pages skip the model |
-| Languages | Simplified Chinese, Traditional Chinese, or English from the user locale |
+| Languages | Simplified Chinese, Traditional Chinese, or English from the user locale, with manual switching via `/language` |
 | Application flow | Four steps: project name, fund type, proposal link, executive summary |
 | Screening | 0–100 score from `values.yaml`, then notify an administrator |
 | Group-member Q&A | Explicit mention is required in `GCC_GROUP_ID`; current members may also ask general questions privately; general Q&A itself enables no application or new admin capability |
@@ -52,6 +52,7 @@ For everyone:
 
 ```text
 /privacy                    Show the Bot's current data-processing notice
+/language                   Choose Simplified Chinese, Traditional Chinese, or English (`/lang` also works)
 /whoami                     Show current identity
 ```
 

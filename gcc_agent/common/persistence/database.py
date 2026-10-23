@@ -89,6 +89,13 @@ async def _migration_004_session_scopes(db: aiosqlite.Connection) -> None:
     )
 
 
+async def _migration_005_language_preference(db: aiosqlite.Connection) -> None:
+    """Allow a user to override Telegram's automatically detected locale."""
+    columns = await _columns(db, "users")
+    if "preferred_lang" not in columns:
+        await db.execute("ALTER TABLE users ADD COLUMN preferred_lang TEXT")
+
+
 async def init_db() -> None:
     async with connect() as db:
         await db.execute(
@@ -111,5 +118,8 @@ async def init_db() -> None:
         if 4 not in applied:
             await _migration_004_session_scopes(db)
             await db.execute("INSERT INTO schema_migrations(version) VALUES (4)")
+        if 5 not in applied:
+            await _migration_005_language_preference(db)
+            await db.execute("INSERT INTO schema_migrations(version) VALUES (5)")
         await db.commit()
     logger.info("database initialized path=%s", DB_PATH)

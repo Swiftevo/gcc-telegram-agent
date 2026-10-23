@@ -95,7 +95,7 @@ async def _load_user(update: Update):
     if not created and user.detected_lang != lang:
         await users.update_user_lang(user.user_id, lang)
         user.detected_lang = lang
-    return user, lang
+    return user, getattr(user, "preferred_lang", "") or lang
 
 
 async def run_guard(
