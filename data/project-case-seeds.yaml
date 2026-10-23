@@ -1,5 +1,5 @@
 schema_version: "0.4.0"
-updated_at: "2026-10-23"
+updated_at: "2026-10-24"
 purpose: >
   Seed records for a reusable Chinese-language public goods database. This file
   includes one representative case from each current GCC category plus a small,
@@ -871,9 +871,9 @@ cases:
         governance_approved:
           amount: 60000
           currency: USD
-          status: source_reported
+          status: owner_confirmed
           source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
-          notes: Closed Snapshot records the shared governance decision; it does not prove downstream awards.
+          notes: GCC content owner confirmed on 2026-10-24 that the two separate 30,000 USD track pools are governance-approved amounts; this does not prove downstream awards or payments.
         disbursed:
           amount:
           currency:
@@ -883,9 +883,9 @@ cases:
         total_budget:
           amount: 60000
           currency: USD
-          status: source_reported
+          status: owner_confirmed
           source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
-          notes: The shared proposal records two separate 30,000 USD funding pools.
+          notes: Sum of the two separate governance-approved 30,000 USD pools confirmed by GCC content owner on 2026-10-24.
         per_person_cap:
           amount:
           currency:
@@ -933,9 +933,9 @@ cases:
             total_pool:
               amount: 30000
               currency: USD
-              status: source_reported
+              status: owner_confirmed
               source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
-              notes: Announced track pool; not evidence of downstream awards or payments.
+              notes: Governance-approved 2025 track pool confirmed by GCC content owner; not evidence of downstream awards or payments.
             min_grant:
               amount: 2000
               currency: USD
@@ -967,9 +967,9 @@ cases:
             total_pool:
               amount: 30000
               currency: USD
-              status: source_reported
+              status: owner_confirmed
               source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
-              notes: Announced track pool; not evidence of downstream awards or payments.
+              notes: Governance-approved 2025 track pool confirmed by GCC content owner; not evidence of downstream awards or payments.
             min_grant:
               amount:
               currency:
@@ -1047,7 +1047,7 @@ cases:
         grant_status: approved
         delivery_status: unknown
         reporting_status: unknown
-        notes: The shared Snapshot records a governance decision, not individual approvals, payments, completed activities, or the tracks' current operating status. Link verified downstream cases to exactly one track when evidence becomes available.
+        notes: GCC content owner confirmed the two programme-level governance-approved pools on 2026-10-24. This is not an individual approval, payment, completed activity, or confirmation of current applications. Link verified downstream cases to exactly one track when evidence becomes available.
       regions: [global, Chinese-speaking community]
       tags: [university Web3 groups, ETH City, education, local community, open-source activities]
       summary: >
@@ -1083,11 +1083,13 @@ cases:
           checksum: sha256:37d0f21a0ef4aefb3677cc411337a35fe51c5a8d8a0ee733c3581ef15ed98d8d
           processing:
             handling_profile: public_source_extract
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-24"
+            reviewed_by_role: GCC content owner
+            notes: Approved for historical Bot QA only; no individual awards, payments, or current application status.
           notes: Snapshot records the funding-track approval, voting timeline, and voting results. Snapshot Hub proposal id is preserved as the normalized proposal id.
         - snapshot_id: snap-eth-city-university-web3-wechat-announcement
           captured_at: "2026-08-30"
@@ -1098,11 +1100,13 @@ cases:
           checksum: sha256:f724e5cdd51fcd20c58d037e174e7e2a78712f418f915dc5bce48bdbc3ecc2a4
           processing:
             handling_profile: public_source_extract
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-24"
+            reviewed_by_role: GCC content owner
+            notes: Approved for historical Bot QA only; no individual awards, payments, or current application status.
           notes: Public WeChat announcement for the two funding tracks and application link.
       grant_application:
         status: available
@@ -1144,7 +1148,7 @@ cases:
         source_snapshot_ids: [snap-eth-city-university-web3-snapshot-proposal]
         notes: Cleaned public proposal extract and WeChat announcement are stored locally. Downstream project applications, approvals, and completion records are pending import.
     ai_review_usage:
-      allowed: false
+      allowed: true
       retrieval_text: >
         Funding-track precedent for rolling support to campus Web3 groups and
         local ETH City activities. Useful for reviewing education, workshop,
@@ -1156,7 +1160,7 @@ cases:
         - feasibility
         - precedent_similarity
       cautions:
-        - Keep this shared proposal out of AI review until the two independent tracks and their verified individual cases have been assessed separately.
+        - Historical Bot QA only. The source approvals do not permit application review, which remains closed until the two independent tracks and verified individual cases are assessed separately.
         - Because this proposal bundles two tracks, compare new applicants to the relevant track only.
         - This is not a single applicant project; use it as funding-track precedent and import downstream applications as child records when evidence is available.
         - The two 30,000 USD pools are proposal-level allocations, not evidence of money disbursed or remaining balances.
@@ -1164,7 +1168,9 @@ cases:
       visibility: public
       license:
       maintainers: [GCC]
-      review_status: seed
+      review_status: reviewed
+      reviewed_at: "2026-10-24"
+      reviewed_by_role: GCC content owner
 
   - case_id: gcc-event-wamotopia-2026
     schema_version: "0.4.0"

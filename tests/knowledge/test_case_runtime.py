@@ -68,10 +68,21 @@ def reviewed_openrpc_case() -> dict:
     )
 
 
+def reviewed_eth_city_university_2025_case() -> dict:
+    database = yaml.safe_load(DATABASE_PATH.read_text(encoding="utf-8"))
+    return deepcopy(next(
+        item for item in database["cases"]
+        if item["case_id"] == "gcc-community-eth-city-university-web3-2025"
+    ))
+
+
 class BotQACaseGateTests(unittest.TestCase):
-    def test_current_database_exposes_only_oskey_and_openrpc_to_runtime(self):
+    def test_current_database_exposes_only_three_reviewed_cases_to_runtime(self):
         active_case_ids = [case["case_id"] for case in load_bot_qa_cases(force_reload=True)]
-        self.assertEqual(["gcc-open-source-oskey", "gcc-open-source-openrpc"], active_case_ids)
+        self.assertEqual([
+            "gcc-open-source-oskey", "gcc-open-source-openrpc",
+            "gcc-community-eth-city-university-web3-2025",
+        ], active_case_ids)
         self.assertTrue(all(has_localized_case_copy(case_id) for case_id in active_case_ids))
         self.assertEqual(
             ["gcc-open-source-oskey"],
@@ -82,6 +93,15 @@ class BotQACaseGateTests(unittest.TestCase):
             [record["case_id"] for record in select_bot_qa_case_records("OpenRPC", force_reload=True)],
         )
         self.assertEqual([], select_bot_qa_case_records("ETH Beijing 2025", force_reload=True))
+        self.assertEqual(
+            ["gcc-community-eth-city-university-web3-2025"],
+            [record["case_id"] for record in select_bot_qa_case_records(
+                "ETH City 2025 的額度？", force_reload=True
+            )],
+        )
+        for query in ("ETH City 2026", "高校 Builder 2026", "ETH City", "高校 Web3"):
+            with self.subTest(query=query):
+                self.assertEqual([], select_bot_qa_case_records(query, force_reload=True))
 
     def test_bot_qa_approval_does_not_enable_application_review(self):
         self.assertEqual([], load_ai_review_cases(force_reload=True))
@@ -89,6 +109,25 @@ class BotQACaseGateTests(unittest.TestCase):
     def test_fully_approved_case_passes_runtime_gate(self):
         self.assertTrue(is_bot_qa_eligible_case(approved_oskey_case()))
         self.assertTrue(is_bot_qa_eligible_case(reviewed_openrpc_case()))
+        self.assertTrue(is_bot_qa_eligible_case(reviewed_eth_city_university_2025_case()))
+
+    def test_historical_programme_fails_closed_when_source_approval_is_removed(self):
+        case = reviewed_eth_city_university_2025_case()
+        case["evidence"]["snapshots"][1]["processing"]["allowed_uses"] = ["evidence_only"]
+        self.assertFalse(is_bot_qa_eligible_case(case))
+
+    def test_historical_programme_retains_two_pools_without_payment_claim(self):
+        case = reviewed_eth_city_university_2025_case()
+        funding = case["public_record"]["funding"]
+        tracks = case["public_record"]["program_details"]["funding_tracks"]
+        self.assertEqual(60000, funding["governance_approved"]["amount"])
+        self.assertEqual("owner_confirmed", funding["governance_approved"]["status"])
+        self.assertEqual(
+            [(track["track_id"], track["total_pool"]["amount"]) for track in tracks],
+            [("gcc-university-web3-2025", 30000), ("gcc-eth-city-2025", 30000)],
+        )
+        self.assertEqual("unknown", funding["disbursed"]["status"])
+        self.assertEqual("unknown", case["public_record"]["lifecycle_status"]["delivery_status"])
 
     def test_openrpc_fails_closed_if_one_source_loses_bot_qa_approval(self):
         case = reviewed_openrpc_case()
@@ -384,7 +423,78 @@ class OpenRPCCaseReplyTests(unittest.TestCase):
         self.assertNotIn("storage_uri", block)
         self.assertEqual([], load_ai_review_cases(force_reload=True))
 
+
+class HistoricalFundingProgrammeReplyTests(unittest.TestCase):
+    def setUp(self):
+        self.record = case_to_bot_qa_record(
+            reviewed_eth_city_university_2025_case(), database_updated_at="2026-10-24"
+        )
+
+    def test_track_specific_answers_are_localized_and_sourced(self):
+        for lang, question, expected in (
+            ("zh-TW", "ETH City 2025 額度？", "免費開放的城市級 ETH 活動"),
+            ("zh-CN", "高校 Web3 2025 额度？", "高校区块链社团的教育与开源活动"),
+            ("en", "University Web3 2025 funding?", "campus blockchain groups"),
+        ):
+            with self.subTest(lang=lang):
+                reply = format_case_fact_reply([self.record], lang, question)
+                self.assertIn(expected, reply)
+                self.assertIn("30,000 USD", reply)
+                self.assertIn("60,000 USD", reply)
+                self.assertIn("snapshot.org/#/", reply)
+                self.assertIn("mp.weixin.qq.com/s/", reply)
+                self.assertNotIn("grant=approved", reply)
+                self.assertNotIn("owner_confirmed", reply)
+                self.assertNotIn("tally.so", reply)
+                self.assertNotIn("ETH Beijing", reply)
+
+    def test_payment_question_does_not_turn_programme_approval_into_individual_award(self):
+        reply = format_case_fact_reply([self.record], "zh-TW", "ETH City 2025 已撥款嗎？")
+        self.assertIn("治理核准", reply)
+        self.assertIn("個別申請是否獲批、實際撥款", reply)
+        self.assertIn("目前是否開放申請", reply)
+        self.assertNotIn("已撥付", reply)
+
+    def test_historical_route_precedes_current_university_route(self):
+        result = check_link_first("高校 Web3 2025 現在可以申請嗎？", "zh-TW")
+        self.assertEqual("canonical_case", result.link_type)
+        self.assertIn("2026 高校 Builder 是另一計劃", result.reply)
+        current = check_link_first("高校 Builder 2026 怎樣申請？", "zh-TW")
+        self.assertTrue(current.link_type.startswith("university2026_"))
+
+    def test_prompt_projection_excludes_application_material_and_payment_inference(self):
+        block = as_case_facts_system_block([self.record])
+        self.assertNotIn("grant_application", block)
+        self.assertNotIn("storage_uri", block)
+        self.assertEqual([], load_ai_review_cases(force_reload=True))
+
 class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
+    async def test_historical_programme_private_and_group_answers_are_plain_text(self):
+        for scope_type in ("private", "group"):
+            with self.subTest(scope_type=scope_type):
+                update = MagicMock()
+                update.message.text = (
+                    "ETH City 2025 已撥款嗎？" if scope_type == "private"
+                    else "@GCCpublicgoods_bot ETH City 2025 已撥款嗎？"
+                )
+                update.message.reply_text = AsyncMock()
+                guard = SimpleNamespace(lang="zh-TW", user=SimpleNamespace(user_id=123))
+                with (
+                    patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=Session(user_id=123))),
+                    patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+                ):
+                    await handle_general(
+                        update, MagicMock(), guard,
+                        user_text_override="ETH City 2025 已撥款嗎？" if scope_type == "group" else None,
+                        scope_type=scope_type,
+                        scope_id=-100123 if scope_type == "group" else 123,
+                        allow_application=False,
+                    )
+                reply = update.message.reply_text.await_args.args[0]
+                self.assertIn("額度分別為 30,000 USD 及 30,000 USD", reply)
+                self.assertIn("個別申請是否獲批、實際撥款", reply)
+                self.assertIsNone(update.message.reply_text.await_args.kwargs["parse_mode"])
+
     async def test_openrpc_private_and_group_replies_remain_plain_text(self):
         for scope_type in ("private", "group"):
             with self.subTest(scope_type=scope_type):

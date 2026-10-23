@@ -227,6 +227,23 @@ def _case_aliases(case: dict) -> set[str]:
     return {alias for alias in aliases if len(alias) >= 2}
 
 
+def _historical_funding_program_match(case: dict, value: str) -> bool:
+    """Require the year and one track name so 2026 policy is never displaced."""
+    if case.get("case_id") != "gcc-community-eth-city-university-web3-2025":
+        return False
+    return (
+        "2025" in value
+        and "2026" not in value
+        and any(
+            term in value
+            for term in (
+                "eth city", "ethcity", "高校web3", "高校 web3",
+                "university web3", "高校興趣小組", "高校兴趣小组",
+            )
+        )
+    )
+
+
 def select_bot_qa_case_records(
     query: str,
     *,
@@ -247,7 +264,12 @@ def select_bot_qa_case_records(
         if not is_bot_qa_eligible_case(case):
             continue
         aliases = _case_aliases(case)
-        explicit_match = any(alias in value for alias in aliases)
+        if case.get("case_id") == "gcc-community-eth-city-university-web3-2025":
+            explicit_match = _historical_funding_program_match(case, value)
+            if not explicit_match:
+                continue
+        else:
+            explicit_match = any(alias in value for alias in aliases)
         score = 100 if explicit_match else 0
         if not explicit_only and not explicit_match:
             searchable = {

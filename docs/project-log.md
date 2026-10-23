@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-10-24：2025 ETH City／高校 Web3 雙資助線歷史問答審核（待 PR／production 驗收）
+
+- GCC content owner 核准共享 Snapshot 提案與 GCC 公開微信公告作 Bot 歷史問答來源，並確認兩條獨立資助線各 30,000 USD 為治理核准的計劃額度。保留原提案各線申請上限與用途；不推論個別申請已獲批、實際撥款、活動成果或現仍開放申請。
+- 兩份 public extract 升為 human-reviewed／approved、僅允許 `bot_qa`；共享 funding-programme case 升為 `reviewed`，而非把它當成單一獲資助項目。申請評審仍未授權。
+- 固定繁／簡／英問答要求明確提及 2025 年及 ETH City 或高校 Web3，避免覆蓋 2026 高校 Builder 現行資料。ETH Beijing 2025 只確認屬 ETH City 線，未核實個別金額、日期與結果。合併後仍須私訊／群組真實驗收。
+
 ## 2026-10-23：OpenRPC 歷史案例審核與 Bot 問答接入（待 PR／production 驗收）
 
 - GCC content owner 確認三份來源（GCC 項目頁、Snapshot 提案與 aggregate vote、
