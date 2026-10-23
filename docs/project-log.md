@@ -3,7 +3,27 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-10-23：OSKey 公開訪談作為有日期的項目進度來源（待 PR／production 驗收）
+## 2026-10-23：OpenRPC 歷史案例審核與 Bot 問答接入（待 PR／production 驗收）
+
+- GCC content owner 確認三份來源（GCC 項目頁、Snapshot 提案與 aggregate vote、
+  經清理申請證據）、公開摘要及 public-goods assessment 可用於歷史 Bot QA；
+  不授權申請評分。提案申請及治理核准額為 25,000 USDC，6 票贊成、
+  2 票棄權，金額不變；USDC 只是提案計價單位，不推斷實際轉帳代幣。
+- 590 萬 NPM 下載及採用者屬來源自述，未獨立重現；華語開發者連結及
+  多語文件屬提案／討論方向，非兩項正式里程碑或已交付成果。M1／M2
+  目標日期不證明完成、GCC 驗收、解鎖或撥款，實際狀態維持 unknown。
+- 三份來源升為 human-reviewed／approved，僅授權 `bot_qa`；OpenRPC 一案
+  升為 `reviewed`。固定回答提供繁中／簡中／英文及來源連結，保留私訊／
+  群組純文字路徑。其餘 6 筆案例及所有案例的申請評審仍封閉。
+
+## 2026-10-23：OSKey 訪談進度問答真實驗收
+
+- PR #57 已合併，main 的 Verify release／Deploy app 成功；公開健康與就緒
+  端點回 200，operations 無近期事故。owner 提供 19:16 私訊及 19:22 指定
+  群組 mention 截圖；兩者均附 2026-10-10 訪談來源、資料庫日期，並清楚標示
+  項目方當時只完成概念驗證，沒有推斷 GCC 驗收、安全證明或公開撥款。
+
+## 2026-10-23：OSKey 公開訪談作為有日期的項目進度來源（已驗收）
 
 - GCC content owner 提供已審核、公開的 2026-10-10 訪談。整理成第四份 OSKey
   case-local 來源，記錄硬件自主與 DIY 使用門檻，以及項目方自述 AI 輔助客製
@@ -13,7 +33,7 @@
   安全指引或已核實產品規格。`disbursed`／`delivery_status` 保持 unknown。
 - 訪談指向新的 GitHub 倉庫；先作參考連結，舊 canonical 倉庫待內容 owner
   核對後再決定是否替換。訪談 X 頁在本次整理時未能獨立讀取，來源為 owner
-  提供的文章。合併後仍需真實私訊／群組進度問答驗收。
+  提供的文章。合併後的真實私訊／群組進度問答已驗收。
 
 ## 2026-10-23：OSKey 首案問答語言及撥款措辭修正（已 merge／真實問答驗收）
 

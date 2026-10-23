@@ -37,8 +37,8 @@ non-conflicting case evidence.
   stable snapshot id.
 - [x] Keep actual disbursement, milestone acceptance／unlock and delivery unknown.
 - [x] Keep both cases `draft` and excluded from Bot QA at import time; OSKey
-  was subsequently reviewed for historical Bot QA on 2026-10-23, while OpenRPC
-  remains a draft. Neither is approved for application review.
+  and OpenRPC were subsequently reviewed for historical Bot QA on 2026-10-23.
+  Neither is approved for application review.
 - [x] Add owner-approved sanitized application evidence covering public problems,
   funding use, deliverables, milestones, sustainability, anonymized governance
   concerns and applicant responses. Exclude voter identity data, per-voter
@@ -49,12 +49,15 @@ non-conflicting case evidence.
 - [x] Curate the 2026-10-10 public GCC founder interview as a fourth OSKey source;
   attribute the proof-of-concept statement, preserve the late-October manual as
   a forecast, and exclude security guarantees and grant-execution inferences.
-- [ ] After merge, test a real private and group question about OSKey's progress;
+- [x] After merge, test a real private and group question about OSKey's progress;
   check that the answer cites the interview and retains its date and caveats.
 - [ ] Ask the OSKey content owner whether the newer `oskey-firmware` repository
   should replace the older `oskey-elf-firmware` canonical project link.
-- [ ] GCC content owner reviews OpenRPC's public summary, public-goods assessment,
+- [x] GCC content owner reviews OpenRPC's public summary, public-goods assessment,
   links and cautions before that record may move to `reviewed`／`published`.
+- [ ] After OpenRPC's Bot QA PR merges, test real private／group overview,
+  payment, milestone, download-claim and Chinese-community answers; confirm
+  source links, USDC unit, source attribution and unknown execution boundary.
 - [x] Schema 0.3 replaces the legacy milestone USD field with a structured
   amount fact and records proposal milestone amounts in their original USDC
   currency, without treating them as actual payments or unlocks.

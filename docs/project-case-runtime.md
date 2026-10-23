@@ -77,8 +77,8 @@ accepted, unlocked or paid. The length limiter preserves the provenance footer.
 At initial implementation, all eight canonical cases were `seed` or `draft`, all
 14 sources were `pending`／`evidence_only`, and the runtime gate returned zero.
 The 2026-10-23 OSKey content-owner decision approves its three public extracts
-for historical `bot_qa` and moves that one case to `reviewed`; the gate now
-selects only OSKey. Its USD figures are owner-confirmed public reporting units,
+for historical `bot_qa` and moved that one case to `reviewed`; the gate initially
+selected only OSKey. Its USD figures are owner-confirmed public reporting units,
 not transfer-token assertions. The Snapshot schedule and milestone review govern
 releases, but actual payment stages, amounts and dates remain undisclosed.
 The public GCC interview dated 2026-10-10 is a fourth approved OSKey source.
@@ -88,8 +88,19 @@ and end-to-end workflow were still planned. The interview is not independent
 security testing, GCC milestone acceptance or disbursement evidence. The newer
 repository URL is retained as a reference without replacing the earlier
 canonical repository link pending owner reconciliation.
-The other seven records remain ineligible. Application-review use remains
-separately denied, including for OSKey.
+The 2026-10-23 OpenRPC content-owner decision approves its GCC project page,
+Snapshot proposal and sanitized application extract for historical Bot QA.
+The proposal-denominated requested and governance-approved amount is 25,000
+USDC. The 5.9 million download figure and ecosystem adoption are source-
+reported, not independently reproduced. Chinese-speaking developer connections
+and multilingual documentation were discussion points, not formal funded
+milestones. M1/M2 dates and shares remain proposed terms; actual delivery,
+GCC acceptance, unlock and payment are unknown in the public record.
+Traditional Chinese, Simplified Chinese and English answers state these
+boundaries explicitly and cite the public sources.
+
+The other six records remain ineligible. Application-review use remains
+separately denied, including for OSKey and OpenRPC.
 
 ## Enabling one case
 

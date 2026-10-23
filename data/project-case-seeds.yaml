@@ -599,15 +599,15 @@ cases:
         requested:
           amount: 25000
           currency: USDC
-          status: source_reported
+          status: owner_confirmed
           source_snapshot_ids: [snap-openrpc-snapshot-proposal]
-          notes: The public Snapshot proposal requests 25,000 USDC.
+          notes: The public Snapshot proposal requests 25,000 USDC; GCC content owner approved this sourced historical fact on 2026-10-23. This is a proposal-denominated unit, not a transfer-token assertion.
         governance_approved:
           amount: 25000
           currency: USDC
-          status: source_reported
+          status: owner_confirmed
           source_snapshot_ids: [snap-openrpc-snapshot-proposal, snap-openrpc-gcc-project-page]
-          notes: The closed vote passed 6 to 0 and the amount ballot recorded 6 for no change; the GCC page lists 25,000.
+          notes: The closed vote recorded 6 approvals, 0 opposition and 2 abstentions; 6 amount ballots chose no change, and the GCC page lists 25,000. GCC content owner approved the 25,000 USDC governance decision on 2026-10-23. No payment is inferred.
         disbursed:
           amount:
           currency:
@@ -699,10 +699,10 @@ cases:
       impact_evidence:
         - type: adoption
           description: The proposal reports more than 5.9 million TypeScript/NPM toolkit downloads in the preceding year.
-          metric: annual_npm_downloads
+          metric: reported_annual_npm_downloads_lower_bound
           value: 5900000
           source_snapshot_ids: [snap-openrpc-snapshot-proposal]
-          notes: Source-reported metric; capture does not independently reproduce the package-registry query.
+          notes: Source-reported lower bound, not an exact measured count; capture does not independently reproduce the package-registry query.
       lifecycle_status:
         grant_status: approved
         delivery_status: unknown
@@ -739,11 +739,13 @@ cases:
           checksum: sha256:81f3217f4109f08a918817364ab69bfded73329f26c64146eee967e787cc8244
           processing:
             handling_profile: public_source_extract
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner approved the public project-page extract for sourced historical Bot QA; generic unlock labels and adoption claims do not prove execution or independent adoption verification.
           notes: GCC page title, category, displayed amount, publication date, description and proposal link.
         - snapshot_id: snap-openrpc-snapshot-proposal
           captured_at: "2026-09-24"
@@ -754,11 +756,13 @@ cases:
           checksum: sha256:b65c79d6324115bca8fc24b7809d784a8568e6a69be272c7df42424e76065d20
           processing:
             handling_profile: public_source_extract
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner approved the public proposal and aggregate vote for sourced historical Bot QA; targets, adoption figures and discussion points remain source-reported where applicable.
           notes: Snapshot proposal amount, deliverables, milestone plan, closed state and public vote totals.
         - snapshot_id: snap-openrpc-sanitized-application-evidence
           captured_at: "2026-09-25"
@@ -769,11 +773,13 @@ cases:
           checksum: sha256:b0e3a003319eb216eae62c4d6a5587fe2179be08196188d1d6b0c29e82f2d3dd
           processing:
             handling_profile: sanitized_public_application
-            sanitization_status: automated_checked
-            review_status: pending
-            allowed_uses: [evidence_only]
+            sanitization_status: human_reviewed
+            review_status: approved
+            allowed_uses: [evidence_only, bot_qa]
             policy_version: "1.0"
-            notes: Awaiting GCC content-owner review.
+            reviewed_at: "2026-10-23"
+            reviewed_by_role: GCC content owner
+            notes: GCC content owner approved the sanitized application for sourced historical Bot QA only; no voter identities, private credentials, independent adoption verification, application review or execution inference.
           notes: Sanitized public application evidence covering public problem, funding context, deliverables, sustainability, governance risks and discussion responses without voter identity data or meeting credentials.
       grant_application:
         status: available
@@ -820,7 +826,7 @@ cases:
         source_snapshot_ids: [snap-openrpc-snapshot-proposal]
         notes: Relevant public proposal fields and vote data are preserved locally.
     ai_review_usage:
-      allowed: false
+      allowed: true
       retrieval_text: >
         Open-standard and developer-tooling precedent focused on machine-readable
         JSON-RPC specifications, interoperability, validation, documentation and
@@ -832,7 +838,7 @@ cases:
         - feasibility
         - precedent_similarity
       cautions:
-        - Draft import; do not use for AI review until a GCC content owner completes review.
+        - Approved for sourced historical Bot QA only, not application scoring or review.
         - Do not describe proposed milestones as completed, accepted, paid or unlocked.
         - Adoption figures are proposal-reported unless separately reproduced.
         - Public governance feedback questioned marginal funding value and asked for a concrete Chinese-developer commitment beyond translation; discussion did not make this a formal milestone.
@@ -840,7 +846,9 @@ cases:
       visibility: public
       license:
       maintainers: [GCC]
-      review_status: draft
+      review_status: reviewed
+      reviewed_at: "2026-10-23"
+      reviewed_by_role: GCC content owner
 
   - case_id: gcc-community-eth-city-university-web3-2025
     schema_version: "0.4.0"

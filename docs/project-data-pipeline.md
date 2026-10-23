@@ -23,9 +23,9 @@ Current inventory:
 - 55 records explicitly remaining `legacy_only`;
 - 2 funding tracks and 15 registered source snapshots;
 - 15 referenced local evidence files;
-- 6 `seed` cases, 1 `draft` case and 1 `reviewed` case;
-- OSKey alone approved for historical Bot QA, with 4 approved sources; 11 sources
-  and the other 7 cases remain outside Bot QA. No source is approved for
+- 6 `seed` cases and 2 `reviewed` cases;
+- OSKey and OpenRPC approved for historical Bot QA, with 7 approved sources;
+  8 sources and the other 6 cases remain outside Bot QA. No source is approved for
   application review.
 
 These values are not documentation-only estimates. The
@@ -58,7 +58,7 @@ eligible for the deny-by-default Bot runtime gate
 ```
 
 The runtime integration now exists and is deny-by-default. It currently returns
-only OSKey after content-owner approval; schema validity alone is not publication
+only OSKey and OpenRPC after content-owner approval; schema validity alone is not publication
 approval. See
 [`project-case-runtime.md`](project-case-runtime.md) for the independent case,
 source, reconciliation, allowlist, provenance and rollback gates.

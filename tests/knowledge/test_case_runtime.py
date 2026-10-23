@@ -61,22 +61,45 @@ def approved_oskey_case() -> dict:
     return case
 
 
+def reviewed_openrpc_case() -> dict:
+    database = yaml.safe_load(DATABASE_PATH.read_text(encoding="utf-8"))
+    return deepcopy(
+        next(item for item in database["cases"] if item["case_id"] == "gcc-open-source-openrpc")
+    )
+
+
 class BotQACaseGateTests(unittest.TestCase):
-    def test_current_database_exposes_only_oskey_to_runtime(self):
+    def test_current_database_exposes_only_oskey_and_openrpc_to_runtime(self):
         active_case_ids = [case["case_id"] for case in load_bot_qa_cases(force_reload=True)]
-        self.assertEqual(["gcc-open-source-oskey"], active_case_ids)
+        self.assertEqual(["gcc-open-source-oskey", "gcc-open-source-openrpc"], active_case_ids)
         self.assertTrue(all(has_localized_case_copy(case_id) for case_id in active_case_ids))
         self.assertEqual(
             ["gcc-open-source-oskey"],
             [record["case_id"] for record in select_bot_qa_case_records("OSKey", force_reload=True)],
         )
-        self.assertEqual([], select_bot_qa_case_records("OpenRPC", force_reload=True))
+        self.assertEqual(
+            ["gcc-open-source-openrpc"],
+            [record["case_id"] for record in select_bot_qa_case_records("OpenRPC", force_reload=True)],
+        )
+        self.assertEqual([], select_bot_qa_case_records("ETH Beijing 2025", force_reload=True))
 
     def test_bot_qa_approval_does_not_enable_application_review(self):
         self.assertEqual([], load_ai_review_cases(force_reload=True))
 
     def test_fully_approved_case_passes_runtime_gate(self):
         self.assertTrue(is_bot_qa_eligible_case(approved_oskey_case()))
+        self.assertTrue(is_bot_qa_eligible_case(reviewed_openrpc_case()))
+
+    def test_openrpc_fails_closed_if_one_source_loses_bot_qa_approval(self):
+        case = reviewed_openrpc_case()
+        case["evidence"]["snapshots"][2]["processing"]["allowed_uses"] = ["evidence_only"]
+        self.assertFalse(is_bot_qa_eligible_case(case))
+
+    def test_openrpc_approval_does_not_claim_delivery_or_payment(self):
+        case = reviewed_openrpc_case()
+        self.assertEqual("unknown", case["public_record"]["funding"]["disbursed"]["status"])
+        self.assertEqual("unknown", case["public_record"]["lifecycle_status"]["delivery_status"])
+        self.assertTrue(all(item["status"] == "planned" for item in case["public_record"]["program_details"]["milestones"]))
 
     def test_runtime_gate_rejects_unapproved_source(self):
         case = approved_oskey_case()
@@ -297,7 +320,97 @@ class BotQACasePromptTests(unittest.TestCase):
                 self.assertNotIn("USDC", reply)
 
 
+class OpenRPCCaseReplyTests(unittest.TestCase):
+    def setUp(self):
+        self.record = case_to_bot_qa_record(
+            reviewed_openrpc_case(), database_updated_at="2026-10-23"
+        )
+
+    def test_overview_is_localized_sourced_and_keeps_funding_boundary(self):
+        for lang, question, expected in (
+            ("zh-TW", "OpenRPC 是甚麼？", "開放標準"),
+            ("zh-CN", "OpenRPC 是什么？", "开放标准"),
+            ("en", "What is OpenRPC?", "open standard"),
+        ):
+            with self.subTest(lang=lang):
+                reply = format_case_fact_reply([self.record], lang, question)
+                self.assertIn(expected, reply)
+                self.assertIn("25,000 USDC", reply)
+                self.assertIn("snapshot.org/#/", reply)
+                self.assertIn("gccofficial.org/project/project-openrpc", reply)
+                self.assertEqual(1, reply.count("snapshot.org/#/"))
+                self.assertNotIn("owner_confirmed", reply)
+                self.assertNotIn("grant=approved", reply)
+                self.assertNotIn("25,000 USD。", reply)
+
+    def test_payment_and_milestone_questions_do_not_infer_execution(self):
+        for lang, question, expected in (
+            ("zh-TW", "OpenRPC 已撥款嗎？", "不代表尚未撥款"),
+            ("zh-CN", "OpenRPC 已拨款吗？", "不代表尚未拨款"),
+            ("en", "Has OpenRPC been paid?", "does not mean no payment occurred"),
+        ):
+            with self.subTest(lang=lang):
+                reply = format_case_fact_reply([self.record], lang, question)
+                self.assertIn(expected, reply)
+                self.assertIn("25,000 USDC", reply)
+                self.assertNotIn("M1：", reply)
+        for lang, question, expected in (
+            ("zh-TW", "OpenRPC M1 完成了嗎？", "尚未核實完成"),
+            ("zh-CN", "OpenRPC M1 完成了吗？", "尚未核实完成"),
+            ("en", "Did OpenRPC finish M1?", "does not verify completion"),
+        ):
+            with self.subTest(lang=lang):
+                reply = format_case_fact_reply([self.record], lang, question)
+                self.assertIn(expected, reply)
+                self.assertIn("2026-05-01", reply)
+                self.assertIn("2026-06-15", reply)
+                self.assertIn("snapshot.org/#/", reply)
+
+    def test_adoption_and_chinese_community_are_attributed_not_delivered(self):
+        for question, expected in (
+            ("OpenRPC 下載量是多少？", "未獨立重現統計"),
+            ("OpenRPC 對華語開發者有何貢獻？", "沒有列入當時兩項正式資助里程碑"),
+        ):
+            with self.subTest(question=question):
+                reply = format_case_fact_reply([self.record], "zh-TW", question)
+                self.assertIn(expected, reply)
+                self.assertNotIn("已交付成果。\n\nSnapshot 提案已通過", reply)
+                self.assertIn("資料庫更新日期：2026-10-23", reply)
+
+    def test_public_projection_excludes_application_review_material(self):
+        block = as_case_facts_system_block([self.record])
+        self.assertNotIn("sanitized_public_application", block)
+        self.assertNotIn("reviewed_by_role", block)
+        self.assertNotIn("storage_uri", block)
+        self.assertEqual([], load_ai_review_cases(force_reload=True))
+
 class BotQACaseHandlerTests(unittest.IsolatedAsyncioTestCase):
+    async def test_openrpc_private_and_group_replies_remain_plain_text(self):
+        for scope_type in ("private", "group"):
+            with self.subTest(scope_type=scope_type):
+                update = MagicMock()
+                update.message.text = (
+                    "OpenRPC M1 完成了嗎？" if scope_type == "private"
+                    else "@GCCpublicgoods_bot OpenRPC M1 完成了嗎？"
+                )
+                update.message.reply_text = AsyncMock()
+                guard = SimpleNamespace(lang="zh-TW", user=SimpleNamespace(user_id=123))
+                with (
+                    patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=Session(user_id=123))),
+                    patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+                ):
+                    await handle_general(
+                        update, MagicMock(), guard,
+                        user_text_override="OpenRPC M1 完成了嗎？" if scope_type == "group" else None,
+                        scope_type=scope_type,
+                        scope_id=-100123 if scope_type == "group" else 123,
+                        allow_application=False,
+                    )
+                reply = update.message.reply_text.await_args.args[0]
+                self.assertIn("尚未核實完成", reply)
+                self.assertIn("snapshot.org/#/", reply)
+                self.assertIsNone(update.message.reply_text.await_args.kwargs["parse_mode"])
+
     async def test_private_and_group_progress_keep_interview_boundary(self):
         for scope_type in ("private", "group"):
             with self.subTest(scope_type=scope_type):

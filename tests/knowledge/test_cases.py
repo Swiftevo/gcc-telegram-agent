@@ -93,7 +93,10 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                     self.assertTrue(stored_source.is_relative_to(ROOT.resolve()))
                     self.assertTrue(stored_source.is_file(), storage_uri)
                     self.assertRegex(snapshot["checksum"], r"^sha256:[0-9a-f]{64}$")
-                    if case["case_id"] == "gcc-open-source-oskey":
+                    if case["case_id"] in {
+                        "gcc-open-source-oskey",
+                        "gcc-open-source-openrpc",
+                    }:
                         self.assertEqual(processing["sanitization_status"], "human_reviewed")
                         self.assertEqual(processing["review_status"], "approved")
                         self.assertEqual(processing["allowed_uses"], ["evidence_only", "bot_qa"])
@@ -157,10 +160,12 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
         )
 
         openrpc = cases["gcc-open-source-openrpc"]
-        self.assertEqual(openrpc["governance"]["review_status"], "draft")
-        self.assertFalse(openrpc["ai_review_usage"]["allowed"])
+        self.assertEqual(openrpc["governance"]["review_status"], "reviewed")
+        self.assertTrue(openrpc["ai_review_usage"]["allowed"])
         self.assertEqual(openrpc["public_record"]["funding"]["requested"]["amount"], 25000)
+        self.assertEqual(openrpc["public_record"]["funding"]["requested"]["currency"], "USDC")
         self.assertEqual(openrpc["public_record"]["funding"]["governance_approved"]["amount"], 25000)
+        self.assertEqual(openrpc["public_record"]["funding"]["governance_approved"]["currency"], "USDC")
         self.assertEqual(openrpc["public_record"]["funding"]["disbursed"]["status"], "unknown")
         self.assertEqual(openrpc["evidence"]["vote_summary"]["total_score"], 8)
         self.assertEqual(len(openrpc["evidence"]["snapshots"]), 3)
@@ -174,6 +179,14 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
             if snapshot["snapshot_id"] == "snap-openrpc-sanitized-application-evidence"
         )
         self.assertEqual(openrpc_application["source_type"], "grant_application")
+        self.assertTrue(
+            all(
+                snapshot["processing"]["review_status"] == "approved"
+                and "bot_qa" in snapshot["processing"]["allowed_uses"]
+                and "application_review" not in snapshot["processing"]["allowed_uses"]
+                for snapshot in openrpc["evidence"]["snapshots"]
+            )
+        )
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
         self.assertEqual(eth_city["record_type"], "funding_program")
