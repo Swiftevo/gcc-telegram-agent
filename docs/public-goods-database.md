@@ -166,23 +166,25 @@ Completed foundations:
   files, and scans for prohibited row-level voter, wallet, and access data.
 - The final schema 0.4 migration audit records and recomputes the complete
   current inventory: 8 cases, 2 funding tracks, 15 registered snapshots／local
-  source files. The 2026-10-23 OSKey review changes the current states to 6 seed,
-  1 draft and 1 reviewed, with 1 historical Bot-QA-enabled case.
+  source files. The 2026-10-23 OSKey and OpenRPC reviews change the current
+  states to 6 seed and 2 reviewed, with 2 historical Bot-QA-enabled cases.
   It rejects a second case-like YAML database so later imports cannot silently
   continue on an obsolete schema copy.
 - A loader exposes all cases and separately gates Bot QA and application review;
-  OSKey has no application-review permission.
+  neither OSKey nor OpenRPC has application-review permission.
 - A separate runtime gate and allowlist connect approved canonical cases to
   deterministic／AI-assisted QA with source URLs and database dates. It currently
-  returns only OSKey after its source and content-owner review. Other cases remain
-  gated out; the frozen legacy project index remains available.
+  returns only OSKey and OpenRPC after source and content-owner review. Other
+  cases remain gated out; the frozen legacy project index remains available.
 - Source snapshots preserve raw material separately from interpreted summaries.
 - The first post-migration batch added OSKey and OpenRPC as `draft` grant cases.
-  OSKey has since been reviewed for sourced historical Bot QA; OpenRPC remains a
-  draft. For OSKey, the content owner confirmed USD as the public reporting unit
-  for the proposal amounts, without identifying the transfer token. Actual
+  Both have since been reviewed for sourced historical Bot QA. For OSKey, the
+  content owner confirmed USD as the public reporting unit for the proposal
+  amounts, without identifying the transfer token. Actual
   disbursement stages, amounts and dates are not publicly disclosed, and neither
-  case is approved for application review.
+  case is approved for application review. OpenRPC's proposal-denominated unit
+  remains USDC; its adoption claims and Chinese-community benefits are not
+  independent outcome verification, and its milestones are not execution proof.
 
 Schema 0.3 resolves the first batch's currency limitation. Case budgets,
 per-person caps, funding-track pools／limits, and proposed milestone unlocks all

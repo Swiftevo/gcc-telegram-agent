@@ -13,22 +13,21 @@ canonical_inventory:
   local_source_file_count: 15
   mapped_legacy_count: 8
   legacy_only_count: 55
-  ai_enabled_case_count: 1
+  ai_enabled_case_count: 2
   review_status_counts:
-    draft: 1
-    reviewed: 1
+    reviewed: 2
     seed: 6
   record_type_counts:
     funding_program: 2
     grant_case: 5
     placeholder: 1
   source_review_status_counts:
-    approved: 4
-    pending: 11
+    approved: 7
+    pending: 8
   notes: >
     This verifies the complete set of cases currently present in the canonical
-    database. OSKey alone has content-owner approval for historical Bot QA;
-    application review is not approved. It does not claim that all 63 legacy
+    database. OSKey and OpenRPC have content-owner approval for historical Bot
+    QA only; application review is not approved. It does not claim that all 63 legacy
     records have been migrated; 55 records intentionally remain legacy_only.
 
 legacy_catalog:
@@ -52,7 +51,7 @@ mappings:
     status: migrated_reviewed
   - legacy_slug: project-openrpc
     case_id: gcc-open-source-openrpc
-    status: migrated_draft
+    status: migrated_reviewed
   - legacy_slug: project-universityblockchain
     case_id: gcc-community-eth-city-university-web3-2025
     status: migrated_seed

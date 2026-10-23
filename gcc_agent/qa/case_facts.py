@@ -7,6 +7,7 @@ import json
 # reviewed cases with approved public Bot QA use may be projected here.
 OSKEY_CASE_ID = "gcc-open-source-oskey"
 OSKEY_INTERVIEW_SOURCE_ID = "snap-oskey-gcc-interview-2026-10-10"
+OPENRPC_CASE_ID = "gcc-open-source-openrpc"
 OSKEY_COPY = {
     "zh-TW": {
         "summary": (
@@ -116,6 +117,123 @@ OSKEY_COPY = {
     },
 }
 
+OPENRPC_COPY = {
+    "zh-TW": {
+        "summary": (
+            "OpenRPC 是描述 JSON-RPC API 的 Apache 2.0 開放標準。"
+            "本次提案希望發佈可正式使用的 Linter，並把測試覆蓋工具升級為 ESM 模組。"
+        ),
+        "why": (
+            "提案指出，機器可讀的共用規範與工具可減少文件偏差、重複整合工作，"
+            "讓不同團隊更容易檢查和重用 JSON-RPC API。"
+        ),
+        "decision": "Snapshot 提案已通過（6 票贊成、2 票棄權）；申請額及治理核准額均為 {amount}。",
+        "payment": (
+            "公開資料未能確認實際撥付的期數、金額或日期；"
+            "這不代表尚未撥款，也不能把提案的解鎖安排當作付款證明。"
+        ),
+        "milestones": (
+            "提案計劃 M1：發佈 Linter（目標 2026-05-01）；"
+            "M2：把測試覆蓋工具升級為 ESM 模組（目標 2026-06-15）。"
+            "兩項各佔提案金額 50%。公開案例資料尚未核實完成、GCC 驗收、解鎖或實際撥付；"
+            "目標日期不是完成證明。"
+        ),
+        "community": (
+            "提案認為結構化 API 規範可降低華語開發者整合和對外發布規範的門檻。"
+            "公開討論亦談到多語文件及與華語開發者社群建立連結；"
+            "這些是提案與討論方向，沒有列入當時兩項正式資助里程碑，不能說成已交付成果。"
+        ),
+        "adoption": (
+            "提案及 GCC 項目頁稱，相關 NPM 工具包在此前一年下載量超過 590 萬次，"
+            "並列出多個採用生態；這是來源所述的歷史數字，"
+            "本案例未獨立重現統計或逐一驗證採用情況，也不是現時下載量。"
+        ),
+        "sources": "公開資料來源",
+        "project_source": "GCC 項目頁",
+        "proposal_source": "Snapshot 提案",
+        "updated": "資料庫更新日期",
+    },
+    "zh-CN": {
+        "summary": (
+            "OpenRPC 是描述 JSON-RPC API 的 Apache 2.0 开放标准。"
+            "本次提案希望发布可正式使用的 Linter，并把测试覆盖工具升级为 ESM 模块。"
+        ),
+        "why": (
+            "提案指出，机器可读的共享规范与工具可减少文档偏差、重复集成工作，"
+            "让不同团队更容易检查和复用 JSON-RPC API。"
+        ),
+        "decision": "Snapshot 提案已通过（6 票赞成、2 票弃权）；申请额及治理核准额均为 {amount}。",
+        "payment": (
+            "公开资料未能确认实际拨付的期数、金额或日期；"
+            "这不代表尚未拨款，也不能把提案的解锁安排当作付款证明。"
+        ),
+        "milestones": (
+            "提案计划 M1：发布 Linter（目标 2026-05-01）；"
+            "M2：把测试覆盖工具升级为 ESM 模块（目标 2026-06-15）。"
+            "两项各占提案金额 50%。公开案例资料尚未核实完成、GCC 验收、解锁或实际拨付；"
+            "目标日期不是完成证明。"
+        ),
+        "community": (
+            "提案认为结构化 API 规范可降低华语开发者集成和对外发布规范的门槛。"
+            "公开讨论也谈到多语文档及与华语开发者社区建立连接；"
+            "这些是提案与讨论方向，没有列入当时两项正式资助里程碑，不能说成已交付成果。"
+        ),
+        "adoption": (
+            "提案及 GCC 项目页称，相关 NPM 工具包在此前一年下载量超过 590 万次，"
+            "并列出多个采用生态；这是来源所述的历史数字，"
+            "本案例未独立重现统计或逐一验证采用情况，也不是当前下载量。"
+        ),
+        "sources": "公开资料来源",
+        "project_source": "GCC 项目页",
+        "proposal_source": "Snapshot 提案",
+        "updated": "数据库更新日期",
+    },
+    "en": {
+        "summary": (
+            "OpenRPC is an Apache 2.0 open standard for describing JSON-RPC APIs. "
+            "The proposal seeks to release a production-ready linter and modernize "
+            "the test-coverage tool as an ESM module."
+        ),
+        "why": (
+            "The proposal presents machine-readable specifications and reusable "
+            "tools as a way to reduce documentation drift and duplicated integration work."
+        ),
+        "decision": (
+            "The Snapshot proposal passed (6 approvals, 2 abstentions); "
+            "the requested and governance-approved amounts are both {amount}."
+        ),
+        "payment": (
+            "The public case record does not establish actual payment stages, "
+            "amounts or dates. That does not mean no payment occurred, and the "
+            "proposal's unlock schedule is not payment evidence."
+        ),
+        "milestones": (
+            "The proposal planned M1, a production-ready linter (target 2026-05-01), "
+            "and M2, ESM modernization of the test-coverage tool (target 2026-06-15), "
+            "each for 50% of the proposed grant. The public case record does not "
+            "verify completion, GCC acceptance, unlock or payment; target dates "
+            "are not proof of delivery."
+        ),
+        "community": (
+            "The proposal argues that structured API specifications could help "
+            "Chinese-speaking developers integrate and publish APIs. Public "
+            "discussion considered multilingual documentation and community "
+            "connections, but these were not part of the two formal funded "
+            "milestones or verified delivered outcomes."
+        ),
+        "adoption": (
+            "The proposal and GCC project page report more than 5.9 million NPM "
+            "toolkit downloads in the preceding year and name several adopter "
+            "ecosystems. This case has not independently reproduced the count or "
+            "verified each adoption claim, and it is not a current download figure."
+        ),
+        "sources": "Public sources",
+        "project_source": "GCC project page",
+        "proposal_source": "Snapshot proposal",
+        "updated": "Database updated",
+    },
+}
+
 PAYMENT_TERMS = (
     "撥付", "拨付", "撥款", "拨款", "已付", "付款", "支付", "發放", "发放", "轉帳", "转账",
     "解鎖", "解锁", "到賬", "到账", "收款", "收到款", "paid", "payment",
@@ -126,6 +244,18 @@ PROGRESS_TERMS = (
     "现在做到", "概念驗證", "概念验证", "自訂", "客製", "定制", "人工智能",
     "ai", "pcb", "progress", "roadmap", "proof of concept", "custom hardware",
 )
+OPENRPC_MILESTONE_TERMS = (
+    "里程碑", "milestone", "進度", "进度", "進展", "进展", "完成", "交付",
+    "驗收", "验收", "m1", "m2", "linter", "coverage", "progress", "delivered",
+    "released", "release status",
+)
+OPENRPC_COMMUNITY_TERMS = (
+    "華語", "华语", "中文", "中國開發", "中国开发", "翻譯", "翻译",
+    "chinese", "translation", "community contribution",
+)
+OPENRPC_ADOPTION_TERMS = (
+    "下載", "下载", "590", "5.9 million", "adoption", "adopter", "downloads",
+)
 
 
 def _shorten(value: str, limit: int = 500) -> str:
@@ -134,7 +264,55 @@ def _shorten(value: str, limit: int = 500) -> str:
 
 
 def has_localized_case_copy(case_id: str) -> bool:
-    return case_id == OSKEY_CASE_ID
+    return case_id in {OSKEY_CASE_ID, OPENRPC_CASE_ID}
+
+
+def _openrpc_reply(record: dict, lang: str, question: str) -> str:
+    copy = OPENRPC_COPY.get(lang, OPENRPC_COPY["zh-TW"])
+    normalized_question = question.casefold()
+    funding = record.get("public_record", {}).get("funding", {})
+    approved = funding.get("governance_approved") or {}
+    amount = approved.get("amount")
+    currency = approved.get("currency")
+    approved_amount = (
+        f"{amount:,} {currency}"
+        if isinstance(amount, (int, float)) and currency
+        else ("unknown" if lang == "en" else "未知")
+    )
+    payment_question = any(term in normalized_question for term in PAYMENT_TERMS)
+    milestone_question = any(term in normalized_question for term in OPENRPC_MILESTONE_TERMS)
+    community_question = any(term in normalized_question for term in OPENRPC_COMMUNITY_TERMS)
+    adoption_question = any(term in normalized_question for term in OPENRPC_ADOPTION_TERMS)
+
+    if payment_question:
+        lines = [copy["decision"].format(amount=approved_amount), copy["payment"]]
+    elif milestone_question:
+        lines = [copy["milestones"]]
+    elif community_question:
+        lines = [copy["community"]]
+    elif adoption_question:
+        lines = [copy["adoption"]]
+    else:
+        lines = [copy["summary"], copy["why"], copy["decision"].format(amount=approved_amount), copy["payment"]]
+
+    separator = ": " if lang == "en" else "："
+    source_labels = {
+        "snap-openrpc-gcc-project-page": copy["project_source"],
+        "snap-openrpc-snapshot-proposal": copy["proposal_source"],
+    }
+    source_lines = []
+    seen_urls = set()
+    for source in record.get("sources", []):
+        snapshot_id = source.get("snapshot_id")
+        url = source.get("source_url")
+        if snapshot_id in source_labels and url and url not in seen_urls:
+            seen_urls.add(url)
+            source_lines.append(f"{source_labels[snapshot_id]}{separator}{url}")
+    if source_lines:
+        lines.append(copy["sources"] + separator.rstrip() + "\n" + "\n".join(source_lines))
+    if record.get("database_updated_at"):
+        lines.append(f"{copy['updated']}{separator}{record['database_updated_at']}")
+    return "\n\n".join(lines)
 
 
 def _oskey_reply(record: dict, lang: str, question: str) -> str:
@@ -310,8 +488,11 @@ def format_case_fact_reply(records: list[dict], lang: str, question: str = "") -
 
     sections = []
     for record in records:
-        if has_localized_case_copy(record.get("case_id", "")):
+        if record.get("case_id") == OSKEY_CASE_ID:
             sections.append(_oskey_reply(record, lang, question))
+            continue
+        if record.get("case_id") == OPENRPC_CASE_ID:
+            sections.append(_openrpc_reply(record, lang, question))
             continue
         public_record = record.get("public_record", {})
         funding = public_record.get("funding", {})
