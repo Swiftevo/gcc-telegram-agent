@@ -23,6 +23,7 @@ from gcc_agent.applications.models import ApplicationDraft
 from gcc_agent.applications.messages import text as application_text
 from gcc_agent.applications.markup import make_exit_markup
 from gcc_agent.applications.workflow import handle_application
+from gcc_agent.common.persistence import users
 from gcc_agent.common.persistence.database import init_db
 from gcc_agent.common.persistence.conversations import get_or_create_session, save_session
 from gcc_agent.common.persistence.users import get_user
@@ -41,6 +42,15 @@ from gcc_agent.access.guard import (
     run_guard,
 )
 from gcc_agent.telegram.router import route
+from gcc_agent.telegram.language import (
+    LANGUAGE_PROMPTS,
+    LANGUAGE_SAVED,
+    LANGUAGE_USAGE,
+    ensure_user,
+    language_markup,
+    normalize_language,
+    stored_language,
+)
 
 logger = logging.getLogger(__name__)
 WEBHOOK_SECRET_PATTERN = re.compile(r"[A-Za-z0-9_-]{32,256}")
@@ -187,11 +197,21 @@ async def handle_callback(update: Update, context) -> None:
     if update.effective_chat is None or update.effective_chat.type != "private":
         logger.info("non-private callback ignored")
         return
+    query_data = getattr(query, "data", "") or ""
+    if query_data.startswith("language:"):
+        lang = normalize_language(query_data.partition(":")[2])
+        detected_lang = detect_language(update)
+        user = await ensure_user(update, detected_lang)
+        if user is None or lang is None:
+            return
+        await users.update_user_preferred_lang(user.user_id, lang)
+        await query.message.reply_text(LANGUAGE_SAVED[lang])
+        return
     user = await get_user(query.from_user.id)
     if user is None or user.is_blocked or not user.can_use_qa():
         return
     session, _ = await get_or_create_session(user.user_id)
-    lang = detect_language(update)
+    lang = getattr(user, "preferred_lang", "") or detect_language(update)
     if query.data == "intent_apply":
         session.mode = "application"
         session.application_draft = ApplicationDraft(collection_step=1)
@@ -210,16 +230,44 @@ async def handle_callback(update: Update, context) -> None:
 
 async def handle_start(update: Update, context) -> None:
     if update.message:
-        await update.message.reply_text(
-            welcome_text(detect_language(update)), parse_mode="Markdown"
-        )
+        lang = await stored_language(update, detect_language(update))
+        await update.message.reply_text(welcome_text(lang), parse_mode="Markdown")
+
+
+async def handle_language(update: Update, context) -> None:
+    """Show or update the user's persistent response-language preference."""
+    if update.message is None or update.effective_user is None:
+        return
+    detected_lang = detect_language(update)
+    user = await ensure_user(update, detected_lang)
+    if user is None:
+        return
+    current_lang = getattr(user, "preferred_lang", "") or detected_lang
+    requested = " ".join(getattr(context, "args", ()) or ())
+    if requested:
+        lang = normalize_language(requested)
+        if lang is None:
+            await update.message.reply_text(
+                LANGUAGE_USAGE.get(current_lang, LANGUAGE_USAGE["zh-TW"]),
+                parse_mode="Markdown",
+                reply_markup=language_markup(),
+            )
+            return
+        await users.update_user_preferred_lang(user.user_id, lang)
+        await update.message.reply_text(LANGUAGE_SAVED[lang])
+        return
+    await update.message.reply_text(
+        LANGUAGE_PROMPTS.get(current_lang, LANGUAGE_PROMPTS["zh-TW"]),
+        reply_markup=language_markup(),
+    )
 
 
 async def handle_privacy(update: Update, context) -> None:
     """Show the current-state notice without creating identity or conversation rows."""
     del context
     if update.message:
-        await update.message.reply_text(privacy_notice(detect_language(update)))
+        lang = await stored_language(update, detect_language(update))
+        await update.message.reply_text(privacy_notice(lang))
 
 
 async def post_init(application: Application) -> None:
@@ -248,6 +296,9 @@ def build_application() -> Application:
     app.add_error_handler(handle_application_error)
     private = filters.ChatType.PRIVATE
     app.add_handler(CommandHandler("start", handle_start, filters=private))
+    app.add_handler(
+        CommandHandler(("language", "lang"), handle_language, filters=private)
+    )
     app.add_handler(CommandHandler("privacy", handle_privacy, filters=private))
     app.add_handler(
         CommandHandler(("email", "verify"), handle_email_shelved, filters=private)

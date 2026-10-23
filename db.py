@@ -26,6 +26,7 @@ from gcc_agent.common.persistence.users import (
     try_increment_daily_count,
     update_user_group_membership,
     update_user_lang,
+    update_user_preferred_lang,
     verify_agent_credential,
 )
 

@@ -30,6 +30,7 @@ def _row_to_user(row) -> User:
         username=row["username"] or "",
         first_name=row["first_name"] or "",
         detected_lang=row["detected_lang"] or "zh-TW",
+        preferred_lang=(row["preferred_lang"] or "") if "preferred_lang" in keys else "",
         is_group_member=bool(row["is_group_member"]),
         is_blocked=bool(row["is_blocked"]),
         actor_type=row["actor_type"] if "actor_type" in keys else ACTOR_HUMAN,
@@ -112,8 +113,14 @@ async def update_user_lang(user_id: int, lang: str) -> None:
     await _update("detected_lang", lang, user_id)
 
 
+async def update_user_preferred_lang(user_id: int, lang: str) -> None:
+    if lang not in ("zh-TW", "zh-CN", "en", ""):
+        raise ValueError("unsupported language")
+    await _update("preferred_lang", lang or None, user_id)
+
+
 async def _update(column: str, value, user_id: int) -> None:
-    allowed = {"is_group_member", "is_blocked", "detected_lang"}
+    allowed = {"is_group_member", "is_blocked", "detected_lang", "preferred_lang"}
     if column not in allowed:
         raise ValueError("unsupported user field")
     async with connect() as db:

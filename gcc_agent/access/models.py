@@ -23,6 +23,7 @@ class User:
     username: str = ""
     first_name: str = ""
     detected_lang: str = "zh-TW"
+    preferred_lang: str = ""
     is_group_member: bool = False
     is_blocked: bool = False
     actor_type: str = ACTOR_HUMAN
