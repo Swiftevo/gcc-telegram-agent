@@ -111,6 +111,18 @@ def check_link_first(
             format_history_projection_reply(history_projection, lang),
             f"history_{history_projection['projection_id']}",
         )
+    if "2025" in value and "2026" not in value:
+        historical_cases = select_bot_qa_case_records(text, explicit_only=True, limit=2)
+        historical_programme = [
+            record for record in historical_cases
+            if record.get("case_id") == "gcc-community-eth-city-university-web3-2025"
+        ]
+        if historical_programme:
+            return LinkResult(
+                True,
+                format_case_fact_reply(historical_programme, lang, text),
+                "canonical_case",
+            )
     university = select_university_answer(text, lang)
     if university.matched:
         return LinkResult(True, university.reply, f"university2026_{university.answer_type}")

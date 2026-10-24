@@ -99,8 +99,16 @@ GCC acceptance, unlock and payment are unknown in the public record.
 Traditional Chinese, Simplified Chinese and English answers state these
 boundaries explicitly and cite the public sources.
 
-The other six records remain ineligible. Application-review use remains
-separately denied, including for OSKey and OpenRPC.
+The 2026-10-24 content-owner decision also approves the two public sources for
+the shared 2025 ETH City／高校 Web3 funding-programme case. Its two independent
+30,000 USD pools are governance-approved programme allocations, not individual
+awards or evidence of payments. Historical answers require a 2025 track name,
+use localized fixed copy, and do not supply the expired application link or
+override the separate 2026 University Builder route. ETH Beijing's track
+membership is known, but its individual amount and outcome are not approved.
+
+The other five records remain ineligible. Application-review use remains
+separately denied, including for all three Bot-QA-enabled cases.
 
 ## Enabling one case
 

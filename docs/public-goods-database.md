@@ -166,15 +166,15 @@ Completed foundations:
   files, and scans for prohibited row-level voter, wallet, and access data.
 - The final schema 0.4 migration audit records and recomputes the complete
   current inventory: 8 cases, 2 funding tracks, 15 registered snapshots／local
-  source files. The 2026-10-23 OSKey and OpenRPC reviews change the current
-  states to 6 seed and 2 reviewed, with 2 historical Bot-QA-enabled cases.
+  source files. Following the OSKey, OpenRPC, and 2025 ETH City／高校 Web3 reviews,
+  the current states are 5 seed and 3 reviewed, with 3 historical Bot-QA-enabled cases.
   It rejects a second case-like YAML database so later imports cannot silently
   continue on an obsolete schema copy.
 - A loader exposes all cases and separately gates Bot QA and application review;
-  neither OSKey nor OpenRPC has application-review permission.
+  none of the three reviewed cases has application-review permission.
 - A separate runtime gate and allowlist connect approved canonical cases to
   deterministic／AI-assisted QA with source URLs and database dates. It currently
-  returns only OSKey and OpenRPC after source and content-owner review. Other
+  returns only OSKey, OpenRPC, and the 2025 ETH City／高校 Web3 programme after source and content-owner review. Other
   cases remain gated out; the frozen legacy project index remains available.
 - Source snapshots preserve raw material separately from interpreted summaries.
 - The first post-migration batch added OSKey and OpenRPC as `draft` grant cases.

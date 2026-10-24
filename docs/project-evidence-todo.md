@@ -94,6 +94,14 @@ Complete these before describing the affected records as verified public cases.
 
 ### ETH City / University Web3 Funding Tracks 2025
 
+- [x] GCC content owner approved the Snapshot proposal and public WeChat
+  announcement for historical Bot QA on 2026-10-24, and confirmed the two
+  separate 30,000 USD pools as governance-approved programme allocations.
+  Neither approval nor the published 2025 application call establishes any
+  individual award, payment, outcome, or current application availability.
+- [ ] After merge, test 2025 ETH City／高校 Web3 historical questions in private
+  and the designated group; also confirm 2026 Builder questions keep their
+  separate current-plan answer.
 - [x] GCC owner confirmed these are two independent funding tracks under one
   shared proposal. Stable track ids and the future individual-case intake route
   are documented in [`funding-track-case-intake.md`](funding-track-case-intake.md).

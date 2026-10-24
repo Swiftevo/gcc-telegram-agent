@@ -96,6 +96,7 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
                     if case["case_id"] in {
                         "gcc-open-source-oskey",
                         "gcc-open-source-openrpc",
+                        "gcc-community-eth-city-university-web3-2025",
                     }:
                         self.assertEqual(processing["sanitization_status"], "human_reviewed")
                         self.assertEqual(processing["review_status"], "approved")
@@ -190,7 +191,12 @@ class ProjectCaseDatabaseTest(unittest.TestCase):
 
         eth_city = cases["gcc-community-eth-city-university-web3-2025"]
         self.assertEqual(eth_city["record_type"], "funding_program")
-        self.assertFalse(eth_city["ai_review_usage"]["allowed"])
+        self.assertTrue(eth_city["ai_review_usage"]["allowed"])
+        self.assertEqual(eth_city["governance"]["review_status"], "reviewed")
+        self.assertEqual(
+            eth_city["public_record"]["funding"]["governance_approved"]["status"],
+            "owner_confirmed",
+        )
         eth_city_details = eth_city["public_record"]["program_details"]
         self.assertEqual(
             eth_city_details["application_deadline"],

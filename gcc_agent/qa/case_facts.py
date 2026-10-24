@@ -8,6 +8,7 @@ import json
 OSKEY_CASE_ID = "gcc-open-source-oskey"
 OSKEY_INTERVIEW_SOURCE_ID = "snap-oskey-gcc-interview-2026-10-10"
 OPENRPC_CASE_ID = "gcc-open-source-openrpc"
+ETH_CITY_UNIVERSITY_2025_CASE_ID = "gcc-community-eth-city-university-web3-2025"
 OSKEY_COPY = {
     "zh-TW": {
         "summary": (
@@ -234,6 +235,39 @@ OPENRPC_COPY = {
     },
 }
 
+ETH_CITY_UNIVERSITY_2025_COPY = {
+    "zh-TW": {
+        "intro": "GCC 在 2025 年經治理核准兩條獨立資助線：高校 Web3 興趣小組與 ETH City；額度分別為 {university_pool} 及 {city_pool}，合計 {total_pool}。這是當年的計劃額度，不是單一項目的資助額。",
+        "university": "高校 Web3 興趣小組線當時計劃支持高校區塊鏈社團的教育與開源活動。",
+        "city": "ETH City 線當時計劃支持面向華語社群、免費開放的城市級 ETH 活動。",
+        "boundary": "這只確認兩條計劃的治理核准額度；個別申請是否獲批、實際撥款、活動成果及目前是否開放申請，均不能由這份歷史記錄確認。2026 高校 Builder 是另一計劃，不能套用 2025 年額度。",
+        "sources": "歷史資料來源",
+        "proposal": "Snapshot 提案",
+        "announcement": "GCC 公開公告",
+        "updated": "資料庫更新日期",
+    },
+    "zh-CN": {
+        "intro": "GCC 在 2025 年经治理核准两条独立资助线：高校 Web3 兴趣小组与 ETH City；额度分别为 {university_pool} 及 {city_pool}，合计 {total_pool}。这是当年的计划额度，不是单一项目的资助额。",
+        "university": "高校 Web3 兴趣小组线当时计划支持高校区块链社团的教育与开源活动。",
+        "city": "ETH City 线当时计划支持面向华语社区、免费开放的城市级 ETH 活动。",
+        "boundary": "这只确认两条计划的治理核准额度；个别申请是否获批、实际拨款、活动成果及目前是否开放申请，均不能由这份历史记录确认。2026 高校 Builder 是另一计划，不能套用 2025 年额度。",
+        "sources": "历史资料来源",
+        "proposal": "Snapshot 提案",
+        "announcement": "GCC 公开公告",
+        "updated": "数据库更新日期",
+    },
+    "en": {
+        "intro": "In 2025, GCC governance approved two separate funding tracks: University Web3 Interest Groups and ETH City, with respective allocations of {university_pool} and {city_pool}, totaling {total_pool}. These are historical programme allocations, not an individual award.",
+        "university": "The University Web3 track planned to support campus blockchain groups' education and open-source activities.",
+        "city": "The ETH City track planned to support free, Chinese-speaking, city-level ETH activities.",
+        "boundary": "This confirms only the two governance-approved programme allocations. Individual awards, actual payments, activity outcomes and whether applications are currently open are not established by this historical record. The 2026 University Builder plan is separate.",
+        "sources": "Historical sources",
+        "proposal": "Snapshot proposal",
+        "announcement": "GCC public announcement",
+        "updated": "Database updated",
+    },
+}
+
 PAYMENT_TERMS = (
     "撥付", "拨付", "撥款", "拨款", "已付", "付款", "支付", "發放", "发放", "轉帳", "转账",
     "解鎖", "解锁", "到賬", "到账", "收款", "收到款", "paid", "payment",
@@ -264,7 +298,54 @@ def _shorten(value: str, limit: int = 500) -> str:
 
 
 def has_localized_case_copy(case_id: str) -> bool:
-    return case_id in {OSKEY_CASE_ID, OPENRPC_CASE_ID}
+    return case_id in {OSKEY_CASE_ID, OPENRPC_CASE_ID, ETH_CITY_UNIVERSITY_2025_CASE_ID}
+
+
+def _eth_city_university_2025_reply(record: dict, lang: str, question: str) -> str:
+    copy = ETH_CITY_UNIVERSITY_2025_COPY.get(lang, ETH_CITY_UNIVERSITY_2025_COPY["zh-TW"])
+    value = question.casefold()
+    city = "eth city" in value or "ethcity" in value
+    university = any(term in value for term in ("高校", "university", "campus"))
+    tracks = {
+        track.get("track_id"): track
+        for track in record.get("public_record", {}).get("program_details", {}).get("funding_tracks", [])
+    }
+    university_track = tracks.get("gcc-university-web3-2025", {})
+    city_track = tracks.get("gcc-eth-city-2025", {})
+
+    def amount(fact: dict) -> str:
+        value = fact.get("amount") if isinstance(fact, dict) else None
+        currency = fact.get("currency") if isinstance(fact, dict) else None
+        if not isinstance(value, (int, float)) or not currency:
+            return "not confirmed" if lang == "en" else "未核實"
+        return f"{value:,} {currency}"
+
+    values = {
+        "university_pool": amount(university_track.get("total_pool", {})),
+        "city_pool": amount(city_track.get("total_pool", {})),
+        "total_pool": amount(record.get("public_record", {}).get("funding", {}).get("governance_approved", {})),
+    }
+    lines = [copy["intro"].format(**values)]
+    if university or not city:
+        lines.append(copy["university"].format(**values))
+    if city or not university:
+        lines.append(copy["city"].format(**values))
+    lines.append(copy["boundary"])
+    source_labels = {
+        "snap-eth-city-university-web3-snapshot-proposal": copy["proposal"],
+        "snap-eth-city-university-web3-wechat-announcement": copy["announcement"],
+    }
+    separator = ": " if lang == "en" else "："
+    sources = [
+        f"{source_labels[source['snapshot_id']]}{separator}{source['source_url']}"
+        for source in record.get("sources", [])
+        if source.get("snapshot_id") in source_labels and source.get("source_url")
+    ]
+    if sources:
+        lines.append(f"{copy['sources']}{separator.rstrip()}\n" + "\n".join(sources))
+    if record.get("database_updated_at"):
+        lines.append(f"{copy['updated']}{separator}{record['database_updated_at']}")
+    return "\n\n".join(lines)
 
 
 def _openrpc_reply(record: dict, lang: str, question: str) -> str:
@@ -493,6 +574,9 @@ def format_case_fact_reply(records: list[dict], lang: str, question: str = "") -
             continue
         if record.get("case_id") == OPENRPC_CASE_ID:
             sections.append(_openrpc_reply(record, lang, question))
+            continue
+        if record.get("case_id") == ETH_CITY_UNIVERSITY_2025_CASE_ID:
+            sections.append(_eth_city_university_2025_reply(record, lang, question))
             continue
         public_record = record.get("public_record", {})
         funding = public_record.get("funding", {})
