@@ -1,6 +1,7 @@
 """Prompt assembly and deterministic link-first answers."""
 
 from dataclasses import dataclass
+import re
 
 from gcc_agent.common.models import Session
 from gcc_agent.knowledge.cases import select_bot_qa_case_records
@@ -10,6 +11,7 @@ from gcc_agent.qa.cohort4 import select_cohort4_answer
 from gcc_agent.qa.university_builder import select_university_answer
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.qa.history_facts import format_history_projection_reply
+from gcc_agent.qa.route_selection import SourceCandidate, choose_qa_source
 from gcc_agent.knowledge.loaders import (
     as_gcc_summary_block,
     as_system_block,
@@ -105,43 +107,59 @@ def check_link_first(
         text,
         previous_messages=previous_messages,
     )
-    if history_projection:
-        return LinkResult(
-            True,
-            format_history_projection_reply(history_projection, lang),
-            f"history_{history_projection['projection_id']}",
-        )
-    if "2025" in value and "2026" not in value:
-        historical_cases = select_bot_qa_case_records(text, explicit_only=True, limit=2)
-        historical_programme = [
-            record for record in historical_cases
-            if record.get("case_id") == "gcc-community-eth-city-university-web3-2025"
-        ]
-        if historical_programme:
-            return LinkResult(
-                True,
-                format_case_fact_reply(historical_programme, lang, text),
-                "canonical_case",
-            )
     university = select_university_answer(text, lang)
-    if university.matched:
-        return LinkResult(True, university.reply, f"university2026_{university.answer_type}")
     cohort4 = select_cohort4_answer(text, lang)
-    if cohort4.matched:
-        return LinkResult(True, cohort4.reply, f"cohort4_{cohort4.answer_type}")
     fact = check_official_fact(text, lang, previous_messages)
-    if fact.matched:
-        return LinkResult(True, fact.reply, f"fact_{fact.fact_type}")
     approved_cases = select_bot_qa_case_records(text, explicit_only=True, limit=2)
-    if approved_cases:
-        return LinkResult(
-            True,
-            format_case_fact_reply(approved_cases, lang, text),
-            "canonical_case",
-        )
+    project_match = None
     for name, url in PROJECT_LINKS.items():
-        if name in value:
-            return LinkResult(True, _link_reply(lang, "project", name.title(), url), "project")
+        if re.search(rf"(?<![a-z0-9]){re.escape(name)}(?![a-z0-9])", value):
+            project_match = (name, url)
+            break
+
+    candidates = []
+    if history_projection:
+        candidates.append(SourceCandidate(
+            "history", "historical_report", detail=history_projection["projection_id"]
+        ))
+    if approved_cases:
+        candidates.append(SourceCandidate("case", "named_reviewed_case", True))
+    if university.matched:
+        explicit_university = (
+            "builder" in value and any(term in value for term in ("高校", "大学", "大學", "university", "campus"))
+        ) or ("2026" in value and any(term in value for term in ("高校", "大学", "大學", "university", "campus")))
+        candidates.append(SourceCandidate("university", "current_programme", explicit_university))
+    if cohort4.matched:
+        explicit_cohort4 = any(term in value for term in (
+            "cohort 4", "cohort4", "cohort-4", "第四期", "第四屆", "第四届", "第4期", "第4屆", "第4届"
+        ))
+        candidates.append(SourceCandidate("cohort4", "current_programme", explicit_cohort4))
+    if fact.matched:
+        candidates.append(SourceCandidate("fact", "general_policy"))
+    if project_match:
+        candidates.append(SourceCandidate("project", "named_project_link", True))
+
+    selected = choose_qa_source(text, candidates)
+    if selected == "history":
+        return LinkResult(True, format_history_projection_reply(history_projection, lang), f"history_{history_projection['projection_id']}")
+    if selected == "case":
+        return LinkResult(True, format_case_fact_reply(approved_cases, lang, text), "canonical_case")
+    if selected == "university":
+        return LinkResult(True, university.reply, f"university2026_{university.answer_type}")
+    if selected == "cohort4":
+        return LinkResult(True, cohort4.reply, f"cohort4_{cohort4.answer_type}")
+    if selected == "fact":
+        return LinkResult(True, fact.reply, f"fact_{fact.fact_type}")
+    if selected == "project":
+        name, url = project_match
+        return LinkResult(True, _link_reply(lang, "project", name.title(), url), "project")
+    if selected == "clarify":
+        replies = {
+            "zh-TW": "這個問題涉及不同的資料範圍或資助計劃。請指定想查哪一個項目／年度，或分開提問；我才可以用相應的已審核來源回答。",
+            "zh-CN": "这个问题涉及不同的资料范围或资助计划。请指定想查哪一个项目／年度，或分开提问；我才可以用相应的已审核来源回答。",
+            "en": "This question spans different evidence scopes or grant programmes. Please name one project and year, or ask about each separately, so I can use the corresponding reviewed source.",
+        }
+        return LinkResult(True, replies.get(lang, replies["zh-TW"]), "route_clarification")
     special = ("專項", "专项", "special fund", "機票", "机票", "travel", "高校", "university", "706", "mastodon")
     if any(word in value for word in special):
         return LinkResult(True, _link_reply(lang, "apply_special", "", GCC_LINKS["apply_special"]), "apply_special")

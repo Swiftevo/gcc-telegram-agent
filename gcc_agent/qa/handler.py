@@ -57,7 +57,10 @@ async def handle_general(
     link_result = check_link_first(user_text, lang, session.get_context())
     if link_result.matched:
         # Reviewed programmes use external forms, not the legacy in-Bot draft.
-        if link_result.link_type.startswith(("cohort4_", "university2026_")):
+        if (
+            link_result.link_type.startswith(("cohort4_", "university2026_"))
+            or link_result.link_type in ("canonical_case", "route_clarification")
+        ):
             reply_markup = None
         # University URLs and canonical case statuses/source labels can contain
         # underscores. Telegram's legacy Markdown parser may reject the whole
@@ -65,7 +68,7 @@ async def handle_general(
         parse_mode = (
             None
             if link_result.link_type.startswith("university2026_")
-            or link_result.link_type == "canonical_case"
+            or link_result.link_type in ("canonical_case", "route_clarification")
             else "Markdown"
         )
         await update.message.reply_text(
