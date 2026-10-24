@@ -59,7 +59,7 @@ async def handle_general(
         # Reviewed programmes use external forms, not the legacy in-Bot draft.
         if (
             link_result.link_type.startswith(("cohort4_", "university2026_"))
-            or link_result.link_type in ("canonical_case", "route_clarification")
+            or link_result.link_type in ("canonical_case", "route_clarification", "reviewed_comparison")
         ):
             reply_markup = None
         # University URLs and canonical case statuses/source labels can contain
@@ -68,7 +68,7 @@ async def handle_general(
         parse_mode = (
             None
             if link_result.link_type.startswith("university2026_")
-            or link_result.link_type in ("canonical_case", "route_clarification")
+            or link_result.link_type in ("canonical_case", "route_clarification", "reviewed_comparison")
             else "Markdown"
         )
         await update.message.reply_text(

@@ -52,10 +52,56 @@ class SourceRoutingTests(unittest.TestCase):
             with self.subTest(question=question):
                 self.assertEqual(route, check_link_first(question, "zh-TW").link_type)
 
-    def test_distinct_named_programmes_do_not_collapse_into_one_answer(self):
-        result = check_link_first("高校 Web3 2025 和高校 Builder 2026 有何不同？", "zh-TW")
-        self.assertEqual("route_clarification", result.link_type)
-        self.assertNotIn("申请表", result.reply)
+    def test_reviewed_programmes_can_be_compared_without_invented_outcomes(self):
+        questions = (
+            ("高校 Web3 2025 和高校 Builder 2026 有何不同？", "zh-TW"),
+            ("高校 Web3 2025 和高校 Builder 2026 有什么区别？", "zh-CN"),
+            ("Compare University Web3 2025 and University Builder 2026", "en"),
+        )
+        for question, lang in questions:
+            with self.subTest(question=question):
+                result = check_link_first(question, lang)
+                self.assertEqual("reviewed_comparison", result.link_type)
+                self.assertIn("30,000 USD", result.reply)
+                self.assertIn("2,000 USD", result.reply)
+                self.assertIn("3,000 USD", result.reply)
+                self.assertIn("snapshot.org", result.reply)
+                self.assertIn("docs.google.com", result.reply)
+                self.assertNotIn("https://tally.so", result.reply)
+
+    def test_comparison_follow_up_uses_the_immediately_clarified_subjects(self):
+        first = check_link_first("高校 Web3 2025 和高校 Builder 2026 的資助額度？", "zh-CN")
+        self.assertEqual("route_clarification", first.link_type)
+        context = [
+            {"role": "user", "content": "高校 Web3 2025 和高校 Builder 2026 的資助額度？"},
+            {"role": "assistant", "content": first.reply},
+        ]
+        result = check_link_first("你能比較兩者的不同之處嗎？", "zh-CN", context)
+        self.assertEqual("reviewed_comparison", result.link_type)
+        self.assertIn("30,000 USD", result.reply)
+        self.assertIn("不能说哪一年更容易通过", result.reply)
+
+    def test_unresolved_clarification_follow_up_does_not_reach_ai(self):
+        first = check_link_first("高校 Web3 2025 和高校 Builder 2026 的資助額度？", "zh-TW")
+        context = [
+            {"role": "user", "content": "高校 Web3 2025 和高校 Builder 2026 的資助額度？"},
+            {"role": "assistant", "content": first.reply},
+        ]
+        self.assertEqual(
+            "route_clarification",
+            check_link_first("那呢？", "zh-TW", context).link_type,
+        )
+
+    def test_comparison_fails_closed_when_either_reviewed_source_is_unavailable(self):
+        question = "高校 Web3 2025 和高校 Builder 2026 有何不同？"
+        with patch("gcc_agent.qa.programme_comparison.load_approved_university_plan", return_value=None):
+            result = check_link_first(question, "zh-TW")
+        self.assertEqual("reviewed_comparison", result.link_type)
+        self.assertIn("缺少可同時核實", result.reply)
+        with patch("gcc_agent.qa.programme_comparison.select_bot_qa_case_records", return_value=[]):
+            result = check_link_first(question, "zh-TW")
+        self.assertEqual("reviewed_comparison", result.link_type)
+        self.assertIn("缺少可同時核實", result.reply)
 
     def test_unreviewed_named_project_is_not_replaced_by_global_history(self):
         result = check_link_first("Vyper 2025 的治理核准額度？", "zh-TW")
@@ -84,6 +130,33 @@ class SourceRoutingHandlerTests(unittest.IsolatedAsyncioTestCase):
                 answer = update.message.reply_text.await_args
                 self.assertIn("30,000 USD", answer.args[0])
                 self.assertIn("snapshot.org", answer.args[0])
+                self.assertIsNone(answer.kwargs["parse_mode"])
+                self.assertIsNone(answer.kwargs["reply_markup"])
+                call_ai.assert_not_awaited()
+
+    async def test_comparison_follow_up_is_plain_text_in_private_and_group(self):
+        for scope_type in ("private", "group"):
+            with self.subTest(scope_type=scope_type):
+                update = MagicMock()
+                update.message.text = "你能比較兩者的不同之處嗎？"
+                update.message.reply_text = AsyncMock()
+                guard = SimpleNamespace(lang="zh-CN", user=SimpleNamespace(user_id=123))
+                prior = check_link_first("高校 Web3 2025 和高校 Builder 2026 的資助額度？", "zh-CN")
+                session = Session(user_id=123)
+                session.add_message("user", "高校 Web3 2025 和高校 Builder 2026 的資助額度？")
+                session.add_message("assistant", prior.reply)
+                with (
+                    patch("gcc_agent.qa.handler.get_session", new=AsyncMock(return_value=session)),
+                    patch("gcc_agent.qa.handler.save_exchange", new=AsyncMock()),
+                    patch("gcc_agent.qa.handler.call_ai", new=AsyncMock()) as call_ai,
+                ):
+                    await handle_general(
+                        update, MagicMock(), guard,
+                        scope_type=scope_type,
+                        scope_id=-100123 if scope_type == "group" else 123,
+                    )
+                answer = update.message.reply_text.await_args
+                self.assertIn("30,000 USD", answer.args[0])
                 self.assertIsNone(answer.kwargs["parse_mode"])
                 self.assertIsNone(answer.kwargs["reply_markup"])
                 call_ai.assert_not_awaited()

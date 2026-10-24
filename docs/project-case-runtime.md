@@ -66,6 +66,15 @@ than silently answering from one source. A source follow-up about a newly named
 case does not inherit an unrelated prior report answer. Only eligible reviewed
 cases enter this selection; routing cannot grant access to draft evidence.
 
+For the reviewed 2025 University Web3 track and approved 2026 University Builder
+plan, an explicit comparison or immediate comparison follow-up can combine a
+small set of source-backed facts. The 2025 governance-approved programme pool,
+announced per-group range, and historical application period remain distinct
+from 2026 category caps and current application routes. No comparable 2025
+review weights or actual payment outcome is inferred. Both source gates must
+pass; otherwise the comparison fails closed. An unresolved follow-up after a
+clarification cannot silently fall back to the language model.
+
 An explicit approved case-name question receives a deterministic overview before
 the language model. Other matching questions may receive the selected allowlist
 as a system data block marked as facts rather than instructions.
