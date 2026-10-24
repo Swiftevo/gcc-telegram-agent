@@ -71,6 +71,11 @@ def _load_approved() -> dict | None:
         return None
 
 
+def load_approved_university_plan() -> dict | None:
+    """Expose only content that has passed this programme's existing QA gate."""
+    return _load_approved()
+
+
 def select_university_answer(text: str, lang: str = "zh-TW") -> UniversityAnswer:
     """Answer current university-plan intents without absorbing history or ETH City."""
     value = text.casefold().strip()

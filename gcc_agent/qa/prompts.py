@@ -11,7 +11,13 @@ from gcc_agent.qa.cohort4 import select_cohort4_answer
 from gcc_agent.qa.university_builder import select_university_answer
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.qa.history_facts import format_history_projection_reply
-from gcc_agent.qa.route_selection import SourceCandidate, choose_qa_source
+from gcc_agent.qa.programme_comparison import select_reviewed_programme_comparison
+from gcc_agent.qa.route_selection import (
+    SourceCandidate,
+    choose_qa_source,
+    clarification_reply,
+    last_clarified_question,
+)
 from gcc_agent.knowledge.loaders import (
     as_gcc_summary_block,
     as_system_block,
@@ -111,6 +117,7 @@ def check_link_first(
     cohort4 = select_cohort4_answer(text, lang)
     fact = check_official_fact(text, lang, previous_messages)
     approved_cases = select_bot_qa_case_records(text, explicit_only=True, limit=2)
+    comparison = select_reviewed_programme_comparison(text, lang, previous_messages)
     project_match = None
     for name, url in PROJECT_LINKS.items():
         if re.search(rf"(?<![a-z0-9]){re.escape(name)}(?![a-z0-9])", value):
@@ -138,8 +145,12 @@ def check_link_first(
         candidates.append(SourceCandidate("fact", "general_policy"))
     if project_match:
         candidates.append(SourceCandidate("project", "named_project_link", True))
+    if comparison.matched:
+        candidates.append(SourceCandidate("comparison", "reviewed_comparison", True))
 
     selected = choose_qa_source(text, candidates)
+    if selected == "comparison":
+        return LinkResult(True, comparison.reply, "reviewed_comparison")
     if selected == "history":
         return LinkResult(True, format_history_projection_reply(history_projection, lang), f"history_{history_projection['projection_id']}")
     if selected == "case":
@@ -154,12 +165,7 @@ def check_link_first(
         name, url = project_match
         return LinkResult(True, _link_reply(lang, "project", name.title(), url), "project")
     if selected == "clarify":
-        replies = {
-            "zh-TW": "這個問題涉及不同的資料範圍或資助計劃。請指定想查哪一個項目／年度，或分開提問；我才可以用相應的已審核來源回答。",
-            "zh-CN": "这个问题涉及不同的资料范围或资助计划。请指定想查哪一个项目／年度，或分开提问；我才可以用相应的已审核来源回答。",
-            "en": "This question spans different evidence scopes or grant programmes. Please name one project and year, or ask about each separately, so I can use the corresponding reviewed source.",
-        }
-        return LinkResult(True, replies.get(lang, replies["zh-TW"]), "route_clarification")
+        return LinkResult(True, clarification_reply(lang), "route_clarification")
     special = ("專項", "专项", "special fund", "機票", "机票", "travel", "高校", "university", "706", "mastodon")
     if any(word in value for word in special):
         return LinkResult(True, _link_reply(lang, "apply_special", "", GCC_LINKS["apply_special"]), "apply_special")
@@ -186,6 +192,10 @@ def check_link_first(
     for words, page in pages:
         if any(word in value for word in words):
             return LinkResult(True, _link_reply(lang, page, "", GCC_LINKS[page]), page)
+    if last_clarified_question(previous_messages):
+        # A one-turn follow-up with no resolved subject must not fall through
+        # to an unconstrained model response about either programme.
+        return LinkResult(True, clarification_reply(lang), "route_clarification")
     return LinkResult(False)
 
 
