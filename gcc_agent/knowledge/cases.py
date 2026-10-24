@@ -228,12 +228,11 @@ def _case_aliases(case: dict) -> set[str]:
 
 
 def _historical_funding_program_match(case: dict, value: str) -> bool:
-    """Require the year and one track name so 2026 policy is never displaced."""
+    """Require the 2025 year and track; source arbitration handles comparisons."""
     if case.get("case_id") != "gcc-community-eth-city-university-web3-2025":
         return False
     return (
         "2025" in value
-        and "2026" not in value
         and any(
             term in value
             for term in (

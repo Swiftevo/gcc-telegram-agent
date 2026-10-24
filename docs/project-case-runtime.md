@@ -55,6 +55,17 @@ Selection is deterministic and limited to a small set matching the question.
 
 ## Answer behavior and provenance
 
+The QA adapter gathers eligible source candidates before choosing an answer:
+approved named case, time-bounded historical report, reviewed current
+programme, general official fact, and legacy project link. Source arbitration
+gives an explicitly named approved case precedence over a broad governance or
+Snapshot rule. A question about a report-specific metric still uses the report.
+When a question explicitly crosses distinct programmes or mixes a named case
+with a report without a clear fact scope, the Bot asks for clarification rather
+than silently answering from one source. A source follow-up about a newly named
+case does not inherit an unrelated prior report answer. Only eligible reviewed
+cases enter this selection; routing cannot grant access to draft evidence.
+
 An explicit approved case-name question receives a deterministic overview before
 the language model. Other matching questions may receive the selected allowlist
 as a system data block marked as facts rather than instructions.
