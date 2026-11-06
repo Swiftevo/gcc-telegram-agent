@@ -3,7 +3,15 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-11-07：發佈前權限與收款地址風險修復（待 merge／production 驗收）
+## 2026-11-07：發佈前權限與收款地址風險修復（首 PR 已 merge；後續修補與 production 驗收待完成）
+
+- PR #65／merge `7e3ed1a`：main Actions `42298954733` 的 Verify release、Deploy app 與
+  Machine health check 均成功；公開 `/readyz`、`/opsz` 均回 200。Fly CLI 在本機無
+  可用 auth token，因此未直接查詢 production audit row 或 Machine image SHA。
+  真實 Telegram 權限及錢包問答 E2E 仍待 operator／測試帳戶確認。
+- Merge 後擴充問法測試發現「GCC 入金地址」及「Where can I send crypto to GCC?」
+  未被第一層詞彙路由攔截；另開後續修補，擴充入金、收錢、轉幣與 GCC 地址問法，
+  並在 AI 產生完整鏈上地址時，於傳送及儲存之前改用固定安全回覆。
 
 - 內測／審計發現 `/grant` 讓指定群組的一般成員改變他人身份；router 宣告的
   `/block`、`/unblock` 尚不能實際撤銷權限。改為只有 `ADMIN_USER_ID` 指定的

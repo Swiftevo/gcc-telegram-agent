@@ -11,11 +11,13 @@ _EXPLICIT_DESTINATION_TERMS = (
 _GCC_MULTISIG = re.compile(r"\bgcc\b.{0,16}(?:多簽|多签|multisig|multi-sig)|"
                            r"(?:多簽|多签|multisig|multi-sig).{0,16}\bgcc\b", re.I)
 _GENERIC_ADDRESS_TERMS = ("地址", "address")
+_NON_PAYMENT_ADDRESS_TERMS = ("官網", "官网", "website", "github", "twitter", "網址", "网址")
 _WALLET_TERMS = ("錢包", "钱包", "wallet", "safe")
 _PAYMENT_TERMS = (
     "捐款", "捐贈", "捐赠", "資助", "资助", "轉帳", "转账",
-    "匯款", "汇款", "付款", "打款", "donat", "fund", "grant",
-    "transfer", "payment", "send", "receive", "usdc", "usdt", "eth",
+    "匯款", "汇款", "付款", "打款", "收錢", "收钱", "入金",
+    "donat", "fund", "grant", "transfer", "payment", "send", "receive",
+    "crypto", "coin", "usdc", "usdt", "eth",
 )
 _DESTINATION_PHRASES = (
     "轉到哪", "转到哪", "打到哪", "匯到哪", "汇到哪",
@@ -23,6 +25,11 @@ _DESTINATION_PHRASES = (
 )
 _GCC_WALLET = re.compile(r"\bgcc\b.{0,16}(?:錢包|钱包|wallet|safe)|"
                          r"(?:錢包|钱包|wallet|safe).{0,16}\bgcc\b", re.I)
+_GCC_TRANSFER = re.compile(
+    r"(?:where|how).{0,20}(?:send|transfer).{0,20}(?:crypto|coin|funds?).{0,20}\bgcc\b|"
+    r"(?:send|transfer).{0,20}(?:crypto|coin|funds?).{0,20}(?:to\s+)?\bgcc\b",
+    re.I,
+)
 _FOLLOW_UP_TERMS = (
     "這個", "这个", "那個", "那个", "該", "该", "地址", "錢包", "钱包",
     "給我", "给我", "發我", "发我", "send it", "give me", "that address",
@@ -49,6 +56,15 @@ REPLIES = {
 }
 
 
+def payment_destination_reply(lang: str) -> str:
+    return REPLIES.get(lang, REPLIES["zh-TW"])
+
+
+def contains_chain_address(text: str) -> bool:
+    """Reject any model-generated Ethereum address, even after routing misses a question."""
+    return bool(_CHAIN_ADDRESS.search(text or ""))
+
+
 def _previous_destination_refusal(previous_messages: list[dict] | None) -> bool:
     if not previous_messages:
         return False
@@ -64,11 +80,18 @@ def select_payment_destination_reply(
     if not value:
         return None
     is_destination = (
-        bool(_CHAIN_ADDRESS.search(value))
+        contains_chain_address(value)
         or bool(_GCC_MULTISIG.search(value))
         or bool(_GCC_WALLET.search(value))
+        or bool(_GCC_TRANSFER.search(value))
+        or ("0x" in value and "gcc" in value)
         or any(term in value for term in _EXPLICIT_DESTINATION_TERMS)
         or any(term in value for term in _DESTINATION_PHRASES)
+        or (
+            "gcc" in value
+            and any(term in value for term in _GENERIC_ADDRESS_TERMS)
+            and not any(term in value for term in _NON_PAYMENT_ADDRESS_TERMS)
+        )
         or (
             any(term in value for term in _GENERIC_ADDRESS_TERMS)
             and any(term in value for term in _PAYMENT_TERMS + _WALLET_TERMS)
@@ -80,4 +103,4 @@ def select_payment_destination_reply(
     )
     if not is_destination and _previous_destination_refusal(previous_messages):
         is_destination = any(term in value for term in _FOLLOW_UP_TERMS)
-    return REPLIES.get(lang, REPLIES["zh-TW"]) if is_destination else None
+    return payment_destination_reply(lang) if is_destination else None

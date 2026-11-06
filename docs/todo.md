@@ -44,7 +44,7 @@
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 0 | ACCESS-PAY-001 | P0 | **收窄身份操作並阻止 AI 猜答收款地址** | `/grant`、`/block`、`/unblock` 只容許明確設定的 operator；變更與最小 audit 同 transaction；測試身份復原、封鎖即時撤銷、解封、拒絕非 operator 與 audit 失敗 rollback。錢包／收款地址問題在 private／group 均先於一般 AI 固定回覆；未有 owner 核准現行地址與鏈別前不提供支付指令。完成需 merge、production 指定 operator／測試帳戶 E2E、確認 audit；此前不擴大群組 | 2026-11-07 發佈前內測／審計決定；`ADMIN_USER_ID` 已設；正式地址 owner 決定 |
+| 0 | ACCESS-PAY-001 | P0 | **收窄身份操作並阻止 AI 猜答收款地址** | PR #65 已 merge 並部署，公開健康檢查正常；merge 後發現額外收款問法仍漏入 AI，後續修補需擴充入口攔截及 AI 輸出地址攔截。完成需後續修補 merge、production 指定 operator／測試帳戶 E2E、確認 audit，並於私訊／群組用多種問法驗收；此前不擴大群組 | 2026-11-07 發佈前內測／審計決定；`ADMIN_USER_ID` 已設；正式地址 owner 決定 |
 | 1* | PRIV-001C | P1 | **決定對話與 session 保存政策** | 分開決定 private／group、link-first／AI、`messages_json`／messages 的必要性、保存期、匿名統計及模型傳送邊界 | PRIV-001A；GCC retention 決定 |
 | 2* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、legacy email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重啟 email verification 或重做 authentication | PRIV-001A；ACCESS-001；部分依賴 ACCESS-002 決定 |
 | 3* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
