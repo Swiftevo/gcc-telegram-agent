@@ -96,6 +96,26 @@ async def _migration_005_language_preference(db: aiosqlite.Connection) -> None:
         await db.execute("ALTER TABLE users ADD COLUMN preferred_lang TEXT")
 
 
+async def _migration_006_operator_actions(db: aiosqlite.Connection) -> None:
+    """Keep a minimal, durable record of authorized identity/access changes."""
+    await db.execute(
+        """CREATE TABLE IF NOT EXISTS operator_actions (
+            action_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            actor_user_id INTEGER NOT NULL,
+            target_user_id INTEGER,
+            action TEXT NOT NULL,
+            result TEXT NOT NULL,
+            before_state TEXT,
+            after_state TEXT,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )"""
+    )
+    await db.execute(
+        "CREATE INDEX IF NOT EXISTS idx_operator_actions_target_time "
+        "ON operator_actions(target_user_id, created_at)"
+    )
+
+
 async def init_db() -> None:
     async with connect() as db:
         await db.execute(
@@ -121,5 +141,8 @@ async def init_db() -> None:
         if 5 not in applied:
             await _migration_005_language_preference(db)
             await db.execute("INSERT INTO schema_migrations(version) VALUES (5)")
+        if 6 not in applied:
+            await _migration_006_operator_actions(db)
+            await db.execute("INSERT INTO schema_migrations(version) VALUES (6)")
         await db.commit()
     logger.info("database initialized path=%s", DB_PATH)

@@ -14,6 +14,42 @@ values, user messages, email addresses, application content, or database rows.
 - Operators must enable GitHub notifications for this repository; an issue is the
   durable incident record, not proof that a particular person has acknowledged it.
 
+## Identity and access operator
+
+- The Telegram user ID in `ADMIN_USER_ID` is the sole designated operator for
+  `/grant`, `/block`, and `/unblock`. Membership of `GCC_GROUP_ID`, including group
+  administrator status, does not confer operator authority. If `ADMIN_USER_ID`
+  is unset, these commands deny all callers. A backup operator requires a
+  separately approved configuration change; do not share a Telegram account.
+- These commands are accepted only in a private chat with the Bot. Targets must
+  already have a Bot user row. Use `/whoami` with the target's cooperation to
+  identify their numeric Telegram ID; avoid relying on a mutable username.
+- `/grant <user_id> ai` marks an existing user as an agent with regular access;
+  `/grant <user_id> regular` returns the identity to human/regular. A regular
+  human who remains a member of the configured GCC group can still use Q&A.
+  Use `/block <user_id>` to revoke Bot Q&A immediately in both private and
+  group contexts; `/unblock <user_id>` restores eligibility subject to the
+  normal group membership and rate-limit checks.
+- Successful, unchanged, invalid, and not-found operator requests are recorded
+  in SQLite `operator_actions` with actor, target where known, action, result,
+  before/after state, and UTC timestamp. The change and audit insert share a
+  transaction: an audit write failure rolls back the access change. Denied
+  non-operator attempts go to redacted application logs without command text.
+  Do not paste user IDs or audit rows into public GitHub issues.
+- After a production merge, verify an ordinary group member cannot `/grant` or
+  `/block`; verify the designated operator can block a consenting test account,
+  that its group mention and private Q&A are refused, then unblock and verify
+  normal eligibility returns. Check the audit results locally through approved
+  production access. If any step fails, stop group expansion and follow the
+  code rollback procedure below. Database migration 6 adds a table and index;
+  code rollback leaves them in place and does not undo recorded changes.
+
+Wallet and receiving-address questions use a fixed reply directing users to
+GCC's official contact channel. No current wallet/network has been approved as
+Bot answer data. A historical multisig address must never be treated as a
+current payment instruction. Test Chinese and English variants in private and
+group chats after merge; the general AI must not provide a destination.
+
 ## Endpoint contract
 
 | Endpoint | Purpose | Success | Must not expose |

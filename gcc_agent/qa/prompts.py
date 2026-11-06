@@ -12,6 +12,7 @@ from gcc_agent.qa.university_builder import select_university_answer
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.qa.history_facts import format_history_projection_reply
 from gcc_agent.qa.programme_comparison import select_reviewed_programme_comparison
+from gcc_agent.qa.payment_destinations import select_payment_destination_reply
 from gcc_agent.qa.route_selection import (
     SourceCandidate,
     choose_qa_source,
@@ -108,6 +109,9 @@ def check_link_first(
     lang: str = "zh-TW",
     previous_messages: list[dict] | None = None,
 ) -> LinkResult:
+    destination_reply = select_payment_destination_reply(text, lang, previous_messages)
+    if destination_reply:
+        return LinkResult(True, destination_reply, "payment_destination")
     value = text.lower().strip()
     history_projection = select_history_projection(
         text,

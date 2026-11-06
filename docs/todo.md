@@ -7,7 +7,8 @@
 ## 執行規則
 
 1. 同一時間只處理一個最前面的未完成項目；不得因較容易而跳級。
-2. P0 未清完前，不主動擴大 production 用戶或收集更多個人／申請資料。
+2. P0 未清完前，不主動擴大 production 用戶或收集更多個人／申請資料；
+   `/grant` 權限及錢包／收款地址問答防線未完成 production 驗收前亦不擴大群組。
 3. 每項完成必須同時具備：程式／設定、測試、production 驗證、文件和 rollback 說明。
 4. 若項目需要產品或治理決定，先記錄決定與責任人，再寫程式。
 5. 完成後將項目移到「Done」，並在 project log 加日期、PR、驗證證據和殘餘風險。
@@ -43,13 +44,14 @@
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
+| 0 | ACCESS-PAY-001 | P0 | **收窄身份操作並阻止 AI 猜答收款地址** | `/grant`、`/block`、`/unblock` 只容許明確設定的 operator；變更與最小 audit 同 transaction；測試身份復原、封鎖即時撤銷、解封、拒絕非 operator 與 audit 失敗 rollback。錢包／收款地址問題在 private／group 均先於一般 AI 固定回覆；未有 owner 核准現行地址與鏈別前不提供支付指令。完成需 merge、production 指定 operator／測試帳戶 E2E、確認 audit；此前不擴大群組 | 2026-11-07 發佈前內測／審計決定；`ADMIN_USER_ID` 已設；正式地址 owner 決定 |
 | 1* | PRIV-001C | P1 | **決定對話與 session 保存政策** | 分開決定 private／group、link-first／AI、`messages_json`／messages 的必要性、保存期、匿名統計及模型傳送邊界 | PRIV-001A；GCC retention 決定 |
 | 2* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、legacy email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重啟 email verification 或重做 authentication | PRIV-001A；ACCESS-001；部分依賴 ACCESS-002 決定 |
 | 3* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
 | 4* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential、legacy draft；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D、PRIV-001E |
 | 5* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C 至 PRIV-001F；ACCESS-002 |
 | 6* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
-| 7 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | 實作或移除 router 中已宣告但不可用的 `/block`、`/unblock`；所有管理動作有 actor、target、timestamp、result audit trail；補 group membership 退出後政策與測試；不在本項重啟 email verification | TEST-001；ACCESS-001；部分依賴 PRIV-001D |
+| 7 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | `/block`、`/unblock`、operator 最小 audit 與即時撤銷測試納入 `ACCESS-PAY-001`；剩餘：group membership 退出後的完整身份生命週期、保存及撤銷政策；不在本項重啟 email verification | TEST-001；ACCESS-001；PRIV-001D；ACCESS-PAY-001 |
 | 8 | RELEASE-001 | P1 | **鎖定 release workflow 與部署工具供應鏈** | 所有 GitHub Actions 固定到已核實的完整 commit SHA；移除 `setup-flyctl@master` 並固定 Fly deployment tooling；建立由 PR／完整 gate 審核的定期更新政策；main test／deploy 可追溯至同一 commit，production image SHA 相符 | TEST-001、OPS-001 |
 | 8a | COHORT4-FACT-001 | P1 | **修正已核准 Cohort 4 公告與 Bot 舊四類的衝突** | round-scoped OPS／申請截止／五項選拔因素／計劃時間表／推薦條件有直接來源及日期防線；舊網站類別不再冒充本輪方向；merge 後 private／group E2E；未核對的歷史總額及實際撥款不入回答 | content owner 2026-10-22 決定；QA-FACT-001；I18N 後續獨立處理 |
 | 9 | REVIEW-001 | P1 | **移除 Bot 現有的假精確申請分數** | 停止計算／通知 40/30/20/10 百分制及 70/40 建議；Bot 不作自動通過、拒絕或排序；一般 QA 繼續使用官方事實邊界；外置表格及人類流程是正式申請／決策來源；舊 scoring code、tests、文件及資料使用有清理／兼容方案 | 外置表格決定已確認；PRIV-001E 跟進歷史資料 |
