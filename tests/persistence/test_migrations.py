@@ -45,7 +45,10 @@ class MigrationTests(unittest.IsolatedAsyncioTestCase):
         await users.update_user_preferred_lang(1, "zh-CN")
         self.assertEqual("zh-CN", (await users.get_user(1)).preferred_lang)
         with closing(sqlite3.connect(self.path)) as db:
-            self.assertEqual(5, db.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0])
+            self.assertEqual(6, db.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0])
+            self.assertIsNotNone(db.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='operator_actions'"
+            ).fetchone())
             user_columns = {
                 row[1] for row in db.execute("PRAGMA table_info(users)").fetchall()
             }

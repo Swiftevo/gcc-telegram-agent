@@ -8,7 +8,6 @@ from telegram.ext import ContextTypes
 from gcc_agent.access.email_sender import SMTPEmailSender
 from gcc_agent.access.messages import EMAIL_VERIFICATION_SHELVED, translated, welcome_text
 from gcc_agent.access.models import (
-    ACCESS_GCC_MEMBER,
     ACCESS_LEVELS,
     ACCESS_REGULAR,
     ACTOR_AGENT,
@@ -18,30 +17,19 @@ from gcc_agent.access.models import (
 )
 from gcc_agent.access.service import EmailVerificationService, mask_email
 from gcc_agent.common.persistence import users
+from gcc_agent.common.persistence import operator_actions
 from gcc_agent.config import settings
 
 logger = logging.getLogger(__name__)
-GROUP_GRANT_STATUSES = ("member", "administrator", "creator")
 
 
 def _service() -> EmailVerificationService:
     return EmailVerificationService(SMTPEmailSender(settings), settings.email_verification_secret)
 
 
-async def is_group_grantor(user_id: int, context: ContextTypes.DEFAULT_TYPE) -> bool:
-    if settings.admin_user_id and user_id == settings.admin_user_id:
-        return True
-    if not settings.gcc_group_id:
-        logger.warning("grant denied because GCC_GROUP_ID is not configured")
-        return False
-    try:
-        member = await context.bot.get_chat_member(settings.gcc_group_id, user_id)
-        allowed = member.status in GROUP_GRANT_STATUSES
-        await users.update_user_group_membership(user_id, allowed)
-        return allowed
-    except Exception:
-        logger.exception("grant membership check failed user_id=%s", user_id)
-        return False
+def is_management_operator(user_id: int) -> bool:
+    """Only the explicitly configured Telegram operator may manage identities."""
+    return settings.admin_user_id > 0 and user_id == settings.admin_user_id
 
 
 async def _current_user(update: Update, lang: str):
@@ -121,13 +109,7 @@ async def handle_verify(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     args = context.args or []
     error = await _service().confirm(user.user_id, args[0] if args else "")
     if not error:
-        promoted = False
-        if user.actor_type == ACTOR_HUMAN and await is_group_grantor(user.user_id, context):
-            promoted = not await users.set_identity(user.user_id, ACTOR_HUMAN, ACCESS_GCC_MEMBER)
-        text = "✅ Email verified."
-        if promoted:
-            text += " GCC-member access granted."
-        await update.message.reply_text(text)
+        await update.message.reply_text("✅ Email verified.")
         return
     text = {
         "not_requested": "No active verification request.",
@@ -174,29 +156,29 @@ def _parse_identity(args: list[str]):
 
 
 async def handle_grant(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    from handlers.guard import detect_language
-
     if update.message is None or update.effective_user is None:
         return
-    lang = detect_language(update)
-    await _current_user(update, lang)
-    if not await is_group_grantor(update.effective_user.id, context):
-        await update.message.reply_text("Only GCC group members may grant identity.")
+    actor_id = update.effective_user.id
+    if not is_management_operator(actor_id):
+        logger.warning("grant denied actor=%s", actor_id)
+        await update.message.reply_text("Only the designated GCC operator may change identity.")
         return
     args = context.args or []
     identity = _parse_identity(args)
     if not identity:
+        await operator_actions.record_invalid_request(actor_id, "grant")
         await update.message.reply_text(
             "Usage: `/grant <user_id|@username> regular|gcc_member|ai` or "
             "`/grant <user_id|@username> human|agent regular|gcc_member`",
             parse_mode="Markdown",
         )
         return
-    target = await _resolve_target(args[0])
-    if target is None:
+    target_id = await _resolve_target_id(args[0])
+    if target_id is None:
+        await operator_actions.record_invalid_request(actor_id, "grant")
         await update.message.reply_text("User not found.")
         return
-    error = await users.set_identity(target.user_id, *identity)
+    error = await operator_actions.change_identity(actor_id, target_id, *identity)
     errors = {
         "verified_email_required": "New human GCC-member onboarding is currently paused.",
         "agent_credential_required": "GCC-member agents require an agent credential.",
@@ -206,19 +188,55 @@ async def handle_grant(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
     logger.info(
         "identity granted actor=%s target=%s actor_type=%s access_level=%s",
-        update.effective_user.id, target.user_id, identity[0], identity[1],
+        actor_id, target_id, identity[0], identity[1],
     )
     await update.message.reply_text(
-        f"✅ `{target.user_id}`: `{identity[0]}` / `{identity[1]}`", parse_mode="Markdown"
+        f"✅ {target_id}: {identity[0]} / {identity[1]}"
     )
 
 
-async def _resolve_target(token: str):
+async def handle_block(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _handle_block_change(update, context, True)
+
+
+async def handle_unblock(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _handle_block_change(update, context, False)
+
+
+async def _handle_block_change(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                               blocked: bool) -> None:
+    if update.message is None or update.effective_user is None:
+        return
+    actor_id = update.effective_user.id
+    action = "block" if blocked else "unblock"
+    if not is_management_operator(actor_id):
+        logger.warning("%s denied actor=%s", action, actor_id)
+        await update.message.reply_text("Only the designated GCC operator may change access.")
+        return
+    args = context.args or []
+    if len(args) != 1:
+        await operator_actions.record_invalid_request(actor_id, action)
+        await update.message.reply_text(f"Usage: /{action} <user_id|@username>")
+        return
+    target_id = await _resolve_target_id(args[0])
+    if target_id is None:
+        await operator_actions.record_invalid_request(actor_id, action)
+        await update.message.reply_text("User not found.")
+        return
+    error = await operator_actions.change_block(actor_id, target_id, blocked)
+    if error:
+        await update.message.reply_text("User not found.")
+        return
+    logger.info("access change actor=%s target=%s action=%s", actor_id, target_id, action)
+    await update.message.reply_text(f"✅ {target_id}: {'blocked' if blocked else 'unblocked'}")
+
+
+async def _resolve_target_id(token: str) -> int | None:
     value = (token or "").strip()
-    if value.lstrip("-").isdigit():
-        user, _ = await users.get_or_create_user(int(value))
-        return user
-    return await users.get_user_by_username(value)
+    if value.isdigit() and int(value) > 0:
+        return int(value)
+    target = await users.get_user_by_username(value)
+    return target.user_id if target else None
 
 
 async def send_limited_welcome(update: Update, user, lang: str) -> None:

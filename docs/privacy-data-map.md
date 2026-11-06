@@ -79,13 +79,21 @@ SQLite 沒有欄位級加密；任何完整 database 或 backup 均包含以下�
 | `detected_lang` | Telegram language code | 選擇繁中／簡中／英文 | 語言改變時更新；沒有自動刪除 |
 | `is_group_member` | Telegram `getChatMember` | 記錄最近一次 explicit membership check | 不是持續同步；沒有 expiry |
 | `actor_type`、`access_level`、legacy `user_kind` | 管理操作／migration | QA 與身份授權 | 沒有 revoke lifecycle／自動刪除 |
-| `is_blocked` | persistence primitive | access guard | `/block`／`/unblock` 尚未完成；沒有 audit table |
+| `is_blocked` | designated operator `/block`／`/unblock` | private／group access guard | 沒有自動解封或 retention cleanup；operator action 另有 audit |
 | `email`、`email_verified_at` | email verification | human GCC-member access | 明文 email；沒有 revoke 或 retention cleanup |
 | `daily_count`、`count_reset_date`、`total_messages` | Bot 使用 | 每日 20 次限制及累計統計 | 日期轉換時重設 daily count；累計不刪除 |
 | `created_at`、`last_seen_at` | Bot | 帳戶建立／最近互動 | 每次互動更新 last seen；沒有 inactive cleanup |
 
-建立 user row 不只發生於完整 QA：普通私訊、群組 mention、身份指令及以 numeric ID 執行
-`/grant` 均可建立或更新 user row。
+建立 user row 不只發生於完整 QA：普通私訊及群組 mention 均可建立或更新 user row。
+`/grant`、`/block`、`/unblock` 只接受已存在的 target row，不會因 numeric ID 自動建立。
+
+### `operator_actions`（migration 6）
+
+`/grant`、`/block`、`/unblock` 由唯一設定的 operator 在私訊執行；保存 actor／target
+Telegram ID、action、result、變更前後的身份或封鎖狀態，以及 UTC 時間。不保存命令原文、
+email 或錢包地址。授權變更與 audit 寫入同一 transaction。未設定 audit 保存期限／自動清理；
+完整 SQLite backup 亦包含這些 row。非 operator 的拒絕只記入應用程式日誌（actor ID、action），
+不寫入此表，避免任意來訊造成資料庫持續增長。
 
 ### `sessions`
 
@@ -200,7 +208,7 @@ extract、照片、證言、捐助人、partner 名單或 QR code，也不把報
 
 - Telegram webhook 使用 secret header，錯誤或缺失會被拒絕。
 - Bot token 有 logging redaction；secret value 不進 repo。
-- `/email`、`/verify`、`/grant`、`/whoami` 只在 private chat 註冊。
+- `/email`、`/verify`、`/grant`、`/block`、`/unblock`、`/whoami` 只在 private chat 註冊。
 - Group QA 只在指定 chat、explicit mention 下運作，且 session 按 group／user／topic 隔離。
 - email code 只保存 HMAC hash，agent credential 只保存 scrypt hash。
 - Production SQLite volume encrypted，backup 有 integrity、foreign-key、checksum validation。

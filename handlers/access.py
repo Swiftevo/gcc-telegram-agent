@@ -6,7 +6,7 @@ from gcc_agent.access.handler import (
     handle_grant,
     handle_verify,
     handle_whoami,
-    is_group_grantor,
+    is_management_operator,
     maybe_promote_group_member_after_email,
     send_limited_welcome,
 )

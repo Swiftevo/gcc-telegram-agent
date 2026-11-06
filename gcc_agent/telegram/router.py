@@ -14,8 +14,6 @@ logger = logging.getLogger(__name__)
 ADMIN_COMMANDS = {
     "/update_values",
     "/status",
-    "/block",
-    "/unblock",
 }
 
 
