@@ -9,6 +9,7 @@ from gcc_agent.common.session import get_session, save_exchange
 from gcc_agent.knowledge.cases import select_bot_qa_case_records
 from gcc_agent.qa.case_facts import append_case_provenance, case_provenance_footer
 from gcc_agent.qa.messages import append_reminder, make_apply_markup
+from gcc_agent.qa.payment_destinations import contains_chain_address, payment_destination_reply
 from gcc_agent.qa.prompts import FUNDING_KEYWORDS, build_messages, check_link_first
 from gcc_agent.qa.service import call_ai
 
@@ -101,6 +102,15 @@ async def handle_general(
         ),
         lang,
     )
+    if contains_chain_address(ai_reply):
+        safe_reply = payment_destination_reply(lang)
+        await update.message.reply_text(safe_reply, parse_mode=None, reply_markup=None)
+        await save_exchange(
+            session, user_id, user_text, safe_reply,
+            tokens_used=tokens_used, link_served=False,
+        )
+        logger.warning("AI address output suppressed user_id=%s", user_id)
+        return
     final_reply = append_reminder(
         append_case_provenance(ai_reply, case_records, lang),
         lang,

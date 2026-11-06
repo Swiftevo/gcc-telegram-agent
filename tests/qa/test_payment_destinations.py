@@ -17,6 +17,10 @@ class PaymentDestinationRoutingTests(TestCase):
             ("what is GCC donation wallet address?", "en", "current receiving wallet"),
             ("0x060114DD2D88b02Fe5Bb11A57B531e67DAE0cF54 是 GCC 的嗎？", "zh-TW", "官方聯絡"),
             ("GCC 錢包？", "zh-TW", "現行收款錢包"),
+            ("GCC 入金地址是什麼？", "zh-TW", "現行收款錢包"),
+            ("GCC 收錢地址？", "zh-TW", "現行收款錢包"),
+            ("Where can I send crypto to GCC?", "en", "current receiving wallet"),
+            ("GCC 的 0x 帳號？", "zh-TW", "現行收款錢包"),
         )
         for question, lang, expected in samples:
             with self.subTest(question=question):
@@ -31,13 +35,30 @@ class PaymentDestinationRoutingTests(TestCase):
                          "payment_destination")
 
     def test_unrelated_questions_keep_existing_routes(self):
-        for question in ("GCC 官網地址？", "OSKey 是甚麼錢包？", "多簽是甚麼？",
+        for question in ("GCC 官網地址？", "GCC GitHub 地址？", "OSKey 是甚麼錢包？", "多簽是甚麼？",
                          "OpenRPC M1 已撥款嗎？", "捐款給 GCC"):
             with self.subTest(question=question):
                 self.assertNotEqual(check_link_first(question).link_type, "payment_destination")
 
 
 class PaymentDestinationHandlerTests(IsolatedAsyncioTestCase):
+    async def test_model_generated_address_is_suppressed_and_not_saved(self):
+        address = "0x060114DD2D88b02Fe5Bb11A57B531e67DAE0cF54"
+        message = SimpleNamespace(text="Hello there", reply_text=AsyncMock())
+        update = SimpleNamespace(message=message)
+        guard = SimpleNamespace(lang="en", user=SimpleNamespace(user_id=2))
+        with patch("gcc_agent.qa.handler.get_session", new_callable=AsyncMock,
+                   return_value=Session(user_id=2)), patch(
+                       "gcc_agent.qa.handler.call_ai", new_callable=AsyncMock,
+                       return_value=(f"Send funds to {address}", 20)
+                   ), patch("gcc_agent.qa.handler.save_exchange", new_callable=AsyncMock) as saved:
+            await handle_general(update, SimpleNamespace(), guard)
+        self.assertNotIn(address, message.reply_text.call_args.args[0])
+        self.assertNotIn(address, saved.call_args.args[3])
+        self.assertIsNone(message.reply_text.call_args.kwargs["parse_mode"])
+        self.assertEqual(saved.call_args.kwargs["tokens_used"], 20)
+        self.assertFalse(saved.call_args.kwargs["link_served"])
+
     async def test_private_and_group_bypass_ai_and_application_markup(self):
         for scope in ("private", "group"):
             with self.subTest(scope=scope):

@@ -47,8 +47,11 @@ values, user messages, email addresses, application content, or database rows.
 Wallet and receiving-address questions use a fixed reply directing users to
 GCC's official contact channel. No current wallet/network has been approved as
 Bot answer data. A historical multisig address must never be treated as a
-current payment instruction. Test Chinese and English variants in private and
-group chats after merge; the general AI must not provide a destination.
+current payment instruction. Input routing covers wallet, deposit, and transfer
+phrasing; if the language model nevertheless emits a full Ethereum address,
+the Bot replaces that draft before sending or storing it. Test Chinese and
+English variants in private and group chats after merge; the general AI must
+not provide a destination.
 
 ## Endpoint contract
 
