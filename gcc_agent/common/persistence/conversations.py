@@ -11,6 +11,22 @@ from gcc_agent.common.persistence.database import connect
 logger = logging.getLogger(__name__)
 
 
+def has_legacy_application_data(session: Session) -> bool:
+    """Cover unfinished and formerly submitted drafts, including general-mode rows."""
+    if session.mode == "application":
+        return True
+    draft = session.application_draft
+    return bool(
+        draft.collection_step
+        or draft.project_name
+        or draft.proposal_link
+        or draft.executive_summary
+        or draft.agent_score not in (-1, None)
+        or draft.agent_notes
+        or draft.submitted_at
+    )
+
+
 def _row_to_session(row) -> Session:
     keys = set(row.keys())
     draft_data = json.loads(row["draft_json"] or "{}")
@@ -55,7 +71,18 @@ async def get_active_session(
     if not row:
         return None
     session = _row_to_session(row)
-    return None if session.is_expired() else session
+    return None if session.is_expired() or session.mode == "legacy_application_closed" else session
+
+
+async def archive_legacy_application_session(session_id: str) -> None:
+    """Close a legacy row without rewriting its historical draft or messages."""
+    async with connect() as db:
+        await db.execute(
+            "UPDATE sessions SET mode='legacy_application_closed' "
+            "WHERE session_id=? AND mode!='legacy_application_closed'",
+            (session_id,),
+        )
+        await db.commit()
 
 
 async def create_session(

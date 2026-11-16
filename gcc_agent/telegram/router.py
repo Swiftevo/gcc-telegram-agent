@@ -6,7 +6,7 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from gcc_agent.common.persistence.conversations import get_or_create_session
+from gcc_agent.common.persistence.conversations import get_or_create_session, has_legacy_application_data
 from gcc_agent.config import settings
 
 logger = logging.getLogger(__name__)
@@ -39,6 +39,6 @@ async def route(
             return RouteResult("admin", command)
 
     session, _ = await get_or_create_session(user_id)
-    if session.mode == "application":
-        return RouteResult("application")
+    if has_legacy_application_data(session):
+        return RouteResult("legacy_application")
     return RouteResult("general")

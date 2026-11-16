@@ -73,9 +73,9 @@ is withdrawn.
 ## Required distinctions
 
 - The official website describes GCC's public process and considerations.
-- The bot's `screening_rubric` remains a legacy internal triage heuristic until
-  `REVIEW-001`; it is not an official score, cannot be cited in general Q&A, and
-  cannot make a final approval or rejection.
+- The Bot no longer collects or scores applications. Historical in-Bot scores
+  are not official GCC scores, must not enter general Q&A, and cannot establish
+  approval or rejection. Applications go through official external forms.
 - A community-call invitation is an optional next step, not a numbered review
   stage.
 - A signed Snapshot proposal or vote records a governance proposal or decision.

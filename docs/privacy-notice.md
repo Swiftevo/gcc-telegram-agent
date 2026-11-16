@@ -1,7 +1,7 @@
 # GCC Telegram Agent minimum data notice
 
 Status: `PRIV-001B` implementation specification  
-Last reviewed: 2026-09-14
+Last reviewed: 2026-11-17
 Evidence baseline: [`privacy-data-map.md`](privacy-data-map.md)
 
 ## Purpose and boundary
@@ -41,9 +41,10 @@ existing language behaviour.
 All three versions disclose the same current facts:
 
 1. Telegram identity, group/topic identifiers, public profile/language, access
-   state, questions, and answers can be processed; the current application flow
-   adds application-draft data. Email verification is paused and accepts no new
-   address or code, while SQLite and backups may retain legacy fields or records.
+   state, questions, and answers can be processed. Old in-Bot application drafts
+   can remain in SQLite and backups; new applications use external forms. Email
+   verification is paused and accepts no new address or code, while SQLite and
+   backups may retain legacy fields or records.
 2. For a general private question or `/whoami`, the Bot asks Telegram for the
    person's current membership status in the configured GCC group and updates the SQLite access
    state. This request-scoped access does not promote the account to `gcc_member`.
@@ -53,8 +54,9 @@ All three versions disclose the same current facts:
 4. OpenAI receives the current question and up to 20 recent messages from the same
    session only when deterministic official-link or established-fact handling does
    not answer it.
-5. The Bot does not currently send verification mail through SMTP. A completed
-   current application may be copied to a GCC administrator's Telegram.
+5. The Bot does not currently send verification mail through SMTP or new
+   application notifications. Old application notifications may remain in a
+   GCC administrator's Telegram.
 6. Some records do not currently expire automatically. Copies held by providers or
    in an administrator's Telegram are outside a live SQLite deletion.
 7. Users should not send passwords, private keys, or unnecessary sensitive data.

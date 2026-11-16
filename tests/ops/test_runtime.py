@@ -11,8 +11,6 @@ from unittest.mock import AsyncMock, patch
 from tornado.testing import AsyncHTTPTestCase
 
 from gcc_agent.common.persistence import database
-from gcc_agent.applications.models import ApplicationDraft
-from gcc_agent.applications import notifier
 from gcc_agent.ops import runtime
 
 
@@ -238,35 +236,6 @@ class MonitoringTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(
             state.record_incident("same", now=100.0 + runtime.ALERT_COOLDOWN_SECONDS)
         )
-
-    async def test_admin_notification_failure_uses_generic_fallback_alert(self) -> None:
-        bot = SimpleNamespace(
-            send_message=AsyncMock(side_effect=[RuntimeError("private detail"), None])
-        )
-        context = SimpleNamespace(bot=bot)
-        draft = ApplicationDraft(
-            project_name="Private project name",
-            fund_type="public",
-            executive_summary="Private application content",
-            agent_score=50,
-            agent_notes="Private notes",
-        )
-        user = SimpleNamespace(username="private", user_id=123, first_name="Private")
-        notify_settings = SimpleNamespace(admin_notify_id=41)
-        ops_settings = SimpleNamespace(admin_user_id=42)
-        with (
-            patch.object(notifier, "settings", notify_settings),
-            patch.object(runtime, "settings", ops_settings),
-        ):
-            sent = await notifier.notify_admin(context, draft, user, "zh-TW")
-
-        self.assertFalse(sent)
-        self.assertEqual(2, bot.send_message.await_count)
-        fallback = bot.send_message.await_args_list[1].kwargs["text"]
-        self.assertIn("admin_notification_failure", fallback)
-        self.assertNotIn("Private project name", fallback)
-        self.assertNotIn("Private application content", fallback)
-
 
 class DeploymentConfigurationTests(unittest.TestCase):
     def test_fly_routes_only_after_cached_database_readiness_passes(self) -> None:

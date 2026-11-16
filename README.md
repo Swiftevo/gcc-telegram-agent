@@ -4,7 +4,7 @@
 
 # GCC Telegram AI 助手
 
-面向公共物品的 Telegram AI 助手：回答问题、收集资助申请、完成初步筛选。
+面向公共物品的 Telegram AI 助手：回答问题，并引导申请者使用 GCC 官网表格。
 
 [![Telegram](https://img.shields.io/badge/Telegram-@GCCpublicgoods__bot-2CA5E0?logo=telegram&logoColor=white)](https://t.me/GCCpublicgoods_bot)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -32,7 +32,7 @@
 
 新成员的问题大多重复：GCC 在做什么、资助怎么申请、我的项目合不合适。这些问题过去要在群里反复回答。
 
-这个助手把这部分工作接过来：能用官网链接回答的直接给链接，需要判断的先收集材料并按 GCC 价值观打分，再交给成员跟进。
+这个助手用已审核资料和官网链接回答问题；资助申请由官网外部表格接收与处理。
 
 ## 核心功能
 
@@ -41,8 +41,7 @@
 | 分级访问 | 指定 GCC 群组的当前 human 成员可使用群组及私聊一般问答；其他用户和未授权 Agent 只收到欢迎信息 |
 | 链接优先 | 能用官网链接回答的问题不调用模型 |
 | 多语言 | 按用户语言使用简体中文、繁体中文或英文，也可用 `/language` 手动切换 |
-| 申请流程 | 四步收集：项目名称、基金类型、提案链接、执行摘要 |
-| 初步筛选 | 依据 `values.yaml` 给出 0–100 分并通知管理员 |
+| 申请入口 | 前往 GCC 官网确认当前计划并填写外部表格；Bot 不收集、评分或提交申请 |
 | 群组成员问答 | 在 `GCC_GROUP_ID` 内须明确 mention；当前成员也可私聊一般问题；一般问答本身不启用申请或新增管理权限 |
 | 用量限制 | 每位用户每天最多 20 条消息，群组问答同样计数 |
 
@@ -97,7 +96,6 @@ cp .env.example .env
 ```env
 BOT_TOKEN=Telegram Bot Token
 ADMIN_USER_ID=管理员 Telegram User ID
-ADMIN_NOTIFY_ID=接收申请通知的 Telegram User ID
 GCC_GROUP_ID=GCC Telegram 群组 ID
 GROUP_QA_ENABLED=false
 
@@ -134,7 +132,7 @@ python -m tests
 gcc_agent/
 ├── access/                  # 身份、授权、Guard 及 dormant 邮箱兼容代码
 ├── admin/                   # 管理员操作
-├── applications/            # 申请流程、文案、筛选和通知
+├── applications/            # 外部申请表引导与历史草稿兼容
 ├── common/
 │   └── persistence/         # SQLite 迁移和 repositories
 ├── knowledge/               # GCC 价值观、项目和案例
@@ -151,26 +149,9 @@ main.py                      # 启动入口
 
 技术栈：Python 3.12、python-telegram-bot、OpenAI API、SQLite、Fly.io。
 
-## 价值观与内部预审
+## 价值观与申请边界
 
-`values.yaml` 保存 GCC 使命、资助方向、拒绝条件、语气，以及旧有 Bot 内部排序 heuristic。修改后重新部署，或私聊 Bot 发送 `/update_values` 生效。
-
-以下权重和阈值仅供现有申请通知作内部初步整理，并非 GCC 官网公布的正式评分、投票规则或资助决定；一般问答不会载入或引用这些数值。它们会在 `REVIEW-001` 中由 evidence-based triage 取代。
-
-旧有内部权重：
-
-| 维度 | 权重 |
-|---|---|
-| 使命契合度 | 40 |
-| 公共物品属性 | 30 |
-| 华语社区影响 | 20 |
-| 可行性 | 10 |
-
-旧有内部提示：
-
-- **≥ 70**：建议管理员跟进
-- **40–69**：建议参加例会进一步了解
-- **< 40**：可能不符合当前方向
+`values.yaml` 保存 GCC 使命、资助方向、公开事实边界和语气。修改后重新部署，或私聊 Bot 发送 `/update_values` 生效。Bot 内申请收集、评分与管理员申请通知已停用；正式申请只在 GCC 官网外部表格完成。旧草稿仍保留在 SQLite，等待资料保存政策处理，不会自动转入外部表格。
 
 ## 数据与对话记忆
 
@@ -203,7 +184,6 @@ flyctl volumes create gcc_agent_data --region nrt --size 1
 flyctl secrets set \
   BOT_TOKEN="..." \
   ADMIN_USER_ID="..." \
-  ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
   GROUP_QA_ENABLED="true" \
   OPENAI_API_KEY="..." \

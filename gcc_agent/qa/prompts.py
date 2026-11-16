@@ -101,6 +101,13 @@ def _link_reply(lang: str, link_type: str, name: str, url: str) -> str:
         "events": {"zh-TW": "📅 GCC 活動與例會：", "zh-CN": "📅 GCC 活动与例会：", "en": "📅 GCC Events & Community Calls:"},
     }
     label = labels.get(link_type, {}).get(lang, labels.get(link_type, {}).get("zh-TW", ""))
+    if link_type in ("apply", "apply_public", "apply_special"):
+        notice = {
+            "zh-TW": "正式申請只在官方外部表格提交；Bot 不收集或評分。請核對目前開放狀態。",
+            "zh-CN": "正式申请仅通过官网外部表格提交；Bot 不收集或评分。请确认当前开放状态。",
+            "en": "Submit only through the official external form. The Bot does not collect or score applications. Check current availability.",
+        }.get(lang, "正式申請只在官方外部表格提交；Bot 不收集或評分。請核對目前開放狀態。")
+        return f"{label}\n{url}\n\n{notice}{reminder}"
     return f"{label}\n{url}{reminder}"
 
 

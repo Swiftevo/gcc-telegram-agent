@@ -27,6 +27,13 @@ production metadata 為證據。本次沒有讀取 production SQLite 內容、Te
 > application 或新增管理能力，既有專用命令資格不變。離群或 API error 均 fail closed。
 > 此處理已同步至 `/privacy` 告知。
 
+> 2026-11-17 後續申請變更：Bot 內四步申請、評分和管理員申請通知已停用。
+> 新申請只經 GCC 官網外部表格。舊 active 或曾提交的 draft session 在下次互動時只改
+> `mode` 為 `legacy_application_closed`；原有 `draft_json`、`messages_json` 不改寫，
+> 新問答另開乾淨 session。舊 draft、score、message row、備份及管理員 Telegram 副本
+> 仍待 `PRIV-001E` 的保存及清理決定。以下圖表和清冊是 2026-09-13 的歷史快照，
+> 不再代表目前會發送新的申請通知。
+
 ## 資料主體與處理角色
 
 | 類別 | 現況 |

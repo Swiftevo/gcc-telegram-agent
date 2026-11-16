@@ -1,8 +1,25 @@
 # GCC Telegram Bot Operations Runbook
 
-This runbook covers process, database, Telegram webhook, notification, deploy,
+This runbook covers process, database, Telegram webhook, operations alerts, deploy,
 and Machine incidents for `gcc-public-goods-bot`. It must not contain secret
 values, user messages, email addresses, application content, or database rows.
+
+## Application retirement release check
+
+After the APP-001 / REVIEW-001 merge, verify in a private chat and in the configured
+group that a funding application question gives only the current official external
+form landing page. Test a Public Fund and a Special Fund question separately, and
+check the website's current opening status before describing any round as open.
+An old Telegram `intent_apply` or `intent_exit` button must return the external
+handoff without asking for a project name or claiming submission. If a test account
+has a legacy draft, confirm its next Q&A starts a clean session and does not quote
+its draft. `/status` must not show a new-application count. Do not paste draft
+contents into logs or a PR.
+
+Rollback uses the previously verified image under the release procedure below;
+this restores the old application flow, so disable public use and investigate
+before any rollback. SQLite draft rows are preserved by this change and need no
+data restoration. Their retention and deletion remain under `PRIV-001E`.
 
 ## Ownership and alert paths
 
@@ -76,7 +93,6 @@ Machine from routing.
 | Main test or deploy fails | `Fly Deploy` run fails and opens a run-specific issue | Inspect the first failed step; do not retry blindly |
 | Telegram API unreachable three times | `/opsz` becomes 503; external monitor opens an issue | Check Telegram status, DNS/network, token validity and logs |
 | Webhook URL mismatch, new Telegram delivery error, or backlog ≥20 | Generic Telegram admin alert; `/opsz` remains degraded for at least 30 minutes; GitHub issue follows | Inspect `getWebhookInfo`, public endpoint, secret and recent deploy |
-| Admin application notification fails | Generic fallback alert to `ADMIN_USER_ID`; `/opsz` degrades and external issue follows | Check bot permission and target chat without copying application content |
 | Unhandled update exception | Redacted traceback in Fly logs, generic admin alert, `/opsz` degradation | Identify exception type and affected feature; never paste user content into an issue |
 
 Alerts are deduplicated per event for 15 minutes. If Telegram itself is down, its

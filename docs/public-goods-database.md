@@ -33,7 +33,7 @@ Out of scope for this first step:
 - Importing all 63 projects in the frozen legacy catalog.
 - Publishing private applications or committee records.
 - Fully automating grant review.
-- Replacing the current `pre_screen()` scoring logic.
+- Do not reintroduce the retired in-Bot scoring logic; case evidence supports reviewed public Q&A, not automated application decisions.
 
 ## Data Layers
 
@@ -93,11 +93,11 @@ Voting records are also modeled as evidence. The repository supports cleaned
 public aggregate records now. Internal committee records remain metadata-only
 unless GCC later publishes an approved, redacted extract.
 
-### 5. AI Screening Context
+### 5. AI Q&A Context
 
-The bot should retrieve only the fields that are allowed for screening. This
-prevents private applications and voting notes from accidentally becoming prompt
-material.
+The bot retrieves only case fields approved for public Q&A. Historical private
+applications and voting notes must not become prompt material. The retired
+in-Bot application screening must not be reintroduced through case retrieval.
 
 ## Design Principle
 
@@ -106,7 +106,7 @@ Each case should separate four things:
 - What happened: public factual record.
 - Why it was funded: GCC's reason and public goods interpretation.
 - What evidence supports it: source URLs, snapshots, applications, votes.
-- What AI may use: concise retrieval text and allowed screening dimensions.
+- What AI may use: concise, reviewed public Q&A text and its source boundaries.
 
 ## Schema 0.4.0
 
@@ -202,8 +202,9 @@ The runtime contract and rollback are documented in
 governed by `PGDATA-001`, `CONTENT-001`,
 `GOVERNANCE-001`, `CONTENT-002`, and `SEARCH-001` in the canonical
 [`docs/todo.md`](todo.md). That ordering is intentional: privacy, screening
-guardrails, provenance, and licensing must be stable before importing private
-applications or adding semantic search.
+guardrails, provenance, and licensing must be stable before importing further
+public case evidence or adding semantic search. Private applications are outside
+the Bot's current scope.
 
 This design document must not be used as a parallel backlog. Detailed evidence
 gaps remain in [`docs/project-evidence-todo.md`](project-evidence-todo.md).
