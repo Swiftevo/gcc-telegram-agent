@@ -3,7 +3,7 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-11-17：停用 Bot 內申請與假精確評分（待 merge／production 驗收）
+## 2026-11-17：停用 Bot 內申請與假精確評分（已部署；Telegram 行為驗收待完成）
 
 - GCC owner 決定完全取消 Bot 內四步申請、百分制和管理員申請通知；正式申請只經
   [GCC 官網申請入口](https://www.gccofficial.org/application)的外部表格。
@@ -14,8 +14,16 @@
   `mode` 為 `legacy_application_closed`，保留原始 `draft_json`／`messages_json`；
   後續一般問答另開乾淨 session，不帶舊申請內容進 AI。舊資料保存、刪除、備份和
   管理員 Telegram 副本仍由 `PRIV-001E` 處理。
-- `REVIEW-001`／`APP-001` 待本 PR merge、production 私訊／群組、舊按鈕和
-  `/status` 驗收後移入 Done。此記錄不聲稱已部署或已刪除 production 草稿。
+- PR #67 已於 2026-11-17 merge 至 main（`5b92f43`）。main Actions
+  [run `44088712636`](https://github.com/Swiftevo/gcc-telegram-agent/actions/runs/44088712636)
+  的 Verify release、完整測試與 Deploy app 均成功；部署 log 顯示 image
+  `deployment-01M7MSMME1Y1KEZJPC0J9S1KEQ`，Machine `7813de2bdd3638`
+  已啟動並通過 Fly smoke／health checks。公開 `/healthz`、`/readyz`、`/opsz`
+  均回 200；`/readyz` 的 application／webhook／database／telegram checks 為 true，
+  `/opsz` 沒有 recent incident。
+- 目前本機 Fly CLI 沒有登入憑證，未核對 production SQLite、secrets、Machine 的
+  後續版本狀態或 Telegram 真實互動。`REVIEW-001`／`APP-001` 仍待私訊、群組、
+  舊按鈕及 `/status` 的 production 行為驗收後移入 Done；未刪除舊資料。
 - 本地全套 28 個測試檔通過；另以 6 個針對性測試確認舊草稿、舊按鈕、失去資格
   用戶及公共／專項基金連結。案例及歷史資料驗證器均通過。
 
