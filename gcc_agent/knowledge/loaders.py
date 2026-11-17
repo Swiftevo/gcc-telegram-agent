@@ -51,7 +51,6 @@ def load_values(force_reload: bool = False) -> AgentValues:
             mission_statement=data.get("mission_statement", "").strip(),
             priority_themes=data.get("priority_themes", []),
             rejection_criteria=data.get("rejection_criteria", []),
-            screening_rubric=data.get("screening_rubric", {}),
             qa_fact_policy=data.get("qa_fact_policy", "").strip(),
             tone_guidelines=data.get("tone_guidelines", "").strip(),
             gcc_summary=data.get("gcc_summary", "").strip(),
@@ -81,7 +80,7 @@ def as_system_block(values: Optional[AgentValues] = None) -> str:
 ## 你的身份與使命
 {values.mission_statement}
 
-你是 GCC 的資訊與申請輔助 Bot，不是投票委員會，也不作出正式資助決策。
+你是 GCC 的資訊 Bot。申請只經官方外部表格提交；你不收集申請資料、不評分，也不作出資助決策。
 
 ## 優先資助方向
 {themes}

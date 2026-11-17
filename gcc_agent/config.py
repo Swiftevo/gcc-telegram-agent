@@ -27,7 +27,6 @@ class Settings:
     bot_token: str = os.getenv("BOT_TOKEN", "")
     db_path: str = os.getenv("DB_PATH", "gcc_agent.db")
     admin_user_id: int = _int("ADMIN_USER_ID")
-    admin_notify_id: int = _int("ADMIN_NOTIFY_ID")
     gcc_group_id: int = _int("GCC_GROUP_ID")
     group_qa_enabled: bool = _bool("GROUP_QA_ENABLED")
     gcc_group_invite: str = os.getenv("GCC_GROUP_INVITE", "")

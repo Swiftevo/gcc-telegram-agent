@@ -21,13 +21,14 @@ from gcc_agent.access.handler import (
     handle_unblock,
     handle_whoami,
 )
-from gcc_agent.applications.models import ApplicationDraft
-from gcc_agent.applications.messages import text as application_text
-from gcc_agent.applications.markup import make_exit_markup
-from gcc_agent.applications.workflow import handle_application
+from gcc_agent.applications.handoff import handoff_text, make_apply_markup
 from gcc_agent.common.persistence import users
 from gcc_agent.common.persistence.database import init_db
-from gcc_agent.common.persistence.conversations import get_or_create_session, save_session
+from gcc_agent.common.persistence.conversations import (
+    archive_legacy_application_session,
+    get_active_session,
+    has_legacy_application_data,
+)
 from gcc_agent.common.persistence.users import get_user
 from gcc_agent.config import settings
 from gcc_agent.ops.runtime import (
@@ -148,10 +149,16 @@ async def handle_message(update: Update, context) -> None:
     result = await route(update, context, guard)
     if result.mode == "admin":
         await handle_admin(update, context, guard, result.command)
+    elif result.mode == "legacy_application":
+        session = await get_active_session(guard.user.user_id)
+        if session is not None and has_legacy_application_data(session):
+            await archive_legacy_application_session(session.session_id)
+        await update.message.reply_text(
+            handoff_text(guard.lang, legacy=True),
+            reply_markup=make_apply_markup(guard.lang),
+        )
     elif guard.reason == PRIVATE_GROUP_QA_REASON:
         await handle_general(update, context, guard, allow_application=False)
-    elif result.mode == "application":
-        await handle_application(update, context, guard)
     else:
         await handle_general(update, context, guard)
 
@@ -210,24 +217,18 @@ async def handle_callback(update: Update, context) -> None:
         await query.message.reply_text(LANGUAGE_SAVED[lang])
         return
     user = await get_user(query.from_user.id)
-    if user is None or user.is_blocked or not user.can_use_qa():
-        return
-    session, _ = await get_or_create_session(user.user_id)
-    lang = getattr(user, "preferred_lang", "") or detect_language(update)
-    if query.data == "intent_apply":
-        session.mode = "application"
-        session.application_draft = ApplicationDraft(collection_step=1)
-        await save_session(session)
+    if query_data in ("intent_apply", "intent_exit"):
+        # Legacy buttons may remain in Telegram after access eligibility changes.
+        # This public handoff does not grant Q&A or create a user/session.
+        lang = getattr(user, "preferred_lang", "") or detect_language(update)
+        session = await get_active_session(query.from_user.id) if user else None
+        legacy = session is not None and has_legacy_application_data(session)
+        if legacy:
+            await archive_legacy_application_session(session.session_id)
         await query.message.reply_text(
-            application_text(lang, "intro"),
-            parse_mode="Markdown",
-            reply_markup=make_exit_markup(lang),
+            handoff_text(lang, legacy=legacy),
+            reply_markup=make_apply_markup(lang),
         )
-    elif query.data == "intent_exit":
-        session.mode = "general"
-        session.application_draft = ApplicationDraft()
-        await save_session(session)
-        await query.message.reply_text("✅ Application flow exited.")
 
 
 async def handle_start(update: Update, context) -> None:

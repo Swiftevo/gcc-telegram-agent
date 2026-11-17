@@ -30,9 +30,4 @@ async def get_stats() -> dict:
                 "SELECT COALESCE(SUM(tokens_used),0) n FROM messages WHERE created_at LIKE ?",
                 (f"{today}%",),
             ),
-            "applications_today": await scalar(
-                """SELECT COUNT(*) n FROM sessions
-                   WHERE draft_json LIKE '%"collection_step": 4%' AND created_at LIKE ?""",
-                (f"{today}%",),
-            ),
         }

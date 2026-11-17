@@ -79,22 +79,14 @@ def test_models():
 
     # ApplicationDraft
     d = ApplicationDraft()
-    check("Draft 初始 is_complete() = False", not d.is_complete())
+    check("Draft 歷史欄位預設空白", d.project_name == "" and d.agent_score == -1)
     check("Draft 初始 collection_step = 0", d.collection_step == 0)
-
-    q = d.next_question("zh-TW")
-    check("Draft 步驟 0 問題不為空", len(q) > 0, q[:30])
-
-    check("Draft parse_fund_type '公共'", d.parse_fund_type("公共") == "public")
-    check("Draft parse_fund_type '专项'", d.parse_fund_type("专项") == "special")
-    check("Draft parse_fund_type 'public'", d.parse_fund_type("public") == "public")
-    check("Draft parse_fund_type '不知道'", d.parse_fund_type("不知道") == "unknown")
 
     d.project_name = "TestProject"
     d.fund_type = "public"
     d.executive_summary = "解決公共問題的開源工具"
     d.collection_step = 4
-    check("Draft 填完四步 is_complete() = True", d.is_complete())
+    check("Draft 歷史欄位可讀寫", d.project_name == "TestProject" and d.collection_step == 4)
 
     # Session
     s = Session(user_id=123456)
@@ -247,7 +239,7 @@ async def test_db():
     session4, _ = await get_or_create_session(999001)
     check("ApplicationDraft 持久化：project_name", session4.application_draft.project_name == "TestProject")
     check("ApplicationDraft 持久化：agent_score", session4.application_draft.agent_score == 75)
-    check("ApplicationDraft is_complete()", session4.application_draft.is_complete())
+    check("ApplicationDraft 歷史欄位仍可讀取", session4.application_draft.collection_step == 4)
 
     # Stats
     stats = await get_stats()
@@ -266,21 +258,17 @@ def test_values_yaml():
 
     import yaml
     try:
-        with open("values.yaml") as f:
+        with open("values.yaml", encoding="utf-8") as f:
             data = yaml.safe_load(f)
         check("values.yaml 解析成功", True)
         check("包含 version", "version" in data)
         check("包含 mission_statement", "mission_statement" in data)
         check("包含 priority_themes（列表）", isinstance(data.get("priority_themes"), list))
         check("包含 rejection_criteria（列表）", isinstance(data.get("rejection_criteria"), list))
-        check("包含 screening_rubric（字典）", isinstance(data.get("screening_rubric"), dict))
+        check("不再載入舊百分制 rubric", "screening_rubric" not in data)
         check("包含 qa_fact_policy", bool(data.get("qa_fact_policy")))
         check("包含 tone_guidelines", "tone_guidelines" in data)
         check("包含 gcc_summary", "gcc_summary" in data)
-        rubric = data.get("screening_rubric", {})
-        check("screening_rubric 包含 mission_fit", "mission_fit" in rubric)
-        check("screening_rubric 總分 = 100",
-              sum(int(v) for v in rubric.values() if str(v).isdigit()) == 100)
     except Exception as e:
         check(f"values.yaml 解析失敗：{e}", False)
 

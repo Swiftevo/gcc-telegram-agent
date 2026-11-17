@@ -8,7 +8,8 @@ from telegram.ext import ContextTypes
 from gcc_agent.common.session import get_session, save_exchange
 from gcc_agent.knowledge.cases import select_bot_qa_case_records
 from gcc_agent.qa.case_facts import append_case_provenance, case_provenance_footer
-from gcc_agent.qa.messages import append_reminder, make_apply_markup
+from gcc_agent.applications.handoff import make_apply_markup
+from gcc_agent.qa.messages import append_reminder
 from gcc_agent.qa.payment_destinations import contains_chain_address, payment_destination_reply
 from gcc_agent.qa.prompts import FUNDING_KEYWORDS, build_messages, check_link_first
 from gcc_agent.qa.service import call_ai
@@ -57,6 +58,12 @@ async def handle_general(
 
     link_result = check_link_first(user_text, lang, session.get_context())
     if link_result.matched:
+        if link_result.link_type in ("apply_public", "apply_special"):
+            reply_markup = make_apply_markup(
+                lang,
+                url="https://www.gccofficial.org/application/"
+                + link_result.link_type.removeprefix("apply_"),
+            )
         # Reviewed programmes use external forms, not the legacy in-Bot draft.
         if (
             link_result.link_type.startswith(("cohort4_", "university2026_"))

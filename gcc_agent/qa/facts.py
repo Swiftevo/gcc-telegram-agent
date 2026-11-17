@@ -100,19 +100,19 @@ Official sources:
     "score": {
         "zh-TW": f"""GCC 官網目前沒有公布 40/30/20/10 的正式評分權重，也沒有公布 70/40 的通過門檻。
 
-Bot 現有的百分制只是內部初步整理 heuristic，不是 GCC 投票委員會的正式評分或決策，不能用來自動通過或拒絕申請。
+Bot 已停用申請收集及評分。舊 Bot 內部分數不是 GCC 投票委員會的正式評分或決策，不能用來判定申請結果。
 
 官網公開的公共基金考慮因素：
 {PUBLIC_FUND_URL}""",
         "zh-CN": f"""GCC 官网目前没有公布 40/30/20/10 的正式评分权重，也没有公布 70/40 的通过门槛。
 
-Bot 现有的百分制只是内部初步整理 heuristic，不是 GCC 投票委员会的正式评分或决策，不能用来自动通过或拒绝申请。
+Bot 已停用申请收集及评分。旧 Bot 内部分数不是 GCC 投票委员会的正式评分或决策，不能用来判定申请结果。
 
 官网公开的公共基金考虑因素：
 {PUBLIC_FUND_URL}""",
         "en": f"""The GCC website does not currently publish official 40/30/20/10 weights or 70/40 passing thresholds.
 
-The bot's existing percentage score is only an internal triage heuristic. It is not an official GCC voting-committee score or decision and must not automatically approve or reject an application.
+The Bot no longer collects or scores applications. Old in-Bot scores were not official GCC voting-committee scores or decisions and cannot determine an application outcome.
 
 Published Public Fund considerations:
 {PUBLIC_FUND_URL}""",
@@ -150,21 +150,21 @@ Official sources:
 • 公共基金評審因素、申請入口及 8–12 週週期：{PUBLIC_FUND_URL}
 • 專項基金主題及滾動申請入口：{SPECIAL_FUND_URL}
 
-這些頁面沒有公布 40/30/20/10 權重或 70/40 門檻；Bot 內部分數不是 GCC 正式政策。""",
+這些頁面沒有公布 40/30/20/10 權重或 70/40 門檻；舊 Bot 內部分數不是 GCC 正式政策，現已停用。""",
         "zh-CN": f"""📚 官方来源：
 
 • GCC 整体资助流程与准则：{ABOUT_URL}
 • 公共基金评审因素、申请入口及 8–12 周周期：{PUBLIC_FUND_URL}
 • 专项基金主题及滚动申请入口：{SPECIAL_FUND_URL}
 
-这些页面没有公布 40/30/20/10 权重或 70/40 门槛；Bot 内部分数不是 GCC 正式政策。""",
+这些页面没有公布 40/30/20/10 权重或 70/40 门槛；旧 Bot 内部分数不是 GCC 正式政策，现已停用。""",
         "en": f"""📚 Official sources:
 
 • GCC's overall funding process and principles: {ABOUT_URL}
 • Public Fund considerations, forms, and 8–12 week cycle: {PUBLIC_FUND_URL}
 • Special Fund themes and rolling application links: {SPECIAL_FUND_URL}
 
-These pages do not publish 40/30/20/10 weights or 70/40 thresholds. The bot's internal score is not official GCC policy.""",
+These pages do not publish 40/30/20/10 weights or 70/40 thresholds. Old in-Bot scores were not official GCC policy and are now disabled.""",
     },
     "decision_execution": {
         "zh-TW": "Snapshot 的簽署、投票或提案結果只能證明相關治理提案或決定，不能單獨證明實際撥款、里程碑驗收或款項解鎖。這些執行狀態必須另以交易、會計、付款或獲授權的驗收紀錄核對；未核實前應視為尚待確認。",

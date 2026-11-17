@@ -4,7 +4,7 @@
 
 # GCC Telegram AI Assistant
 
-A Telegram AI assistant for public goods: it answers questions, collects grant applications, and runs preliminary screening.
+A Telegram AI assistant for public goods: it answers questions and directs applicants to GCC's official forms.
 
 [![Telegram](https://img.shields.io/badge/Telegram-@GCCpublicgoods__bot-2CA5E0?logo=telegram&logoColor=white)](https://t.me/GCCpublicgoods_bot)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -32,7 +32,7 @@ To change code or open an Issue, start with the [contributing guide](CONTRIBUTIN
 
 Newcomers ask the same questions: what GCC does, how to apply for funding, and whether a project is a fit. Those threads used to land in the group over and over.
 
-This assistant takes that first layer: it answers with official links when it can, collects materials and scores them against GCC values when judgment is needed, then hands the case to members.
+This assistant answers from reviewed material and official links. Applications are submitted and processed through external forms on the GCC website.
 
 ## Features
 
@@ -41,8 +41,7 @@ This assistant takes that first layer: it answers with official links when it ca
 | Tiered access | Current human members of the configured GCC group may use group and private general Q&A; other users and unauthorized agents get a welcome message only |
 | Link-first answers | Questions that match official pages skip the model |
 | Languages | Simplified Chinese, Traditional Chinese, or English from the user locale, with manual switching via `/language` |
-| Application flow | Four steps: project name, fund type, proposal link, executive summary |
-| Screening | 0–100 score from `values.yaml`, then notify an administrator |
+| Application entry | Check current programmes and use the official external forms; the Bot does not collect, score, or submit applications |
 | Group-member Q&A | Explicit mention is required in `GCC_GROUP_ID`; current members may also ask general questions privately; general Q&A itself enables no application or new admin capability |
 | Rate limit | 20 messages per user per day, including group Q&A |
 
@@ -97,7 +96,6 @@ Fill in `.env`:
 ```env
 BOT_TOKEN=Telegram Bot Token
 ADMIN_USER_ID=Administrator Telegram User ID
-ADMIN_NOTIFY_ID=Application notification Telegram User ID
 GCC_GROUP_ID=GCC Telegram group ID
 GROUP_QA_ENABLED=false
 
@@ -133,7 +131,7 @@ The codebase is a feature-oriented modular monolith:
 gcc_agent/
 ├── access/                  # Identity, authorization, guard, dormant email compatibility
 ├── admin/                   # Administrator operations
-├── applications/            # Workflow, copy, screening, notifications
+├── applications/            # External-form handoff and legacy draft compatibility
 ├── common/
 │   └── persistence/         # SQLite migrations and repositories
 ├── knowledge/               # GCC values, projects, and cases
@@ -150,24 +148,9 @@ Root-level `db.py`, `models.py`, `core/`, and `handlers/` are compatibility faca
 
 Stack: Python 3.12, python-telegram-bot, OpenAI API, SQLite, Fly.io.
 
-## Values and screening
+## Values and application boundary
 
-`values.yaml` stores GCC's mission, funding priorities, rejection criteria, tone, and scoring weights. Redeploy after edits, or send `/update_values` in a private chat with the bot.
-
-Default weights:
-
-| Dimension | Weight |
-|---|---|
-| Mission fit | 40 |
-| Public-goods nature | 30 |
-| Chinese-speaking community impact | 20 |
-| Feasibility | 10 |
-
-Scores are preliminary only and are not a final decision:
-
-- **≥ 70**: recommend administrator follow-up
-- **40–69**: recommend discussion at a community call
-- **< 40**: may not fit the current direction
+`values.yaml` stores GCC's mission, funding priorities, public-fact boundaries, and tone. Redeploy after edits, or send `/update_values` in a private chat with the Bot. In-Bot collection, scoring, and administrator application notifications are disabled. Formal applications are submitted only through external forms on the GCC website. Historical drafts remain in SQLite pending a retention policy; they are not transferred to external forms.
 
 ## Data and conversation memory
 
@@ -195,7 +178,6 @@ flyctl volumes create gcc_agent_data --region nrt --size 1
 flyctl secrets set \
   BOT_TOKEN="..." \
   ADMIN_USER_ID="..." \
-  ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
   GROUP_QA_ENABLED="true" \
   OPENAI_API_KEY="..." \

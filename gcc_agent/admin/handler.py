@@ -51,7 +51,6 @@ async def handle_status(update: Update) -> None:
         f"🤖 AI 呼叫：{stats['ai_calls_today']}\n"
         f"🔗 連結回覆：{stats['messages_today'] - stats['ai_calls_today']}\n"
         f"🪙 Token 消耗：{stats['tokens_today']}\n"
-        f"📋 新申請：{stats['applications_today']}\n"
         f"{'─' * 28}\n"
         "*累計*\n"
         f"👥 總用戶數：{stats['total_users']}"

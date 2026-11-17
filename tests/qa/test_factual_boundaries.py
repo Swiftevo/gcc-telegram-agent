@@ -110,17 +110,11 @@ class QAFactPromptTests(unittest.TestCase):
             mission_statement="測試使命",
             priority_themes=["開源"],
             rejection_criteria=["欺詐"],
-            screening_rubric={
-                "mission_fit": 40,
-                "public_goods_nature": 30,
-                "chinese_community": 20,
-                "feasibility": 10,
-            },
             qa_fact_policy="沒有公開來源時必須明確回答未知，不得推斷。",
             tone_guidelines="保持簡潔。",
         )
         prompt = as_system_block(values)
-        self.assertIn("不是投票委員會", prompt)
+        self.assertIn("不收集申請資料、不評分", prompt)
         self.assertIn("回答未知", prompt)
         self.assertNotIn("使命契合度 40", prompt)
         self.assertNotIn(">= 70", prompt)

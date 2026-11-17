@@ -54,7 +54,7 @@ def test_values_load():
         check("values.yaml 載入 mission_statement", len(v2.mission_statement) > 0)
         check("values.yaml 載入 priority_themes（list）", isinstance(v2.priority_themes, list))
         check("values.yaml priority_themes 不為空", len(v2.priority_themes) > 0)
-        check("values.yaml 載入 screening_rubric（dict）", isinstance(v2.screening_rubric, dict))
+        check("Values 不再載入舊 rubric", not hasattr(v2, "screening_rubric"))
         check("values.yaml 載入 QA 事實邊界", len(v2.qa_fact_policy) > 0)
     else:
         print("  ⚠️  values.yaml 不存在，跳過詳細載入測試")
@@ -69,12 +69,6 @@ def test_system_block():
         mission_statement="測試使命",
         priority_themes=["開源軟件", "治理研究"],
         rejection_criteria=["商業項目", "不開源"],
-        screening_rubric={
-            "mission_fit": 40,
-            "public_goods_nature": 30,
-            "chinese_community": 20,
-            "feasibility": 10,
-        },
         qa_fact_policy="沒有公開來源時明確回答未知，不得推斷。",
         tone_guidelines="保持簡潔。",
         gcc_summary="GCC 是資助機構。",

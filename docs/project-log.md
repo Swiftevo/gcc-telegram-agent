@@ -3,6 +3,22 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-17：停用 Bot 內申請與假精確評分（待 merge／production 驗收）
+
+- GCC owner 決定完全取消 Bot 內四步申請、百分制和管理員申請通知；正式申請只經
+  [GCC 官網申請入口](https://www.gccofficial.org/application)的外部表格。
+  公共基金與專項基金使用各自官方入口，開放狀態以網站現況核對。
+- 移除舊收集／評分／通知程式和 `values.yaml` 舊 rubric；新申請按鈕是官方 URL。
+  已留在 Telegram 的舊「開始申請／退出申請」按鈕改為表格交接，不顯示已提交。
+- 舊 active 草稿，以及曾經提交但已轉為一般模式的 draft session，下次互動時只改
+  `mode` 為 `legacy_application_closed`，保留原始 `draft_json`／`messages_json`；
+  後續一般問答另開乾淨 session，不帶舊申請內容進 AI。舊資料保存、刪除、備份和
+  管理員 Telegram 副本仍由 `PRIV-001E` 處理。
+- `REVIEW-001`／`APP-001` 待本 PR merge、production 私訊／群組、舊按鈕和
+  `/status` 驗收後移入 Done。此記錄不聲稱已部署或已刪除 production 草稿。
+- 本地全套 28 個測試檔通過；另以 6 個針對性測試確認舊草稿、舊按鈕、失去資格
+  用戶及公共／專項基金連結。案例及歷史資料驗證器均通過。
+
 ## 2026-11-07：發佈前權限與收款地址風險修復（首 PR 已 merge；後續修補與 production 驗收待完成）
 
 - PR #65／merge `7e3ed1a`：main Actions `42298954733` 的 Verify release、Deploy app 與

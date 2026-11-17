@@ -210,7 +210,7 @@ class PrivateGroupMemberRoutingTests(unittest.IsolatedAsyncioTestCase):
         membership.assert_not_awaited()
         self.assertIn("qa: no", update.message.reply_text.await_args.args[0])
 
-    async def test_membership_qa_cannot_enter_private_application_flow(self):
+    async def test_membership_qa_closes_legacy_application_before_ai(self):
         update = make_update()
         guard = GuardResult(
             True,
@@ -224,25 +224,25 @@ class PrivateGroupMemberRoutingTests(unittest.IsolatedAsyncioTestCase):
         ):
             with patch(
                 "gcc_agent.telegram.app.route",
-                new=AsyncMock(return_value=SimpleNamespace(mode="application")),
+                new=AsyncMock(return_value=SimpleNamespace(mode="legacy_application")),
             ):
                 with patch(
-                    "gcc_agent.telegram.app.handle_application",
-                    new_callable=AsyncMock,
-                ) as application:
+                    "gcc_agent.telegram.app.get_active_session",
+                    new=AsyncMock(return_value=SimpleNamespace(session_id="old", mode="application")),
+                ):
                     with patch(
-                        "gcc_agent.telegram.app.handle_general",
+                        "gcc_agent.telegram.app.archive_legacy_application_session",
                         new_callable=AsyncMock,
-                    ) as general:
-                        await handle_message(update, SimpleNamespace())
+                    ) as archive:
+                        with patch(
+                            "gcc_agent.telegram.app.handle_general",
+                            new_callable=AsyncMock,
+                        ) as general:
+                            await handle_message(update, SimpleNamespace())
 
-        application.assert_not_awaited()
-        general.assert_awaited_once_with(
-            update,
-            ANY,
-            guard,
-            allow_application=False,
-        )
+        archive.assert_awaited_once_with("old")
+        general.assert_not_awaited()
+        self.assertIn("沒有轉交", update.message.reply_text.await_args.args[0])
 
 
 if __name__ == "__main__":

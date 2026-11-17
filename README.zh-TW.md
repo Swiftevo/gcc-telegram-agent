@@ -4,7 +4,7 @@
 
 # GCC Telegram AI 助手
 
-面向公共物品的 Telegram AI 助手：回答問題、收集資助申請、完成初步篩選。
+面向公共物品的 Telegram AI 助手：回答問題，並引導申請者使用 GCC 官網表格。
 
 [![Telegram](https://img.shields.io/badge/Telegram-@GCCpublicgoods__bot-2CA5E0?logo=telegram&logoColor=white)](https://t.me/GCCpublicgoods_bot)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -32,7 +32,7 @@
 
 新成員的問題大多重複：GCC 在做什麼、資助怎麼申請、我的專案合不合適。這些問題過去要在群裡反覆回答。
 
-這個助手把這部分工作接過來：能用官網連結回答的直接給連結，需要判斷的先收集材料並按 GCC 價值觀打分，再交給成員跟進。
+這個助手用已審核資料和官網連結回答問題；資助申請由官網外部表格接收與處理。
 
 ## 核心功能
 
@@ -41,8 +41,7 @@
 | 分級存取 | 指定 GCC 群組的現任 human 成員可使用群組及私人一般問答；其他用戶和未授權 Agent 只收到歡迎訊息 |
 | 連結優先 | 能用官網連結回答的問題不呼叫模型 |
 | 多語言 | 依用戶語言使用簡體中文、繁體中文或英文，也可用 `/language` 手動切換 |
-| 申請流程 | 四步收集：專案名稱、基金類型、提案連結、執行摘要 |
-| 初步篩選 | 依據 `values.yaml` 給出 0–100 分並通知管理員 |
+| 申請入口 | 前往 GCC 官網確認現行計劃並填寫外部表格；Bot 不收集、評分或提交申請 |
 | 群組成員問答 | 在 `GCC_GROUP_ID` 內須明確 mention；現任成員亦可私訊一般問題；一般問答本身不開啟申請或新增管理權限 |
 | 用量限制 | 每位用戶每天最多 20 條訊息，群組問答同樣計數 |
 
@@ -97,7 +96,6 @@ cp .env.example .env
 ```env
 BOT_TOKEN=Telegram Bot Token
 ADMIN_USER_ID=管理員 Telegram User ID
-ADMIN_NOTIFY_ID=接收申請通知的 Telegram User ID
 GCC_GROUP_ID=GCC Telegram 群組 ID
 GROUP_QA_ENABLED=false
 
@@ -134,7 +132,7 @@ python -m tests
 gcc_agent/
 ├── access/                  # 身份、授權、Guard 及 dormant 郵箱兼容程式
 ├── admin/                   # 管理員操作
-├── applications/            # 申請流程、文案、篩選和通知
+├── applications/            # 外部申請表引導與歷史草稿兼容
 ├── common/
 │   └── persistence/         # SQLite 遷移和 repositories
 ├── knowledge/               # GCC 價值觀、專案和案例
@@ -151,24 +149,9 @@ main.py                      # 啟動入口
 
 技術棧：Python 3.12、python-telegram-bot、OpenAI API、SQLite、Fly.io。
 
-## 價值觀與預審
+## 價值觀與申請邊界
 
-`values.yaml` 保存 GCC 使命、資助方向、拒絕條件、語氣和評分權重。修改後重新部署，或私訊 Bot 發送 `/update_values` 生效。
-
-預設評分權重：
-
-| 維度 | 權重 |
-|---|---|
-| 使命契合度 | 40 |
-| 公共物品屬性 | 30 |
-| 華語社區影響 | 20 |
-| 可行性 | 10 |
-
-結果僅用於初步篩選，不代表最終決定：
-
-- **≥ 70**：建議管理員跟進
-- **40–69**：建議參加例會進一步了解
-- **< 40**：可能不符合目前方向
+`values.yaml` 保存 GCC 使命、資助方向、公開事實邊界和語氣。修改後重新部署，或私訊 Bot 發送 `/update_values` 生效。Bot 內申請收集、評分與管理員申請通知已停用；正式申請只在 GCC 官網外部表格完成。舊草稿仍保留在 SQLite，等待資料保存政策處理，不會自動轉入外部表格。
 
 ## 資料與對話記憶
 
@@ -199,7 +182,6 @@ flyctl volumes create gcc_agent_data --region nrt --size 1
 flyctl secrets set \
   BOT_TOKEN="..." \
   ADMIN_USER_ID="..." \
-  ADMIN_NOTIFY_ID="..." \
   GCC_GROUP_ID="..." \
   GROUP_QA_ENABLED="true" \
   OPENAI_API_KEY="..." \
