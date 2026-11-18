@@ -3,7 +3,7 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
-## 2026-11-17：停用 Bot 內申請與假精確評分（待 merge／production 驗收）
+## 2026-11-17：停用 Bot 內申請與假精確評分（已部署並驗收現有 Telegram 入口）
 
 - GCC owner 決定完全取消 Bot 內四步申請、百分制和管理員申請通知；正式申請只經
   [GCC 官網申請入口](https://www.gccofficial.org/application)的外部表格。
@@ -14,8 +14,26 @@
   `mode` 為 `legacy_application_closed`，保留原始 `draft_json`／`messages_json`；
   後續一般問答另開乾淨 session，不帶舊申請內容進 AI。舊資料保存、刪除、備份和
   管理員 Telegram 副本仍由 `PRIV-001E` 處理。
-- `REVIEW-001`／`APP-001` 待本 PR merge、production 私訊／群組、舊按鈕和
-  `/status` 驗收後移入 Done。此記錄不聲稱已部署或已刪除 production 草稿。
+- PR #67 已於 2026-11-17 merge 至 main（`5b92f43`）。main Actions
+  [run `44088712636`](https://github.com/Swiftevo/gcc-telegram-agent/actions/runs/44088712636)
+  的 Verify release、完整測試與 Deploy app 均成功；部署 log 顯示 image
+  `deployment-01M7MSMME1Y1KEZJPC0J9S1KEQ`，Machine `7813de2bdd3638`
+  已啟動並通過 Fly smoke／health checks。公開 `/healthz`、`/readyz`、`/opsz`
+  均回 200；`/readyz` 的 application／webhook／database／telegram checks 為 true，
+  `/opsz` 沒有 recent incident。
+- 目前本機 Fly CLI 沒有登入憑證，未直接核對 production SQLite、secrets 或
+  Machine 的後續版本狀態；本次沒有刪除舊資料。
+- GCC owner 提供合併後真實 Telegram 截圖：群聊 mention「專項基金如何申請？」
+  回覆官方 `/application/special`；私訊「公共基金如何申請？」回覆
+  `/application/public` 並顯示「查看官方申請表」URL 按鈕；私訊
+  「如何申請資助？」回覆官方 `/application` 總入口。三則均說明正式申請只經
+  外部表格、Bot 不收集或評分，沒有顯示已提交或要求填寫項目資料。
+- Owner 找不到舊 Telegram「開始申請／退出申請」按鈕，故該歷史 callback
+  沒有 production E2E；本地與 PR CI 已測兩種舊按鈕只作表格交接，保留
+  draft 原始 JSON。管理員私訊 `/status` 的真實截圖不再列出「新申請」計數。
+  現有私訊、群聊、管理員狀態入口均已驗收；未能找到舊按鈕及未直接查看
+  production draft row 是記錄在案的驗收限制。`REVIEW-001`／`APP-001` 移入 Done；
+  舊資料的保存、通知副本及清理由 `PRIV-001E` 繼續處理。
 - 本地全套 28 個測試檔通過；另以 6 個針對性測試確認舊草稿、舊按鈕、失去資格
   用戶及公共／專項基金連結。案例及歷史資料驗證器均通過。
 
