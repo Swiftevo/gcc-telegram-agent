@@ -7,8 +7,7 @@
 ## 執行規則
 
 1. 同一時間只處理一個最前面的未完成項目；不得因較容易而跳級。
-2. P0 未清完前，不主動擴大 production 用戶或收集更多個人／申請資料；
-   `/grant` 權限及錢包／收款地址問答防線未完成 production 驗收前亦不擴大群組。
+2. P0 未清完前，不主動擴大 production 用戶或收集更多個人／申請資料。
 3. 每項完成必須同時具備：程式／設定、測試、production 驗證、文件和 rollback 說明。
 4. 若項目需要產品或治理決定，先記錄決定與責任人，再寫程式。
 5. 完成後將項目移到「Done」，並在 project log 加日期、PR、驗證證據和殘餘風險。
@@ -44,7 +43,6 @@
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 0 | ACCESS-PAY-001 | P0 | **收窄身份操作並阻止 AI 猜答收款地址** | PR #65 已 merge 並部署，公開健康檢查正常；merge 後發現額外收款問法仍漏入 AI，後續修補需擴充入口攔截及 AI 輸出地址攔截。完成需後續修補 merge、production 指定 operator／測試帳戶 E2E、確認 audit，並於私訊／群組用多種問法驗收；此前不擴大群組 | 2026-11-07 發佈前內測／審計決定；`ADMIN_USER_ID` 已設；正式地址 owner 決定 |
 | 1* | PRIV-001C | P1 | **決定對話與 session 保存政策** | 分開決定 private／group、link-first／AI、`messages_json`／messages 的必要性、保存期、匿名統計及模型傳送邊界 | PRIV-001A；GCC retention 決定 |
 | 2* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、legacy email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重啟 email verification 或重做 authentication | PRIV-001A；ACCESS-001；部分依賴 ACCESS-002 決定 |
 | 3* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
@@ -75,6 +73,7 @@
 
 | 日期 | ID | 原優先級 | 完成內容 | 證據 |
 |---|---|---|---|---|
+| 2026-11-22 | ACCESS-PAY-001 | P0 | 指定 operator 才可變更身份、封鎖及解封；撤權同時作用於私訊及群組；收款地址問法回覆固定安全提示，AI 輸出地址亦受攔截；operator 操作有最小 SQLite audit | PR #65／#66 已 merge；owner 真實測試非 operator 拒絕、封鎖／解封及私訊／群組錢包問答；封鎖期間群組 mention 無回覆、解封後問答恢復；2026-11-22 Fly production 唯讀查得 grant unchanged、block／unblock changed 三筆 audit；未上傳截圖或記錄帳號 ID |
 | 2026-11-17 | REVIEW-001 | P1 | 移除 Bot 內百分制、70／40 建議及申請通知；歷史分數只供舊 SQLite row 兼容，不能用作正式評分或新 QA；`/status` 不再列新申請 | PR #67／merge `5b92f43`；main Actions `44088712636` 完整測試／部署及 Fly Machine health 成功；公開三項健康端點 200；owner 真實私訊／群聊回覆均說明不評分，管理員 `/status` 截圖無新申請計數；未直接查看 production 舊資料 |
 | 2026-11-17 | APP-001 | P2 | 正式申請只導向官網外部表格；停止 Bot 四步收集、提交成功暗示及管理員通知；舊 draft 在下次互動時隔離並保留原始資料，後續保存／刪除交 `PRIV-001E` | PR #67／merge `5b92f43`；owner 真實私訊通用／公共基金、群聊專項基金入口及 `/status` 驗收；舊 Telegram 按鈕找不到，callback 與 draft 隔離以自動測試覆蓋，沒有聲稱 production 舊按鈕 E2E |
 | 2026-10-25 | QA-ROUTE-002 | P1 | 直接比較 2025 高校 Web3 與 2026 高校 Builder，或緊接澄清追問「兩者」，均只組合兩份核准資料；分清計劃池、單項上限、申請節奏及付款界線，無可比評審權重時不判斷難易；來源失效及未辨認追問不落回無來源 AI | PR #63／merge `53fef76`；完整 26 測試檔及 main Fly Deploy `40134430123` 通過；owner 05:31 私訊澄清後追問、05:38 指定群組直接比較均附三份來源且無舊錯答；之後 `/readyz`、`/opsz` 200、無 recent incident |
