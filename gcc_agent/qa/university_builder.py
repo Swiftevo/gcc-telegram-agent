@@ -6,6 +6,8 @@ import logging
 
 import yaml
 
+from gcc_agent.qa.messages import COMMUNITY_INVITE_FOOTER
+
 
 logger = logging.getLogger(__name__)
 _PATH = Path(__file__).resolve().parents[2] / "data" / "university-builder-2026.yaml"
@@ -136,10 +138,6 @@ def select_university_answer(text: str, lang: str = "zh-TW") -> UniversityAnswer
         "zh-TW": "以下為 GCC 已核准的簡體中文高校 Builder 計劃摘要：\n\n",
         "en": "The approved university Builder plan summary is currently available in Simplified Chinese:\n\n",
     }.get(lang, "")
-    reminder = {
-        "zh-TW": "如希望深入交流，歡迎參與 GCC 定期例會。",
-        "zh-CN": "如希望深入交流，欢迎参与 GCC 定期例会。",
-        "en": "For deeper discussion, you're welcome to join GCC's regular community calls.",
-    }.get(lang, "如希望深入交流，歡迎參與 GCC 定期例會。")
-    reply = f"{fallback}{body}\n\n申请表：{source['application_url']}\n计划附录：{source['appendix_url']}\n\n{reminder}"
+    reminder = COMMUNITY_INVITE_FOOTER.get(lang, COMMUNITY_INVITE_FOOTER["zh-TW"])
+    reply = f"{fallback}{body}\n\n申请表：{source['application_url']}\n计划附录：{source['appendix_url']}{reminder}"
     return UniversityAnswer(True, reply, kind)

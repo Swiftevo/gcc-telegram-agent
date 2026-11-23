@@ -1,5 +1,5 @@
 schema_version: "0.1.0"
-updated_at: "2026-09-16"
+updated_at: "2026-11-24"
 title: GCC 贡献者成长地图
 purpose: >
   面向已经加入指定 GCC Telegram 群组的新手，以轻量、问题驱动的方式，
@@ -29,7 +29,7 @@ public_channels:
   x: https://x.com/GCCofCommons
   telegram:
     label: GCC 志愿者大群
-    url: https://t.me/+GpdpcPIN2fY5YTZl
+    url: https://t.me/+VPm1urIRC0s4NzJl
   email: admin@gccofficial.org
 
 journey:
@@ -160,7 +160,7 @@ topics:
           - label: X（Twitter）
             text: https://x.com/GCCofCommons
           - label: Telegram
-            text: https://t.me/+GpdpcPIN2fY5YTZl
+            text: https://t.me/+VPm1urIRC0s4NzJl
           - label: 邮箱
             text: admin@gccofficial.org
         next_prompt: 如果你已经找到 GCC，可以继续了解如何加入志愿者大群。
@@ -168,7 +168,7 @@ topics:
           - label: GCC 官网
             url: https://www.gccofficial.org/
           - label: GCC Telegram 志愿者大群
-            url: https://t.me/+GpdpcPIN2fY5YTZl
+            url: https://t.me/+VPm1urIRC0s4NzJl
 
   - id: join-volunteer-community
     journey_id: join-gcc
@@ -192,7 +192,7 @@ topics:
         next_prompt: 加入后，你可以继续问「如何参与活动与任务？」。
         links:
           - label: GCC Telegram 志愿者大群
-            url: https://t.me/+GpdpcPIN2fY5YTZl
+            url: https://t.me/+VPm1urIRC0s4NzJl
 
   - id: activities-and-tasks
     journey_id: participate
@@ -264,4 +264,4 @@ topics:
         next_prompt: 你也可以先从志愿者大群中的活动或任务开始参与。
         links:
           - label: GCC Telegram 志愿者大群
-            url: https://t.me/+GpdpcPIN2fY5YTZl
+            url: https://t.me/+VPm1urIRC0s4NzJl

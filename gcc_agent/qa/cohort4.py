@@ -7,6 +7,8 @@ import logging
 
 import yaml
 
+from gcc_agent.qa.messages import COMMUNITY_INVITE_FOOTER
+
 
 logger = logging.getLogger(__name__)
 _PATH = Path(__file__).resolve().parents[2] / "data" / "cohort4.yaml"
@@ -144,10 +146,6 @@ def select_cohort4_answer(
         "zh-TW": "以下為 GCC 已核准的簡體中文 Cohort 4 公告摘要：\n\n",
         "en": "The approved Cohort 4 announcement summary is currently available in Simplified Chinese:\n\n",
     }.get(lang, "")
-    reminder = {
-        "zh-TW": "_如希望深入交流，歡迎參與 GCC 定期例會。_",
-        "zh-CN": "_如希望深入交流，欢迎参与 GCC 定期例会。_",
-        "en": "_For deeper discussion, you're welcome to join GCC's regular community calls._",
-    }.get(lang, "_如希望深入交流，歡迎參與 GCC 定期例會。_")
-    reply = f"{fallback}{body}\n\n公告來源：{source['announcement_url']}\n\n{reminder}"
+    reminder = COMMUNITY_INVITE_FOOTER.get(lang, COMMUNITY_INVITE_FOOTER["zh-TW"])
+    reply = f"{fallback}{body}\n\n公告來源：{source['announcement_url']}{reminder}"
     return Cohort4Answer(True, reply, answer_type)

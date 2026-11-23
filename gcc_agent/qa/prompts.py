@@ -11,6 +11,7 @@ from gcc_agent.qa.cohort4 import select_cohort4_answer
 from gcc_agent.qa.university_builder import select_university_answer
 from gcc_agent.qa.case_facts import as_case_facts_system_block, format_case_fact_reply
 from gcc_agent.qa.history_facts import format_history_projection_reply
+from gcc_agent.qa.messages import COMMUNITY_INVITE_FOOTER
 from gcc_agent.qa.programme_comparison import select_reviewed_programme_comparison
 from gcc_agent.qa.payment_destinations import select_payment_destination_reply
 from gcc_agent.qa.route_selection import (
@@ -79,11 +80,7 @@ class LinkResult:
 
 
 def _link_reply(lang: str, link_type: str, name: str, url: str) -> str:
-    reminder = {
-        "zh-TW": "\n\n_如希望深入交流，歡迎參與 GCC 定期例會。_",
-        "zh-CN": "\n\n_如希望深入交流，欢迎参与 GCC 定期例会。_",
-        "en": "\n\n_For deeper discussion, you're welcome to join GCC's regular community calls._",
-    }.get(lang, "\n\n_如希望深入交流，歡迎參與 GCC 定期例會。_")
+    reminder = COMMUNITY_INVITE_FOOTER.get(lang, COMMUNITY_INVITE_FOOTER["zh-TW"])
     labels = {
         "project": {
             "zh-TW": f"📄 *{name}* 的詳細資料：",

@@ -11,6 +11,7 @@ from gcc_agent.access.models import ACTOR_HUMAN
 from gcc_agent.access.rules import qa_decision
 from gcc_agent.common.persistence import users
 from gcc_agent.config import settings
+from gcc_agent.qa.messages import COMMUNITY_INVITE_FOOTER
 
 logger = logging.getLogger(__name__)
 DAILY_LIMIT = 20
@@ -38,9 +39,9 @@ def message(lang: str, key: str) -> str:
             "en": "You are currently unable to use this service. Contact GCC if you have questions.",
         },
         "rate_limited": {
-            "zh-TW": f"⏳ 你今天已經達到 {DAILY_LIMIT} 條對話上限。\n\n明天再來繼續交流！\n\n如希望深入交流，歡迎參與 GCC 定期例會。",
-            "zh-CN": f"⏳ 你今天已达到 {DAILY_LIMIT} 条对话上限。\n\n明天再来继续交流！\n\n如希望深入交流，欢迎参与 GCC 定期例会。",
-            "en": f"⏳ You've reached today's limit of {DAILY_LIMIT} messages.\n\nCome back tomorrow!\n\nFor deeper discussion, join GCC's regular community calls.",
+            "zh-TW": f"⏳ 你今天已經達到 {DAILY_LIMIT} 條對話上限。\n\n明天再來繼續交流！{COMMUNITY_INVITE_FOOTER['zh-TW']}",
+            "zh-CN": f"⏳ 你今天已达到 {DAILY_LIMIT} 条对话上限。\n\n明天再来继续交流！{COMMUNITY_INVITE_FOOTER['zh-CN']}",
+            "en": f"⏳ You've reached today's limit of {DAILY_LIMIT} messages.\n\nCome back tomorrow!{COMMUNITY_INVITE_FOOTER['en']}",
         },
         "not_member": {
             "zh-TW": "👋 你好！\n\n你目前沒有 GCC 成員權限。\n\n🌐 https://www.gccofficial.org",

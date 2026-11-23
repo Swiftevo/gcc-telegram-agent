@@ -78,7 +78,7 @@ class Cohort4Tests(TestCase):
     def test_locale_fallback_explicit_and_no_unverified_total(self):
         result = check_link_first("Cohort 4 的申请截止？", "en")
         self.assertIn("Simplified Chinese", result.reply)
-        self.assertIn("community calls", result.reply)
+        self.assertIn("https://t.me/+VPm1urIRC0s4NzJl", result.reply)
         self.assertNotIn("160 万", result.reply)
 
     def test_review_gate_fails_closed(self):

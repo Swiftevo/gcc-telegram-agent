@@ -97,7 +97,8 @@ class UniversityBuilderHandlerTests(IsolatedAsyncioTestCase):
         self.assertIsNone(sent.kwargs["reply_markup"])
         self.assertIsNone(sent.kwargs["parse_mode"])
         self.assertIn("1kxkpeluBX7k4sAi_uV7aAO0TFOw8BTvSLmkd7XhEWiI", sent.args[0])
-        self.assertIn("如希望深入交流，歡迎參與 GCC 定期例會。", sent.args[0])
+        self.assertIn("如希望深入交流，歡迎加入 GCC Telegram group", sent.args[0])
+        self.assertIn("https://t.me/+VPm1urIRC0s4NzJl", sent.args[0])
         self.assertNotIn("_如希望深入交流", sent.args[0])
 
 
