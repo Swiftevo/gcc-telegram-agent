@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-23：PRIV-001E 舊 Bot 內申請資料零筆核對與關閉
+
+- GCC owner 指出目前沒有開放 Bot 內申請渠道，要求核實是否真的有舊申請資料；同意在零資料證據下關閉專項待辦，不為假設中的資料建立清理流程。
+- Fly production SQLite 唯讀 aggregate：42 筆 session；`application`／`legacy_application_closed` 模式 0；有申請內容的 draft 0；`submitted_at` 標記 0；`agent_score` 標記 0；無效 draft JSON 0。沒有讀取或輸出申請內容、用戶身份或單筆紀錄。這只證明核對時的 live SQLite 狀態，不證明舊備份或管理員 Telegram 從未有副本。
+- `PRIV-001E` 由 P1 待辦移至 Done；`PRIV-001F` 可按已批准的 30 日問答、90 日一般身份與停用 email 政策實作，不再以 E 為前置條件。實作前仍要以 aggregate 重查；若發現舊申請內容，跳過相關 row 並交 owner 核對。備份與管理員 Telegram 副本由 `PRIV-001H` 處理。本次只更新文件，沒有修改 Bot 行為或 production row。
+
 ## 2026-11-23：PRIV-001D 身份與已停用 email 的社區 Bot MVP 政策
 
 - GCC owner 指示以可實行的普通社區 Telegram Bot 準則推進私隱工作。本 PR 提出 90 日閒置一般帳號清理：只適用未封鎖、human／regular、沒有舊申請或 agent credential 的帳號；再次互動可重建並重新查核群組資格。被封鎖、operator、agent 或人工管理身份不因閒置自動刪除，避免繞過撤權。

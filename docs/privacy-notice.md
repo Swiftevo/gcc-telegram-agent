@@ -1,7 +1,7 @@
 # GCC Telegram Agent minimum data notice
 
 Status: `PRIV-001B` implementation specification  
-Last reviewed: 2026-11-17
+Last reviewed: 2026-11-23
 Evidence baseline: [`privacy-data-map.md`](privacy-data-map.md)
 
 ## Purpose and boundary
@@ -17,7 +17,8 @@ implementation decisions remain separated as follows:
 
 - conversation and session retention: `PRIV-001C`;
 - identity and email lifecycle: `PRIV-001D`;
-- legacy application and scoring records: `PRIV-001E`;
+- legacy application and scoring records: `PRIV-001E` closed after a zero-count
+  live SQLite check; backup and administrator Telegram copies remain in `PRIV-001H`;
 - automated cleanup: `PRIV-001F`;
 - access, export, and deletion requests: `PRIV-001G`;
 - provider, backup, log, and production-access governance: `PRIV-001H`.
