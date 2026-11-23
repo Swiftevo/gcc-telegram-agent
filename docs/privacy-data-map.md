@@ -245,6 +245,28 @@ Fly snapshots、手動 backup 及第三方副本不套用此 30 日 live QA 規�
 `/status` 當日計數仍正常。毋須為本項新增另一套分析、匿名化或管理介面。
 在實作及 production 驗收前，這項政策只是目標，現行資料仍可能留在 SQLite。
 
+## `PRIV-001D`：身份與已停用 email 的 MVP 政策
+
+此節提出可實行的社區 Bot 目標政策。**90 日閒置期限及清除舊 email 須由
+GCC owner 合併本 PR 才算批准**；目前 production 尚未執行這些清理。
+實作與驗收交 `PRIV-001F`，不可先在 `/privacy` 聲稱已生效。
+
+| 資料 | MVP 決定 |
+|---|---|
+| 一般身份 | Telegram ID、當前顯示名稱、語言、每日限額和最近活動時間只用於 Bot 存取、回覆與用量控制。未封鎖的 human／regular 帳號若 90 日沒有互動，且沒有舊申請資料或 agent credential，可在清理相關問答後刪除 user row；回來時按現有流程重建並重新核對群組資格。這會令 `/status` 的總用戶數變成現存帳號數，並非歷史累計人數。 |
+| 群組資格 | `is_group_member` 只是最近一次查核結果，不是永久成員授權或成員歷史；私人一般問答仍須每次向 Telegram 查核。毋須新增成員活動紀錄。 |
+| 封鎖及特殊身份 | `is_blocked=1` 的帳號不可因閒置而刪除，否則可能重建帳號繞過封鎖。指定 operator、agent、`gcc_member` 及其他人工管理的身份也不作一般 90 日自動刪除；由 operator／`ACCESS-002` 處理撤銷或降回 regular。 |
+| 舊 email | `/email`、`/verify` 已暫停且不再收集資料。清理實作時移除全部舊 `email_verifications` challenge，並清空 `users.email`、`email_verified_at`；先用不顯示地址的 aggregate 核對是否有仍依賴舊驗證的人工身份。若有，暫停該批 user row 的清空，交 owner 核對；不以舊 email 重新開放問答資格。 |
+| Agent credential | 目前沒有可用的 Telegram agent authentication 流程。不新增 credential；既有 active credential 如存在，先由 operator 核對並 revoke，才移除 hash。沒有該紀錄就不建立額外處理流程。 |
+| Audit 與副本 | `operator_actions` 的 actor／target ID 不會隨 user row 自動清除；保存與存取邊界由 `PRIV-001H` 決定。Fly snapshot、手動 backup 和 Telegram 副本也不隨 live SQLite 清理同步消失。 |
+
+`PRIV-001F` 只需依上述條件實作定期清理：先處理 `PRIV-001C` 的 30 日一般問答，
+再於同一 transaction 處理符合條件的閒置 user 及關聯 row；SQLite 的
+`sessions`／`messages` 外鍵沒有 `ON DELETE CASCADE`，不可直接刪 user。
+舊申請 session 及其 user 仍由 `PRIV-001E` 決定去向。上線前做不含地址／
+訊息內容的 aggregate 核對，測試一般重建、封鎖不被繞過及舊資料例外即可；
+不新增身份系統或重啟 email verification。
+
 ## 已確認缺口與後續路由
 
 | 缺口 | 後續任務 |
