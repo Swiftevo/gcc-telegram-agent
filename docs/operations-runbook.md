@@ -24,6 +24,52 @@ draft content, submission markers, or score markers. Recheck aggregate counts
 before retention cleanup; if legacy data appears, skip those rows and investigate.
 Backup and administrator Telegram copies are covered by `PRIV-001H`.
 
+## Live SQLite retention cleanup (`PRIV-001F`)
+
+The Bot defaults to `RETENTION_CLEANUP_MODE=off`. A production deploy alone does
+not delete data. `dry-run` logs aggregate candidates without changing rows;
+`apply` runs the same checks and then deletes eligible rows in one SQLite
+transaction, starting 60 seconds after Bot startup and repeating every 24 hours.
+Each run logs only counts and the mode, never IDs, addresses, or message text.
+Failures raise `retention_cleanup_failed`; unexpected legacy drafts or invalid
+timestamps raise `retention_cleanup_skipped_rows`; special-identity email data or
+active agent credentials raise `retention_cleanup_manual_review`. These alerts
+contain no user content.
+
+Before enabling deletion after the merge:
+
+1. Confirm the new image is deployed and `/readyz` and `/opsz` are healthy. Run
+   `python -m gcc_agent.ops.retention` in the Fly Machine for a read-only preview;
+   record aggregate counts only. Expected baseline on 2026-11-23: 42 sessions,
+   33 older than 30 days, 6 users, no eligible inactive regular users, and no
+   email or credential rows. Candidate counts may change with ongoing use.
+2. Follow [`sqlite-backup-restore.md`](sqlite-backup-restore.md) to create and
+   confirm an on-demand volume snapshot immediately before the first `apply`.
+   If the preview shows legacy application rows, invalid timestamps, special
+   email data, or active credentials, review the exception before proceeding.
+3. Set `RETENTION_CLEANUP_MODE=apply` for the production app and let the Machine
+   restart. Check the first aggregate `retention cleanup mode=apply` log line,
+   `/readyz`, `/opsz`, and a normal private/group Q&A. Re-run the read-only
+   preview to confirm eligible counts fell as expected. Do not paste user rows
+   or message content into an issue or PR.
+
+The cleanup removes both `sessions.messages_json` and related `messages` rows
+after 30 days since session last activity. It removes unblocked human/regular
+users after 90 days without activity only when they have no remaining sessions
+or active credentials; the configured operator and blocked/managed identities
+are protected. It removes dormant email challenges, clears email fields on
+regular users, and removes already revoked credential hashes. Email fields on
+managed identities and active credentials await operator review. Any unexpected
+legacy application session is skipped, including its user; no application
+content is printed or automatically deleted.
+
+To stop future cleanup, set `RETENTION_CLEANUP_MODE=off`. If an incorrect
+deletion occurred, stop cleanup first, preserve the current volume, and follow
+the documented snapshot restore procedure; restoring a snapshot also rolls
+back legitimate writes since that snapshot, so assess them before restoring.
+Backups, logs, administrator Telegram copies, and third-party data remain under
+`PRIV-001H` and are not deleted by this job.
+
 ## Ownership and alert paths
 
 - The repository owner/on-call maintainer owns GitHub Actions and Fly incidents.

@@ -76,7 +76,7 @@ Identity uses two independent fields instead of RBAC:
 - `actor_type`: `human` or `agent`
 - `access_level`: `regular` or `gcc_member`
 
-Email verification is paused; `/email` and `/verify` accept no new data. Current human members of the configured group receive request-scoped group and private general-Q&A capability. Private questions use Telegram `getChatMember` for a live check; the account is not promoted to `gcc_member`, and general Q&A enables no application or new admin capability. Governance of existing dedicated management commands remains under `ACCESS-002`. Legacy email fields, the verification table, and dormant implementation remain in place so data is not destroyed before retention and deletion policy is decided; legacy `user_kind` rows still migrate at startup.
+Email verification is paused; `/email` and `/verify` accept no new data. Current human members of the configured group receive request-scoped group and private general-Q&A capability. Private questions use Telegram `getChatMember` for a live check; the account is not promoted to `gcc_member`, and general Q&A enables no application or new admin capability. Governance of existing dedicated management commands remains under `ACCESS-002`. Legacy email schema and dormant implementation remain for compatibility; `PRIV-001F` handles old live email data under the approved retention policy. Legacy `user_kind` rows still migrate at startup.
 
 ## Quick start
 
@@ -150,7 +150,7 @@ Stack: Python 3.12, python-telegram-bot, OpenAI API, SQLite, Fly.io.
 
 ## Values and application boundary
 
-`values.yaml` stores GCC's mission, funding priorities, public-fact boundaries, and tone. Redeploy after edits, or send `/update_values` in a private chat with the Bot. In-Bot collection, scoring, and administrator application notifications are disabled. Formal applications are submitted only through external forms on the GCC website. Historical drafts remain in SQLite pending a retention policy; they are not transferred to external forms.
+`values.yaml` stores GCC's mission, funding priorities, public-fact boundaries, and tone. Redeploy after edits, or send `/update_values` in a private chat with the Bot. In-Bot collection, scoring, and administrator application notifications are disabled. Formal applications are submitted only through external forms on the GCC website. A 2026-11-23 live SQLite aggregate found no legacy application drafts, submissions, or scores; any unexpected legacy row is excluded from automatic cleanup and is not transferred to external forms.
 
 ## Data and conversation memory
 

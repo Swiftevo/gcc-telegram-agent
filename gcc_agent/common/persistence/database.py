@@ -13,8 +13,12 @@ MIGRATIONS_DIR = Path(__file__).resolve().parents[3] / "migrations"
 
 
 @asynccontextmanager
-async def connect(*, rows: bool = False):
-    db = await aiosqlite.connect(DB_PATH)
+async def connect(*, rows: bool = False, readonly: bool = False):
+    if readonly:
+        uri = Path(DB_PATH).resolve().as_uri() + "?mode=ro"
+        db = await aiosqlite.connect(uri, uri=True)
+    else:
+        db = await aiosqlite.connect(DB_PATH)
     if rows:
         db.row_factory = aiosqlite.Row
     await db.execute("PRAGMA foreign_keys = ON")

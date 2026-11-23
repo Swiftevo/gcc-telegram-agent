@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from gcc_agent.config import settings
+
 
 CONTACT_URL = "https://www.gccofficial.org/contact"
 
@@ -70,10 +72,34 @@ PRIVACY_NOTICES = {
     ),
 }
 
+RETENTION_DISCLOSURES = {
+    "zh-TW": (
+        "Live SQLite 的一般問答 session 在最後活動超過 30 日後定期清理；"
+        "未封鎖的普通用戶閒置超過 90 日後可清理身份及關聯資料。"
+        "封鎖及人工管理身份、備份、logs 和第三方副本另行處理。"
+    ),
+    "zh-CN": (
+        "Live SQLite 的一般问答 session 在最后活动超过 30 日后定期清理；"
+        "未封锁的普通用户闲置超过 90 日后可清理身份及关联数据。"
+        "封锁及人工管理身份、备份、logs 和第三方副本另行处理。"
+    ),
+    "en": (
+        "General Q&A sessions in live SQLite are routinely cleared after 30 days "
+        "since their last activity. An unblocked regular user's identity and related "
+        "records may be cleared after 90 days of inactivity. Blocked and managed "
+        "identities, backups, logs, and third-party copies are handled separately."
+    ),
+}
+
 
 def privacy_notice(lang: str) -> str:
     """Return the notice in a supported locale, falling back to Traditional Chinese."""
-    return PRIVACY_NOTICES.get(lang, PRIVACY_NOTICES["zh-TW"])
+    language = lang if lang in PRIVACY_NOTICES else "zh-TW"
+    notice = PRIVACY_NOTICES[language]
+    if settings.retention_cleanup_mode != "apply":
+        return notice
+    body, contact = notice.rsplit("\n\n", 1)
+    return f"{body}\n\n{RETENTION_DISCLOSURES[language]}\n\n{contact}"
 
 
 def is_privacy_request(text: str) -> bool:

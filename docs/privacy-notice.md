@@ -23,6 +23,13 @@ implementation decisions remain separated as follows:
 - access, export, and deletion requests: `PRIV-001G`;
 - provider, backup, log, and production-access governance: `PRIV-001H`.
 
+`PRIV-001F` adds a mode-aware retention paragraph only when
+`RETENTION_CLEANUP_MODE=apply`: live Q&A sessions are routinely cleared after
+30 days since last activity, and eligible unblocked regular identities after
+90 inactive days. In `off` or `dry-run`, the notice retains its current-state
+wording and does not claim those deletions are active. Backups, logs, and
+third-party copies remain outside this live SQLite cleanup.
+
 ## Published surfaces
 
 | Surface | Behaviour |

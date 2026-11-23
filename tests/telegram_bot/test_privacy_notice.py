@@ -51,6 +51,16 @@ class PrivacyNoticeTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("Email verification is paused", privacy_notice("en"))
         self.assertIn("member of the configured GCC group", privacy_notice("en"))
 
+    def test_enabled_cleanup_discloses_live_retention_without_claiming_backup_deletion(self):
+        with patch("gcc_agent.privacy.settings", SimpleNamespace(retention_cleanup_mode="apply")):
+            for lang in ("zh-TW", "zh-CN", "en"):
+                with self.subTest(lang=lang):
+                    notice = privacy_notice(lang)
+                    self.assertIn("30", notice)
+                    self.assertIn("90", notice)
+                    self.assertIn("SQLite", notice)
+                    self.assertLessEqual(len(notice), 4096)
+
     def test_unknown_language_falls_back_to_traditional_chinese(self):
         self.assertEqual(privacy_notice("zh-TW"), privacy_notice("fr"))
 
