@@ -3,6 +3,13 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-24：PRIV-001F production 啟用與首次清理
+
+- PR #73 已 merge（`3ff6f32`）；Fly release v105 部署完成，Machine started、health check 1/1，`/healthz`、`/readyz`、`/opsz` 均為 200，`recent_incident: false`。
+- 啟用前唯讀預覽：待清理 session 33、相關 message 108；90 日閒置 user、email／challenge／credential 及例外候選均為 0。先建立並確認加密 volume 的 on-demand snapshot `vs_O0YMgQeYgVDtzaDZRA8yq35`（建立時顯示保留 14 日），才把 `RETENTION_CLEANUP_MODE` 設為 `apply`。
+- 首次例行清理於 2026-11-23 16:44:50 UTC 成功：刪除 33 筆 session 和 108 筆相關 message，其他類別 0。之後唯讀預覽候選全為 0；SQLite `quick_check=ok`、foreign-key issue 0；總數由 6 user／42 session／152 message 變為 6／9／44。只讀 aggregate，沒有讀取或記錄任何用戶內容。
+- 清理後三個公開健康端點維持 200，沒有 operations incident。真實 Telegram 私訊及指定群組 mention 問答仍待 owner 驗收；完成前 `PRIV-001F` 保留在 Next up。Fly CLI 另外顯示對 8.8.8.8 的 DNS verification timeout，但 app health 與 Machine 更新正常。
+
 ## 2026-11-23：PRIV-001F live SQLite 清理實作待驗收
 
 - 以已批准的社區 Bot MVP 政策實作 30 日 session／兩份訊息同步清理、90 日閒置普通身份清理、停用 email 資料清理，以及已撤銷 agent credential hash 清理。封鎖、人工管理身份及指定 operator 不自動刪除；意外出現的舊申請、無效時間與特殊身份 email／仍有效的 credential 跳過並發出不含內容的 operator alert。

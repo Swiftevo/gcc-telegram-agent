@@ -41,9 +41,12 @@
 使用私人一般問答並完成 production 驗收。F–H 的表內次序仍只是方便檢視的暫定排列，
 不會自動開始。
 
+`PRIV-001F` 的 PR #73 已 merge，production `apply` 首次清理與資料庫完整性檢查通過；
+仍待 owner 真實 Telegram 私訊及指定群組 mention 問答驗收，才可移入 Done。
+
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 3* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential；清理前以 aggregate 核對舊申請標記，若出現則跳過相關 row 並另行核對；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D |
+| 3* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | PR #73 與 production `apply`／首次清理已完成；剩餘真實 Telegram 私訊及指定群組 mention 問答驗收。保留 30／90 日、安全跳過例外、transaction、aggregate 日誌、告警及 rollback 的既有實作 | PRIV-001C、PRIV-001D |
 | 4* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C、PRIV-001D、PRIV-001F；ACCESS-002 |
 | 5* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
 | 7 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | `/block`、`/unblock`、operator 最小 audit 與即時撤銷測試納入 `ACCESS-PAY-001`；剩餘：group membership 退出後的完整身份生命週期、保存及撤銷政策；不在本項重啟 email verification | TEST-001；ACCESS-001；PRIV-001D；ACCESS-PAY-001 |
