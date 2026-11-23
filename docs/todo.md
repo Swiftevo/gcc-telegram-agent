@@ -36,14 +36,13 @@
 
 ## Next up：嚴格執行順序
 
-原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A–C 已完成。
+原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A–D 已完成。
 `ACCESS-001` 已收起 email verification；`GROUP-ACCESS-002` 亦已讓指定群組現任成員
-使用私人一般問答並完成 production 驗收。D–H 的表內次序仍只是方便檢視的暫定排列，
+使用私人一般問答並完成 production 驗收。E–H 的表內次序仍只是方便檢視的暫定排列，
 不會自動開始。
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 2* | PRIV-001D | P1 | **決定身份與 email 資料政策** | 定義 Telegram identity、membership、legacy email、challenge、credential 的用途、revoke、inactive user 及保存期；不在本項重啟 email verification 或重做 authentication | PRIV-001A；ACCESS-001；部分依賴 ACCESS-002 決定 |
 | 3* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
 | 4* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential、legacy draft；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D、PRIV-001E |
 | 5* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C 至 PRIV-001F；ACCESS-002 |
@@ -72,6 +71,7 @@
 
 | 日期 | ID | 原優先級 | 完成內容 | 證據 |
 |---|---|---|---|---|
+| 2026-11-23 | PRIV-001D | P1 | 社區 Bot MVP 身份政策：一般 human／regular 閒置 90 日後可清理；封鎖及人工管理身份不自動刪除；群組資格僅為最近一次查核狀態；已停用 email challenge／地址資料列入安全清理，既有 agent credential 先人工核對撤銷 | 本 PR 的 `docs/privacy-data-map.md` 記錄界線，GCC owner merge 才批准 90 日與 email 清理政策；文件決定不代表 production 已刪除，實作／驗收交 `PRIV-001F`；舊申請與 audit／備份分別交 `PRIV-001E`／`PRIV-001H` |
 | 2026-11-23 | PRIV-001C | P1 | 以社區問答 MVP 訂定私訊／群組、固定答案／AI 共用的 30 日 live 問答保存目標；現有兩份文字一起到期清理，保持 30 分鐘 session 與最多 20 條模型上下文；不新增分析或用戶興趣 profile；舊申請資料另由 `PRIV-001E` 處理 | GCC owner 指示採可實行的普通社區 Bot 標準；`docs/privacy-data-map.md` 記錄具體政策並以本 PR merge 批准 30 日；本 PR 只改文件，production 尚無自動清理，實作／驗收交 `PRIV-001F` |
 | 2026-11-22 | ACCESS-PAY-001 | P0 | 指定 operator 才可變更身份、封鎖及解封；撤權同時作用於私訊及群組；收款地址問法回覆固定安全提示，AI 輸出地址亦受攔截；operator 操作有最小 SQLite audit | PR #65／#66 已 merge；owner 真實測試非 operator 拒絕、封鎖／解封及私訊／群組錢包問答；封鎖期間群組 mention 無回覆、解封後問答恢復；2026-11-22 Fly production 唯讀查得 grant unchanged、block／unblock changed 三筆 audit；未上傳截圖或記錄帳號 ID |
 | 2026-11-17 | REVIEW-001 | P1 | 移除 Bot 內百分制、70／40 建議及申請通知；歷史分數只供舊 SQLite row 兼容，不能用作正式評分或新 QA；`/status` 不再列新申請 | PR #67／merge `5b92f43`；main Actions `44088712636` 完整測試／部署及 Fly Machine health 成功；公開三項健康端點 200；owner 真實私訊／群聊回覆均說明不評分，管理員 `/status` 截圖無新申請計數；未直接查看 production 舊資料 |
