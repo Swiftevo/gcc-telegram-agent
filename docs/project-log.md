@@ -3,6 +3,13 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-22：ACCESS-PAY-001 production 權限撤銷及收款地址防線驗收完成
+
+- PR #65（merge `7e3ed1a`）只容許指定 operator 在私訊執行身份及封鎖變更，加入與變更同一 transaction 的最小 `operator_actions` audit；PR #66（merge `784ad59`）補充收款問法攔截及 AI 輸出地址攔截。既有 runbook 記錄回退及撤權步驟。
+- GCC owner 的真實 Telegram 測試：一般帳號的 `/grant`、`/block`、`/unblock` 均被拒；指定 operator 的 `/grant <測試帳號> regular`、`/block`、`/unblock` 有預期回覆。封鎖後私人問答被拒；owner 確認指定群組的 explicit mention 沒有回覆。解封後 `/whoami` 顯示 `qa: yes`，私人及群組問答恢復。
+- 私訊／群組使用多簽、入金及英文 crypto 收款問法測試，均沒有提供地址或鏈別，而是指向 GCC 官方聯絡渠道。這是上述問法的真實 E2E；AI 輸出地址防線另由 PR #66 自動測試涵蓋，不以 Bot 產生地址作 production 測試。
+- 2026-11-22 經 Fly SSH 唯讀查詢 production `operator_actions`，核對測試帳號有 `grant: unchanged (human/regular → human/regular)`、`block: changed (active → blocked)`、`unblock: changed (blocked → active)`；三筆 UTC 時間介乎 2026-11-20 23:35 至 23:37。記錄不包含帳號 ID、登入資料或訊息內容。這證明撤權與復原的正式環境 audit 已落盤；其他身份生命週期仍由 `ACCESS-002` 處理。
+
 ## 2026-11-17：停用 Bot 內申請與假精確評分（已部署並驗收現有 Telegram 入口）
 
 - GCC owner 決定完全取消 Bot 內四步申請、百分制和管理員申請通知；正式申請只經
