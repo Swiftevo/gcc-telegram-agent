@@ -8,7 +8,7 @@
 - PR #73 已 merge（`3ff6f32`）；Fly release v105 部署完成，Machine started、health check 1/1，`/healthz`、`/readyz`、`/opsz` 均為 200，`recent_incident: false`。
 - 啟用前唯讀預覽：待清理 session 33、相關 message 108；90 日閒置 user、email／challenge／credential 及例外候選均為 0。先建立並確認加密 volume 的 on-demand snapshot `vs_O0YMgQeYgVDtzaDZRA8yq35`（建立時顯示保留 14 日），才把 `RETENTION_CLEANUP_MODE` 設為 `apply`。
 - 首次例行清理於 2026-11-23 16:44:50 UTC 成功：刪除 33 筆 session 和 108 筆相關 message，其他類別 0。之後唯讀預覽候選全為 0；SQLite `quick_check=ok`、foreign-key issue 0；總數由 6 user／42 session／152 message 變為 6／9／44。只讀 aggregate，沒有讀取或記錄任何用戶內容。
-- 清理後三個公開健康端點維持 200，沒有 operations incident。真實 Telegram 私訊及指定群組 mention 問答仍待 owner 驗收；完成前 `PRIV-001F` 保留在 Next up。Fly CLI 另外顯示對 8.8.8.8 的 DNS verification timeout，但 app health 與 Machine 更新正常。
+- 清理後三個公開健康端點維持 200，沒有 operations incident。GCC owner 於 2026-11-24 提供真實 Telegram 私訊及指定群組明確 mention 的正常問答截圖，兩條回歸路徑通過；紀錄只保存結果，不上傳截圖或對話內容。`PRIV-001F` 移入 Done，備份及外部副本仍由 `PRIV-001H` 跟進。Fly CLI 另外顯示對 8.8.8.8 的 DNS verification timeout，但 app health 與 Machine 更新正常。
 
 ## 2026-11-23：PRIV-001F live SQLite 清理實作待驗收
 

@@ -256,7 +256,7 @@ Fly snapshots、手動 backup 及第三方副本不套用此 30 日 live QA 規�
 
 `PRIV-001F` 在同一 transaction 清理超過 30 日且沒有舊申請資料的 session
 及其 `messages` rows。首次清理後唯讀預覽候選為 0，資料庫完整性檢查通過；
-真實私訊／群組問答驗收狀態見 [`project-log.md`](project-log.md)。
+真實私訊／群組問答亦已由 owner 驗收，詳見 [`project-log.md`](project-log.md)。
 
 ## `PRIV-001D`：身份與已停用 email 的 MVP 政策
 
