@@ -36,17 +36,16 @@
 
 ## Next up：嚴格執行順序
 
-原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A–D 已完成。
+原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A–E 已完成。
 `ACCESS-001` 已收起 email verification；`GROUP-ACCESS-002` 亦已讓指定群組現任成員
-使用私人一般問答並完成 production 驗收。E–H 的表內次序仍只是方便檢視的暫定排列，
+使用私人一般問答並完成 production 驗收。F–H 的表內次序仍只是方便檢視的暫定排列，
 不會自動開始。
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 3* | PRIV-001E | P1 | **處理舊申請 draft、評分及 admin notification 資料** | 停止新流程後定義舊 session draft／score 的兼容、保存、通知副本及安全清理；政策前不得直接刪 production 歷史資料 | APP-001、REVIEW-001；GCC retention 決定 |
-| 4* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential、legacy draft；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D、PRIV-001E |
-| 5* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C 至 PRIV-001F；ACCESS-002 |
-| 6* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
+| 3* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential；清理前以 aggregate 核對舊申請標記，若出現則跳過相關 row 並另行核對；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D |
+| 4* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C、PRIV-001D、PRIV-001F；ACCESS-002 |
+| 5* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
 | 7 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | `/block`、`/unblock`、operator 最小 audit 與即時撤銷測試納入 `ACCESS-PAY-001`；剩餘：group membership 退出後的完整身份生命週期、保存及撤銷政策；不在本項重啟 email verification | TEST-001；ACCESS-001；PRIV-001D；ACCESS-PAY-001 |
 | 8 | RELEASE-001 | P1 | **鎖定 release workflow 與部署工具供應鏈** | 所有 GitHub Actions 固定到已核實的完整 commit SHA；移除 `setup-flyctl@master` 並固定 Fly deployment tooling；建立由 PR／完整 gate 審核的定期更新政策；main test／deploy 可追溯至同一 commit，production image SHA 相符 | TEST-001、OPS-001 |
 | 8a | COHORT4-FACT-001 | P1 | **修正已核准 Cohort 4 公告與 Bot 舊四類的衝突** | round-scoped OPS／申請截止／五項選拔因素／計劃時間表／推薦條件有直接來源及日期防線；舊網站類別不再冒充本輪方向；merge 後 private／group E2E；未核對的歷史總額及實際撥款不入回答 | content owner 2026-10-22 決定；QA-FACT-001；I18N 後續獨立處理 |
@@ -69,8 +68,11 @@
 
 ## Done
 
+以下較早完成項目所寫的 `PRIV-001E` 後續安排，以本日的零資料核對與關閉決定為準。
+
 | 日期 | ID | 原優先級 | 完成內容 | 證據 |
 |---|---|---|---|---|
+| 2026-11-23 | PRIV-001E | P1 | 關閉舊 Bot 內申請資料專項：現時 live SQLite 無舊申請草稿、提交或評分標記，不建立專用清理流程；外部備份與管理員 Telegram 副本的範圍仍由 `PRIV-001H` 核對 | owner 確認 Bot 不開放申請渠道並同意關閉此待辦；Fly production 唯讀 aggregate：42 筆 session、舊申請模式 0、含申請內容 draft 0、提交標記 0、評分標記 0、無效 JSON 0；沒有讀取申請內容或身份；`PRIV-001F` 不再依賴本項 |
 | 2026-11-23 | PRIV-001D | P1 | 社區 Bot MVP 身份政策：一般 human／regular 閒置 90 日後可清理；封鎖及人工管理身份不自動刪除；群組資格僅為最近一次查核狀態；已停用 email challenge／地址資料列入安全清理，既有 agent credential 先人工核對撤銷 | 本 PR 的 `docs/privacy-data-map.md` 記錄界線，GCC owner merge 才批准 90 日與 email 清理政策；文件決定不代表 production 已刪除，實作／驗收交 `PRIV-001F`；舊申請與 audit／備份分別交 `PRIV-001E`／`PRIV-001H` |
 | 2026-11-23 | PRIV-001C | P1 | 以社區問答 MVP 訂定私訊／群組、固定答案／AI 共用的 30 日 live 問答保存目標；現有兩份文字一起到期清理，保持 30 分鐘 session 與最多 20 條模型上下文；不新增分析或用戶興趣 profile；舊申請資料另由 `PRIV-001E` 處理 | GCC owner 指示採可實行的普通社區 Bot 標準；`docs/privacy-data-map.md` 記錄具體政策並以本 PR merge 批准 30 日；本 PR 只改文件，production 尚無自動清理，實作／驗收交 `PRIV-001F` |
 | 2026-11-22 | ACCESS-PAY-001 | P0 | 指定 operator 才可變更身份、封鎖及解封；撤權同時作用於私訊及群組；收款地址問法回覆固定安全提示，AI 輸出地址亦受攔截；operator 操作有最小 SQLite audit | PR #65／#66 已 merge；owner 真實測試非 operator 拒絕、封鎖／解封及私訊／群組錢包問答；封鎖期間群組 mention 無回覆、解封後問答恢復；2026-11-22 Fly production 唯讀查得 grant unchanged、block／unblock changed 三筆 audit；未上傳截圖或記錄帳號 ID |

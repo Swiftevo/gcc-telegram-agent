@@ -18,8 +18,11 @@ contents into logs or a PR.
 
 Rollback uses the previously verified image under the release procedure below;
 this restores the old application flow, so disable public use and investigate
-before any rollback. SQLite draft rows are preserved by this change and need no
-data restoration. Their retention and deletion remain under `PRIV-001E`.
+before any rollback. The release itself did not delete SQLite draft rows. A
+2026-11-23 read-only production aggregate found no legacy application modes,
+draft content, submission markers, or score markers. Recheck aggregate counts
+before retention cleanup; if legacy data appears, skip those rows and investigate.
+Backup and administrator Telegram copies are covered by `PRIV-001H`.
 
 ## Ownership and alert paths
 

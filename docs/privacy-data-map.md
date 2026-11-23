@@ -30,8 +30,10 @@ production metadata 為證據。本次沒有讀取 production SQLite 內容、Te
 > 2026-11-17 後續申請變更：Bot 內四步申請、評分和管理員申請通知已停用。
 > 新申請只經 GCC 官網外部表格。舊 active 或曾提交的 draft session 在下次互動時只改
 > `mode` 為 `legacy_application_closed`；原有 `draft_json`、`messages_json` 不改寫，
-> 新問答另開乾淨 session。舊 draft、score、message row、備份及管理員 Telegram 副本
-> 仍待 `PRIV-001E` 的保存及清理決定。以下圖表和清冊是 2026-09-13 的歷史快照，
+> 新問答另開乾淨 session。2026-11-23 的 production 唯讀 aggregate 查得 42 筆
+> session、舊申請模式／有內容 draft／提交及評分標記均為 0；因此 `PRIV-001E`
+> 不再需要專用 live 資料清理。備份及管理員 Telegram 副本尚未核對，交 `PRIV-001H`。
+> 以下圖表和清冊是 2026-09-13 的歷史快照，
 > 不再代表目前會發送新的申請通知。
 
 ## 資料主體與處理角色
@@ -235,8 +237,10 @@ extract、照片、證言、捐助人、partner 名單或 QR code，也不把報
 | 模型傳送 | 維持 deterministic-first：只有固定答案不足以回答時，才傳送當前問題及同一 session 最近最多 20 條訊息給 OpenAI。不新增跨 session／群組的個人檔案或自動敏感內容分類；用戶自行輸入的敏感文字仍可能傳送，按現行 `/privacy` 告知。 |
 | 統計 | 不新增長期原文分析、用戶興趣 profile 或額外統計表；保留現有 `/status` 當日計數。用戶身份與累計欄位另由 `PRIV-001D` 決定。 |
 
-舊 Bot 內申請草稿、評分及其所在 session，即使早已逾 30 日，也暫不按本政策刪除；
-其保存與清理須先由 `PRIV-001E` 決定。`operator_actions`、身份、email、logs、
+`PRIV-001E` 的 2026-11-23 live SQLite 唯讀核對沒有發現舊 Bot 內申請草稿、
+提交或評分標記，因此一般清理不必等待另一項舊申請政策。若實作或日後核對時
+發現帶舊申請內容的 session，先跳過該 row 並交 owner 核對，不自動刪除。
+`operator_actions`、身份、email、logs、
 Fly snapshots、手動 backup 及第三方副本不套用此 30 日 live QA 規則，
 分別由 `PRIV-001D`／`PRIV-001H` 處理。
 
@@ -263,7 +267,7 @@ GCC owner 合併本 PR 才算批准**；目前 production 尚未執行這些清�
 `PRIV-001F` 只需依上述條件實作定期清理：先處理 `PRIV-001C` 的 30 日一般問答，
 再於同一 transaction 處理符合條件的閒置 user 及關聯 row；SQLite 的
 `sessions`／`messages` 外鍵沒有 `ON DELETE CASCADE`，不可直接刪 user。
-舊申請 session 及其 user 仍由 `PRIV-001E` 決定去向。上線前做不含地址／
+舊申請 session 及其 user 如意外出現，先跳過並交 owner 核對。上線前做不含地址／
 訊息內容的 aggregate 核對，測試一般重建、封鎖不被繞過及舊資料例外即可；
 不新增身份系統或重啟 email verification。
 
@@ -274,7 +278,7 @@ GCC owner 合併本 PR 才算批准**；目前 production 尚未執行這些清�
 | 沒有 Bot 內最低限度資料告知或 `/privacy` | `PRIV-001B` |
 | 對話、session、group identifiers 沒有保存期限；20-message／30-minute 並非刪除 | `PRIV-001C` |
 | user identity、email、membership、credential 沒有完整 revoke／inactive policy | `PRIV-001D`、`ACCESS-001`／`ACCESS-002` |
-| 現行申請 draft、評分及 admin notification 的去向未定 | `APP-001`、`REVIEW-001`、`PRIV-001E` |
+| Bot 內申請流程已停用；live SQLite 舊草稿、提交及評分標記均為 0；備份及管理員 Telegram 副本未核對 | `APP-001`、`REVIEW-001`、`PRIV-001E` 已完成；副本邊界交 `PRIV-001H` |
 | 沒有 scheduled retention cleanup | `PRIV-001F` |
 | 沒有 user export／delete 或 privacy request record | `PRIV-001G` |
 | Fly／SMTP／OpenAI／Telegram 的 owner、access register、provider retention 及 incident 流程未定 | `PRIV-001H` |
