@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-23：PRIV-001F live SQLite 清理實作待驗收
+
+- 以已批准的社區 Bot MVP 政策實作 30 日 session／兩份訊息同步清理、90 日閒置普通身份清理、停用 email 資料清理，以及已撤銷 agent credential hash 清理。封鎖、人工管理身份及指定 operator 不自動刪除；意外出現的舊申請、無效時間與特殊身份 email／仍有效的 credential 跳過並發出不含內容的 operator alert。
+- production 唯讀基線：6 個 user、42 筆 session、其中 33 筆超過 30 日；沒有符合 90 日規則的普通 user，也沒有 email、challenge 或 credential row；`messages` 共 152 筆，沒有 orphan message。這些是候選規模，不是已刪數量。沒有讀取訊息或個人欄位原值。
+- 新程式預設 `off`，支援 `dry-run`／`apply`；每天在同一 transaction 執行，失敗回滾，只記錄 aggregate。合併 PR 後須先確認部署、執行唯讀預覽、建立並核實 on-demand snapshot，才開啟 `apply` 並做 production 回歸。未完成這些步驟前，`PRIV-001F` 留在 Next up，`/privacy` 不宣稱已自動清理。
+
 ## 2026-11-23：PRIV-001E 舊 Bot 內申請資料零筆核對與關閉
 
 - GCC owner 指出目前沒有開放 Bot 內申請渠道，要求核實是否真的有舊申請資料；同意在零資料證據下關閉專項待辦，不為假設中的資料建立清理流程。

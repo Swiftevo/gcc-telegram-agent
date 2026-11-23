@@ -229,6 +229,9 @@ extract、照片、證言、捐助人、partner 名單或 QR code，也不把報
 以 owner 合併 PR 作批准。**目前 production 尚未自動按此期限清理**；
 實作與驗收屬 `PRIV-001F`，不能先在 `/privacy` 宣稱已執行。
 
+`PRIV-001F` 實作在設定 `RETENTION_CLEANUP_MODE=apply` 前預設關閉；`dry-run`
+只輸出 aggregate。上線驗收及啟用步驟見 [`operations-runbook.md`](operations-runbook.md)。
+
 | 範圍 | MVP 決定 |
 |---|---|
 | 一般問答 | 私訊及指定群組／topic 使用同一規則；固定連結／事實回答與 AI 回答同樣處理。從 session 的最後活動時間起，完整問答的 live SQLite 保存期定為 30 日，之後由例行清理移除。 |

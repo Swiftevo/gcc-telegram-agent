@@ -38,6 +38,7 @@ class Settings:
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     ai_model: str = os.getenv("AI_MODEL", "gpt-4o-mini")
     ai_max_tokens: int = _int("AI_MAX_TOKENS", 800)
+    retention_cleanup_mode: str = os.getenv("RETENTION_CLEANUP_MODE", "off").strip().lower()
     smtp_host: str = os.getenv("SMTP_HOST", "")
     smtp_port: int = _int("SMTP_PORT", 587)
     smtp_username: str = os.getenv("SMTP_USERNAME", "")

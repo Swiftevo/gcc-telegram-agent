@@ -76,7 +76,7 @@ GCC Telegram 群的 `member`、`administrator`、`creator` 以及 `ADMIN_USER_ID
 - `actor_type`：`human` 或 `agent`
 - `access_level`：`regular` 或 `gcc_member`
 
-邮箱验证目前暂停；`/email` 和 `/verify` 不接受新数据。指定群组的当前 human 成员可获得 request-scoped 群组及私聊一般问答能力；私聊问题会即时通过 Telegram `getChatMember` 核对，不会把帐户升级为 `gcc_member`，一般问答也不会启用申请或新增管理权限。现有专用管理命令的治理另由 `ACCESS-002` 跟进。历史邮箱字段、验证表及 dormant implementation 暂时保留，以免在保存／删除政策确定前破坏资料；旧数据库中的 `user_kind` 仍会在启动时自动迁移。
+邮箱验证目前暂停；`/email` 和 `/verify` 不接受新数据。指定群组的当前 human 成员可获得 request-scoped 群组及私聊一般问答能力；私聊问题会即时通过 Telegram `getChatMember` 核对，不会把帐户升级为 `gcc_member`，一般问答也不会启用申请或新增管理权限。现有专用管理命令的治理另由 `ACCESS-002` 跟进。历史邮箱 schema 及 dormant implementation 保留作兼容；`PRIV-001F` 按已批准的政策清理 live 旧邮箱数据。旧数据库中的 `user_kind` 仍会在启动时自动迁移。
 
 ## 快速开始
 
@@ -151,7 +151,7 @@ main.py                      # 启动入口
 
 ## 价值观与申请边界
 
-`values.yaml` 保存 GCC 使命、资助方向、公开事实边界和语气。修改后重新部署，或私聊 Bot 发送 `/update_values` 生效。Bot 内申请收集、评分与管理员申请通知已停用；正式申请只在 GCC 官网外部表格完成。旧草稿仍保留在 SQLite，等待资料保存政策处理，不会自动转入外部表格。
+`values.yaml` 保存 GCC 使命、资助方向、公开事实边界和语气。修改后重新部署，或私聊 Bot 发送 `/update_values` 生效。Bot 内申请收集、评分与管理员申请通知已停用；正式申请只在 GCC 官网外部表格完成。2026-11-23 的 live SQLite 汇总未发现旧申请草稿、提交或评分；今后如发现旧资料，会跳过自动清理，也不会转入外部表格。
 
 ## 数据与对话记忆
 

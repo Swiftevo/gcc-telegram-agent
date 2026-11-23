@@ -16,6 +16,7 @@ from tornado.httpserver import HTTPServer
 
 from gcc_agent.common.persistence.database import connect
 from gcc_agent.config import settings
+from gcc_agent.ops.retention import run_retention_cleanup
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,8 @@ WEBHOOK_PENDING_THRESHOLD = 20
 WEBHOOK_MONITOR_INITIAL_DELAY_SECONDS = 20
 WEBHOOK_MONITOR_INTERVAL_SECONDS = 60
 READINESS_MONITOR_INTERVAL_SECONDS = 15
+RETENTION_INITIAL_DELAY_SECONDS = 60
+RETENTION_INTERVAL_SECONDS = 24 * 60 * 60
 
 
 @dataclass
@@ -43,6 +46,7 @@ class OperationalState:
     last_alert_at: dict[str, float] = field(default_factory=dict)
     monitor_task: asyncio.Task | None = None
     readiness_task: asyncio.Task | None = None
+    retention_task: asyncio.Task | None = None
     server: "OperationsServer | None" = None
 
     def record_incident(
@@ -364,6 +368,38 @@ async def _readiness_loop(state: OperationalState) -> None:
         state.database_ready = await check_database_readiness()
 
 
+async def _retention_loop(application: Any, mode: str) -> None:
+    await asyncio.sleep(RETENTION_INITIAL_DELAY_SECONDS)
+    while True:
+        try:
+            report = await run_retention_cleanup(apply=mode == "apply")
+            logger.info(
+                "retention cleanup mode=%s sessions=%d messages=%d users=%d "
+                "email_users=%d challenges=%d revoked_credentials=%d "
+                "active_credentials=%d held_special_emails=%d "
+                "held_legacy_sessions=%d held_invalid_timestamps=%d",
+                report.mode,
+                report.sessions,
+                report.messages,
+                report.users,
+                report.email_users,
+                report.challenges,
+                report.revoked_credentials,
+                report.active_credentials,
+                report.held_special_emails,
+                report.held_legacy_sessions,
+                report.held_invalid_timestamps,
+            )
+            if report.held_legacy_sessions or report.held_invalid_timestamps:
+                await report_incident(application.bot, "retention_cleanup_skipped_rows")
+            if report.held_special_emails or report.active_credentials:
+                await report_incident(application.bot, "retention_cleanup_manual_review")
+        except Exception as exc:
+            logger.error("retention cleanup failed type=%s", type(exc).__name__)
+            await report_incident(application.bot, "retention_cleanup_failed")
+        await asyncio.sleep(RETENTION_INTERVAL_SECONDS)
+
+
 async def start_operations(
     application: Any,
     *,
@@ -372,6 +408,10 @@ async def start_operations(
     upstream_port: int,
 ) -> OperationalState:
     global _state
+    mode = settings.retention_cleanup_mode
+    if mode not in {"off", "dry-run", "apply"}:
+        raise ValueError("RETENTION_CLEANUP_MODE must be off, dry-run, or apply")
+    logger.info("retention cleanup configured mode=%s", mode)
     state = OperationalState(telegram_initialized=True)
     state.database_ready = await check_database_readiness()
     if not state.database_ready:
@@ -394,6 +434,11 @@ async def start_operations(
         name="database-readiness-monitor",
     )
     _state = state
+    if mode != "off":
+        state.retention_task = asyncio.create_task(
+            _retention_loop(application, mode),
+            name="retention-cleanup",
+        )
     return state
 
 
@@ -404,7 +449,7 @@ async def stop_operations(application: Any) -> None:
     _state = None
     if state is None:
         return
-    for task in (state.monitor_task, state.readiness_task):
+    for task in (state.monitor_task, state.readiness_task, state.retention_task):
         if task:
             task.cancel()
             try:
