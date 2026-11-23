@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-23：PRIV-001D 身份與已停用 email 的社區 Bot MVP 政策
+
+- GCC owner 指示以可實行的普通社區 Telegram Bot 準則推進私隱工作。本 PR 提出 90 日閒置一般帳號清理：只適用未封鎖、human／regular、沒有舊申請或 agent credential 的帳號；再次互動可重建並重新查核群組資格。被封鎖、operator、agent 或人工管理身份不因閒置自動刪除，避免繞過撤權。
+- 群組成員欄位只作最近一次查核狀態；不建立歷史成員檔案。已暫停的 email challenge 及 `users.email`／驗證時間列入清理目標，先以無地址 aggregate 核對任何舊人工權限依賴；存在例外時由 owner 核對。不重啟 email；agent credential 如存在先由 operator 核對並 revoke。
+- 本 PR 只記錄政策，90 日與清除舊 email 以 owner merge 批准；沒有修改 Bot 或 production row。`PRIV-001E` 先決定舊申請資料，`PRIV-001F` 再實作清理並驗證；`PRIV-001H` 處理 operator audit 及備份副本。現有 `/privacy` 仍須如實描述尚未自動清理的現況。
+
 ## 2026-11-23：PRIV-001C 社區問答保存 MVP 決定
 
 - GCC owner 要求按普通社區 Telegram 問答 Bot 的 MVP 設定可實行準則，不持續提高標準再要求程式追逐。具體政策寫入 `privacy-data-map.md`：私訊／群組及固定答案／AI 共用 30 日 live 問答保存期，從 session 最後活動起算；既有 `messages_json` 與 `messages` 同步到期清理。
