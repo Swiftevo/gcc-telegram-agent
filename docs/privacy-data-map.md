@@ -221,6 +221,30 @@ extract、照片、證言、捐助人、partner 名單或 QR code，也不把報
 - Production SQLite volume encrypted，backup 有 integrity、foreign-key、checksum validation。
 - 公開 health／readiness／ops endpoints 不輸出 user content、row count、secret 或錯誤細節。
 
+## `PRIV-001C`：社區問答保存 MVP
+
+此節是 GCC owner 要求的簡單目標政策；30 日是本 PR 提供審閱的具體期限，
+以 owner 合併 PR 作批准。**目前 production 尚未自動按此期限清理**；
+實作與驗收屬 `PRIV-001F`，不能先在 `/privacy` 宣稱已執行。
+
+| 範圍 | MVP 決定 |
+|---|---|
+| 一般問答 | 私訊及指定群組／topic 使用同一規則；固定連結／事實回答與 AI 回答同樣處理。從 session 的最後活動時間起，完整問答的 live SQLite 保存期定為 30 日，之後由例行清理移除。 |
+| 現有兩份文字 | `sessions.messages_json` 用於同一 session 的追問上下文，`messages` 支援現有用量統計。MVP 不為去重而改 schema；到期時須連同該 session 的 `messages` rows 一起清理，不留下另一份原文。 |
+| 問答體驗 | 30 分鐘 session timeout、最多 20 條 AI 上下文及 private／group／topic 隔離保持現狀。這些限制不是 30 日刪除機制。 |
+| 模型傳送 | 維持 deterministic-first：只有固定答案不足以回答時，才傳送當前問題及同一 session 最近最多 20 條訊息給 OpenAI。不新增跨 session／群組的個人檔案或自動敏感內容分類；用戶自行輸入的敏感文字仍可能傳送，按現行 `/privacy` 告知。 |
+| 統計 | 不新增長期原文分析、用戶興趣 profile 或額外統計表；保留現有 `/status` 當日計數。用戶身份與累計欄位另由 `PRIV-001D` 決定。 |
+
+舊 Bot 內申請草稿、評分及其所在 session，即使早已逾 30 日，也暫不按本政策刪除；
+其保存與清理須先由 `PRIV-001E` 決定。`operator_actions`、身份、email、logs、
+Fly snapshots、手動 backup 及第三方副本不套用此 30 日 live QA 規則，
+分別由 `PRIV-001D`／`PRIV-001H` 處理。
+
+`PRIV-001F` 的最小實作是：找出超過 30 日、沒有舊申請資料的 session，
+在同一 transaction 清理該 session 及其 `messages` rows；驗證活躍問答和
+`/status` 當日計數仍正常。毋須為本項新增另一套分析、匿名化或管理介面。
+在實作及 production 驗收前，這項政策只是目標，現行資料仍可能留在 SQLite。
+
 ## 已確認缺口與後續路由
 
 | 缺口 | 後續任務 |

@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-23：PRIV-001C 社區問答保存 MVP 決定
+
+- GCC owner 要求按普通社區 Telegram 問答 Bot 的 MVP 設定可實行準則，不持續提高標準再要求程式追逐。具體政策寫入 `privacy-data-map.md`：私訊／群組及固定答案／AI 共用 30 日 live 問答保存期，從 session 最後活動起算；既有 `messages_json` 與 `messages` 同步到期清理。
+- 沿用 30 分鐘 session timeout、最多 20 條同一 session 的 AI 上下文和現有 `/status` 當日計數；不新增分析、長期原文統計、個人興趣 profile 或 schema 去重。舊申請草稿與評分屬 `PRIV-001E`，身份／email 及 backup／provider 分別屬 `PRIV-001D`／`PRIV-001H`。
+- 本 PR 只形成政策，沒有改 Bot、資料庫或 production 紀錄；30 日以 GCC owner 合併本 PR 作批准。`PRIV-001F` 才實作定期清理、基本測試與 production 驗收；在那之前，`/privacy` 仍須描述現況，不能聲稱 30 日已生效。
+
 ## 2026-11-22：ACCESS-PAY-001 production 權限撤銷及收款地址防線驗收完成
 
 - PR #65（merge `7e3ed1a`）只容許指定 operator 在私訊執行身份及封鎖變更，加入與變更同一 transaction 的最小 `operator_actions` audit；PR #66（merge `784ad59`）補充收款問法攔截及 AI 輸出地址攔截。既有 runbook 記錄回退及撤權步驟。
