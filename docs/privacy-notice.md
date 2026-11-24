@@ -1,7 +1,7 @@
 # GCC Telegram Agent minimum data notice
 
 Status: `PRIV-001B` implementation specification  
-Last reviewed: 2026-11-23
+Last reviewed: 2026-11-24
 Evidence baseline: [`privacy-data-map.md`](privacy-data-map.md)
 
 ## Purpose and boundary
@@ -29,6 +29,8 @@ implementation decisions remain separated as follows:
 90 inactive days. In `off` or `dry-run`, the notice retains its current-state
 wording and does not claim those deletions are active. Backups, logs, and
 third-party copies remain outside this live SQLite cleanup.
+Production enabled `apply` on 2026-11-24 (Hong Kong time); the first scheduled
+cleanup succeeded. Runtime mode remains the source of truth for the notice.
 
 ## Published surfaces
 
