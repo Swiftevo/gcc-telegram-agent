@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from typing import Iterable
 
+from gcc_agent.qa.messages import COMMUNITY_INVITE_FOOTER
+
 
 ABOUT_URL = "https://www.gccofficial.org/about"
 PUBLIC_FUND_URL = "https://www.gccofficial.org/application/public"
@@ -17,11 +19,7 @@ class OfficialFactAnswer:
     fact_type: str = ""
 
 
-_REMINDERS = {
-    "zh-TW": "\n\n_如希望深入交流，歡迎參與 GCC 定期例會。_",
-    "zh-CN": "\n\n_如希望深入交流，欢迎参与 GCC 定期例会。_",
-    "en": "\n\n_For deeper discussion, you're welcome to join GCC's regular community calls._",
-}
+_REMINDERS = COMMUNITY_INVITE_FOOTER
 
 _ANSWERS = {
     "process": {

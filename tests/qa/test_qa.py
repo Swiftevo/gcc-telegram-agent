@@ -161,13 +161,13 @@ def test_link_first():
         r = check_link_first(text, "zh-TW")
         check(f"不匹配（需 AI）：'{text[:20]}'", not r.matched, f"matched={r.matched}")
 
-    # 確認回覆包含連結和例會提醒
+    # 確認回覆包含項目連結和群組邀請
     r = check_link_first("Vyper 是什麼", "zh-TW")
     check("項目回覆包含項目頁面 URL", "gccofficial.org/project" in r.reply)
-    check("項目回覆包含例會提醒", "例會" in r.reply)
+    check("項目回覆包含群組邀請", "https://t.me/+VPm1urIRC0s4NzJl" in r.reply)
 
     r_en = check_link_first("how to apply", "en")
-    check("英文回覆包含例會提醒（英文）", "community calls" in r_en.reply)
+    check("英文回覆包含群組邀請", "join the GCC Telegram group" in r_en.reply)
 
 
 # ── Test 4: Prompt 組裝 ───────────────────────────────────────────────────────
@@ -215,25 +215,26 @@ def test_build_messages():
     check("超過 20 條歷史只保留 20 條", len(history_msgs) <= 21)  # 20條 + 1條新訊息
 
 
-# ── Test 5: 例會提醒 ──────────────────────────────────────────────────────────
+# ── Test 5: 群組邀請 ──────────────────────────────────────────────────────────
 
 def test_meeting_reminder():
-    print("\n[ 5 ] 例會提醒測試")
+    print("\n[ 5 ] 群組邀請測試")
 
     text = "這是一個 AI 回覆"
     result_tw = append_reminder(text, "zh-TW")
     result_cn = append_reminder(text, "zh-CN")
     result_en = append_reminder(text, "en")
 
-    check("繁體中文附加例會提醒", "例會" in result_tw)
-    check("簡體中文附加例會提醒", "例会" in result_cn)
-    check("英文附加例會提醒", "community calls" in result_en)
+    check("繁體中文附加群組邀請", "歡迎加入 GCC Telegram group" in result_tw)
+    check("簡體中文附加群組邀請", "欢迎加入 GCC Telegram group" in result_cn)
+    check("英文附加群組邀請", "join the GCC Telegram group" in result_en)
+    check("三語均有正確連結", all("https://t.me/+VPm1urIRC0s4NzJl" in reply for reply in (result_tw, result_cn, result_en)))
 
     # 避免重複附加
-    already_has = "這個回覆已經提到例會了。"
+    already_has = "這個回覆已有連結：https://t.me/+VPm1urIRC0s4NzJl"
     result_no_dup = append_reminder(already_has, "zh-TW")
-    count = result_no_dup.count("例會")
-    check("不重複附加提醒", count == 1, f"出現 {count} 次")
+    count = result_no_dup.count("https://t.me/+VPm1urIRC0s4NzJl")
+    check("不重複附加群組連結", count == 1, f"出現 {count} 次")
 
 
 # ── Test 6: Session 管理 ─────────────────────────────────────────────────────
@@ -295,7 +296,7 @@ async def test_handle_general_link():
     check("handle_general 回覆了訊息", update.message.reply_text.called)
     call_args = update.message.reply_text.call_args[0][0]
     check("回覆包含 Vyper 項目連結", "gccofficial.org/project" in call_args)
-    check("回覆包含例會提醒", "例會" in call_args)
+    check("回覆包含群組邀請", "https://t.me/+VPm1urIRC0s4NzJl" in call_args)
 
 
 async def test_handle_general_ai():
@@ -322,7 +323,7 @@ async def test_handle_general_ai():
     check("AI 回覆了訊息", update.message.reply_text.called)
     call_args = update.message.reply_text.call_args[0][0]
     check("回覆包含 AI 回應內容", "公共物品" in call_args)
-    check("回覆包含例會提醒", "例會" in call_args)
+    check("回覆包含群組邀請", "https://t.me/+VPm1urIRC0s4NzJl" in call_args)
 
 
 # ── 清理 ──────────────────────────────────────────────────────────────────────

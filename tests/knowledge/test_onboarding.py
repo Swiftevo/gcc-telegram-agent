@@ -57,7 +57,7 @@ class OnboardingContentTests(unittest.TestCase):
         self.assertEqual("https://www.gccofficial.org/", channels["website"])
         self.assertEqual("https://x.com/GCCofCommons", channels["x"])
         self.assertEqual(
-            "https://t.me/+GpdpcPIN2fY5YTZl",
+            "https://t.me/+VPm1urIRC0s4NzJl",
             channels["telegram"]["url"],
         )
         self.assertEqual("admin@gccofficial.org", channels["email"])
