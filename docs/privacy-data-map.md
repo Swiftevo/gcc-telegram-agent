@@ -36,6 +36,13 @@ production metadata 為證據。本次沒有讀取 production SQLite 內容、Te
 > 以下圖表和清冊是 2026-09-13 的歷史快照，
 > 不再代表目前會發送新的申請通知。
 
+> 2026-11-24 後續保存變更：`PRIV-001F` 已在 production 以
+> `RETENTION_CLEANUP_MODE=apply` 啟用。一般問答 session 由最後活動起超過 30 日後，
+> 連同其 `messages` rows 在每日清理中移除；符合安全條件的閒置普通身份採 90 日。
+> 首次清理刪除 33 筆 session／108 筆 message，完整性檢查通過。以下 2026-09-13
+> 清冊中的「沒有 retention cleanup」等敘述是當時狀態；目前實作以本節下方
+> `PRIV-001C`／`PRIV-001D` 及 [`operations-runbook.md`](operations-runbook.md) 為準。
+
 ## 資料主體與處理角色
 
 | 類別 | 現況 |
@@ -225,9 +232,9 @@ extract、照片、證言、捐助人、partner 名單或 QR code，也不把報
 
 ## `PRIV-001C`：社區問答保存 MVP
 
-此節是 GCC owner 要求的簡單目標政策；30 日是本 PR 提供審閱的具體期限，
-以 owner 合併 PR 作批准。**目前 production 尚未自動按此期限清理**；
-實作與驗收屬 `PRIV-001F`，不能先在 `/privacy` 宣稱已執行。
+GCC owner 已批准 30 日社區 Bot MVP 政策。`PRIV-001F` 於 2026-11-24
+在 production 啟用 `apply` 並完成首次清理；後續依每日排程處理。
+`/privacy` 只在設定為 `apply` 時描述此 live SQLite 清理。
 
 `PRIV-001F` 實作在設定 `RETENTION_CLEANUP_MODE=apply` 前預設關閉；`dry-run`
 只輸出 aggregate。上線驗收及啟用步驟見 [`operations-runbook.md`](operations-runbook.md)。
@@ -247,16 +254,15 @@ extract、照片、證言、捐助人、partner 名單或 QR code，也不把報
 Fly snapshots、手動 backup 及第三方副本不套用此 30 日 live QA 規則，
 分別由 `PRIV-001D`／`PRIV-001H` 處理。
 
-`PRIV-001F` 的最小實作是：找出超過 30 日、沒有舊申請資料的 session，
-在同一 transaction 清理該 session 及其 `messages` rows；驗證活躍問答和
-`/status` 當日計數仍正常。毋須為本項新增另一套分析、匿名化或管理介面。
-在實作及 production 驗收前，這項政策只是目標，現行資料仍可能留在 SQLite。
+`PRIV-001F` 在同一 transaction 清理超過 30 日且沒有舊申請資料的 session
+及其 `messages` rows。首次清理後唯讀預覽候選為 0，資料庫完整性檢查通過；
+真實私訊／群組問答亦已由 owner 驗收，詳見 [`project-log.md`](project-log.md)。
 
 ## `PRIV-001D`：身份與已停用 email 的 MVP 政策
 
-此節提出可實行的社區 Bot 目標政策。**90 日閒置期限及清除舊 email 須由
-GCC owner 合併本 PR 才算批准**；目前 production 尚未執行這些清理。
-實作與驗收交 `PRIV-001F`，不可先在 `/privacy` 聲稱已生效。
+GCC owner 已批准 90 日閒置與舊 email 清理政策。`PRIV-001F` 已在
+production 啟用；首次清理時，這兩類符合條件的候選均為 0。
+`/privacy` 只在設定為 `apply` 時描述 90 日 live SQLite 身份清理。
 
 | 資料 | MVP 決定 |
 |---|---|
@@ -282,7 +288,7 @@ GCC owner 合併本 PR 才算批准**；目前 production 尚未執行這些清�
 | 對話、session、group identifiers 沒有保存期限；20-message／30-minute 並非刪除 | `PRIV-001C` |
 | user identity、email、membership、credential 沒有完整 revoke／inactive policy | `PRIV-001D`、`ACCESS-001`／`ACCESS-002` |
 | Bot 內申請流程已停用；live SQLite 舊草稿、提交及評分標記均為 0；備份及管理員 Telegram 副本未核對 | `APP-001`、`REVIEW-001`、`PRIV-001E` 已完成；副本邊界交 `PRIV-001H` |
-| 沒有 scheduled retention cleanup | `PRIV-001F` |
+| 30／90 日 live SQLite 清理已啟用；備份、logs 與第三方副本不在其範圍 | `PRIV-001F` 啟用證據見 project log；副本交 `PRIV-001H` |
 | 沒有 user export／delete 或 privacy request record | `PRIV-001G` |
 | Fly／SMTP／OpenAI／Telegram 的 owner、access register、provider retention 及 incident 流程未定 | `PRIV-001H` |
 | SQLite 刪除不會同步刪除 snapshots、manual backups 或 Telegram admin messages | `PRIV-001G`／`PRIV-001H` |

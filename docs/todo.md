@@ -36,14 +36,13 @@
 
 ## Next up：嚴格執行順序
 
-原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A–E 已完成。
+原本單一 `PRIV-001` 已於 2026-09-13 拆成 `PRIV-001A` 至 `PRIV-001H`；A–F 已完成。
 `ACCESS-001` 已收起 email verification；`GROUP-ACCESS-002` 亦已讓指定群組現任成員
-使用私人一般問答並完成 production 驗收。F–H 的表內次序仍只是方便檢視的暫定排列，
+使用私人一般問答並完成 production 驗收。G–H 的表內次序仍只是方便檢視的暫定排列，
 不會自動開始。
 
 | 次序 | ID | 優先級 | 工作 | 完成定義／出口條件 | 依賴 |
 |---:|---|---|---|---|---|
-| 3* | PRIV-001F | P1 | **實作自動過期及 retention cleanup** | 按已批准期限清理／匿名化 user、session、message、challenge、credential；清理前以 aggregate 核對舊申請標記，若出現則跳過相關 row 並另行核對；transaction 可重跑、有測試、metric、告警及 rollback | PRIV-001C、PRIV-001D |
 | 4* | PRIV-001G | P1 | **提供用戶資料查閱、匯出及刪除流程** | 驗證 requestor，只處理自己的資料；完整涵蓋重複儲存及關聯 row，記錄最小 audit，清楚說明 backup／Telegram 外部副本延遲 | PRIV-001C、PRIV-001D、PRIV-001F；ACCESS-002 |
 | 5* | PRIV-001H | P1 | **治理 backup、logs、第三方及 production 存取** | 定義 data owner、access register、provider／admin chat 邊界、logs review、snapshot／manual backup retention、離站儲存及 incident／撤權 runbook | PRIV-001A；GCC owner 決定；REPO-GOV-001 |
 | 7 | ACCESS-002 | P1 | **補完現有管理命令與身份生命週期** | `/block`、`/unblock`、operator 最小 audit 與即時撤銷測試納入 `ACCESS-PAY-001`；剩餘：group membership 退出後的完整身份生命週期、保存及撤銷政策；不在本項重啟 email verification | TEST-001；ACCESS-001；PRIV-001D；ACCESS-PAY-001 |
@@ -72,6 +71,7 @@
 
 | 日期 | ID | 原優先級 | 完成內容 | 證據 |
 |---|---|---|---|---|
+| 2026-11-24 | PRIV-001F | P1 | 啟用 30 日一般問答及 90 日合資格閒置身份的 live SQLite 定期清理；停用 email、已撤銷 credential 和例外跳過沿用安全規則；不處理備份／Telegram 等外部副本 | PR #73／merge `3ff6f32`；Fly v105、啟用前唯讀預覽、14 日 on-demand snapshot、`apply` 首次清理 33 session／108 message；清理後候選 0、`quick_check=ok`、外鍵問題 0、健康端點正常；owner 2026-11-24 真實私訊與指定群組明確 mention 問答均有正常回覆；文字驗收紀錄見 PR #74，不上傳截圖或對話內容 |
 | 2026-11-23 | PRIV-001E | P1 | 關閉舊 Bot 內申請資料專項：現時 live SQLite 無舊申請草稿、提交或評分標記，不建立專用清理流程；外部備份與管理員 Telegram 副本的範圍仍由 `PRIV-001H` 核對 | owner 確認 Bot 不開放申請渠道並同意關閉此待辦；Fly production 唯讀 aggregate：42 筆 session、舊申請模式 0、含申請內容 draft 0、提交標記 0、評分標記 0、無效 JSON 0；沒有讀取申請內容或身份；`PRIV-001F` 不再依賴本項 |
 | 2026-11-23 | PRIV-001D | P1 | 社區 Bot MVP 身份政策：一般 human／regular 閒置 90 日後可清理；封鎖及人工管理身份不自動刪除；群組資格僅為最近一次查核狀態；已停用 email challenge／地址資料列入安全清理，既有 agent credential 先人工核對撤銷 | 本 PR 的 `docs/privacy-data-map.md` 記錄界線，GCC owner merge 才批准 90 日與 email 清理政策；文件決定不代表 production 已刪除，實作／驗收交 `PRIV-001F`；舊申請與 audit／備份分別交 `PRIV-001E`／`PRIV-001H` |
 | 2026-11-23 | PRIV-001C | P1 | 以社區問答 MVP 訂定私訊／群組、固定答案／AI 共用的 30 日 live 問答保存目標；現有兩份文字一起到期清理，保持 30 分鐘 session 與最多 20 條模型上下文；不新增分析或用戶興趣 profile；舊申請資料另由 `PRIV-001E` 處理 | GCC owner 指示採可實行的普通社區 Bot 標準；`docs/privacy-data-map.md` 記錄具體政策並以本 PR merge 批准 30 日；本 PR 只改文件，production 尚無自動清理，實作／驗收交 `PRIV-001F` |
