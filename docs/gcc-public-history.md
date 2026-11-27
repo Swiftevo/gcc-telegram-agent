@@ -22,8 +22,10 @@ deterministic link-first selector
 fixed answer + public report citation
 ```
 
-The source and seven projections are content-owner approved and connected through a fail-closed
-runtime gate. The runtime reads only the explicit projection allowlist; it never reads the cleaned
+The report source and original seven projections were content-owner approved. The eighth, concise
+project-count projection reuses the already approved `45+` report-period fact and is proposed for
+content-owner review with this PR. All eight connect through a fail-closed runtime gate. The runtime
+reads only the explicit projection allowlist; it never reads the cleaned
 extract or original PDF into the AI prompt. Matching answers are returned without an OpenAI call.
 The history layer remains separate from `values.yaml`, onboarding, canonical case retrieval and
 application review.
@@ -87,7 +89,7 @@ The source is now:
 
 ## Approved projection boundary
 
-The seven approved projections cover only:
+The eight approved projections cover only:
 
 1. GCC historical development from 2022-10 through the 2023–2025 report period;
 2. historical fund structure and funding directions;
@@ -96,6 +98,9 @@ The seven approved projections cover only:
 5. the historical governance, funding process and cooperation methods;
 6. two-year donation, category, milestone-rate, regional and operating-expense aggregates;
 7. historical Builder／ETH City／university Web3 programme reach.
+8. a short answer to GCC-wide funded-project count questions: the report-period
+   figure is **45+ supported projects**; it is neither a verified paid-project count
+   nor a verified present-day cumulative count.
 
 Each projection carries its question examples, fixed Traditional-Chinese answer, exact source and
 section references, citation URL, excluded claims and content-owner review metadata. Projections
@@ -133,7 +138,7 @@ aggregate periods, storage location, normalized checksum, public source URL, war
 markers, unsafe voter or access data, source review gates, projection references and citations,
 historical wording, excluded sections and the requirement that any 50.4% answer explicitly state
 the undefined denominator／calculation boundary. Runtime tests independently fail closed on schema,
-connection, review, source, section and citation regressions; verify seven minimal projections,
+connection, review, source, section and citation regressions; verify eight minimal projections,
 current-versus-historical routing, locale fallback, private／group replies and AI-prompt isolation.
 The case validator also recognizes history extracts as registered files so they are not mistaken
 for orphan case evidence.

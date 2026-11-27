@@ -1,5 +1,5 @@
 schema_version: 0.3.0
-updated_at: '2026-10-22'
+updated_at: '2026-11-28'
 purpose: Register cleaned, time-bounded public evidence about GCC organization history outside the canonical project-case database.
 runtime:
   connected: true
@@ -196,6 +196,24 @@ approved_projections:
       - transaction-level payment proof
       - project-level milestone acceptance
       - current financial position
+    review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}
+  - projection_id: gcc-historical-project-count
+    topic: Historical supported-project count
+    language: zh-Hant
+    scope: historical_only
+    question_examples:
+      - GCC 資助過多少項目？
+      - GCC 已支持多少個項目？
+    answer_text: GCC《2023–2025 公共物品之路》的兩年歷史數據頁列出「支持項目 45+」。這是報告期的支持範圍，不等於已實際撥款的項目數，也不是目前的累計總數；現行累計數仍待核實。
+    source_references:
+      - source_id: gcc-report-2023-2025-cn
+        section_ids: [two-year-aggregate]
+    citation:
+      label: GCC 2023–2025 公共物品之路
+      url: https://drive.google.com/file/d/15HztLjCcUtatmknZuUZbjb1ifEojzKfR/view
+    excluded_claims:
+      - current cumulative project count
+      - actual funded-project payment count
     review: {status: approved, reviewed_at: '2026-10-22', reviewed_by_role: GCC content owner}
   - projection_id: gcc-historical-programme-reach
     topic: Historical programme reach

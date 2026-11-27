@@ -95,6 +95,11 @@ is withdrawn.
   aggregates. Do not use it to answer a current historical-total question
   until the accounting scope is reconciled. Cohort 3's ~USD 260,000 is
   described as *planned* support, not disbursement.
+- `projects.yaml` contains 63 legacy catalogue records. This is not a verified
+  count of funded projects and must not enter the AI prompt as such. For an
+  overall project-count question, the approved report provides only **45+
+  supported projects during its historical period**. The actual paid-project
+  count and present-day cumulative count remain unverified.
 
 ## Runtime behavior
 

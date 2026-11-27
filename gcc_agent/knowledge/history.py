@@ -225,6 +225,18 @@ def _contains(value: str, terms: tuple[str, ...]) -> bool:
     return any(term in value for term in terms)
 
 
+def is_gcc_overall_project_count_query(query: str) -> bool:
+    """Recognize a GCC-wide funded-project total without taking a programme count."""
+    value = query.casefold().strip()
+    return (
+        "gcc" in value
+        and _contains(value, ("項目", "项目", "projects"))
+        and _contains(value, ("多少", "幾個", "几个", "總數", "总数", "how many", "number of", "total"))
+        and _contains(value, ("資助", "资助", "支持", "funded", "supported"))
+        and not _contains(value, ("cohort", "eth city", "高校", "builder", "2023", "2024", "2025", "2026"))
+    )
+
+
 def _matched_projection_id(value: str) -> str | None:
     historical = _contains(value, _HISTORICAL_CONTEXT_TERMS)
     current_or_action = _contains(value, _CURRENT_OR_ACTION_TERMS)
@@ -246,6 +258,9 @@ def _matched_projection_id(value: str) -> str | None:
     builder = builder or "機票計劃" in value or "机票计划" in value
     if builder and not current_or_action:
         return "gcc-builder-flight-history"
+
+    if is_gcc_overall_project_count_query(value):
+        return "gcc-historical-project-count"
 
     if not historical:
         return None

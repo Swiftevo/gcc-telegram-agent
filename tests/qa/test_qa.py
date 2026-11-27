@@ -56,6 +56,7 @@ def test_values_load():
         check("values.yaml priority_themes 不為空", len(v2.priority_themes) > 0)
         check("Values 不再載入舊 rubric", not hasattr(v2, "screening_rubric"))
         check("values.yaml 載入 QA 事實邊界", len(v2.qa_fact_policy) > 0)
+        check("QA 不把清單筆數當資助總數", "不可把項目清單筆數" in v2.qa_fact_policy)
     else:
         print("  ⚠️  values.yaml 不存在，跳過詳細載入測試")
 
@@ -86,8 +87,7 @@ def test_system_block():
     check("包含 END OF IMMUTABLE", "END OF IMMUTABLE" in block)
 
     summary = as_gcc_summary_block(fake_values)
-    check("GCC Summary block 不為空", len(summary) > 0)
-    check("Summary 包含 gcc_summary 內容", "GCC 是資助機構" in summary)
+    check("GCC Summary 只含核准摘要，不注入舊項目清冊", summary == "## GCC 背景摘要\nGCC 是資助機構。")
 
 
 # ── Test 3: 連結優先邏輯 ──────────────────────────────────────────────────────
