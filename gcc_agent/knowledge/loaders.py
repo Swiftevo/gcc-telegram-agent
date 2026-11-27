@@ -1,6 +1,5 @@
 """Load immutable GCC values and project knowledge from YAML."""
 
-from collections import defaultdict
 import logging
 import os
 from typing import Optional
@@ -99,18 +98,6 @@ def as_system_block(values: Optional[AgentValues] = None) -> str:
 
 def as_gcc_summary_block(values: Optional[AgentValues] = None) -> str:
     values = values or load_values()
-    projects = load_projects()
-    index = ""
-    if projects:
-        by_category = defaultdict(list)
-        for project in projects:
-            by_category[project.get("category", "其他")].append(project.get("name", ""))
-        lines = [
-            f"## GCC 已資助項目（共 {len(projects)} 個）",
-            "回答時：點名項目則給 project_url 連結；問概況則按類別介紹。",
-            "",
-        ]
-        lines.extend(f"【{category}】{'、'.join(names)}" for category, names in by_category.items())
-        index = "\n".join(lines)
-    summary = f"## GCC 背景摘要\n{values.gcc_summary}"
-    return f"{summary}\n\n{index}" if index else summary
+    # The frozen legacy catalogue is a migration ledger, not a reviewed count
+    # of funded projects. Approved case projections are added separately by QA.
+    return f"## GCC 背景摘要\n{values.gcc_summary}"

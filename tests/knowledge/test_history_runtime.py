@@ -43,9 +43,9 @@ class HistoryRuntimeGateTests(unittest.TestCase):
         ):
             return load_bot_history_projections(force_reload=True)
 
-    def test_registry_exposes_exactly_seven_minimal_runtime_records(self):
+    def test_registry_exposes_exactly_eight_minimal_runtime_records(self):
         records = load_bot_history_projections(force_reload=True)
-        self.assertEqual(7, len(records))
+        self.assertEqual(8, len(records))
         self.assertTrue(all(set(record) == RUNTIME_FIELDS for record in records))
         serialized = repr(records)
         self.assertNotIn("storage_uri", serialized)
@@ -71,7 +71,7 @@ class HistoryRuntimeGateTests(unittest.TestCase):
         unapproved_projection = deepcopy(self.registry)
         unapproved_projection["approved_projections"][0]["review"]["status"] = "pending"
         records = self.load_with_registry(unapproved_projection)
-        self.assertEqual(6, len(records))
+        self.assertEqual(7, len(records))
         self.assertNotIn(
             "gcc-history-2022-2025",
             {record["projection_id"] for record in records},
@@ -80,18 +80,18 @@ class HistoryRuntimeGateTests(unittest.TestCase):
     def test_runtime_rejects_unbounded_rate_and_excluded_section(self):
         unsafe_answer = deepcopy(self.registry)
         unsafe_answer["approved_projections"][0]["answer_text"] += " 50.4%"
-        self.assertEqual(6, len(self.load_with_registry(unsafe_answer)))
+        self.assertEqual(7, len(self.load_with_registry(unsafe_answer)))
 
         excluded = deepcopy(self.registry)
         excluded["approved_projections"][0]["source_references"][0]["section_ids"] = [
             "testimonials"
         ]
-        self.assertEqual(6, len(self.load_with_registry(excluded)))
+        self.assertEqual(7, len(self.load_with_registry(excluded)))
 
     def test_runtime_rejects_citation_mismatch(self):
         registry = deepcopy(self.registry)
         registry["approved_projections"][0]["citation"]["url"] = "https://example.com"
-        self.assertEqual(6, len(self.load_with_registry(registry)))
+        self.assertEqual(7, len(self.load_with_registry(registry)))
 
 
 class HistorySelectionTests(unittest.TestCase):
@@ -104,6 +104,8 @@ class HistorySelectionTests(unittest.TestCase):
             ("GCC 當時的治理方式是怎樣？", "gcc-historical-governance-process"),
             ("報告中的兩年捐贈數據是多少？", "gcc-historical-aggregate-data"),
             ("GCC 歷史總捐贈了多少？", "gcc-historical-aggregate-data"),
+            ("GCC 資助過多少項目？", "gcc-historical-project-count"),
+            ("How many projects has GCC funded?", "gcc-historical-project-count"),
             ("What was the historical regional distribution?", "gcc-historical-aggregate-data"),
             ("ETH City 過往覆蓋多少地區？", "gcc-historical-programme-reach"),
         )
@@ -112,6 +114,26 @@ class HistorySelectionTests(unittest.TestCase):
                 projection = select_history_projection(query)
                 self.assertIsNotNone(projection)
                 self.assertEqual(expected, projection["projection_id"])
+
+    def test_overall_project_count_is_historical_and_does_not_use_legacy_catalogue(self):
+        for query, lang in (
+            ("GCC 資助過多少項目？", "zh-TW"),
+            ("GCC 资助过多少项目？", "zh-CN"),
+            ("How many projects has GCC funded?", "en"),
+        ):
+            with self.subTest(query=query):
+                result = check_link_first(query, lang)
+                self.assertEqual("history_gcc-historical-project-count", result.link_type)
+                self.assertIn("45+", result.reply)
+                self.assertNotIn("63 個", result.reply)
+                self.assertIn(REPORT_URL, result.reply)
+
+        for scoped in ("GCC Cohort 4 資助了多少項目？", "GCC 2025 資助多少項目？"):
+            with self.subTest(scoped=scoped):
+                self.assertNotEqual(
+                    "gcc-historical-project-count",
+                    (select_history_projection(scoped) or {}).get("projection_id"),
+                )
 
     def test_current_policy_and_application_questions_do_not_use_history(self):
         for query in (

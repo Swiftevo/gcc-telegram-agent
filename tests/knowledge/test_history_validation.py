@@ -30,14 +30,14 @@ class PublicHistoryValidationTests(unittest.TestCase):
     def test_current_history_source_layer_passes(self):
         self.assertEqual([], validate_paths())
 
-    def test_source_and_seven_projections_are_content_owner_approved(self):
+    def test_source_and_eight_projections_are_content_owner_approved(self):
         source = self.registry["sources"][0]
         self.assertEqual("human_reviewed", source["processing"]["sanitization_status"])
         self.assertEqual("approved", source["processing"]["review_status"])
         self.assertEqual(
             {"evidence_only", "bot_qa"}, set(source["processing"]["allowed_uses"])
         )
-        self.assertEqual(7, len(self.registry["approved_projections"]))
+        self.assertEqual(8, len(self.registry["approved_projections"]))
         self.assertTrue(
             all(
                 item["review"]["status"] == "approved"

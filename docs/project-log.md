@@ -3,6 +3,12 @@
 這份日記記錄已核實的產品、技術、營運與 public-goods 決策。它不是待辦清單；
 尚未完成的工作及其唯一執行順序，以 [`docs/todo.md`](todo.md) 為準。
 
+## 2026-11-28：群組資助項目總數回答待修正
+
+- GCC owner 的真實群組 mention 測試確認新 Telegram 邀請尾句及公開群組預覽正常，亦發現 Bot 回答「已資助 63 個項目」。這個數字來自 `projects.yaml` 的 63 筆舊清冊；其中 55 筆仍為 `legacy_only`，清冊筆數不是已核實的資助或付款項目數。
+- 已核准的《2023–2025 公共物品之路》僅列出報告期「支持項目 45+」；Cohort 4 公告的較新總數與報告期間／口徑未對齊，現時累計及實際撥款項目數不可由這些來源推算。
+- `QA-COUNT-001` 提出移除舊清冊對 AI prompt 的總數暗示，並為通用總數問題提供附報告來源、明確時段與未知界線的短答。程式與測試尚待 PR merge 及 production 私訊／群組驗收；不能以此段日記宣稱線上回答已修復。
+
 ## 2026-11-24：PRIV-001F production 啟用與首次清理
 
 - PR #73 已 merge（`3ff6f32`）；Fly release v105 部署完成，Machine started、health check 1/1，`/healthz`、`/readyz`、`/opsz` 均為 200，`recent_incident: false`。
